@@ -1,0 +1,11 @@
+{
+  "nav": {
+    "dashboard": "Tablero",
+    "users": "Usuarios",
+    "devices": "Dispositivos"
+  },
+  "logout": "Cerrar sesión",
+  "role": {
+    "admin": "Administrador"
+  }
+}

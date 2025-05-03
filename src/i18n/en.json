@@ -1,0 +1,11 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "users": "Users",
+    "devices": "Devices"
+  },
+  "logout": "Logout",
+  "role": {
+    "admin": "Administrator"
+  }
+}
