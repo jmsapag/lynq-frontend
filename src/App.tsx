@@ -1,27 +1,24 @@
 import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
-import { useState } from "react";
 import Dashboard from "./pages/dashboard";
-import { SidebarWithState } from "./components/layout/sidebar";
-import Header from "./components/layout/header";
+import { SidebarWithState } from "./components/navigation/sidebar/sidebar-with-state.tsx";
+import Header from "./components/navigation/header/header.tsx";
+import { useSidebar } from "./hooks/useSidebar.ts";
+import UsersPage from "./pages/users";
+import DevicesPage from "./pages/devices";
 
 function AppLayoutWithState() {
-  const [isMobileOpen, setIsMobileOpen] = useState(false);
-
-  const handleMobileToggle = () => {
-    setIsMobileOpen(!isMobileOpen);
-  };
-
-  const closeMobileSidebar = () => {
-    setIsMobileOpen(false);
-  };
+  const { isOpen, handleToggle, handleClose } = useSidebar();
 
   return (
     <div className="flex h-screen bg-white text-black">
-      <SidebarWithState isOpen={isMobileOpen} setIsOpen={closeMobileSidebar} />
+      <SidebarWithState isOpen={isOpen} onClose={handleClose} />
 
       <div className="flex flex-1 flex-col overflow-hidden">
-        <Header onMobileToggleClick={handleMobileToggle} />
-        <main className="flex-1 overflow-y-auto p-4 md:p-6">
+        <Header onMobileToggleClick={handleToggle} />
+        <main
+          className="flex-1 overflow-y-auto p-4 md:p-6"
+          onClick={() => isOpen && handleClose()}
+        >
           <Outlet />
         </main>
       </div>
@@ -37,6 +34,8 @@ function App() {
       <Routes>
         <Route path="/" element={<AppLayoutWithState />}>
           <Route index element={<Dashboard />} />
+          <Route path="users" element={<UsersPage />} />
+          <Route path="devices" element={<DevicesPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
