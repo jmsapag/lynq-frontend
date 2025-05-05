@@ -5,25 +5,28 @@ import Header from "./components/navigation/header/header.tsx";
 import { useSidebar } from "./hooks/useSidebar.ts";
 import UsersPage from "./pages/users";
 import DevicesPage from "./pages/devices";
+import { Footer } from "./components/navigation/footer/footer.tsx";
+import HelpPage from "./pages/help.tsx";
 
 function AppLayoutWithState() {
-  const { isOpen, handleToggle, handleClose } = useSidebar();
+    const { isOpen, handleToggle, handleClose } = useSidebar();
 
-  return (
-    <div className="flex h-screen bg-white text-black">
-      <SidebarWithState isOpen={isOpen} onClose={handleClose} />
+    return (
+        <div className="flex h-screen bg-white text-black">
+            <SidebarWithState isOpen={isOpen} onClose={handleClose} />
 
-      <div className="flex flex-1 flex-col overflow-hidden">
-        <Header onMobileToggleClick={handleToggle} />
-        <main
-          className="flex-1 overflow-y-auto p-4 md:p-6"
-          onClick={() => isOpen && handleClose()}
-        >
-          <Outlet />
-        </main>
-      </div>
-    </div>
-  );
+            <div className="flex flex-1 flex-col overflow-hidden">
+                <Header onMobileToggleClick={handleToggle} />
+                <main
+                    className="flex-1 overflow-y-auto p-4 md:p-6"
+                    onClick={() => isOpen && handleClose()}
+                >
+                    <Outlet />
+                </main>
+                <Footer />
+            </div>
+        </div>
+    );
 }
 
 function App() {
@@ -36,6 +39,7 @@ function App() {
           <Route index element={<Dashboard />} />
           <Route path="users" element={<UsersPage />} />
           <Route path="devices" element={<DevicesPage />} />
+            <Route path="help" element={<HelpPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

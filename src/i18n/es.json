@@ -2,7 +2,17 @@
   "nav": {
     "dashboard": "Tablero",
     "users": "Usuarios",
-    "devices": "Dispositivos"
+    "devices": "Dispositivos",
+    "help": "Ayuda"
+  },
+  "help": {
+    "userGuide": "Guía de Uso",
+    "userGuideText": "Aquí encontrarás información sobre cómo usar la aplicación People Counter.",
+    "faq": "Preguntas Frecuentes",
+    "faqText": "Consulta las respuestas a las preguntas más comunes."
+  },
+  "footer": {
+    "rights": "© {{year}} LYNQ, People Counter. Todos los derechos reservados."
   },
   "logout": "Cerrar sesión",
   "role": {

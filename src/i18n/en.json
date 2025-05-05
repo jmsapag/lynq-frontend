@@ -2,7 +2,17 @@
   "nav": {
     "dashboard": "Dashboard",
     "users": "Users",
-    "devices": "Devices"
+    "devices": "Devices",
+    "help": "Help"
+  },
+  "help": {
+    "userGuide": "User Guide",
+    "userGuideText": "Here you will find information about how to use the People Counter application.",
+    "faq": "Frequently Asked Questions",
+    "faqText": "Check the answers to the most common questions."
+  },
+  "footer": {
+    "rights": "© {{year}} LYNQ, People Counter. All rights reserved."
   },
   "logout": "Logout",
   "role": {
