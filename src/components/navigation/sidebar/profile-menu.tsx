@@ -1,8 +1,6 @@
 import React, { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
-import { LanguageIcon } from "@heroicons/react/24/outline";
 import { useTranslation } from "react-i18next";
-import { useLanguage } from "../../../hooks/useLanguage.ts";
 
 interface ProfileMenuProps {
   onLogout: () => void;
@@ -10,12 +8,6 @@ interface ProfileMenuProps {
 
 export const ProfileMenu: React.FC<ProfileMenuProps> = ({ onLogout }) => {
   const { t } = useTranslation();
-  const { toggleLanguage, currentLanguage } = useLanguage();
-
-  const handleLanguageToggle = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    toggleLanguage();
-  };
 
   return (
     <div className="flex items-center justify-between gap-2">
@@ -51,17 +43,6 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({ onLogout }) => {
           </Menu.Items>
         </MenuTransition>
       </Menu>
-
-      <button
-        onClick={handleLanguageToggle}
-        title={t("common.changeLanguage")}
-        className="p-2 rounded-md text-gray-500 hover:bg-gray-100 hover:text-gray-700 flex items-center gap-2"
-      >
-        <LanguageIcon className="h-5 w-5" />
-        <span className="text-xs font-medium">
-          {currentLanguage.toUpperCase()}
-        </span>
-      </button>
     </div>
   );
 };

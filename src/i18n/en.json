@@ -2,10 +2,49 @@
   "nav": {
     "dashboard": "Dashboard",
     "users": "Users",
-    "devices": "Devices"
+    "devices": "Devices",
+    "help": "Help"
+  },
+  "help": {
+    "userGuide": "User Guide",
+    "userGuideText": "Here you will find information about how to use the People Counter application.",
+    "faq": "Frequently Asked Questions",
+    "faqText": "Check the answers to the most common questions."
+  },
+  "footer": {
+    "rights": "© {{year}} LYNQ, People Counter. All rights reserved."
   },
   "logout": "Logout",
   "role": {
     "admin": "Administrator"
+  },
+  "dashboard": {
+    "filters": {
+      "selectDates": "Select dates",
+      "startDate": "Start date",
+      "endDate": "End date",
+      "selectSensors": "Select sensors",
+      "sensorsSelected": "{{count}} sensors selected"
+    },
+    "charts": {
+      "dailyVisitors": "Daily Visitors",
+      "weeklyTrend": "Weekly Trend"
+    }
+  },
+  "users": {
+    "management": "User Management",
+    "profile": "Profile",
+    "addUser": "Add User",
+    "profileInformation": "Profile Information",
+    "personalDetails": "Personal details and information",
+    "fullName": "Full name",
+    "email": "Email address",
+    "phone": "Phone number",
+    "role": "Role",
+    "business": "Business",
+    "addUserContentComingSoon": "Add user functionality will be available soon",
+    "contactInformation": "Contact Information",
+    "edit": "Edit",
+    "delete": "Delete"
   }
 }

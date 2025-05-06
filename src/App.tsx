@@ -5,6 +5,8 @@ import Header from "./components/navigation/header/header.tsx";
 import { useSidebar } from "./hooks/useSidebar.ts";
 import UsersPage from "./pages/users";
 import DevicesPage from "./pages/devices";
+import { Footer } from "./components/navigation/footer/footer.tsx";
+import HelpPage from "./pages/help.tsx";
 
 function AppLayoutWithState() {
   const { isOpen, handleToggle, handleClose } = useSidebar();
@@ -21,6 +23,7 @@ function AppLayoutWithState() {
         >
           <Outlet />
         </main>
+        <Footer />
       </div>
     </div>
   );
@@ -36,6 +39,7 @@ function App() {
           <Route index element={<Dashboard />} />
           <Route path="users" element={<UsersPage />} />
           <Route path="devices" element={<DevicesPage />} />
+          <Route path="help" element={<HelpPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
