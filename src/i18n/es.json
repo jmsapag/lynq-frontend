@@ -17,5 +17,18 @@
   "logout": "Cerrar sesión",
   "role": {
     "admin": "Administrador"
+  },
+  "dashboard": {
+    "filters": {
+      "selectDates": "Seleccionar fechas",
+      "startDate": "Fecha inicio",
+      "endDate": "Fecha fin",
+      "selectSensors": "Seleccionar sensores",
+      "sensorsSelected": "{{count}} sensores seleccionados"
+    },
+    "charts": {
+      "dailyVisitors": "Visitantes Diarios",
+      "weeklyTrend": "Tendencia Semanal"
+    }
   }
 }
