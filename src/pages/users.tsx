@@ -1,3 +1,9 @@
+import UserProfile from "../components/users/user-profile";
+
 export default function UsersPage() {
-  return <div className="space-y-4"></div>;
+  return (
+    <div className="container mx-auto px-4">
+      <UserProfile />
+    </div>
+  );
 }

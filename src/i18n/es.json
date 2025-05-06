@@ -30,5 +30,21 @@
       "dailyVisitors": "Visitantes Diarios",
       "weeklyTrend": "Tendencia Semanal"
     }
+  },
+  "users": {
+    "management": "Gestión de Usuarios",
+    "profile": "Perfil",
+    "addUser": "Añadir Usuario",
+    "profileInformation": "Información de Perfil",
+    "personalDetails": "Detalles personales e información",
+    "fullName": "Nombre completo",
+    "email": "Correo electrónico",
+    "phone": "Número de teléfono",
+    "role": "Rol",
+    "business": "Empresa",
+    "addUserContentComingSoon": "La funcionalidad para añadir usuarios estará disponible próximamente",
+    "contactInformation": "Información de Contacto",
+    "edit": "Editar",
+    "delete": "Borrar"
   }
 }

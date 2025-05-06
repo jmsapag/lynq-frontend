@@ -30,5 +30,21 @@
       "dailyVisitors": "Daily Visitors",
       "weeklyTrend": "Weekly Trend"
     }
+  },
+  "users": {
+    "management": "User Management",
+    "profile": "Profile",
+    "addUser": "Add User",
+    "profileInformation": "Profile Information",
+    "personalDetails": "Personal details and information",
+    "fullName": "Full name",
+    "email": "Email address",
+    "phone": "Phone number",
+    "role": "Role",
+    "business": "Business",
+    "addUserContentComingSoon": "Add user functionality will be available soon",
+    "contactInformation": "Contact Information",
+    "edit": "Edit",
+    "delete": "Delete"
   }
 }
