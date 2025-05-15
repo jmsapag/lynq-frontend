@@ -5,11 +5,11 @@ import Cookies from "js-cookie";
 const BACKEND_URL = import.meta.env.VITE_API_URL;
 
 export const axiosClient = axios.create({
-    baseURL: BACKEND_URL ?? "http://localhost:8080",
+    baseURL: BACKEND_URL || "http://localhost:8080",
 });
 
 export const axiosPrivate = axios.create({
-    baseURL: BACKEND_URL ?? "http://localhost:8080",
+    baseURL: BACKEND_URL || "http://localhost:8080",
 });
 
 axiosPrivate.interceptors.request.use(
