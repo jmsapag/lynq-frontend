@@ -1,19 +1,34 @@
 import React from "react";
-import { BaseChart } from "./base-chart.tsx";
-import type { EChartsOption } from "echarts";
+import ReactECharts from "echarts-for-react";
 
-interface BarChartProps {
+type BarChartDataItem = {
+  in: number;
+  out: number;
+};
+
+type BarChartProps = {
   data: {
     categories: string[];
-    values: number[];
+    values: BarChartDataItem[];
   };
-  className?: string;
-}
+};
 
-export const BarChart: React.FC<BarChartProps> = ({ data, className }) => {
-  const option: EChartsOption = {
+export const BarChart: React.FC<BarChartProps> = ({ data }) => {
+  const option = {
     tooltip: {
       trigger: "axis",
+      axisPointer: {
+        type: "shadow",
+      },
+    },
+    legend: {
+      data: ["Entradas", "Salidas"],
+    },
+    grid: {
+      left: "3%",
+      right: "4%",
+      bottom: "3%",
+      containLabel: true,
     },
     xAxis: {
       type: "category",
@@ -24,14 +39,17 @@ export const BarChart: React.FC<BarChartProps> = ({ data, className }) => {
     },
     series: [
       {
-        data: data.values,
+        name: "Entradas",
         type: "bar",
-        itemStyle: {
-          color: "#00A5B1",
-        },
+        data: data.values.map((item) => item.in),
+      },
+      {
+        name: "Salidas",
+        type: "bar",
+        data: data.values.map((item) => item.out),
       },
     ],
   };
 
-  return <BaseChart option={option} className={className} />;
+  return <ReactECharts option={option} style={{ height: "300px" }} />;
 };

@@ -7,14 +7,14 @@
   },
   "help": {
     "userGuide": "User Guide",
-    "userGuideText": "Here you will find information about how to use the People Counter application.",
+    "userGuideText": "Here you will find information on how to use the People Counter application.",
     "faq": "Frequently Asked Questions",
     "faqText": "Check the answers to the most common questions."
   },
   "footer": {
     "rights": "© {{year}} LYNQ, People Counter. All rights reserved."
   },
-  "logout": "Logout",
+  "logout": "Log out",
   "role": {
     "admin": "Administrator"
   },
@@ -28,7 +28,8 @@
     },
     "charts": {
       "dailyVisitors": "Daily Visitors",
-      "weeklyTrend": "Weekly Trend"
+      "weeklyTrend": "Weekly Trend",
+      "peopleFlow": "People Flow (In/Out)"
     }
   },
   "users": {
@@ -38,13 +39,38 @@
     "profileInformation": "Profile Information",
     "personalDetails": "Personal details and information",
     "fullName": "Full name",
-    "email": "Email address",
+    "email": "Email",
     "phone": "Phone number",
     "role": "Role",
     "business": "Business",
-    "addUserContentComingSoon": "Add user functionality will be available soon",
+    "addUserContentComingSoon": "The functionality to add users will be available soon",
     "contactInformation": "Contact Information",
     "edit": "Edit",
     "delete": "Delete"
+  },
+  "filters": {
+    "dateRange": "Date Range",
+    "to": "to",
+    "sensors": "Sensors",
+    "selectSensors": "Select sensors",
+    "allSensors": "All sensors",
+    "sensorsSelected": "{{count}} sensors selected",
+    "timeRange": "Time Range",
+    "groupBy": "Group by",
+    "groupOptions": {
+      "5min": "5 minutes",
+      "10min": "10 minutes",
+      "15min": "15 minutes",
+      "30min": "30 minutes",
+      "hour": "Hour",
+      "day": "Day",
+      "week": "Week",
+      "month": "Month"
+    },
+    "refresh": "Refresh"
+  },
+  "chart": {
+    "in": "Entries",
+    "out": "Exits"
   }
 }

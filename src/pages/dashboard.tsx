@@ -1,6 +1,5 @@
 import { ChartCard } from "../components/dashboard/charts/chart-card.tsx";
 import { BarChart } from "../components/dashboard/charts/bar-chart.tsx";
-import { LineChart } from "../components/dashboard/charts/line-chart.tsx";
 import { DashboardFilters } from "../components/dashboard/filter.tsx";
 import { useEffect, useState } from "react";
 
@@ -12,13 +11,11 @@ const Dashboard = () => {
     end: Date;
   } | null>(null);
   const [selectedSensors, setSelectedSensors] = useState<string[]>([]);
-  const [visitors, setVisitors] = useState({
+
+  const [flowData, setFlowData] = useState({
     categories: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-    values: [120, 200, 150, 80, 70, 110, 130],
-  });
-  const [weeklyTrend, setWeeklyTrend] = useState({
-    categories: ["Week 1", "Week 2", "Week 3", "Week 4"],
-    values: [400, 600, 550, 750],
+    in: [120, 200, 150, 80, 70, 110, 130],
+    out: [80, 150, 120, 60, 50, 90, 110],
   });
 
   const handleDateRangeChange = (startDate: Date, endDate: Date) => {
@@ -29,29 +26,29 @@ const Dashboard = () => {
     setSelectedSensors(sensors);
   };
 
-  useEffect(() => {
-    const updateChartData = async () => {
-      if (selectedDateRange && selectedSensors.length > 0) {
-        try {
-          setVisitors((prevData) => ({
-            ...prevData,
-            values: prevData.values.map(
-              (v) => v * (Math.random() * 0.5 + 0.75),
-            ),
-          }));
+  const handleRefreshData = () => {
+    updateChartData();
+  };
 
-          setWeeklyTrend((prevData) => ({
-            ...prevData,
-            values: prevData.values.map(
-              (v) => v * (Math.random() * 0.5 + 0.75),
-            ),
-          }));
-        } catch (error) {
-          console.error("Error al actualizar los datos:", error);
-        }
+  const updateChartData = async () => {
+    if (selectedDateRange && selectedSensors.length > 0) {
+      try {
+        setFlowData((prevData) => ({
+          ...prevData,
+          in: prevData.in.map((v) =>
+            Math.round(v * (Math.random() * 0.5 + 0.75)),
+          ),
+          out: prevData.out.map((v) =>
+            Math.round(v * (Math.random() * 0.5 + 0.75)),
+          ),
+        }));
+      } catch (error) {
+        console.error("Error al actualizar los datos:", error);
       }
-    };
+    }
+  };
 
+  useEffect(() => {
     updateChartData();
   }, [selectedDateRange, selectedSensors]);
 
@@ -60,22 +57,24 @@ const Dashboard = () => {
       <DashboardFilters
         onDateRangeChange={handleDateRangeChange}
         onSensorsChange={handleSensorsChange}
+        onRefreshData={handleRefreshData}
         availableSensors={availableSensors}
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-6">
         <ChartCard
-          title="Daily Visitors"
-          translationKey="dashboard.charts.dailyVisitors"
+          title="Flujo de Personas (In/Out)"
+          translationKey="dashboard.charts.peopleFlow"
         >
-          <BarChart data={visitors} />
-        </ChartCard>
-
-        <ChartCard
-          title="Weekly Trend"
-          translationKey="dashboard.charts.weeklyTrend"
-        >
-          <LineChart data={weeklyTrend} />
+          <BarChart
+            data={{
+              categories: flowData.categories,
+              values: flowData.in.map((value, index) => ({
+                in: value,
+                out: flowData.out[index],
+              })),
+            }}
+          />
         </ChartCard>
       </div>
     </div>
