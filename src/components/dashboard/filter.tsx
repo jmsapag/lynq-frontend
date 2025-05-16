@@ -8,6 +8,7 @@ type DashboardFiltersProps = {
   onSensorsChange: (sensors: string[]) => void;
   onRefreshData?: () => void;
   availableSensors: string[];
+  lastUpdated: Date | null;
 };
 
 export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
@@ -15,6 +16,7 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
   onSensorsChange,
   onRefreshData,
   availableSensors,
+  lastUpdated,
 }) => {
   const { t } = useTranslation();
 
@@ -99,6 +101,14 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
     } else {
       return t("filters.sensorsSelected", { count: selectedSensors.length });
     }
+  };
+
+  const formatLastUpdated = () => {
+    if (!lastUpdated) return t("filters.neverUpdated");
+
+    const date = format(lastUpdated, "dd/MM/yyyy");
+    const time = format(lastUpdated, "HH:mm:ss");
+    return `${date} ${time}`;
   };
 
   return (
@@ -210,13 +220,18 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
             </select>
           </div>
 
-          <button
-            onClick={handleRefresh}
-            className="flex items-center justify-center px-4 py-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500"
-          >
-            <ArrowPathIcon className="h-5 w-5 mr-2" />
-            {t("filters.refresh")}
-          </button>
+          <div className="space-y-2">
+            <div className="text-xs text-gray-500 text-center mb-2">
+              {t("filters.lastUpdated")}: {formatLastUpdated()}
+            </div>
+            <button
+              onClick={handleRefresh}
+              className="flex items-center justify-center w-full px-4 py-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500"
+            >
+              <ArrowPathIcon className="h-5 w-5 mr-2" />
+              {t("filters.refresh")}
+            </button>
+          </div>
         </div>
       </div>
     </div>

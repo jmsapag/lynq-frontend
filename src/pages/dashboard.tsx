@@ -11,6 +11,7 @@ const Dashboard = () => {
     end: Date;
   } | null>(null);
   const [selectedSensors, setSelectedSensors] = useState<string[]>([]);
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
   const [flowData, setFlowData] = useState({
     categories: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
@@ -27,6 +28,9 @@ const Dashboard = () => {
   };
 
   const handleRefreshData = () => {
+    // Siempre actualizamos la marca de tiempo cuando se presiona el botón
+    setLastUpdated(new Date());
+    // Y luego intentamos actualizar los datos
     updateChartData();
   };
 
@@ -42,6 +46,8 @@ const Dashboard = () => {
             Math.round(v * (Math.random() * 0.5 + 0.75)),
           ),
         }));
+        // Nota: Ya no necesitamos actualizar lastUpdated aquí,
+        // pues ya lo hicimos en handleRefreshData
       } catch (error) {
         console.error("Error al actualizar los datos:", error);
       }
@@ -50,6 +56,9 @@ const Dashboard = () => {
 
   useEffect(() => {
     updateChartData();
+    // Si quieres que la marca de tiempo se actualice también cuando cambian los filtros,
+    // puedes descomentahar la siguiente línea:
+    // if (selectedDateRange && selectedSensors.length > 0) setLastUpdated(new Date());
   }, [selectedDateRange, selectedSensors]);
 
   return (
@@ -59,6 +68,7 @@ const Dashboard = () => {
         onSensorsChange={handleSensorsChange}
         onRefreshData={handleRefreshData}
         availableSensors={availableSensors}
+        lastUpdated={lastUpdated}
       />
 
       <div className="grid grid-cols-1 gap-6">

@@ -67,7 +67,9 @@
       "week": "Semana",
       "month": "Mes"
     },
-    "refresh": "Actualizar"
+    "refresh": "Actualizar",
+    "lastUpdated": "Última actualización",
+    "neverUpdated": "Nunca actualizado"
   },
   "chart": {
     "in": "Entradas",
