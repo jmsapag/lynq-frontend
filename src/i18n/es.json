@@ -67,6 +67,14 @@
       "week": "Semana",
       "month": "Mes"
     },
+    "aggregation": "Agregación",
+    "aggregationOptions": {
+      "none": "Ninguna",
+      "sum": "Suma",
+      "avg": "Promedio",
+      "min": "Mínimo",
+      "max": "Máximo"
+    },
     "refresh": "Actualizar",
     "lastUpdated": "Última actualización",
     "neverUpdated": "Nunca actualizado"

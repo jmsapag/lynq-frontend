@@ -11,6 +11,8 @@ const Dashboard = () => {
     end: Date;
   } | null>(null);
   const [selectedSensors, setSelectedSensors] = useState<string[]>([]);
+  const [selectedAggregation, setSelectedAggregation] =
+    useState<string>("none");
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
   const [flowData, setFlowData] = useState({
@@ -27,27 +29,46 @@ const Dashboard = () => {
     setSelectedSensors(sensors);
   };
 
+  const handleAggregationChange = (aggregation: string) => {
+    setSelectedAggregation(aggregation);
+  };
+
   const handleRefreshData = () => {
-    // Siempre actualizamos la marca de tiempo cuando se presiona el botón
     setLastUpdated(new Date());
-    // Y luego intentamos actualizar los datos
     updateChartData();
   };
 
   const updateChartData = async () => {
     if (selectedDateRange && selectedSensors.length > 0) {
       try {
+        let multiplier = 1.0;
+
+        switch (selectedAggregation) {
+          case "sum":
+            multiplier = 1.5;
+            break;
+          case "avg":
+            multiplier = 1.0;
+            break;
+          case "min":
+            multiplier = 0.6;
+            break;
+          case "max":
+            multiplier = 1.8;
+            break;
+          default:
+            multiplier = 1.0;
+        }
+
         setFlowData((prevData) => ({
           ...prevData,
           in: prevData.in.map((v) =>
-            Math.round(v * (Math.random() * 0.5 + 0.75)),
+            Math.round(v * multiplier * (Math.random() * 0.5 + 0.75)),
           ),
           out: prevData.out.map((v) =>
-            Math.round(v * (Math.random() * 0.5 + 0.75)),
+            Math.round(v * multiplier * (Math.random() * 0.5 + 0.75)),
           ),
         }));
-        // Nota: Ya no necesitamos actualizar lastUpdated aquí,
-        // pues ya lo hicimos en handleRefreshData
       } catch (error) {
         console.error("Error al actualizar los datos:", error);
       }
@@ -56,16 +77,14 @@ const Dashboard = () => {
 
   useEffect(() => {
     updateChartData();
-    // Si quieres que la marca de tiempo se actualice también cuando cambian los filtros,
-    // puedes descomentahar la siguiente línea:
-    // if (selectedDateRange && selectedSensors.length > 0) setLastUpdated(new Date());
-  }, [selectedDateRange, selectedSensors]);
+  }, [selectedDateRange, selectedSensors, selectedAggregation]);
 
   return (
     <div className="space-y-6">
       <DashboardFilters
         onDateRangeChange={handleDateRangeChange}
         onSensorsChange={handleSensorsChange}
+        onAggregationChange={handleAggregationChange}
         onRefreshData={handleRefreshData}
         availableSensors={availableSensors}
         lastUpdated={lastUpdated}
