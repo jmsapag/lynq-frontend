@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 type DashboardFiltersProps = {
   onDateRangeChange: (startDate: Date, endDate: Date) => void;
   onSensorsChange: (sensors: string[]) => void;
+  onAggregationChange?: (aggregation: string) => void;
   onRefreshData?: () => void;
   availableSensors: string[];
   lastUpdated: Date | null;
@@ -14,6 +15,7 @@ type DashboardFiltersProps = {
 export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
   onDateRangeChange,
   onSensorsChange,
+  onAggregationChange,
   onRefreshData,
   availableSensors,
   lastUpdated,
@@ -28,6 +30,7 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
   const [startTime, setStartTime] = useState<string>("00:00");
   const [endTime, setEndTime] = useState<string>("23:59");
   const [groupBy, setGroupBy] = useState<string>("day");
+  const [aggregation, setAggregation] = useState<string>("none");
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -67,6 +70,14 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
 
   const handleGroupByChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setGroupBy(e.target.value);
+  };
+
+  const handleAggregationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newAggregation = e.target.value;
+    setAggregation(newAggregation);
+    if (onAggregationChange) {
+      onAggregationChange(newAggregation);
+    }
   };
 
   const handleRefresh = () => {
@@ -163,7 +174,7 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
                           type="checkbox"
                           className="h-4 w-4 text-gray-600 border-gray-300 rounded focus:ring-gray-500"
                           checked={selectedSensors.includes(sensor)}
-                          onChange={() => {}} // La acción ya está en el onClick del div
+                          onChange={() => {}}
                           onClick={(e) => e.stopPropagation()}
                         />
                       </div>
@@ -217,6 +228,25 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
               <option value="day">{t("filters.groupOptions.day")}</option>
               <option value="week">{t("filters.groupOptions.week")}</option>
               <option value="month">{t("filters.groupOptions.month")}</option>
+            </select>
+          </div>
+
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-700">
+              {t("filters.aggregation")}
+            </label>
+            <select
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
+              value={aggregation}
+              onChange={handleAggregationChange}
+            >
+              <option value="none">
+                {t("filters.aggregationOptions.none")}
+              </option>
+              <option value="sum">{t("filters.aggregationOptions.sum")}</option>
+              <option value="avg">{t("filters.aggregationOptions.avg")}</option>
+              <option value="min">{t("filters.aggregationOptions.min")}</option>
+              <option value="max">{t("filters.aggregationOptions.max")}</option>
             </select>
           </div>
 

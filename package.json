@@ -20,7 +20,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-i18next": "^15.5.1",
-    "react-router-dom": "^6.21.1"
+    "react-router-dom": "^6.21.1",
+    "react-tailwindcss-datepicker": "^2.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",
