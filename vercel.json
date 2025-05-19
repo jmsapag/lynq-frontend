@@ -1,0 +1,13 @@
+
+{
+  "rewrites": [
+    {
+      "source": "/api",
+      "destination": "https://peoplecounter.2lynq.com"
+    },
+    {
+      "source": "/api/(.*)",
+      "destination": "https://peoplecounter.2lynq.com/$1"
+    }
+  ]
+}

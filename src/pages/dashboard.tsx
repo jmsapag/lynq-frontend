@@ -2,8 +2,30 @@ import { ChartCard } from "../components/dashboard/charts/chart-card.tsx";
 import { BarChart } from "../components/dashboard/charts/bar-chart.tsx";
 import { DashboardFilters } from "../components/dashboard/filter.tsx";
 import { useEffect, useState } from "react";
+import { axiosClient } from "../services/axiosClient";
 
 const Dashboard = () => {
+  useEffect(() => {
+    const testApiConnection = async () => {
+      try {
+        await axiosClient.get("/");
+        console.log("API Connection Test Was Successful");
+      } catch (error) {
+        console.error("API Connection Error:", error);
+        // Add more detailed error logging
+        if (error.response) {
+          console.log("Error data:", error.response.data);
+          console.log("Error status:", error.response.status);
+        } else if (error.request) {
+          console.log("Request was made but no response received");
+        } else {
+          console.log("Error message:", error.message);
+        }
+      }
+    };
+    testApiConnection();
+  }, []);
+
   const availableSensors = ["Sensor 1", "Sensor 2", "Sensor 3", "Sensor 4"];
 
   const [selectedDateRange, setSelectedDateRange] = useState<{
