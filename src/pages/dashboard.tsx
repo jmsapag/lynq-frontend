@@ -4,21 +4,18 @@ import { DashboardFilters } from "../components/dashboard/filter.tsx";
 import { useEffect, useState } from "react";
 import { axiosClient } from "../services/axiosClient";
 
-
 const Dashboard = () => {
-
   useEffect(() => {
     const testApiConnection = async () => {
       try {
-        await axiosClient.get('/');
-        console.log('API Connection Test Was Successful');
+        await axiosClient.get("/");
+        console.log("API Connection Test Was Successful");
       } catch (error) {
-        console.error('API Connection Error:', error);
+        console.error("API Connection Error:", error);
       }
     };
     testApiConnection();
   }, []);
-
 
   const availableSensors = ["Sensor 1", "Sensor 2", "Sensor 3", "Sensor 4"];
 
