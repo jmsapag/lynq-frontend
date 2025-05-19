@@ -1,14 +1,23 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 
-const BACKEND_URL = import.meta.env.VITE_API_URL;
+const BACKEND_URL = import.meta.env.DEV ? "/api" : import.meta.env.VITE_API_URL;
+
+console.log("BACKEND_URL:", BACKEND_URL, "DEV mode:", import.meta.env.DEV);
 
 export const axiosClient = axios.create({
-  baseURL: BACKEND_URL || "http://localhost:8080",
+  baseURL: BACKEND_URL,
+  timeout: 10000,
+  withCredentials: false,
+  headers: {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+  },
 });
 
 export const axiosPrivate = axios.create({
-  baseURL: BACKEND_URL || "http://localhost:8080",
+  baseURL: BACKEND_URL,
+  timeout: 10000,
 });
 
 axiosPrivate.interceptors.request.use(
