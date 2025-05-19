@@ -9,12 +9,10 @@ import { axiosClient } from "../services/axiosClient";
 const Dashboard = () => {
 
   useEffect(() => {
-    console.log('API URL:', import.meta.env.VITE_API_URL);
-
     const testApiConnection = async () => {
       try {
-        const response = await axiosClient.get('/');
-        console.log('API Connection Test:', response.data);
+        await axiosClient.get('/');
+        console.log('API Connection Test Was Successful');
       } catch (error) {
         console.error('API Connection Error:', error);
       }
