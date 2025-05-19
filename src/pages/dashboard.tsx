@@ -12,6 +12,15 @@ const Dashboard = () => {
         console.log("API Connection Test Was Successful");
       } catch (error) {
         console.error("API Connection Error:", error);
+        // Add more detailed error logging
+        if (error.response) {
+          console.log("Error data:", error.response.data);
+          console.log("Error status:", error.response.status);
+        } else if (error.request) {
+          console.log("Request was made but no response received");
+        } else {
+          console.log("Error message:", error.message);
+        }
       }
     };
     testApiConnection();

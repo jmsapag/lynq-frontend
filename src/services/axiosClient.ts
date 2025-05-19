@@ -1,7 +1,7 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 
-const BACKEND_URL = import.meta.env.DEV ? "/api" : import.meta.env.VITE_API_URL;
+const BACKEND_URL = "/api";
 
 console.log("BACKEND_URL:", BACKEND_URL, "DEV mode:", import.meta.env.DEV);
 
