@@ -28,7 +28,8 @@
     },
     "charts": {
       "dailyVisitors": "Visitantes Diarios",
-      "weeklyTrend": "Tendencia Semanal"
+      "weeklyTrend": "Tendencia Semanal",
+      "peopleFlow": "Flujo de Personas (Entradas/Salidas)"
     }
   },
   "users": {
@@ -46,5 +47,40 @@
     "contactInformation": "Información de Contacto",
     "edit": "Editar",
     "delete": "Borrar"
+  },
+  "filters": {
+    "dateRange": "Rango de fechas",
+    "to": "a",
+    "sensors": "Sensores",
+    "selectSensors": "Seleccionar sensores",
+    "allSensors": "Todos los sensores",
+    "sensorsSelected": "{{count}} sensores seleccionados",
+    "timeRange": "Horario",
+    "groupBy": "Agrupar por",
+    "groupOptions": {
+      "5min": "5 minutos",
+      "10min": "10 minutos",
+      "15min": "15 minutos",
+      "30min": "30 minutos",
+      "hour": "Hora",
+      "day": "Día",
+      "week": "Semana",
+      "month": "Mes"
+    },
+    "aggregation": "Agregación",
+    "aggregationOptions": {
+      "none": "Ninguna",
+      "sum": "Suma",
+      "avg": "Promedio",
+      "min": "Mínimo",
+      "max": "Máximo"
+    },
+    "refresh": "Actualizar",
+    "lastUpdated": "Última actualización",
+    "neverUpdated": "Nunca actualizado"
+  },
+  "chart": {
+    "in": "Entradas",
+    "out": "Salidas"
   }
 }
