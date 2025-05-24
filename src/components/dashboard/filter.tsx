@@ -22,10 +22,17 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
 }) => {
   const { t } = useTranslation();
 
-  const [startDate, setStartDate] = useState<Date>(
-    new Date(new Date().setDate(new Date().getDate() - 7)),
-  );
-  const [endDate, setEndDate] = useState<Date>(new Date());
+  const [startDate, setStartDate] = useState<Date>(() => {
+    const date = new Date();
+    date.setDate(date.getDate() - 7);
+    date.setHours(0, 0, 0, 0);
+    return date;
+  });
+  const [endDate, setEndDate] = useState<Date>(() => {
+    const date = new Date();
+    date.setHours(23, 59, 59, 999);
+    return date;
+  });
   const [selectedSensors, setSelectedSensors] = useState<string[]>([]);
   const [startTime, setStartTime] = useState<string>("00:00");
   const [endTime, setEndTime] = useState<string>("23:59");
@@ -37,6 +44,8 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
 
   const handleStartDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const date = new Date(e.target.value);
+    // Set to beginning of the day
+    date.setHours(0, 0, 0, 0);
     setStartDate(date);
     if (endDate) {
       onDateRangeChange(date, endDate);
@@ -45,6 +54,8 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
 
   const handleEndDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const date = new Date(e.target.value);
+    // Set to end of the day
+    date.setHours(23, 59, 59, 999);
     setEndDate(date);
     if (startDate) {
       onDateRangeChange(startDate, date);
@@ -69,7 +80,14 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
   };
 
   const handleGroupByChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setGroupBy(e.target.value);
+    const newGroupBy = e.target.value;
+    setGroupBy(newGroupBy);
+
+    // Dispatch a custom event to notify the dashboard component
+    const event = new CustomEvent('groupByChange', { 
+      detail: { groupBy: newGroupBy } 
+    });
+    window.dispatchEvent(event);
   };
 
   const handleAggregationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
