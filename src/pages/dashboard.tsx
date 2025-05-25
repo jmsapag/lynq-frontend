@@ -78,13 +78,12 @@ const Dashboard = () => {
       };
     }
 
-    const totalIn = sensorData.in.reduce((sum, val) => sum + val, 0);
-
-    const totalOut = sensorData.out.reduce((sum, val) => sum + val, 0);
+    const totalIn = sensorData.in.reduce((sum, value) => sum + value, 0);
+    const totalOut = sensorData.out.reduce((sum, value) => sum + value, 0);
 
     const entryRate =
-      sensorData.timestamps.length > 0
-        ? Math.round((totalIn / sensorData.timestamps.length) * 100) / 100
+      sensorData.in.length > 0
+        ? Math.round((totalIn / sensorData.in.length) * 100) / 100
         : 0;
 
     return { totalIn, totalOut, entryRate };
@@ -107,8 +106,25 @@ const Dashboard = () => {
   };
 
   const handleRefreshData = () => {
-    setLastUpdated(new Date());
+    const now = new Date();
+    localStorage.setItem("lastUpdated", now.toISOString());
+    setLastUpdated(now);
+
+    if (selectedDateRange) {
+      const refreshedRange = {
+        start: new Date(selectedDateRange.start.getTime()),
+        end: new Date(selectedDateRange.end.getTime()),
+      };
+      setSelectedDateRange(refreshedRange);
+    }
   };
+
+  useEffect(() => {
+    const storedLastUpdated = localStorage.getItem("lastUpdated");
+    if (storedLastUpdated) {
+      setLastUpdated(new Date(storedLastUpdated));
+    }
+  }, []);
 
   // Listen for groupBy changes from the filter component
   useEffect(() => {
