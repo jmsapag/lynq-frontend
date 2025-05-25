@@ -1,46 +1,71 @@
 import { ChartCard } from "../components/dashboard/charts/chart-card.tsx";
 import { BarChart } from "../components/dashboard/charts/bar-chart.tsx";
+import { Spinner } from "@heroui/react";
 import { DashboardFilters } from "../components/dashboard/filter.tsx";
-import { useEffect, useState } from "react";
-import { axiosClient } from "../services/axiosClient";
+import { useEffect, useState, useMemo } from "react";
+import { useSensorData } from "../hooks/useSensorData.ts";
+import { useSensorRecords } from "../hooks/useSensorRecords.ts";
+import { sensorResponse } from "../types/deviceResponse";
+import { sensorMetadata } from "../types/sensorMetadata";
+import {
+  GroupByTimeAmount,
+  AggregationType,
+} from "../types/sensorDataResponse";
 
 const Dashboard = () => {
-  useEffect(() => {
-    const testApiConnection = async () => {
-      try {
-        await axiosClient.get("/");
-        console.log("API Connection Test Was Successful");
-      } catch (error) {
-        console.error("API Connection Error:", error);
-        // Add more detailed error logging
-        if (error.response) {
-          console.log("Error data:", error.response.data);
-          console.log("Error status:", error.response.status);
-        } else if (error.request) {
-          console.log("Request was made but no response received");
-        } else {
-          console.log("Error message:", error.message);
-        }
-      }
-    };
-    testApiConnection();
-  }, []);
-
-  const availableSensors = ["Sensor 1", "Sensor 2", "Sensor 3", "Sensor 4"];
+  const {
+    sensors,
+    loading: sensorsLoading,
+    error: sensorsError,
+  } = useSensorData();
 
   const [selectedDateRange, setSelectedDateRange] = useState<{
     start: Date;
     end: Date;
-  } | null>(null);
+  } | null>(() => {
+    // Set end date to the end of the current day to avoid time-based variations
+    const end = new Date();
+    end.setHours(23, 59, 59, 999);
+
+    const start = new Date();
+    start.setDate(start.getDate() - 7);
+    start.setHours(0, 0, 0, 0);
+
+    return { start, end };
+  });
   const [selectedSensors, setSelectedSensors] = useState<string[]>([]);
   const [selectedAggregation, setSelectedAggregation] =
-    useState<string>("none");
+    useState<AggregationType>("none");
+  const [groupBy, setGroupBy] = useState<GroupByTimeAmount>("day");
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
-  const [flowData, setFlowData] = useState({
-    categories: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-    in: [120, 200, 150, 80, 70, 110, 130],
-    out: [80, 150, 120, 60, 50, 90, 110],
+  // Convert selected sensors from strings to numbers
+  const selectedSensorIds = useMemo(() => {
+    return selectedSensors
+      .map((sensorPosition) => {
+        // Find the sensor ID by position
+        for (const device of sensors) {
+          for (const sensor of device.sensors) {
+            if (sensor.position === sensorPosition) {
+              return sensor.id;
+            }
+          }
+        }
+        return 0; // Default value if not found
+      })
+      .filter((id) => id !== 0); // Remove any not found
+  }, [selectedSensors, sensors]);
+
+  // Use the sensor records hook
+  const {
+    data: sensorData,
+    loading: dataLoading,
+    error: dataError,
+  } = useSensorRecords({
+    sensorIds: selectedSensorIds,
+    dateRange: selectedDateRange,
+    groupBy,
+    aggregationType: selectedAggregation,
   });
 
   const handleDateRangeChange = (startDate: Date, endDate: Date) => {
@@ -52,80 +77,95 @@ const Dashboard = () => {
   };
 
   const handleAggregationChange = (aggregation: string) => {
-    setSelectedAggregation(aggregation);
+    setSelectedAggregation(aggregation as AggregationType);
+  };
+
+  const handleGroupByChange = (groupByValue: string) => {
+    setGroupBy(groupByValue as GroupByTimeAmount);
   };
 
   const handleRefreshData = () => {
     setLastUpdated(new Date());
-    updateChartData();
   };
 
-  const updateChartData = async () => {
-    if (selectedDateRange && selectedSensors.length > 0) {
-      try {
-        let multiplier = 1.0;
-
-        switch (selectedAggregation) {
-          case "sum":
-            multiplier = 1.5;
-            break;
-          case "avg":
-            multiplier = 1.0;
-            break;
-          case "min":
-            multiplier = 0.6;
-            break;
-          case "max":
-            multiplier = 1.8;
-            break;
-          default:
-            multiplier = 1.0;
-        }
-
-        setFlowData((prevData) => ({
-          ...prevData,
-          in: prevData.in.map((v) =>
-            Math.round(v * multiplier * (Math.random() * 0.5 + 0.75)),
-          ),
-          out: prevData.out.map((v) =>
-            Math.round(v * multiplier * (Math.random() * 0.5 + 0.75)),
-          ),
-        }));
-      } catch (error) {
-        console.error("Error al actualizar los datos:", error);
-      }
-    }
-  };
-
+  // Listen for groupBy changes from the filter component
   useEffect(() => {
-    updateChartData();
-  }, [selectedDateRange, selectedSensors, selectedAggregation]);
+    const handleGroupByChangeFromFilter = (e: CustomEvent) => {
+      if (e.detail && e.detail.groupBy) {
+        handleGroupByChange(e.detail.groupBy);
+      }
+    };
 
-  return (
+    window.addEventListener(
+      "groupByChange",
+      handleGroupByChangeFromFilter as EventListener,
+    );
+    return () => {
+      window.removeEventListener(
+        "groupByChange",
+        handleGroupByChangeFromFilter as EventListener,
+      );
+    };
+  }, []);
+
+  // Handle loading states
+  const isLoading = sensorsLoading || dataLoading;
+  const hasError = sensorsError || dataError;
+
+  // Prepare chart data from sensor data
+  const chartData = useMemo(() => {
+    if (
+      !sensorData ||
+      !sensorData.timestamps ||
+      sensorData.timestamps.length === 0
+    ) {
+      return {
+        categories: [],
+        values: [],
+      };
+    }
+
+    return {
+      categories: sensorData.timestamps,
+      values: sensorData.in.map((value, index) => ({
+        in: value,
+        out: sensorData.out[index],
+      })),
+    };
+  }, [sensorData]);
+
+  return isLoading ? (
+    <div className="flex items-center justify-center h-screen">
+      <Spinner size="lg" />
+    </div>
+  ) : hasError ? (
+    <div className="flex items-center justify-center h-screen text-red-500">
+      Error loading data. Please try again.
+    </div>
+  ) : (
     <div className="space-y-6">
       <DashboardFilters
         onDateRangeChange={handleDateRangeChange}
         onSensorsChange={handleSensorsChange}
         onAggregationChange={handleAggregationChange}
         onRefreshData={handleRefreshData}
-        availableSensors={availableSensors}
+        availableSensors={sensors.flatMap((s: sensorResponse): string[] =>
+          s.sensors.flatMap((m: sensorMetadata): string => m.position),
+        )}
         lastUpdated={lastUpdated}
       />
-
       <div className="grid grid-cols-1 gap-6">
         <ChartCard
           title="Flujo de Personas (In/Out)"
           translationKey="dashboard.charts.peopleFlow"
         >
-          <BarChart
-            data={{
-              categories: flowData.categories,
-              values: flowData.in.map((value, index) => ({
-                in: value,
-                out: flowData.out[index],
-              })),
-            }}
-          />
+          {chartData.categories.length === 0 ? (
+            <div className="flex items-center justify-center h-64 text-gray-500">
+              No data available. Please select sensors and date range.
+            </div>
+          ) : (
+            <BarChart data={chartData} />
+          )}
         </ChartCard>
       </div>
     </div>
