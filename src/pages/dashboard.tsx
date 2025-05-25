@@ -83,7 +83,7 @@ const Dashboard = () => {
 
     const entryRate =
       sensorData.in.length > 0
-        ? Math.round((totalIn / sensorData.in.length) * 100) / 100
+        ? Math.round((totalIn / (totalIn + totalOut)) * 100) / 100
         : 0;
 
     return { totalIn, totalOut, entryRate };
@@ -198,18 +198,21 @@ const Dashboard = () => {
           title="Total In"
           value={metrics.totalIn}
           translationKey="dashboard.metrics.totalIn"
+          unit="people"
         />
 
         <SensorDataCard
           title="Total Out"
           value={metrics.totalOut}
           translationKey="dashboard.metrics.totalOut"
+          unit="people"
         />
 
         <SensorDataCard
           title="Entry Rate"
           value={metrics.entryRate}
           translationKey="dashboard.metrics.entryRate"
+          unit="%"
         />
       </div>
 
