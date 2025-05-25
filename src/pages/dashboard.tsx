@@ -11,6 +11,7 @@ import {
   GroupByTimeAmount,
   AggregationType,
 } from "../types/sensorDataResponse";
+import { LineChart } from "../components/dashboard/charts/line-chart.tsx";
 
 const Dashboard = () => {
   const {
@@ -164,7 +165,7 @@ const Dashboard = () => {
               No data available. Please select sensors and date range.
             </div>
           ) : (
-            <BarChart data={chartData} />
+            <LineChart data={chartData} />
           )}
         </ChartCard>
       </div>
