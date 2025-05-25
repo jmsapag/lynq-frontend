@@ -84,8 +84,8 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
     setGroupBy(newGroupBy);
 
     // Dispatch a custom event to notify the dashboard component
-    const event = new CustomEvent('groupByChange', { 
-      detail: { groupBy: newGroupBy } 
+    const event = new CustomEvent("groupByChange", {
+      detail: { groupBy: newGroupBy },
     });
     window.dispatchEvent(event);
   };

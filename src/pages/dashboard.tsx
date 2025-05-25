@@ -11,6 +11,7 @@ import {
   GroupByTimeAmount,
   AggregationType,
 } from "../types/sensorDataResponse";
+import { SensorDataCard } from "../components/dashboard/charts/card.tsx";
 
 const Dashboard = () => {
   const {
@@ -67,6 +68,27 @@ const Dashboard = () => {
     groupBy,
     aggregationType: selectedAggregation,
   });
+
+  const metrics = useMemo(() => {
+    if (!sensorData || !sensorData.in || !sensorData.out) {
+      return {
+        totalIn: 0,
+        totalOut: 0,
+        entryRate: 0,
+      };
+    }
+
+    const totalIn = sensorData.in.reduce((sum, val) => sum + val, 0);
+
+    const totalOut = sensorData.out.reduce((sum, val) => sum + val, 0);
+
+    const entryRate =
+      sensorData.timestamps.length > 0
+        ? Math.round((totalIn / sensorData.timestamps.length) * 100) / 100
+        : 0;
+
+    return { totalIn, totalOut, entryRate };
+  }, [sensorData]);
 
   const handleDateRangeChange = (startDate: Date, endDate: Date) => {
     setSelectedDateRange({ start: startDate, end: endDate });
@@ -154,6 +176,27 @@ const Dashboard = () => {
         )}
         lastUpdated={lastUpdated}
       />
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <SensorDataCard
+          title="Total In"
+          value={metrics.totalIn}
+          translationKey="dashboard.metrics.totalIn"
+        />
+
+        <SensorDataCard
+          title="Total Out"
+          value={metrics.totalOut}
+          translationKey="dashboard.metrics.totalOut"
+        />
+
+        <SensorDataCard
+          title="Entry Rate"
+          value={metrics.entryRate}
+          translationKey="dashboard.metrics.entryRate"
+        />
+      </div>
+
       <div className="grid grid-cols-1 gap-6">
         <ChartCard
           title="Flujo de Personas (In/Out)"
