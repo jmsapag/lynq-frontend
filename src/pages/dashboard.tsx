@@ -1,5 +1,4 @@
 import { ChartCard } from "../components/dashboard/charts/chart-card.tsx";
-import { BarChart } from "../components/dashboard/charts/bar-chart.tsx";
 import { Spinner } from "@heroui/react";
 import { DashboardFilters } from "../components/dashboard/filter.tsx";
 import { useEffect, useState, useMemo } from "react";
@@ -82,10 +81,10 @@ const Dashboard = () => {
     const totalIn = sensorData.in.reduce((sum, value) => sum + value, 0);
     const totalOut = sensorData.out.reduce((sum, value) => sum + value, 0);
 
+    const totalMovements = totalIn + totalOut;
+
     const entryRate =
-      sensorData.in.length > 0
-        ? Math.round((totalIn / (totalIn + totalOut)) * 100) / 100
-        : 0;
+      totalMovements > 0 ? Math.round((totalIn / totalMovements) * 100) : 0;
 
     return { totalIn, totalOut, entryRate };
   }, [sensorData]);
