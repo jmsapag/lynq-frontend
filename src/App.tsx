@@ -8,6 +8,7 @@ import DevicesPage from "./pages/devices";
 import { Footer } from "./components/navigation/footer/footer.tsx";
 import HelpPage from "./pages/help.tsx";
 import { HeroUIProvider } from "@heroui/react";
+import Comparison from "./pages/comparison.tsx";
 
 function AppLayoutWithState() {
   const { isOpen, handleToggle, handleClose } = useSidebar();
@@ -40,6 +41,7 @@ function App() {
       <Routes>
         <Route path="/" element={<AppLayoutWithState />}>
           <Route index element={<Dashboard />} />
+          <Route path="/comparison" element={<Comparison />} />
           <Route path="users" element={<UsersPage />} />
           <Route path="devices" element={<DevicesPage />} />
           <Route path="help" element={<HelpPage />} />
