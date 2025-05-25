@@ -1,18 +1,15 @@
-// src/pages/comparison.tsx
-import { ChartCard } from "../components/dashboard/charts/chart-card.tsx";
-import { Spinner } from "@heroui/react";
-import { DashboardFilters } from "../components/dashboard/filter.tsx";
+import { ChartCard } from "../components/dashboard/charts/chart-card";
+import { DashboardFilters } from "../components/dashboard/filter";
 import { useEffect, useState, useMemo } from "react";
-import { useSensorData } from "../hooks/useSensorData.ts";
-import { useSensorComparisonData } from "../hooks/useSensorComparisonData.ts";
+import { useSensorData } from "../hooks/useSensorData";
+import { useSensorComparisonData } from "../hooks/useSensorComparisonData";
 import { sensorResponse } from "../types/deviceResponse";
 import { sensorMetadata } from "../types/sensorMetadata";
 import {
   GroupByTimeAmount,
   AggregationType,
 } from "../types/sensorDataResponse";
-import { BaseChart } from "../components/dashboard/charts/base-chart.tsx";
-import { useTranslation } from "react-i18next";
+import { BaseChart } from "../components/dashboard/charts/base-chart";
 import type { EChartsOption } from "echarts";
 
 // Device Comparison Chart Component for In/Out values
@@ -26,7 +23,7 @@ const DeviceComparisonChart: React.FC<{
   };
   title: string;
   className?: string;
-}> = ({ data, title, className }) => {
+}> = ({ data, className }) => {
   const option: EChartsOption = {
     tooltip: {
       trigger: "axis",
@@ -66,8 +63,22 @@ const DeviceComparisonChart: React.FC<{
   return <BaseChart option={option} className={className || "h-full"} />;
 };
 
+// Loading Spinner Component
+const Spinner: React.FC<{ size?: string }> = ({ size = "md" }) => {
+  const sizeClasses = {
+    sm: "w-5 h-5",
+    md: "w-8 h-8",
+    lg: "w-12 h-12",
+  }[size] || "w-8 h-8";
+
+  return (
+      <div className="flex justify-center">
+        <div className={`animate-spin rounded-full border-t-2 border-blue-500 border-opacity-50 ${sizeClasses}`}></div>
+      </div>
+  );
+};
+
 const Comparison = () => {
-  const { t } = useTranslation();
   const {
     sensors,
     loading: sensorsLoading,
@@ -90,7 +101,7 @@ const Comparison = () => {
   });
   const [selectedSensors, setSelectedSensors] = useState<string[]>([]);
   const [selectedAggregation, setSelectedAggregation] =
-    useState<AggregationType>("none");
+      useState<AggregationType>("none");
   const [groupBy, setGroupBy] = useState<GroupByTimeAmount>("day");
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
@@ -101,12 +112,14 @@ const Comparison = () => {
 
     selectedSensors.forEach((sensorPosition) => {
       // Find the sensor ID by position
-      for (const device of sensors) {
-        for (const sensor of device.sensors) {
-          if (sensor.position === sensorPosition) {
-            ids.push(sensor.id);
-            names.push(sensorPosition); // Using position as the display name
-            break;
+      if (sensors) {
+        for (const device of sensors) {
+          for (const sensor of device.sensors) {
+            if (sensor.position === sensorPosition) {
+              ids.push(sensor.id);
+              names.push(sensorPosition); // Using position as the display name
+              break;
+            }
           }
         }
       }
@@ -166,13 +179,13 @@ const Comparison = () => {
     };
 
     window.addEventListener(
-      "groupByChange",
-      handleGroupByChangeFromFilter as EventListener,
+        "groupByChange",
+        handleGroupByChangeFromFilter as EventListener,
     );
     return () => {
       window.removeEventListener(
-        "groupByChange",
-        handleGroupByChangeFromFilter as EventListener,
+          "groupByChange",
+          handleGroupByChangeFromFilter as EventListener,
       );
     };
   }, []);
@@ -184,8 +197,8 @@ const Comparison = () => {
   // Prepare chart data for in comparison
   const inChartData = useMemo(() => {
     if (
-      !sensorComparisonData.timestamps ||
-      sensorComparisonData.timestamps.length === 0
+        !sensorComparisonData?.timestamps ||
+        sensorComparisonData.timestamps.length === 0
     ) {
       return {
         timestamps: [],
@@ -205,8 +218,8 @@ const Comparison = () => {
   // Prepare chart data for out comparison
   const outChartData = useMemo(() => {
     if (
-      !sensorComparisonData.timestamps ||
-      sensorComparisonData.timestamps.length === 0
+        !sensorComparisonData?.timestamps ||
+        sensorComparisonData.timestamps.length === 0
     ) {
       return {
         timestamps: [],
@@ -224,64 +237,64 @@ const Comparison = () => {
   }, [sensorComparisonData]);
 
   return isLoading ? (
-    <div className="flex items-center justify-center h-screen">
-      <Spinner size="lg" />
-    </div>
-  ) : hasError ? (
-    <div className="flex items-center justify-center h-screen text-red-500">
-      Error loading data. Please try again.
-    </div>
-  ) : (
-    <div className="space-y-6">
-      <DashboardFilters
-        onDateRangeChange={handleDateRangeChange}
-        onSensorsChange={handleSensorsChange}
-        onAggregationChange={handleAggregationChange}
-        onRefreshData={handleRefreshData}
-        availableSensors={sensors.flatMap((s: sensorResponse): string[] =>
-          s.sensors.flatMap((m: sensorMetadata): string => m.position),
-        )}
-        lastUpdated={lastUpdated}
-      />
-
-      <div className="grid grid-cols-1 gap-6">
-        <ChartCard
-          title="Device Comparison (Entries)"
-          translationKey="comparison.charts.deviceComparisonIn"
-        >
-          {inChartData.timestamps.length === 0 ||
-          inChartData.devices.length === 0 ? (
-            <div className="flex items-center justify-center h-64 text-gray-500">
-              No data available. Please select sensors and date range.
-            </div>
-          ) : (
-            <DeviceComparisonChart
-              data={inChartData}
-              title="Device Comparison (Entries)"
-              className="h-[300px]"
-            />
-          )}
-        </ChartCard>
-
-        <ChartCard
-          title="Device Comparison (Exits)"
-          translationKey="comparison.charts.deviceComparisonOut"
-        >
-          {outChartData.timestamps.length === 0 ||
-          outChartData.devices.length === 0 ? (
-            <div className="flex items-center justify-center h-64 text-gray-500">
-              No data available. Please select sensors and date range.
-            </div>
-          ) : (
-            <DeviceComparisonChart
-              data={outChartData}
-              title="Device Comparison (Exits)"
-              className="h-[300px]"
-            />
-          )}
-        </ChartCard>
+      <div className="flex items-center justify-center h-screen">
+        <Spinner size="lg" />
       </div>
-    </div>
+  ) : hasError ? (
+      <div className="flex items-center justify-center h-screen text-red-500">
+        Error loading data. Please try again.
+      </div>
+  ) : (
+      <div className="space-y-6">
+        <DashboardFilters
+            onDateRangeChange={handleDateRangeChange}
+            onSensorsChange={handleSensorsChange}
+            onAggregationChange={handleAggregationChange}
+            onRefreshData={handleRefreshData}
+            availableSensors={sensors?.flatMap((s: sensorResponse): string[] =>
+                s.sensors.flatMap((m: sensorMetadata): string => m.position)
+            ) || []}
+            lastUpdated={lastUpdated}
+        />
+
+        <div className="grid grid-cols-1 gap-6">
+          <ChartCard
+              title="Device Comparison (Entries)"
+              translationKey="comparison.charts.deviceComparisonIn"
+          >
+            {inChartData.timestamps.length === 0 ||
+            inChartData.devices.length === 0 ? (
+                <div className="flex items-center justify-center h-64 text-gray-500">
+                  No data available. Please select sensors and date range.
+                </div>
+            ) : (
+                <DeviceComparisonChart
+                    data={inChartData}
+                    title="Device Comparison (Entries)"
+                    className="h-[300px]"
+                />
+            )}
+          </ChartCard>
+
+          <ChartCard
+              title="Device Comparison (Exits)"
+              translationKey="comparison.charts.deviceComparisonOut"
+          >
+            {outChartData.timestamps.length === 0 ||
+            outChartData.devices.length === 0 ? (
+                <div className="flex items-center justify-center h-64 text-gray-500">
+                  No data available. Please select sensors and date range.
+                </div>
+            ) : (
+                <DeviceComparisonChart
+                    data={outChartData}
+                    title="Device Comparison (Exits)"
+                    className="h-[300px]"
+                />
+            )}
+          </ChartCard>
+        </div>
+      </div>
   );
 };
 
