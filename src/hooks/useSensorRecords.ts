@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, useMemo } from "react";
+import { useCallback, useEffect, useState} from "react";
 import { axiosClient } from "../services/axiosClient";
 import {
   AggregationType,
@@ -236,14 +236,6 @@ export function useSensorRecords({
     [],
   );
 
-  // Create a stable copy of the date range to prevent unnecessary re-renders
-  const stableDateRange = useMemo(() => {
-    if (!dateRange) return null;
-    return {
-      start: new Date(dateRange.start.getTime()),
-      end: new Date(dateRange.end.getTime()),
-    };
-  }, [dateRange]);
 
   // Process data immediately when groupBy or aggregationType changes
   useEffect(() => {
@@ -276,7 +268,7 @@ export function useSensorRecords({
   // Main effect to fetch data when needed
   useEffect(() => {
     const fetchAndProcessData = async () => {
-      if (!stableDateRange || sensorIds.length === 0) return;
+      if (!dateRange || sensorIds.length === 0) return;
 
       let dataToProcess: SensorDataPoint[] = [];
       setNeedToFetch(false);
@@ -286,8 +278,8 @@ export function useSensorRecords({
         // First fetch
         setNeedToFetch(true);
       } else if (
-        isBefore(stableDateRange!.start, fetchedDateRange.start) ||
-        isAfter(stableDateRange!.end, fetchedDateRange.end)
+        isBefore(dateRange!.start, fetchedDateRange.start) ||
+        isAfter(dateRange!.end, fetchedDateRange.end)
       ) {
         // Only fetch if the new range extends beyond the already fetched range
         console.log("New range extends beyond fetched range");
@@ -298,8 +290,8 @@ export function useSensorRecords({
       const dataInRange = rawData.filter((point) => {
         const pointDate = parseISO(point.timestamp);
         return (
-          !isBefore(pointDate, stableDateRange!.start) &&
-          !isAfter(pointDate, stableDateRange!.end)
+          !isBefore(pointDate, dateRange!.start) &&
+          !isAfter(pointDate, dateRange!.end)
         );
       });
       const hasDataInRange = dataInRange.length > 0;
@@ -310,9 +302,9 @@ export function useSensorRecords({
       if (fetchedDateRange) {
         // Check if the date ranges are the same (to avoid duplicate requests)
         const isSameRange =
-          stableDateRange!.start.getTime() ===
+          dateRange!.start.getTime() ===
             fetchedDateRange.start.getTime() &&
-          stableDateRange!.end.getTime() === fetchedDateRange.end.getTime();
+          dateRange!.end.getTime() === fetchedDateRange.end.getTime();
 
         if (isSameRange) {
           setNeedToFetch(false);
@@ -323,8 +315,8 @@ export function useSensorRecords({
         // Check if the new range is completely within the already fetched range and we have data
         else if (
           hasDataInRange &&
-          !isBefore(stableDateRange!.start, fetchedDateRange.start) &&
-          !isAfter(stableDateRange!.end, fetchedDateRange.end)
+          !isBefore(dateRange!.start, fetchedDateRange.start) &&
+          !isAfter(dateRange!.end, fetchedDateRange.end)
         ) {
           setNeedToFetch(false);
           console.log(
@@ -335,18 +327,18 @@ export function useSensorRecords({
 
       if (needToFetch) {
         // Determine what date range to fetch
-        let fetchStart = stableDateRange!.start;
-        let fetchEnd = stableDateRange!.end;
+        let fetchStart = dateRange!.start;
+        let fetchEnd = dateRange!.end;
 
         if (fetchedDateRange) {
           // Check if we need to fetch data for the start of the range
           const needFetchStart = isBefore(
-            stableDateRange!.start,
+            dateRange!.start,
             fetchedDateRange.start,
           );
           // Check if we need to fetch data for the end of the range
           const needFetchEnd = isAfter(
-            stableDateRange!.end,
+            dateRange!.end,
             fetchedDateRange.end,
           );
 
@@ -356,14 +348,14 @@ export function useSensorRecords({
             setNeedToFetch(false);
           } else if (needFetchStart && !needFetchEnd) {
             // Only need to fetch data for the start of the range
-            fetchStart = stableDateRange!.start;
+            fetchStart = dateRange!.start;
             fetchEnd = new Date(fetchedDateRange.start);
             fetchEnd.setDate(fetchEnd.getDate() - 1);
           } else if (!needFetchStart && needFetchEnd) {
             // Only need to fetch data for the end of the range
             fetchStart = new Date(fetchedDateRange.end);
             fetchStart.setDate(fetchStart.getDate() + 1);
-            fetchEnd = stableDateRange!.end;
+            fetchEnd = dateRange!.end;
           }
           // If both conditions are true, we fetch the entire range (default behavior)
         }
@@ -383,21 +375,21 @@ export function useSensorRecords({
 
             // Update the fetched date range
             const newStart = isBefore(
-              stableDateRange!.start,
+              dateRange!.start,
               fetchedDateRange.start,
             )
-              ? stableDateRange!.start
+              ? dateRange!.start
               : fetchedDateRange.start;
 
-            const newEnd = isAfter(stableDateRange!.end, fetchedDateRange.end)
-              ? stableDateRange!.end
+            const newEnd = isAfter(dateRange!.end, fetchedDateRange.end)
+              ? dateRange!.end
               : fetchedDateRange.end;
 
             setFetchedDateRange({ start: newStart, end: newEnd });
           } else {
             // First fetch
             dataToProcess = newData;
-            setFetchedDateRange(stableDateRange);
+            setFetchedDateRange(dateRange);
           }
           setLoading(true);
           setRawData(dataToProcess);
@@ -411,8 +403,8 @@ export function useSensorRecords({
         const filteredData = dataToProcess.filter((point) => {
           const pointDate = parseISO(point.timestamp);
           return (
-            !isBefore(pointDate, stableDateRange!.start) &&
-            !isAfter(pointDate, stableDateRange!.end)
+            !isBefore(pointDate, dateRange!.start) &&
+            !isAfter(pointDate, dateRange!.end)
           );
         });
 
@@ -424,8 +416,8 @@ export function useSensorRecords({
         dataToProcess = rawData.filter((point) => {
           const pointDate = parseISO(point.timestamp);
           return (
-            !isBefore(pointDate, stableDateRange!.start) &&
-            !isAfter(pointDate, stableDateRange!.end)
+            !isBefore(pointDate, dateRange!.start) &&
+            !isAfter(pointDate, dateRange!.end)
           );
         });
 
@@ -448,7 +440,7 @@ export function useSensorRecords({
     fetchedDateRange,
     groupBy,
     needToFetch,
-    stableDateRange,
+    dateRange,
   ]);
 
   // Function to manually refetch data
