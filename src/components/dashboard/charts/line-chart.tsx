@@ -15,7 +15,6 @@ interface LineChartProps {
   className?: string;
 }
 
-
 export const LineChart: React.FC<LineChartProps> = ({ data, className }) => {
   const option: EChartsOption = {
     tooltip: {

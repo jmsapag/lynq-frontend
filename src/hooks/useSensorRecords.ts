@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState} from "react";
+import { useCallback, useEffect, useState } from "react";
 import { axiosClient } from "../services/axiosClient";
 import {
   AggregationType,
@@ -236,7 +236,6 @@ export function useSensorRecords({
     [],
   );
 
-
   // Process data immediately when groupBy or aggregationType changes
   useEffect(() => {
     if (!dateRange || !rawData.length) return;
@@ -302,8 +301,7 @@ export function useSensorRecords({
       if (fetchedDateRange) {
         // Check if the date ranges are the same (to avoid duplicate requests)
         const isSameRange =
-          dateRange!.start.getTime() ===
-            fetchedDateRange.start.getTime() &&
+          dateRange!.start.getTime() === fetchedDateRange.start.getTime() &&
           dateRange!.end.getTime() === fetchedDateRange.end.getTime();
 
         if (isSameRange) {
@@ -337,10 +335,7 @@ export function useSensorRecords({
             fetchedDateRange.start,
           );
           // Check if we need to fetch data for the end of the range
-          const needFetchEnd = isAfter(
-            dateRange!.end,
-            fetchedDateRange.end,
-          );
+          const needFetchEnd = isAfter(dateRange!.end, fetchedDateRange.end);
 
           // If both conditions are false, we don't need to fetch anything
           if (!needFetchStart && !needFetchEnd) {
@@ -374,10 +369,7 @@ export function useSensorRecords({
             dataToProcess = [...rawData, ...newData];
 
             // Update the fetched date range
-            const newStart = isBefore(
-              dateRange!.start,
-              fetchedDateRange.start,
-            )
+            const newStart = isBefore(dateRange!.start, fetchedDateRange.start)
               ? dateRange!.start
               : fetchedDateRange.start;
 

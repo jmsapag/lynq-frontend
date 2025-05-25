@@ -37,7 +37,9 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
     return fromDate(date, getLocalTimeZone());
   });
   const [selectedSensors, setSelectedSensors] = useState<string[]>([]);
-  const [startTime, setStartTime] = useState<TimeValue>(() => parseTime("00:00"));
+  const [startTime, setStartTime] = useState<TimeValue>(() =>
+    parseTime("00:00"),
+  );
   const [endTime, setEndTime] = useState<TimeValue>(() => parseTime("23:59"));
   const [groupBy, setGroupBy] = useState<string>("day");
   const [aggregation, setAggregation] = useState<string>("none");

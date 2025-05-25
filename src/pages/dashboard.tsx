@@ -1,5 +1,4 @@
 import { ChartCard } from "../components/dashboard/charts/chart-card.tsx";
-import { BarChart } from "../components/dashboard/charts/bar-chart.tsx";
 import { Spinner } from "@heroui/react";
 import { DashboardFilters } from "../components/dashboard/filter.tsx";
 import { useEffect, useState, useMemo } from "react";
@@ -12,6 +11,7 @@ import {
   AggregationType,
 } from "../types/sensorDataResponse";
 import { LineChart } from "../components/dashboard/charts/line-chart.tsx";
+import { SensorDataCard } from "../components/dashboard/charts/card.tsx";
 
 const Dashboard = () => {
   const {
@@ -69,6 +69,26 @@ const Dashboard = () => {
     aggregationType: selectedAggregation,
   });
 
+  const metrics = useMemo(() => {
+    if (!sensorData || !sensorData.in || !sensorData.out) {
+      return {
+        totalIn: 0,
+        totalOut: 0,
+        entryRate: 0,
+      };
+    }
+
+    const totalIn = sensorData.in.reduce((sum, value) => sum + value, 0);
+    const totalOut = sensorData.out.reduce((sum, value) => sum + value, 0);
+
+    const totalMovements = totalIn + totalOut;
+
+    const entryRate =
+      totalMovements > 0 ? Math.round((totalIn / totalMovements) * 100) : 0;
+
+    return { totalIn, totalOut, entryRate };
+  }, [sensorData]);
+
   const handleDateRangeChange = (startDate: Date, endDate: Date) => {
     setSelectedDateRange({ start: startDate, end: endDate });
   };
@@ -86,8 +106,25 @@ const Dashboard = () => {
   };
 
   const handleRefreshData = () => {
-    setLastUpdated(new Date());
+    const now = new Date();
+    localStorage.setItem("lastUpdated", now.toISOString());
+    setLastUpdated(now);
+
+    if (selectedDateRange) {
+      const refreshedRange = {
+        start: new Date(selectedDateRange.start.getTime()),
+        end: new Date(selectedDateRange.end.getTime()),
+      };
+      setSelectedDateRange(refreshedRange);
+    }
   };
+
+  useEffect(() => {
+    const storedLastUpdated = localStorage.getItem("lastUpdated");
+    if (storedLastUpdated) {
+      setLastUpdated(new Date(storedLastUpdated));
+    }
+  }, []);
 
   // Listen for groupBy changes from the filter component
   useEffect(() => {
@@ -155,6 +192,30 @@ const Dashboard = () => {
         )}
         lastUpdated={lastUpdated}
       />
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <SensorDataCard
+          title="Total In"
+          value={metrics.totalIn}
+          translationKey="dashboard.metrics.totalIn"
+          unit="people"
+        />
+
+        <SensorDataCard
+          title="Total Out"
+          value={metrics.totalOut}
+          translationKey="dashboard.metrics.totalOut"
+          unit="people"
+        />
+
+        <SensorDataCard
+          title="Entry Rate"
+          value={metrics.entryRate}
+          translationKey="dashboard.metrics.entryRate"
+          unit="%"
+        />
+      </div>
+
       <div className="grid grid-cols-1 gap-6">
         <ChartCard
           title="Flujo de Personas (In/Out)"
