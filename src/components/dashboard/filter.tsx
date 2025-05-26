@@ -2,52 +2,82 @@ import React, { useState, useRef, useEffect } from "react";
 import { ArrowPathIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
 import { format } from "date-fns";
 import { useTranslation } from "react-i18next";
+import { DatePicker, TimeInput } from "@heroui/react";
+import { DateValue } from "@internationalized/date";
+import { fromDate, getLocalTimeZone, parseTime } from "@internationalized/date";
 
 type DashboardFiltersProps = {
   onDateRangeChange: (startDate: Date, endDate: Date) => void;
+  currentDateRange: { start: Date; end: Date };
   onSensorsChange: (sensors: string[]) => void;
   onAggregationChange?: (aggregation: string) => void;
   onRefreshData?: () => void;
   availableSensors: string[];
+  currentSensors: string[];
   lastUpdated: Date | null;
 };
 
 export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
   onDateRangeChange,
+  currentDateRange,
   onSensorsChange,
   onAggregationChange,
   onRefreshData,
   availableSensors,
+  currentSensors,
   lastUpdated,
 }) => {
   const { t } = useTranslation();
+  const [startDate, setStartDate] = useState<DateValue>(() => {
+    return currentDateRange?.start
+      ? fromDate(currentDateRange.start, getLocalTimeZone())
+      : fromDate(new Date(), getLocalTimeZone());
+  });
 
-  const [startDate, setStartDate] = useState<Date>(
-    new Date(new Date().setDate(new Date().getDate() - 7)),
+  const [endDate, setEndDate] = useState<DateValue>(() => {
+    return currentDateRange?.end
+      ? fromDate(currentDateRange.end, getLocalTimeZone())
+      : fromDate(new Date(), getLocalTimeZone());
+  });
+
+  const [selectedSensors, setSelectedSensors] = useState<string[]>(currentSensors || []);
+  const [startTime, setStartTime] = useState<TimeValue>(() =>
+    parseTime("00:00"),
   );
-  const [endDate, setEndDate] = useState<Date>(new Date());
-  const [selectedSensors, setSelectedSensors] = useState<string[]>([]);
-  const [startTime, setStartTime] = useState<string>("00:00");
-  const [endTime, setEndTime] = useState<string>("23:59");
+  const [endTime, setEndTime] = useState<TimeValue>(() => parseTime("23:59"));
   const [groupBy, setGroupBy] = useState<string>("day");
   const [aggregation, setAggregation] = useState<string>("none");
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const handleStartDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const date = new Date(e.target.value);
-    setStartDate(date);
-    if (endDate) {
-      onDateRangeChange(date, endDate);
+  const handleStartDateChange = (value: DateValue | null) => {
+    if (value) {
+      setStartDate(value);
+      if (endDate) {
+        // Convert DateValue to Date for the callback
+        const startDateObj = value.toDate(getLocalTimeZone());
+        startDateObj.setHours(0, 0, 0, 0);
+        const endDateObj = endDate.toDate(getLocalTimeZone());
+        onDateRangeChange(startDateObj, endDateObj);
+      }
     }
   };
 
-  const handleEndDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const date = new Date(e.target.value);
-    setEndDate(date);
-    if (startDate) {
-      onDateRangeChange(startDate, date);
+  const handleEndDateChange = (value: DateValue | null) => {
+    if (value) {
+      const now = new Date().setHours(23, 59, 59, 999);
+      if (value.toDate(getLocalTimeZone()).getTime() >now) {
+        return;
+      }
+      setEndDate(value);
+      if (startDate) {
+        // Convert DateValue to Date for the callback
+        const endDateObj = value.toDate(getLocalTimeZone());
+        endDateObj.setHours(23, 59, 59, 999);
+        const startDateObj = startDate.toDate(getLocalTimeZone());
+        onDateRangeChange(startDateObj, endDateObj);
+      }
     }
   };
 
@@ -60,16 +90,27 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
     onSensorsChange(updatedSensors);
   };
 
-  const handleStartTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setStartTime(e.target.value);
+  const handleStartTimeChange = (value: TimeValue | null) => {
+    if (value) {
+      setStartTime(value);
+    }
   };
 
-  const handleEndTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEndTime(e.target.value);
+  const handleEndTimeChange = (value: TimeValue | null) => {
+    if (value) {
+      setEndTime(value);
+    }
   };
 
   const handleGroupByChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setGroupBy(e.target.value);
+    const newGroupBy = e.target.value;
+    setGroupBy(newGroupBy);
+
+    // Dispatch a custom event to notify the dashboard component
+    const event = new CustomEvent("groupByChange", {
+      detail: { groupBy: newGroupBy },
+    });
+    window.dispatchEvent(event);
   };
 
   const handleAggregationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -131,18 +172,22 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
               {t("filters.dateRange")}
             </label>
             <div className="flex items-center space-x-2">
-              <input
-                type="date"
-                className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
-                value={format(startDate, "yyyy-MM-dd")}
+              <DatePicker
+                value={startDate}
+                variant="bordered"
+                granularity="day"
                 onChange={handleStartDateChange}
+                className="w-full"
+                aria-label="Start Date"
               />
               <span className="text-gray-500">{t("filters.to")}</span>
-              <input
-                type="date"
-                className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
-                value={format(endDate, "yyyy-MM-dd")}
+              <DatePicker
+                value={endDate}
+                variant="bordered"
+                granularity="day"
                 onChange={handleEndDateChange}
+                className="w-full"
+                aria-label="End Date"
               />
             </div>
           </div>
@@ -195,18 +240,18 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
               {t("filters.timeRange")}
             </label>
             <div className="flex items-center space-x-2">
-              <input
-                type="time"
-                className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
+              <TimeInput
                 value={startTime}
+                variant="bordered"
                 onChange={handleStartTimeChange}
+                className="w-full"
               />
               <span className="text-gray-500">{t("filters.to")}</span>
-              <input
-                type="time"
-                className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
+              <TimeInput
                 value={endTime}
+                variant="bordered"
                 onChange={handleEndTimeChange}
+                className="w-full"
               />
             </div>
           </div>
