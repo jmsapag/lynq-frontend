@@ -42,13 +42,17 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
       : fromDate(new Date(), getLocalTimeZone());
   });
 
-  const [selectedSensors, setSelectedSensors] = useState<string[]>(currentSensors || []);
+  const [selectedSensors, setSelectedSensors] = useState<string[]>(
+    currentSensors || [],
+  );
   const [startTime, setStartTime] = useState<TimeValue>(() =>
     parseTime("00:00"),
   );
   const [endTime, setEndTime] = useState<TimeValue>(() => parseTime("23:59"));
   const [groupBy, setGroupBy] = useState<string>("day");
-  const [aggregation, setAggregation] = useState<string>(currentAggregation || "sum");
+  const [aggregation, setAggregation] = useState<string>(
+    currentAggregation || "sum",
+  );
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -69,7 +73,7 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
   const handleEndDateChange = (value: DateValue | null) => {
     if (value) {
       const now = new Date().setHours(23, 59, 59, 999);
-      if (value.toDate(getLocalTimeZone()).getTime() >now) {
+      if (value.toDate(getLocalTimeZone()).getTime() > now) {
         return;
       }
       setEndDate(value);

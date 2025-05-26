@@ -286,7 +286,8 @@ export function useSensorRecords({
         setNeedToFetch(true);
       } else if (
         isBefore(dateRange!.start, fetchedDateRange.start) ||
-        (isAfter(dateRange!.end, fetchedDateRange.end) && !isAfter(dateRange!.end, new Date()))
+        (isAfter(dateRange!.end, fetchedDateRange.end) &&
+          !isAfter(dateRange!.end, new Date()))
       ) {
         // Only fetch if the new range extends beyond the already fetched range
         console.log("New range extends beyond fetched range");
@@ -308,8 +309,7 @@ export function useSensorRecords({
       // we don't need to fetch new data
       if (fetchedDateRange) {
         const isSameRange =
-          dateRange!.start.getTime() ===
-          fetchedDateRange.start.getTime() &&
+          dateRange!.start.getTime() === fetchedDateRange.start.getTime() &&
           dateRange!.end.getTime() === fetchedDateRange.end.getTime();
 
         if (isSameRange) {
@@ -346,7 +346,6 @@ export function useSensorRecords({
 
           console.log("Need fetch start:", needFetchStart);
           console.log("Need fetch end:", needFetchEnd);
-
 
           // If both conditions are false, we don't need to fetch anything
           if (!needFetchStart && !needFetchEnd) {
@@ -441,11 +440,7 @@ export function useSensorRecords({
     };
 
     fetchAndProcessData();
-  }, [
-    sensorIds,
-    needToFetch,
-    dateRange,
-  ]);
+  }, [sensorIds, needToFetch, dateRange]);
 
   // Function to manually refetch data
 

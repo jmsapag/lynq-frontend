@@ -8,6 +8,7 @@ import { sensorMetadata } from "../types/sensorMetadata";
 import {
   GroupByTimeAmount,
   AggregationType,
+  SensorDataPoint,
 } from "../types/sensorDataResponse";
 import { BaseChart } from "../components/dashboard/charts/base-chart";
 import type { EChartsOption } from "echarts";
@@ -65,16 +66,19 @@ const DeviceComparisonChart: React.FC<{
 
 // Loading Spinner Component
 const Spinner: React.FC<{ size?: string }> = ({ size = "md" }) => {
-  const sizeClasses = {
-    sm: "w-5 h-5",
-    md: "w-8 h-8",
-    lg: "w-12 h-12",
-  }[size] || "w-8 h-8";
+  const sizeClasses =
+    {
+      sm: "w-5 h-5",
+      md: "w-8 h-8",
+      lg: "w-12 h-12",
+    }[size] || "w-8 h-8";
 
   return (
-      <div className="flex justify-center">
-        <div className={`animate-spin rounded-full border-t-2 border-blue-500 border-opacity-50 ${sizeClasses}`}></div>
-      </div>
+    <div className="flex justify-center">
+      <div
+        className={`animate-spin rounded-full border-t-2 border-blue-500 border-opacity-50 ${sizeClasses}`}
+      ></div>
+    </div>
   );
 };
 
@@ -101,9 +105,22 @@ const Comparison = () => {
   });
   const [selectedSensors, setSelectedSensors] = useState<string[]>([]);
   const [selectedAggregation, setSelectedAggregation] =
-      useState<AggregationType>("none");
+    useState<AggregationType>("none");
   const [groupBy, setGroupBy] = useState<GroupByTimeAmount>("day");
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+
+  // Add caching state at component level
+  const [fetchedDateRange, setFetchedDateRange] = useState<{
+    start: Date;
+    end: Date;
+  } | null>(null);
+  const [rawData, setRawData] = useState<Map<number, SensorDataPoint[]>>(
+    new Map(),
+  );
+  const [needToFetch, setNeedToFetch] = useState(false);
+  const [loadedSensorIds, setLoadedSensorIds] = useState<Set<number>>(
+    new Set(),
+  );
 
   // Convert selected sensors from strings to numbers and get their names
   const selectedSensorInfo = useMemo(() => {
@@ -128,18 +145,26 @@ const Comparison = () => {
     return { ids, names };
   }, [selectedSensors, sensors]);
 
-  // Use the sensor comparison data hook
+  // Use the sensor comparison data hook with lifted state
   const {
     data: sensorComparisonData,
     loading: dataLoading,
     error: dataError,
-    refetch: refetchSensorData,
   } = useSensorComparisonData({
     sensorIds: selectedSensorInfo.ids,
     sensorNames: selectedSensorInfo.names,
     dateRange: selectedDateRange,
     groupBy,
     aggregationType: selectedAggregation,
+    // Pass the caching state
+    rawData,
+    setRawData,
+    fetchedDateRange,
+    setFetchedDateRange,
+    needToFetch,
+    setNeedToFetch,
+    loadedSensorIds,
+    setLoadedSensorIds,
   });
 
   const handleDateRangeChange = (startDate: Date, endDate: Date) => {
@@ -148,6 +173,7 @@ const Comparison = () => {
 
   const handleSensorsChange = (sensors: string[]) => {
     setSelectedSensors(sensors);
+    // Don't reset caching state here - let the hook handle it
   };
 
   const handleAggregationChange = (aggregation: string) => {
@@ -159,8 +185,11 @@ const Comparison = () => {
     localStorage.setItem("lastUpdated", now.toISOString());
     setLastUpdated(now);
 
-    // Refetch sensor data
-    refetchSensorData();
+    // Clear caching state to force a refetch
+    setRawData(new Map());
+    setLoadedSensorIds(new Set());
+    setFetchedDateRange(null);
+    setNeedToFetch(true);
   };
 
   useEffect(() => {
@@ -179,13 +208,13 @@ const Comparison = () => {
     };
 
     window.addEventListener(
-        "groupByChange",
-        handleGroupByChangeFromFilter as EventListener,
+      "groupByChange",
+      handleGroupByChangeFromFilter as EventListener,
     );
     return () => {
       window.removeEventListener(
-          "groupByChange",
-          handleGroupByChangeFromFilter as EventListener,
+        "groupByChange",
+        handleGroupByChangeFromFilter as EventListener,
       );
     };
   }, []);
@@ -197,8 +226,8 @@ const Comparison = () => {
   // Prepare chart data for in comparison
   const inChartData = useMemo(() => {
     if (
-        !sensorComparisonData?.timestamps ||
-        sensorComparisonData.timestamps.length === 0
+      !sensorComparisonData?.timestamps ||
+      sensorComparisonData.timestamps.length === 0
     ) {
       return {
         timestamps: [],
@@ -218,8 +247,8 @@ const Comparison = () => {
   // Prepare chart data for out comparison
   const outChartData = useMemo(() => {
     if (
-        !sensorComparisonData?.timestamps ||
-        sensorComparisonData.timestamps.length === 0
+      !sensorComparisonData?.timestamps ||
+      sensorComparisonData.timestamps.length === 0
     ) {
       return {
         timestamps: [],
@@ -237,64 +266,71 @@ const Comparison = () => {
   }, [sensorComparisonData]);
 
   return isLoading ? (
-      <div className="flex items-center justify-center h-screen">
-        <Spinner size="lg" />
-      </div>
+    <div className="flex items-center justify-center h-screen">
+      <Spinner size="lg" />
+    </div>
   ) : hasError ? (
-      <div className="flex items-center justify-center h-screen text-red-500">
-        Error loading data. Please try again.
-      </div>
+    <div className="flex items-center justify-center h-screen text-red-500">
+      Error loading data. Please try again.
+    </div>
   ) : (
-      <div className="space-y-6">
-        <DashboardFilters
-            onDateRangeChange={handleDateRangeChange}
-            onSensorsChange={handleSensorsChange}
-            onAggregationChange={handleAggregationChange}
-            onRefreshData={handleRefreshData}
-            availableSensors={sensors?.flatMap((s: sensorResponse): string[] =>
-                s.sensors.flatMap((m: sensorMetadata): string => m.position)
-            ) || []}
-            lastUpdated={lastUpdated}
-        />
+    <div className="space-y-6">
+      <DashboardFilters
+        onDateRangeChange={handleDateRangeChange}
+        currentDateRange={
+          selectedDateRange || { start: new Date(), end: new Date() }
+        }
+        onSensorsChange={handleSensorsChange}
+        currentSensors={selectedSensors}
+        onAggregationChange={handleAggregationChange}
+        currentAggregation={selectedAggregation}
+        onRefreshData={handleRefreshData}
+        availableSensors={
+          sensors?.flatMap((s: sensorResponse): string[] =>
+            s.sensors.flatMap((m: sensorMetadata): string => m.position),
+          ) || []
+        }
+        lastUpdated={lastUpdated}
+      />
 
-        <div className="grid grid-cols-1 gap-6">
-          <ChartCard
+      <div className="grid grid-cols-1 gap-6">
+        <ChartCard
+          title="Device Comparison (Entries)"
+          translationKey="comparison.charts.deviceComparisonIn"
+        >
+          {inChartData.timestamps.length === 0 ||
+          inChartData.devices.length === 0 ? (
+            <div className="flex items-center justify-center h-64 text-gray-500">
+              No data available. Please select sensors and date range.
+            </div>
+          ) : (
+            <DeviceComparisonChart
+              data={inChartData}
               title="Device Comparison (Entries)"
-              translationKey="comparison.charts.deviceComparisonIn"
-          >
-            {inChartData.timestamps.length === 0 ||
-            inChartData.devices.length === 0 ? (
-                <div className="flex items-center justify-center h-64 text-gray-500">
-                  No data available. Please select sensors and date range.
-                </div>
-            ) : (
-                <DeviceComparisonChart
-                    data={inChartData}
-                    title="Device Comparison (Entries)"
-                    className="h-[300px]"
-                />
-            )}
-          </ChartCard>
+              className="h-[300px]"
+            />
+          )}
+        </ChartCard>
 
-          <ChartCard
+        <ChartCard
+          title="Device Comparison (Exits)"
+          translationKey="comparison.charts.deviceComparisonOut"
+        >
+          {outChartData.timestamps.length === 0 ||
+          outChartData.devices.length === 0 ? (
+            <div className="flex items-center justify-center h-64 text-gray-500">
+              No data available. Please select sensors and date range.
+            </div>
+          ) : (
+            <DeviceComparisonChart
+              data={outChartData}
               title="Device Comparison (Exits)"
-              translationKey="comparison.charts.deviceComparisonOut"
-          >
-            {outChartData.timestamps.length === 0 ||
-            outChartData.devices.length === 0 ? (
-                <div className="flex items-center justify-center h-64 text-gray-500">
-                  No data available. Please select sensors and date range.
-                </div>
-            ) : (
-                <DeviceComparisonChart
-                    data={outChartData}
-                    title="Device Comparison (Exits)"
-                    className="h-[300px]"
-                />
-            )}
-          </ChartCard>
-        </div>
+              className="h-[300px]"
+            />
+          )}
+        </ChartCard>
       </div>
+    </div>
   );
 };
 
