@@ -32,7 +32,7 @@ export const SensorDataCard: React.FC<SensorDataCardProps> = ({
       <div className="flex items-center justify-between p-4">
         <div>
           <p className="text-sm text-gray-500 font-medium">{displayTitle}</p>
-          <p className="text-2xl font-semibold mt-1">
+          <p className="text-xl font-semibold mt-1">
             {value} {unit}
           </p>
         </div>
