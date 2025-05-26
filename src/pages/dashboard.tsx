@@ -126,13 +126,7 @@ const Dashboard = () => {
     localStorage.setItem("lastUpdated", now.toISOString());
     setLastUpdated(now);
 
-    if (selectedDateRange) {
-      const refreshedRange = {
-        start: new Date(selectedDateRange.start.getTime()),
-        end: new Date(now),
-      };
-      setSelectedDateRange(refreshedRange);
-    }
+    setSelectedDateRange((prev) => ({ start: prev.start, end: now }));
   };
 
   useEffect(() => {
