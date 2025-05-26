@@ -11,6 +11,7 @@ type DashboardFiltersProps = {
   currentDateRange: { start: Date; end: Date };
   onSensorsChange: (sensors: string[]) => void;
   onAggregationChange?: (aggregation: string) => void;
+  currentAggregation?: string;
   onRefreshData?: () => void;
   availableSensors: string[];
   currentSensors: string[];
@@ -22,6 +23,7 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
   currentDateRange,
   onSensorsChange,
   onAggregationChange,
+  currentAggregation,
   onRefreshData,
   availableSensors,
   currentSensors,
@@ -46,7 +48,7 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
   );
   const [endTime, setEndTime] = useState<TimeValue>(() => parseTime("23:59"));
   const [groupBy, setGroupBy] = useState<string>("day");
-  const [aggregation, setAggregation] = useState<string>("none");
+  const [aggregation, setAggregation] = useState<string>(currentAggregation || "sum");
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -285,9 +287,6 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
               value={aggregation}
               onChange={handleAggregationChange}
             >
-              <option value="none">
-                {t("filters.aggregationOptions.none")}
-              </option>
               <option value="sum">{t("filters.aggregationOptions.sum")}</option>
               <option value="avg">{t("filters.aggregationOptions.avg")}</option>
               <option value="min">{t("filters.aggregationOptions.min")}</option>

@@ -26,7 +26,6 @@ const Dashboard = () => {
     end: Date;
   }>(() => {
     const end = new Date();
-    end.setHours(23, 59, 59, 999);
 
     const start = new Date();
     start.setDate(start.getDate() - 7);
@@ -37,7 +36,7 @@ const Dashboard = () => {
   const [fetchedDateRange, setFetchedDateRange] = useState<{start: Date; end: Date} | null>(null);
   const [selectedSensors, setSelectedSensors] = useState<string[]>([]);
   const [selectedAggregation, setSelectedAggregation] =
-    useState<AggregationType>("none");
+    useState<AggregationType>("sum");
   const [groupBy, setGroupBy] = useState<GroupByTimeAmount>("day");
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [rawData, setRawData] = useState<SensorDataPoint[]>([]);
@@ -130,7 +129,7 @@ const Dashboard = () => {
     if (selectedDateRange) {
       const refreshedRange = {
         start: new Date(selectedDateRange.start.getTime()),
-        end: new Date(selectedDateRange.end.getTime()),
+        end: new Date(now),
       };
       setSelectedDateRange(refreshedRange);
     }
