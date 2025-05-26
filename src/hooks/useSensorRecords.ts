@@ -356,11 +356,9 @@ export function useSensorRecords({
             // Only need to fetch data for the start of the range
             fetchStart = dateRange!.start;
             fetchEnd = new Date(fetchedDateRange.start);
-            fetchEnd.setDate(fetchEnd.getDate() - 1);
           } else if (!needFetchStart && needFetchEnd) {
             // Only need to fetch data for the end of the range
             fetchStart = new Date(fetchedDateRange.end);
-            fetchStart.setDate(fetchStart.getDate() + 1);
             fetchEnd = dateRange!.end;
           }
           // If both conditions are true, we fetch the entire range (default behavior)
