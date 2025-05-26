@@ -91,7 +91,7 @@ export default function DevicesPage() {
       console.error("Failed to delete device:", err);
     }
   };
-
+  // replace all this with toast
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
   if (creating) return <div>Creating device...</div>;
