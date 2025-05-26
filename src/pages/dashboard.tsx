@@ -34,7 +34,10 @@ const Dashboard = () => {
 
     return { start, end };
   });
-  const [fetchedDateRange, setFetchedDateRange] = useState<{start: Date; end: Date} | null>(null);
+  const [fetchedDateRange, setFetchedDateRange] = useState<{
+    start: Date;
+    end: Date;
+  } | null>(null);
   const [selectedSensors, setSelectedSensors] = useState<string[]>([]);
   const [selectedAggregation, setSelectedAggregation] =
     useState<AggregationType>("none");
@@ -191,7 +194,7 @@ const Dashboard = () => {
 
   return isLoading ? (
     <div className="flex items-center justify-center h-screen">
-      <Spinner size="lg"/>
+      <Spinner size="lg" />
     </div>
   ) : hasError ? (
     <div className="flex items-center justify-center h-screen text-red-500">
@@ -245,7 +248,7 @@ const Dashboard = () => {
               No data available. Please select sensors and date range.
             </div>
           ) : (
-            <LineChart data={chartData}/>
+            <LineChart data={chartData} />
           )}
         </ChartCard>
       </div>
