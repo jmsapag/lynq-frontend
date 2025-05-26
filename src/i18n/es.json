@@ -30,6 +30,11 @@
       "dailyVisitors": "Visitantes Diarios",
       "weeklyTrend": "Tendencia Semanal",
       "peopleFlow": "Flujo de Personas (Entradas/Salidas)"
+    },
+    "metrics": {
+      "totalIn": "Total Entradas",
+      "totalOut": "Total Salidas",
+      "entryRate": "Tasa de Entrada"
     }
   },
   "users": {

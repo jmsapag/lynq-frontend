@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState} from "react";
+import { useCallback, useEffect, useState } from "react";
 import { axiosClient } from "../services/axiosClient";
 import {
   AggregationType,
@@ -243,7 +243,6 @@ export function useSensorRecords({
     [],
   );
 
-
   // Process data immediately when groupBy or aggregationType changes
   useEffect(() => {
     if (!dateRange || !rawData.length) return;
@@ -343,10 +342,7 @@ export function useSensorRecords({
             fetchedDateRange.start,
           );
           // Check if we need to fetch data for the end of the range
-          const needFetchEnd = isAfter(
-            dateRange!.end,
-            fetchedDateRange.end,
-          );
+          const needFetchEnd = isAfter(dateRange!.end, fetchedDateRange.end);
 
           console.log("Need fetch start:", needFetchStart);
           console.log("Need fetch end:", needFetchEnd);
