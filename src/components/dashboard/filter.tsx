@@ -3,41 +3,47 @@ import { ArrowPathIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
 import { format } from "date-fns";
 import { useTranslation } from "react-i18next";
 import { DatePicker, TimeInput } from "@heroui/react";
-import { DateValue, TimeValue } from "@internationalized/date";
+import { DateValue } from "@internationalized/date";
 import { fromDate, getLocalTimeZone, parseTime } from "@internationalized/date";
 
 type DashboardFiltersProps = {
   onDateRangeChange: (startDate: Date, endDate: Date) => void;
+  currentDateRange: { start: Date; end: Date };
   onSensorsChange: (sensors: string[]) => void;
   onAggregationChange?: (aggregation: string) => void;
   onRefreshData?: () => void;
   availableSensors: string[];
+  currentSensors: string[];
   lastUpdated: Date | null;
 };
 
 export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
   onDateRangeChange,
+  currentDateRange,
   onSensorsChange,
   onAggregationChange,
   onRefreshData,
   availableSensors,
+  currentSensors,
   lastUpdated,
 }) => {
   const { t } = useTranslation();
-
   const [startDate, setStartDate] = useState<DateValue>(() => {
-    const date = new Date();
-    date.setDate(date.getDate() - 7);
-    date.setHours(0, 0, 0, 0);
-    return fromDate(date, getLocalTimeZone());
+    return currentDateRange?.start
+      ? fromDate(currentDateRange.start, getLocalTimeZone())
+      : fromDate(new Date(), getLocalTimeZone());
   });
+
   const [endDate, setEndDate] = useState<DateValue>(() => {
-    const date = new Date();
-    date.setHours(23, 59, 59, 999);
-    return fromDate(date, getLocalTimeZone());
+    return currentDateRange?.end
+      ? fromDate(currentDateRange.end, getLocalTimeZone())
+      : fromDate(new Date(), getLocalTimeZone());
   });
-  const [selectedSensors, setSelectedSensors] = useState<string[]>([]);
-  const [startTime, setStartTime] = useState<TimeValue>(() => parseTime("00:00"));
+
+  const [selectedSensors, setSelectedSensors] = useState<string[]>(currentSensors || []);
+  const [startTime, setStartTime] = useState<TimeValue>(() =>
+    parseTime("00:00"),
+  );
   const [endTime, setEndTime] = useState<TimeValue>(() => parseTime("23:59"));
   const [groupBy, setGroupBy] = useState<string>("day");
   const [aggregation, setAggregation] = useState<string>("none");
@@ -60,6 +66,10 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
 
   const handleEndDateChange = (value: DateValue | null) => {
     if (value) {
+      const now = new Date().setHours(23, 59, 59, 999);
+      if (value.toDate(getLocalTimeZone()).getTime() >now) {
+        return;
+      }
       setEndDate(value);
       if (startDate) {
         // Convert DateValue to Date for the callback
@@ -168,6 +178,7 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
                 granularity="day"
                 onChange={handleStartDateChange}
                 className="w-full"
+                aria-label="Start Date"
               />
               <span className="text-gray-500">{t("filters.to")}</span>
               <DatePicker
@@ -176,6 +187,7 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
                 granularity="day"
                 onChange={handleEndDateChange}
                 className="w-full"
+                aria-label="End Date"
               />
             </div>
           </div>

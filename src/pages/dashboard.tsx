@@ -1,5 +1,4 @@
 import { ChartCard } from "../components/dashboard/charts/chart-card.tsx";
-import { BarChart } from "../components/dashboard/charts/bar-chart.tsx";
 import { Spinner } from "@heroui/react";
 import { DashboardFilters } from "../components/dashboard/filter.tsx";
 import { useEffect, useState, useMemo } from "react";
@@ -10,6 +9,7 @@ import { sensorMetadata } from "../types/sensorMetadata";
 import {
   GroupByTimeAmount,
   AggregationType,
+  SensorDataPoint,
 } from "../types/sensorDataResponse";
 import { LineChart } from "../components/dashboard/charts/line-chart.tsx";
 
@@ -23,8 +23,7 @@ const Dashboard = () => {
   const [selectedDateRange, setSelectedDateRange] = useState<{
     start: Date;
     end: Date;
-  } | null>(() => {
-    // Set end date to the end of the current day to avoid time-based variations
+  }>(() => {
     const end = new Date();
     end.setHours(23, 59, 59, 999);
 
@@ -34,27 +33,38 @@ const Dashboard = () => {
 
     return { start, end };
   });
+  const [fetchedDateRange, setFetchedDateRange] = useState<{start: Date; end: Date} | null>(null);
   const [selectedSensors, setSelectedSensors] = useState<string[]>([]);
   const [selectedAggregation, setSelectedAggregation] =
     useState<AggregationType>("none");
   const [groupBy, setGroupBy] = useState<GroupByTimeAmount>("day");
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
-
+  const [rawData, setRawData] = useState<SensorDataPoint[]>([]);
+  const [needToFetch, setNeedToFetch] = useState(false);
   // Convert selected sensors from strings to numbers
   const selectedSensorIds = useMemo(() => {
-    return selectedSensors
-      .map((sensorPosition) => {
-        // Find the sensor ID by position
-        for (const device of sensors) {
-          for (const sensor of device.sensors) {
-            if (sensor.position === sensorPosition) {
-              return sensor.id;
+    if (sensors && sensors.length > 0) {
+      const selected = selectedSensors
+        .map((sensorPosition) => {
+          // Find the sensor ID by position
+          for (const device of sensors) {
+            for (const sensor of device.sensors) {
+              if (sensor.position === sensorPosition) {
+                return sensor.id;
+              }
             }
           }
-        }
-        return 0; // Default value if not found
-      })
-      .filter((id) => id !== 0); // Remove any not found
+          return 0; // Default value if not found
+        })
+        .filter((id) => id !== 0); // Remove any not found
+      setFetchedDateRange(null);
+      setRawData([]);
+
+      if (selected) {
+        return selected;
+      }
+    }
+    return [];
   }, [selectedSensors, sensors]);
 
   // Use the sensor records hook
@@ -65,6 +75,12 @@ const Dashboard = () => {
   } = useSensorRecords({
     sensorIds: selectedSensorIds,
     dateRange: selectedDateRange,
+    rawData,
+    setRawData,
+    needToFetch,
+    setNeedToFetch,
+    currentFetchedDateRange: fetchedDateRange,
+    setFetchedDateRange: setFetchedDateRange,
     groupBy,
     aggregationType: selectedAggregation,
   });
@@ -137,7 +153,7 @@ const Dashboard = () => {
 
   return isLoading ? (
     <div className="flex items-center justify-center h-screen">
-      <Spinner size="lg" />
+      <Spinner size="lg"/>
     </div>
   ) : hasError ? (
     <div className="flex items-center justify-center h-screen text-red-500">
@@ -147,7 +163,9 @@ const Dashboard = () => {
     <div className="space-y-6">
       <DashboardFilters
         onDateRangeChange={handleDateRangeChange}
+        currentDateRange={selectedDateRange}
         onSensorsChange={handleSensorsChange}
+        currentSensors={selectedSensors}
         onAggregationChange={handleAggregationChange}
         onRefreshData={handleRefreshData}
         availableSensors={sensors.flatMap((s: sensorResponse): string[] =>
@@ -165,7 +183,7 @@ const Dashboard = () => {
               No data available. Please select sensors and date range.
             </div>
           ) : (
-            <LineChart data={chartData} />
+            <LineChart data={chartData}/>
           )}
         </ChartCard>
       </div>
