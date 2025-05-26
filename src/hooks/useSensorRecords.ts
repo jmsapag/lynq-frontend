@@ -20,6 +20,12 @@ import {
 interface UseSensorRecordsParams {
   sensorIds: number[];
   dateRange: { start: Date; end: Date } | null;
+  currentFetchedDateRange: { start: Date; end: Date } | null;
+  setFetchedDateRange: (range: { start: Date; end: Date }) => void;
+  rawData: SensorDataPoint[];
+  setRawData: (data: SensorDataPoint[]) => void;
+  needToFetch: boolean;
+  setNeedToFetch: (need: boolean) => void;
   groupBy: GroupByTimeAmount;
   aggregationType: AggregationType;
 }
@@ -33,9 +39,16 @@ interface UseSensorRecordsResult {
 export function useSensorRecords({
   sensorIds,
   dateRange,
+  rawData,
+  setRawData,
+  currentFetchedDateRange,
+  setFetchedDateRange,
+  needToFetch,
+  setNeedToFetch,
   groupBy,
   aggregationType,
 }: UseSensorRecordsParams): UseSensorRecordsResult {
+  const fetchedDateRange = currentFetchedDateRange;
   const [data, setData] = useState<TransformedSensorData>({
     timestamps: [],
     in: [],
@@ -43,12 +56,6 @@ export function useSensorRecords({
   });
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [rawData, setRawData] = useState<SensorDataPoint[]>([]);
-  const [fetchedDateRange, setFetchedDateRange] = useState<{
-    start: Date;
-    end: Date;
-  } | null>(null);
-  const [needToFetch, setNeedToFetch] = useState<boolean>(false);
 
   // Function to fetch data from the API
   const fetchData = useCallback(
@@ -275,10 +282,11 @@ export function useSensorRecords({
       // Check if we need to fetch new data or can use existing data
       if (!fetchedDateRange) {
         // First fetch
+        console.log("First fetch - no previously fetched data");
         setNeedToFetch(true);
       } else if (
         isBefore(dateRange!.start, fetchedDateRange.start) ||
-        isAfter(dateRange!.end, fetchedDateRange.end)
+        (isAfter(dateRange!.end, fetchedDateRange.end) && !isAfter(dateRange!.end, new Date()))
       ) {
         // Only fetch if the new range extends beyond the already fetched range
         console.log("New range extends beyond fetched range");
@@ -299,9 +307,9 @@ export function useSensorRecords({
       // If we have data in the requested range and the new range is within the fetched range,
       // we don't need to fetch new data
       if (fetchedDateRange) {
-        // Check if the date ranges are the same (to avoid duplicate requests)
         const isSameRange =
-          dateRange!.start.getTime() === fetchedDateRange.start.getTime() &&
+          dateRange!.start.getTime() ===
+          fetchedDateRange.start.getTime() &&
           dateRange!.end.getTime() === fetchedDateRange.end.getTime();
 
         if (isSameRange) {
@@ -310,8 +318,7 @@ export function useSensorRecords({
             "Skipping API request - date range is the same as previously fetched",
           );
         }
-        // Check if the new range is completely within the already fetched range and we have data
-        else if (
+        if (
           hasDataInRange &&
           !isBefore(dateRange!.start, fetchedDateRange.start) &&
           !isAfter(dateRange!.end, fetchedDateRange.end)
@@ -337,10 +344,15 @@ export function useSensorRecords({
           // Check if we need to fetch data for the end of the range
           const needFetchEnd = isAfter(dateRange!.end, fetchedDateRange.end);
 
+          console.log("Need fetch start:", needFetchStart);
+          console.log("Need fetch end:", needFetchEnd);
+
+
           // If both conditions are false, we don't need to fetch anything
           if (!needFetchStart && !needFetchEnd) {
             // The new range is completely within the already fetched range
             setNeedToFetch(false);
+            return;
           } else if (needFetchStart && !needFetchEnd) {
             // Only need to fetch data for the start of the range
             fetchStart = dateRange!.start;
@@ -362,6 +374,14 @@ export function useSensorRecords({
             "to",
             fetchEnd,
           );
+          console.log("Sensor IDs to fetch:", sensorIds);
+          console.log("Date range to fetch:", dateRange);
+          console.log("Fetched date range:", fetchedDateRange);
+          console.log("Raw data length:", rawData.length);
+          console.log("Need to fetch:", needToFetch);
+          console.log("Data in range:", dataInRange.length);
+          console.log("Has data in range:", hasDataInRange);
+          console.log("Fetching new data...");
           const newData = await fetchData(fetchStart, fetchEnd, sensorIds);
 
           if (fetchedDateRange) {
@@ -425,12 +445,6 @@ export function useSensorRecords({
     fetchAndProcessData();
   }, [
     sensorIds,
-    fetchData,
-    groupDataByTime,
-    transformData,
-    rawData,
-    fetchedDateRange,
-    groupBy,
     needToFetch,
     dateRange,
   ]);
