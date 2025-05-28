@@ -9,81 +9,45 @@ import { sensorMetadata } from "../types/sensorMetadata";
 import {
   GroupByTimeAmount,
   AggregationType,
-  SensorDataPoint,
 } from "../types/sensorDataResponse";
 import { LineChart } from "../components/dashboard/charts/line-chart.tsx";
 import { SensorDataCard } from "../components/dashboard/charts/card.tsx";
+import { SensorRecordsFormData } from "../types/sensorRecordsFormData";
+import { Time } from "@internationalized/date";
+
+function getFirstFetchedDateRange() {
+  return {
+    start: new Date(new Date().setDate(new Date().getDate() - 14)), // 14 days ago
+    end: new Date(), // today
+  };
+}
 
 const Dashboard = () => {
+  const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
+  const [sensorMap, setSensorMap] = useState<Map<number, string>>(new Map());
   const {
-    sensors,
+    locations,
     loading: sensorsLoading,
     error: sensorsError,
   } = useSensorData();
-
-  const [selectedDateRange, setSelectedDateRange] = useState<{
-    start: Date;
-    end: Date;
-  }>(() => {
-    const end = new Date();
-
-    const start = new Date();
-    start.setDate(start.getDate() - 7);
-    start.setHours(0, 0, 0, 0);
-
-    return { start, end };
-  });
-  const [fetchedDateRange, setFetchedDateRange] = useState<{start: Date; end: Date} | null>(null);
-  const [selectedSensors, setSelectedSensors] = useState<string[]>([]);
-  const [selectedAggregation, setSelectedAggregation] =
-    useState<AggregationType>("sum");
-  const [groupBy, setGroupBy] = useState<GroupByTimeAmount>("day");
-  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
-  const [rawData, setRawData] = useState<SensorDataPoint[]>([]);
-  const [needToFetch, setNeedToFetch] = useState(false);
-  // Convert selected sensors from strings to numbers
-  const selectedSensorIds = useMemo(() => {
-    if (sensors && sensors.length > 0) {
-      const selected = selectedSensors
-        .map((sensorPosition) => {
-          // Find the sensor ID by position
-          for (const device of sensors) {
-            for (const sensor of device.sensors) {
-              if (sensor.position === sensorPosition) {
-                return sensor.id;
-              }
-            }
-          }
-          return 0; // Default value if not found
-        })
-        .filter((id) => id !== 0); // Remove any not found
-      setFetchedDateRange(null);
-      setRawData([]);
-
-      if (selected) {
-        return selected;
-      }
-    }
-    return [];
-  }, [selectedSensors, sensors]);
+  const [sensorRecordsFormData, setSensorRecordsFormData] =
+    useState<SensorRecordsFormData>({
+      sensorIds: [],
+      fetchedDateRange: null,
+      dateRange: getFirstFetchedDateRange(),
+      hourRange: { start: new Time(0, 0), end: new Time(23, 59) },
+      rawData: [],
+      groupBy: "day",
+      aggregationType: "sum",
+      needToFetch: true,
+    });
 
   // Use the sensor records hook
   const {
     data: sensorData,
     loading: dataLoading,
     error: dataError,
-  } = useSensorRecords({
-    sensorIds: selectedSensorIds,
-    dateRange: selectedDateRange,
-    rawData,
-    setRawData,
-    needToFetch,
-    setNeedToFetch,
-    currentFetchedDateRange: fetchedDateRange,
-    setFetchedDateRange: setFetchedDateRange,
-    groupBy,
-    aggregationType: selectedAggregation,
-  });
+  } = useSensorRecords(sensorRecordsFormData, setSensorRecordsFormData);
 
   const metrics = useMemo(() => {
     if (!sensorData || !sensorData.in || !sensorData.out) {
@@ -106,19 +70,56 @@ const Dashboard = () => {
   }, [sensorData]);
 
   const handleDateRangeChange = (startDate: Date, endDate: Date) => {
-    setSelectedDateRange({ start: startDate, end: endDate });
+    setSensorRecordsFormData((prev) => ({
+      ...prev,
+      dateRange: { start: startDate, end: endDate },
+    }));
   };
 
   const handleSensorsChange = (sensors: string[]) => {
-    setSelectedSensors(sensors);
+    console.log("Sensor Map:", sensorMap);
+    console.log("Selected sensors:", sensors);
+    setSensorRecordsFormData((prev: SensorRecordsFormData) => {
+      return {
+        ...prev,
+        sensorIds: sensors
+          .map((sensor) => {
+            const sensorEntry = Array.from(sensorMap.entries()).find(
+              ([, position]) => position === sensor,
+            );
+            console.log("Sensor Entry:", sensorEntry);
+            return sensorEntry ? sensorEntry[0] : null;
+          })
+          .filter((id): id is number => id !== null), // Filter out null values
+      };
+    });
   };
+  useEffect(() => {
+    console.log("sensorRecordsFormData:", sensorRecordsFormData);
+  }, [sensorRecordsFormData]);
+
+  useEffect(() => {
+    const newSensorMap = new Map<number, string>();
+    locations?.forEach((location: sensorResponse) => {
+      location.sensors.forEach((sensor: sensorMetadata) => {
+        newSensorMap.set(sensor.id, sensor.position);
+      });
+    });
+    setSensorMap(newSensorMap);
+  }, [locations]);
 
   const handleAggregationChange = (aggregation: string) => {
-    setSelectedAggregation(aggregation as AggregationType);
+    setSensorRecordsFormData((prev) => ({
+      ...prev,
+      aggregationType: aggregation as AggregationType,
+    }));
   };
 
   const handleGroupByChange = (groupByValue: string) => {
-    setGroupBy(groupByValue as GroupByTimeAmount);
+    setSensorRecordsFormData((prev) => ({
+      ...prev,
+      groupBy: groupByValue as GroupByTimeAmount,
+    }));
   };
 
   const handleRefreshData = () => {
@@ -126,8 +127,21 @@ const Dashboard = () => {
     localStorage.setItem("lastUpdated", now.toISOString());
     setLastUpdated(now);
 
-    setSelectedDateRange((prev) => ({ start: prev.start, end: now }));
+    setSensorRecordsFormData((prev) => ({
+      ...prev,
+      dateRange: {
+        start: prev.dateRange.start,
+        end: new Date(), // today
+      },
+    }));
   };
+
+  const handleHourRangeChange = (start: Time, end: Time) => {
+    setSensorRecordsFormData((prev) => ({
+      ...prev,
+      hourRange: { start, end },
+    }));
+  }
 
   useEffect(() => {
     const storedLastUpdated = localStorage.getItem("lastUpdated");
@@ -182,66 +196,74 @@ const Dashboard = () => {
     };
   }, [sensorData]);
 
-  return isLoading ? (
-    <div className="flex items-center justify-center h-screen">
-      <Spinner size="lg"/>
-    </div>
-  ) : hasError ? (
-    <div className="flex items-center justify-center h-screen text-red-500">
-      Error loading data. Please try again.
-    </div>
-  ) : (
+  return (
     <div className="space-y-6">
       <DashboardFilters
         onDateRangeChange={handleDateRangeChange}
-        currentDateRange={selectedDateRange}
+        currentDateRange={sensorRecordsFormData.dateRange}
         onSensorsChange={handleSensorsChange}
-        currentSensors={selectedSensors}
+        currentSensors={sensorRecordsFormData.sensorIds?.map((id) =>
+          sensorMap.get(id)!,
+        ) || []}
+        hourRange={sensorRecordsFormData.hourRange}
+        onHourRangeChange={handleHourRangeChange}
         onAggregationChange={handleAggregationChange}
         onRefreshData={handleRefreshData}
-        availableSensors={sensors.flatMap((s: sensorResponse): string[] =>
-          s.sensors.flatMap((m: sensorMetadata): string => m.position),
-        )}
+        availableSensors={
+          locations?.flatMap((s: sensorResponse): string[] =>
+            s.sensors.flatMap((m: sensorMetadata): string => m.position),
+          ) || []
+        }
         lastUpdated={lastUpdated}
       />
+      {isLoading ? (
+        <div className="flex items-center justify-center h-screen">
+          <Spinner size="lg" />
+        </div>
+      ) : hasError ? (
+        <div className="flex items-center justify-center h-screen text-red-500">
+          Error loading data. Please try again.
+        </div>
+      ) : (
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <SensorDataCard
+              title="Total In"
+              value={metrics.totalIn}
+              translationKey="dashboard.metrics.totalIn"
+              unit="people"
+            />
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <SensorDataCard
-          title="Total In"
-          value={metrics.totalIn}
-          translationKey="dashboard.metrics.totalIn"
-          unit="people"
-        />
+            <SensorDataCard
+              title="Total Out"
+              value={metrics.totalOut}
+              translationKey="dashboard.metrics.totalOut"
+              unit="people"
+            />
 
-        <SensorDataCard
-          title="Total Out"
-          value={metrics.totalOut}
-          translationKey="dashboard.metrics.totalOut"
-          unit="people"
-        />
-
-        <SensorDataCard
-          title="Entry Rate"
-          value={metrics.entryRate}
-          translationKey="dashboard.metrics.entryRate"
-          unit="%"
-        />
-      </div>
-
-      <div className="grid grid-cols-1 gap-6">
-        <ChartCard
-          title="Flujo de Personas (In/Out)"
-          translationKey="dashboard.charts.peopleFlow"
-        >
-          {chartData.categories.length === 0 ? (
-            <div className="flex items-center justify-center h-64 text-gray-500">
-              No data available. Please select sensors and date range.
-            </div>
-          ) : (
-            <LineChart data={chartData}/>
-          )}
-        </ChartCard>
-      </div>
+            <SensorDataCard
+              title="Entry Rate"
+              value={metrics.entryRate}
+              translationKey="dashboard.metrics.entryRate"
+              unit="%"
+            />
+          </div>
+          <div className="grid grid-cols-1 gap-6">
+            <ChartCard
+              title="Flujo de Personas (In/Out)"
+              translationKey="dashboard.charts.peopleFlow"
+            >
+              {chartData.categories.length === 0 ? (
+                <div className="flex items-center justify-center h-64 text-gray-500">
+                  No data available. Please select sensors and date range.
+                </div>
+              ) : (
+                <LineChart data={chartData} />
+              )}
+            </ChartCard>
+          </div>
+        </>
+      )}
     </div>
   );
 };

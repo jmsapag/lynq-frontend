@@ -35,7 +35,7 @@ function useSensorData() {
   }, [id]);
 
   return {
-    sensors,
+    locations: sensors,
     loading,
     error,
   };

@@ -3,14 +3,16 @@ import { ArrowPathIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
 import { format } from "date-fns";
 import { useTranslation } from "react-i18next";
 import { DatePicker, TimeInput } from "@heroui/react";
-import { DateValue } from "@internationalized/date";
-import { fromDate, getLocalTimeZone, parseTime } from "@internationalized/date";
+import { DateValue, Time } from "@internationalized/date";
+import { fromDate, getLocalTimeZone } from "@internationalized/date";
 
 type DashboardFiltersProps = {
   onDateRangeChange: (startDate: Date, endDate: Date) => void;
   currentDateRange: { start: Date; end: Date };
   onSensorsChange: (sensors: string[]) => void;
   onAggregationChange?: (aggregation: string) => void;
+  hourRange: { start: Time; end: Time };
+  onHourRangeChange: (start: Time, end: Time) => void;
   currentAggregation?: string;
   onRefreshData?: () => void;
   availableSensors: string[];
@@ -24,6 +26,8 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
   onSensorsChange,
   onAggregationChange,
   currentAggregation,
+  hourRange,
+  onHourRangeChange,
   onRefreshData,
   availableSensors,
   currentSensors,
@@ -43,10 +47,6 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
   });
 
   const [selectedSensors, setSelectedSensors] = useState<string[]>(currentSensors || []);
-  const [startTime, setStartTime] = useState<TimeValue>(() =>
-    parseTime("00:00"),
-  );
-  const [endTime, setEndTime] = useState<TimeValue>(() => parseTime("23:59"));
   const [groupBy, setGroupBy] = useState<string>("day");
   const [aggregation, setAggregation] = useState<string>(currentAggregation || "sum");
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
@@ -92,15 +92,15 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
     onSensorsChange(updatedSensors);
   };
 
-  const handleStartTimeChange = (value: TimeValue | null) => {
+  const handleStartTimeChange = (value: Time | null) => {
     if (value) {
-      setStartTime(value);
+      onHourRangeChange(value, hourRange.end);
     }
   };
 
-  const handleEndTimeChange = (value: TimeValue | null) => {
+  const handleEndTimeChange = (value: Time | null) => {
     if (value) {
-      setEndTime(value);
+      onHourRangeChange(hourRange.start, value);
     }
   };
 
@@ -243,14 +243,14 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
             </label>
             <div className="flex items-center space-x-2">
               <TimeInput
-                value={startTime}
+                value={hourRange.start}
                 variant="bordered"
                 onChange={handleStartTimeChange}
                 className="w-full"
               />
               <span className="text-gray-500">{t("filters.to")}</span>
               <TimeInput
-                value={endTime}
+                value={hourRange.end}
                 variant="bordered"
                 onChange={handleEndTimeChange}
                 className="w-full"

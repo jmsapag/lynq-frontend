@@ -8,6 +8,7 @@ export type SensorDataPoint = {
   timestamp: string;
   total_count_in: number;
   total_count_out: number;
+  isSelected: boolean;
 };
 
 export type TransformedSensorData = {
