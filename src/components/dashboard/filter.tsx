@@ -3,14 +3,16 @@ import { ArrowPathIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
 import { format } from "date-fns";
 import { useTranslation } from "react-i18next";
 import { DatePicker, TimeInput } from "@heroui/react";
-import { DateValue } from "@internationalized/date";
-import { fromDate, getLocalTimeZone, parseTime } from "@internationalized/date";
+import { DateValue, Time } from "@internationalized/date";
+import { fromDate, getLocalTimeZone } from "@internationalized/date";
 
 type DashboardFiltersProps = {
   onDateRangeChange: (startDate: Date, endDate: Date) => void;
   currentDateRange: { start: Date; end: Date };
   onSensorsChange: (sensors: string[]) => void;
   onAggregationChange?: (aggregation: string) => void;
+  hourRange: { start: Time; end: Time };
+  onHourRangeChange: (start: Time, end: Time) => void;
   currentAggregation?: string;
   onRefreshData?: () => void;
   availableSensors: string[];
@@ -24,6 +26,8 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
   onSensorsChange,
   onAggregationChange,
   currentAggregation,
+  hourRange,
+  onHourRangeChange,
   onRefreshData,
   availableSensors,
   currentSensors,
@@ -42,17 +46,9 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
       : fromDate(new Date(), getLocalTimeZone());
   });
 
-  const [selectedSensors, setSelectedSensors] = useState<string[]>(
-    currentSensors || [],
-  );
-  const [startTime, setStartTime] = useState<TimeValue>(() =>
-    parseTime("00:00"),
-  );
-  const [endTime, setEndTime] = useState<TimeValue>(() => parseTime("23:59"));
+  const [selectedSensors, setSelectedSensors] = useState<string[]>(currentSensors || []);
   const [groupBy, setGroupBy] = useState<string>("day");
-  const [aggregation, setAggregation] = useState<string>(
-    currentAggregation || "sum",
-  );
+  const [aggregation, setAggregation] = useState<string>(currentAggregation || "sum");
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -96,15 +92,15 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
     onSensorsChange(updatedSensors);
   };
 
-  const handleStartTimeChange = (value: TimeValue | null) => {
+  const handleStartTimeChange = (value: Time | null) => {
     if (value) {
-      setStartTime(value);
+      onHourRangeChange(value, hourRange.end);
     }
   };
 
-  const handleEndTimeChange = (value: TimeValue | null) => {
+  const handleEndTimeChange = (value: Time | null) => {
     if (value) {
-      setEndTime(value);
+      onHourRangeChange(hourRange.start, value);
     }
   };
 
@@ -204,15 +200,16 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
             </label>
             <button
               type="button"
-              className="flex justify-between items-center w-full md:w-60 px-3 py-2 border border-gray-300 rounded-md bg-white text-left focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
+              className="inline-flex w-full md:w-60 items-center justify-between rounded-xl border-2 border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-900 shadow-sm hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-1 transition"
               onClick={() => setDropdownOpen(!dropdownOpen)}
             >
               <span className="truncate">{getSensorButtonText()}</span>
-              <ChevronDownIcon className="h-5 w-5 text-gray-400" />
+              <ChevronDownIcon className="h-4 w-3 text-gray-500" />
             </button>
 
             {dropdownOpen && (
-              <div className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto">
+              <div className="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-auto ring-1 ring-black ring-opacity-5 focus:outline-none">
+                {" "}
                 <div className="py-1">
                   {availableSensors.map((sensor) => (
                     <div
@@ -247,14 +244,14 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
             </label>
             <div className="flex items-center space-x-2">
               <TimeInput
-                value={startTime}
+                value={hourRange.start}
                 variant="bordered"
                 onChange={handleStartTimeChange}
                 className="w-full"
               />
               <span className="text-gray-500">{t("filters.to")}</span>
               <TimeInput
-                value={endTime}
+                value={hourRange.end}
                 variant="bordered"
                 onChange={handleEndTimeChange}
                 className="w-full"
@@ -267,7 +264,7 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
               {t("filters.groupBy")}
             </label>
             <select
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
+              className="inline-flex w-full md:w-60 items-center justify-between rounded-xl border-2 border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-900 shadow-sm hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-1 transition-colors duration-150"
               value={groupBy}
               onChange={handleGroupByChange}
             >
@@ -287,7 +284,7 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
               {t("filters.aggregation")}
             </label>
             <select
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
+              className="inline-flex w-full md:w-60 items-center justify-between rounded-xl border-2 border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-900 shadow-sm hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-1 transition-colors duration-150"
               value={aggregation}
               onChange={handleAggregationChange}
             >
@@ -299,12 +296,12 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
           </div>
 
           <div className="space-y-2">
-            <div className="text-xs text-gray-500 text-center mb-2">
+            <div className="text-xs text-gray-500 text-center">
               {t("filters.lastUpdated")}: {formatLastUpdated()}
             </div>
             <button
               onClick={handleRefresh}
-              className="flex items-center justify-center w-full px-4 py-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500"
+              className="inline-flex w-full items-center justify-center rounded-xl border-2 border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 shadow-sm hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-1 transition-colors duration-150"
             >
               <ArrowPathIcon className="h-5 w-5 mr-2" />
               {t("filters.refresh")}
