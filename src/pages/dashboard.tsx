@@ -42,6 +42,7 @@ const Dashboard = () => {
       needToFetch: true,
     });
 
+
   // Use the sensor records hook
   const {
     data: sensorData,
@@ -77,8 +78,6 @@ const Dashboard = () => {
   };
 
   const handleSensorsChange = (sensors: string[]) => {
-    console.log("Sensor Map:", sensorMap);
-    console.log("Selected sensors:", sensors);
     setSensorRecordsFormData((prev: SensorRecordsFormData) => {
       return {
         ...prev,
@@ -87,7 +86,6 @@ const Dashboard = () => {
             const sensorEntry = Array.from(sensorMap.entries()).find(
               ([, position]) => position === sensor,
             );
-            console.log("Sensor Entry:", sensorEntry);
             return sensorEntry ? sensorEntry[0] : null;
           })
           .filter((id): id is number => id !== null), // Filter out null values
@@ -95,7 +93,6 @@ const Dashboard = () => {
     });
   };
   useEffect(() => {
-    console.log("sensorRecordsFormData:", sensorRecordsFormData);
   }, [sensorRecordsFormData]);
 
   useEffect(() => {

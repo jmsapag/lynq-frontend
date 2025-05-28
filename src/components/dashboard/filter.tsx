@@ -69,7 +69,7 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
   const handleEndDateChange = (value: DateValue | null) => {
     if (value) {
       const now = new Date().setHours(23, 59, 59, 999);
-      if (value.toDate(getLocalTimeZone()).getTime() >now) {
+      if (value.toDate(getLocalTimeZone()).getTime() > now) {
         return;
       }
       setEndDate(value);
@@ -200,15 +200,16 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
             </label>
             <button
               type="button"
-              className="flex justify-between items-center w-full md:w-60 px-3 py-2 border border-gray-300 rounded-md bg-white text-left focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
+              className="inline-flex w-full md:w-60 items-center justify-between rounded-xl border-2 border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-900 shadow-sm hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-1 transition"
               onClick={() => setDropdownOpen(!dropdownOpen)}
             >
               <span className="truncate">{getSensorButtonText()}</span>
-              <ChevronDownIcon className="h-5 w-5 text-gray-400" />
+              <ChevronDownIcon className="h-4 w-3 text-gray-500" />
             </button>
 
             {dropdownOpen && (
-              <div className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto">
+              <div className="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-auto ring-1 ring-black ring-opacity-5 focus:outline-none">
+                {" "}
                 <div className="py-1">
                   {availableSensors.map((sensor) => (
                     <div
@@ -263,7 +264,7 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
               {t("filters.groupBy")}
             </label>
             <select
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
+              className="inline-flex w-full md:w-60 items-center justify-between rounded-xl border-2 border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-900 shadow-sm hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-1 transition-colors duration-150"
               value={groupBy}
               onChange={handleGroupByChange}
             >
@@ -283,7 +284,7 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
               {t("filters.aggregation")}
             </label>
             <select
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500"
+              className="inline-flex w-full md:w-60 items-center justify-between rounded-xl border-2 border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-900 shadow-sm hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-1 transition-colors duration-150"
               value={aggregation}
               onChange={handleAggregationChange}
             >
@@ -295,12 +296,12 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
           </div>
 
           <div className="space-y-2">
-            <div className="text-xs text-gray-500 text-center mb-2">
+            <div className="text-xs text-gray-500 text-center">
               {t("filters.lastUpdated")}: {formatLastUpdated()}
             </div>
             <button
               onClick={handleRefresh}
-              className="flex items-center justify-center w-full px-4 py-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500"
+              className="inline-flex w-full items-center justify-center rounded-xl border-2 border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 shadow-sm hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-1 transition-colors duration-150"
             >
               <ArrowPathIcon className="h-5 w-5 mr-2" />
               {t("filters.refresh")}

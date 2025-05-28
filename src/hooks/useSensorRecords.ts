@@ -77,6 +77,7 @@ export function useSensorRecords(
         dataInRange,
       );
 
+
       setSensorRecordsFormData((prev: SensorRecordsFormData) => {
         return {
           ...prev,
@@ -107,6 +108,7 @@ export function useSensorRecords(
             needToFetch: false,
           }));
           return;
+
         }
 
         // Fetch and process data
@@ -117,7 +119,6 @@ export function useSensorRecords(
           sensorIds,
           setError,
         );
-        console.log("newData:", newData)
 
         let dataToProcess: SensorDataPoint[] = [];
 
@@ -165,8 +166,8 @@ export function useSensorRecords(
     };
 
     fetchAndProcessData();
-    console.log("data fetched and processed:", data);
   }, [sensorIds, dateRange, groupBy, aggregationType, needToFetch, hourRange]);
+
 
   return { data, loading, error };
 }
