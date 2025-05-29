@@ -2,194 +2,223 @@ import { ChartCard } from "../components/dashboard/charts/chart-card";
 import { DashboardFilters } from "../components/dashboard/filter";
 import { useEffect, useState, useMemo } from "react";
 import { useSensorData } from "../hooks/useSensorData";
-import { useSensorComparisonData } from "../hooks/useSensorComparisonData";
+import { useSensorRecords } from "../hooks/useSensorRecords.ts";
 import { sensorResponse } from "../types/deviceResponse";
 import { sensorMetadata } from "../types/sensorMetadata";
 import {
   GroupByTimeAmount,
   AggregationType,
-  SensorDataPoint,
 } from "../types/sensorDataResponse";
-import { BaseChart } from "../components/dashboard/charts/base-chart";
-import type { EChartsOption } from "echarts";
+import { SensorRecordsFormData } from "../types/sensorRecordsFormData";
+import { Time } from "@internationalized/date";
+import { Spinner, addToast } from "@heroui/react";
+import { DeviceComparisonChart } from "../components/dashboard/charts/device-comparison.tsx";
 
-// Device Comparison Chart Component for In/Out values
-const DeviceComparisonChart: React.FC<{
-  data: {
-    timestamps: string[];
-    devices: {
-      name: string;
-      values: number[];
-    }[];
+function getFirstFetchedDateRange() {
+  return {
+    start: new Date(new Date().setDate(new Date().getDate() - 14)),
+    end: new Date(),
   };
-  title: string;
-  className?: string;
-}> = ({ data, className }) => {
-  const option: EChartsOption = {
-    tooltip: {
-      trigger: "axis",
-      axisPointer: {
-        type: "cross",
-        label: {
-          backgroundColor: "#6a7985",
-        },
-      },
-    },
-    legend: {
-      data: data.devices.map((device) => device.name),
-    },
-    xAxis: {
-      type: "category",
-      data: data.timestamps,
-    },
-    yAxis: {
-      type: "value",
-    },
-    dataZoom: [
-      {
-        type: "inside",
-        start: 0,
-        end: 100,
-        moveOnMouseMove: true,
-      },
-    ],
-    series: data.devices.map((device) => ({
-      name: device.name,
-      type: "line",
-      data: device.values,
-      smooth: true,
-    })),
-  };
+}
 
-  return <BaseChart option={option} className={className || "h-full"} />;
-};
+const MAX_SENSORS = 20;
 
-// Loading Spinner Component
-const Spinner: React.FC<{ size?: string }> = ({ size = "md" }) => {
-  const sizeClasses =
-    {
-      sm: "w-5 h-5",
-      md: "w-8 h-8",
-      lg: "w-12 h-12",
-    }[size] || "w-8 h-8";
-
-  return (
-    <div className="flex justify-center">
-      <div
-        className={`animate-spin rounded-full border-t-2 border-blue-500 border-opacity-50 ${sizeClasses}`}
-      ></div>
-    </div>
-  );
-};
+const getInitialFormData = (): SensorRecordsFormData => ({
+  sensorIds: [],
+  fetchedDateRange: null,
+  dateRange: getFirstFetchedDateRange(),
+  hourRange: { start: new Time(0, 0), end: new Time(23, 59) },
+  rawData: [],
+  groupBy: "day",
+  aggregationType: "sum",
+  needToFetch: true,
+});
 
 const Comparison = () => {
+  const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
+  const [sensorMap, setSensorMap] = useState<Map<number, string>>(new Map());
   const {
-    sensors,
+    locations,
     loading: sensorsLoading,
     error: sensorsError,
   } = useSensorData();
 
-  const [selectedDateRange, setSelectedDateRange] = useState<{
-    start: Date;
-    end: Date;
-  } | null>(() => {
-    // Set end date to the end of the current day to avoid time-based variations
-    const end = new Date();
-    end.setHours(23, 59, 59, 999);
+  const [selectedSensorIds, setSelectedSensorIds] = useState<number[]>([]);
 
-    const start = new Date();
-    start.setDate(start.getDate() - 7);
-    start.setHours(0, 0, 0, 0);
-
-    return { start, end };
-  });
-  const [selectedSensors, setSelectedSensors] = useState<string[]>([]);
-  const [selectedAggregation, setSelectedAggregation] =
-    useState<AggregationType>("none");
-  const [groupBy, setGroupBy] = useState<GroupByTimeAmount>("day");
-  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
-
-  // Add caching state at component level
-  const [fetchedDateRange, setFetchedDateRange] = useState<{
-    start: Date;
-    end: Date;
-  } | null>(null);
-  const [rawData, setRawData] = useState<Map<number, SensorDataPoint[]>>(
-    new Map(),
-  );
-  const [needToFetch, setNeedToFetch] = useState(false);
-  const [loadedSensorIds, setLoadedSensorIds] = useState<Set<number>>(
-    new Set(),
+  const [formDataArr, setFormDataArr] = useState<SensorRecordsFormData[]>(
+    Array(MAX_SENSORS).fill(null).map(getInitialFormData),
   );
 
-  // Convert selected sensors from strings to numbers and get their names
-  const selectedSensorInfo = useMemo(() => {
-    const ids: number[] = [];
-    const names: string[] = [];
-
-    selectedSensors.forEach((sensorPosition) => {
-      // Find the sensor ID by position
-      if (sensors) {
-        for (const device of sensors) {
-          for (const sensor of device.sensors) {
-            if (sensor.position === sensorPosition) {
-              ids.push(sensor.id);
-              names.push(sensorPosition); // Using position as the display name
-              break;
-            }
+  useEffect(() => {
+    setFormDataArr((prevArr) =>
+      Array(MAX_SENSORS)
+        .fill(null)
+        .map((_, idx) => {
+          const sensorId = selectedSensorIds[idx];
+          if (sensorId !== undefined) {
+            return {
+              ...prevArr[idx],
+              sensorIds: [sensorId],
+              needToFetch: true,
+            };
           }
-        }
-      }
-    });
+          return getInitialFormData();
+        }),
+    );
+  }, [selectedSensorIds]);
 
-    return { ids, names };
-  }, [selectedSensors, sensors]);
+  const sensorResults = formDataArr.map((formData, idx) =>
+    useSensorRecords(formData, (updater) =>
+      setFormDataArr((prevArr) => {
+        const newArr = [...prevArr];
+        newArr[idx] =
+          typeof updater === "function" ? updater(prevArr[idx]) : updater;
+        return newArr;
+      }),
+    ),
+  );
 
-  // Use the sensor comparison data hook with lifted state
-  const {
-    data: sensorComparisonData,
-    loading: dataLoading,
-    error: dataError,
-  } = useSensorComparisonData({
-    sensorIds: selectedSensorInfo.ids,
-    sensorNames: selectedSensorInfo.names,
-    dateRange: selectedDateRange,
-    groupBy,
-    aggregationType: selectedAggregation,
-    // Pass the caching state
-    rawData,
-    setRawData,
-    fetchedDateRange,
-    setFetchedDateRange,
-    needToFetch,
-    setNeedToFetch,
-    loadedSensorIds,
-    setLoadedSensorIds,
-  });
+  const { inChartData, outChartData } = useMemo(() => {
+    const validResults = sensorResults
+      .map((result, idx) =>
+        selectedSensorIds[idx] !== undefined
+          ? { sensorId: selectedSensorIds[idx], ...result }
+          : null,
+      )
+      .filter((result): result is NonNullable<typeof result> =>
+        Boolean(result),
+      );
+
+    if (validResults.length === 0) {
+      return {
+        inChartData: { categories: [], devices: [] },
+        outChartData: { categories: [], devices: [] },
+      };
+    }
+
+    const firstWithData = validResults.find(
+      (r) => r?.data?.timestamps && r.data.timestamps.length > 0,
+    );
+    if (!firstWithData || !firstWithData.data?.timestamps) {
+      return {
+        inChartData: { categories: [], devices: [] },
+        outChartData: { categories: [], devices: [] },
+      };
+    }
+    const categories = firstWithData.data.timestamps;
+
+    const inDevices = validResults
+      .filter((r) => r?.data?.in && r.data.in.length > 0)
+      .map((r) => ({
+        name: sensorMap.get(r.sensorId) || `Sensor ${r.sensorId}`,
+        values: r.data.in,
+      }));
+
+    const outDevices = validResults
+      .filter((r) => r?.data?.out && r.data.out.length > 0)
+      .map((r) => ({
+        name: sensorMap.get(r.sensorId) || `Sensor ${r.sensorId}`,
+        values: r.data.out,
+      }));
+
+    return {
+      inChartData: { categories, devices: inDevices },
+      outChartData: { categories, devices: outDevices },
+    };
+  }, [sensorResults, selectedSensorIds, sensorMap]);
+
+  const dataLoading = sensorResults.some(
+    (result, idx) => selectedSensorIds[idx] !== undefined && result.loading,
+  );
+  const dataError = sensorResults.find((result) => result.error)?.error || null;
 
   const handleDateRangeChange = (startDate: Date, endDate: Date) => {
-    setSelectedDateRange({ start: startDate, end: endDate });
+    setFormDataArr((prevArr) =>
+      prevArr.map((formData) => ({
+        ...formData,
+        dateRange: { start: startDate, end: endDate },
+        needToFetch: true,
+      })),
+    );
   };
 
   const handleSensorsChange = (sensors: string[]) => {
-    setSelectedSensors(sensors);
-    // Don't reset caching state here - let the hook handle it
+    if (sensors.length > MAX_SENSORS) {
+      addToast({
+        title: "Too many sensors selected",
+        description: `You can only compare up to ${MAX_SENSORS} sensor${MAX_SENSORS > 1 ? "s" : ""}.`,
+        severity: "warning",
+        color: "warning",
+      });
+      return;
+    }
+
+    setSelectedSensorIds(
+      sensors
+        .map((sensor) => {
+          const entry = Array.from(sensorMap.entries()).find(
+            ([, position]) => position === sensor,
+          );
+          return entry ? entry[0] : null;
+        })
+        .filter((id): id is number => id !== null),
+    );
   };
 
+  useEffect(() => {
+    const newSensorMap = new Map<number, string>();
+    locations?.forEach((location: sensorResponse) => {
+      location.sensors.forEach((sensor: sensorMetadata) => {
+        newSensorMap.set(sensor.id, sensor.position);
+      });
+    });
+    setSensorMap(newSensorMap);
+  }, [locations]);
+
   const handleAggregationChange = (aggregation: string) => {
-    setSelectedAggregation(aggregation as AggregationType);
+    setFormDataArr((prevArr) =>
+      prevArr.map((formData) => ({
+        ...formData,
+        aggregationType: aggregation as AggregationType,
+        needToFetch: true,
+      })),
+    );
+  };
+
+  const handleGroupByChange = (groupByValue: string) => {
+    setFormDataArr((prevArr) =>
+      prevArr.map((formData) => ({
+        ...formData,
+        groupBy: groupByValue as GroupByTimeAmount,
+        needToFetch: true,
+      })),
+    );
   };
 
   const handleRefreshData = () => {
     const now = new Date();
     localStorage.setItem("lastUpdated", now.toISOString());
     setLastUpdated(now);
+    setFormDataArr((prevArr) =>
+      prevArr.map((formData) => ({
+        ...formData,
+        dateRange: {
+          start: formData.dateRange.start,
+          end: new Date(),
+        },
+        needToFetch: true,
+      })),
+    );
+  };
 
-    // Clear caching state to force a refetch
-    setRawData(new Map());
-    setLoadedSensorIds(new Set());
-    setFetchedDateRange(null);
-    setNeedToFetch(true);
+  const handleHourRangeChange = (start: Time, end: Time) => {
+    setFormDataArr((prevArr) =>
+      prevArr.map((formData) => ({
+        ...formData,
+        hourRange: { start, end },
+        needToFetch: true,
+      })),
+    );
   };
 
   useEffect(() => {
@@ -199,14 +228,12 @@ const Comparison = () => {
     }
   }, []);
 
-  // Listen for groupBy changes from the filter component
   useEffect(() => {
     const handleGroupByChangeFromFilter = (e: CustomEvent) => {
       if (e.detail && e.detail.groupBy) {
-        setGroupBy(e.detail.groupBy as GroupByTimeAmount);
+        handleGroupByChange(e.detail.groupBy);
       }
     };
-
     window.addEventListener(
       "groupByChange",
       handleGroupByChangeFromFilter as EventListener,
@@ -219,51 +246,8 @@ const Comparison = () => {
     };
   }, []);
 
-  // Handle loading states
   const isLoading = sensorsLoading || dataLoading;
   const hasError = sensorsError || dataError;
-
-  // Prepare chart data for in comparison
-  const inChartData = useMemo(() => {
-    if (
-      !sensorComparisonData?.timestamps ||
-      sensorComparisonData.timestamps.length === 0
-    ) {
-      return {
-        timestamps: [],
-        devices: [],
-      };
-    }
-
-    return {
-      timestamps: sensorComparisonData.timestamps,
-      devices: sensorComparisonData.sensorsData.map((sensor) => ({
-        name: sensor.name,
-        values: sensor.inValues,
-      })),
-    };
-  }, [sensorComparisonData]);
-
-  // Prepare chart data for out comparison
-  const outChartData = useMemo(() => {
-    if (
-      !sensorComparisonData?.timestamps ||
-      sensorComparisonData.timestamps.length === 0
-    ) {
-      return {
-        timestamps: [],
-        devices: [],
-      };
-    }
-
-    return {
-      timestamps: sensorComparisonData.timestamps,
-      devices: sensorComparisonData.sensorsData.map((sensor) => ({
-        name: sensor.name,
-        values: sensor.outValues,
-      })),
-    };
-  }, [sensorComparisonData]);
 
   return isLoading ? (
     <div className="flex items-center justify-center h-screen">
@@ -277,56 +261,47 @@ const Comparison = () => {
     <div className="space-y-6">
       <DashboardFilters
         onDateRangeChange={handleDateRangeChange}
-        currentDateRange={
-          selectedDateRange || { start: new Date(), end: new Date() }
-        }
+        currentDateRange={formDataArr[0].dateRange}
         onSensorsChange={handleSensorsChange}
-        currentSensors={selectedSensors}
+        currentSensors={selectedSensorIds.map(
+          (id) => sensorMap.get(id) || `Sensor ${id}`,
+        )}
+        hourRange={formDataArr[0].hourRange}
+        onHourRangeChange={handleHourRangeChange}
         onAggregationChange={handleAggregationChange}
-        currentAggregation={selectedAggregation}
         onRefreshData={handleRefreshData}
         availableSensors={
-          sensors?.flatMap((s: sensorResponse): string[] =>
+          locations?.flatMap((s: sensorResponse): string[] =>
             s.sensors.flatMap((m: sensorMetadata): string => m.position),
           ) || []
         }
         lastUpdated={lastUpdated}
       />
-
       <div className="grid grid-cols-1 gap-6">
         <ChartCard
           title="Device Comparison (Entries)"
           translationKey="comparison.charts.deviceComparisonIn"
         >
-          {inChartData.timestamps.length === 0 ||
+          {inChartData.categories.length === 0 ||
           inChartData.devices.length === 0 ? (
             <div className="flex items-center justify-center h-64 text-gray-500">
               No data available. Please select sensors and date range.
             </div>
           ) : (
-            <DeviceComparisonChart
-              data={inChartData}
-              title="Device Comparison (Entries)"
-              className="h-[300px]"
-            />
+            <DeviceComparisonChart data={inChartData} className="h-[300px]" />
           )}
         </ChartCard>
-
         <ChartCard
           title="Device Comparison (Exits)"
           translationKey="comparison.charts.deviceComparisonOut"
         >
-          {outChartData.timestamps.length === 0 ||
+          {outChartData.categories.length === 0 ||
           outChartData.devices.length === 0 ? (
             <div className="flex items-center justify-center h-64 text-gray-500">
               No data available. Please select sensors and date range.
             </div>
           ) : (
-            <DeviceComparisonChart
-              data={outChartData}
-              title="Device Comparison (Exits)"
-              className="h-[300px]"
-            />
+            <DeviceComparisonChart data={outChartData} className="h-[300px]" />
           )}
         </ChartCard>
       </div>

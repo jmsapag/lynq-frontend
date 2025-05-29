@@ -42,7 +42,6 @@ const Dashboard = () => {
       needToFetch: true,
     });
 
-
   // Use the sensor records hook
   const {
     data: sensorData,
@@ -92,8 +91,7 @@ const Dashboard = () => {
       };
     });
   };
-  useEffect(() => {
-  }, [sensorRecordsFormData]);
+  useEffect(() => {}, [sensorRecordsFormData]);
 
   useEffect(() => {
     const newSensorMap = new Map<number, string>();
@@ -138,7 +136,7 @@ const Dashboard = () => {
       ...prev,
       hourRange: { start, end },
     }));
-  }
+  };
 
   useEffect(() => {
     const storedLastUpdated = localStorage.getItem("lastUpdated");
@@ -199,9 +197,9 @@ const Dashboard = () => {
         onDateRangeChange={handleDateRangeChange}
         currentDateRange={sensorRecordsFormData.dateRange}
         onSensorsChange={handleSensorsChange}
-        currentSensors={sensorRecordsFormData.sensorIds?.map((id) =>
-          sensorMap.get(id)!,
-        ) || []}
+        currentSensors={
+          sensorRecordsFormData.sensorIds?.map((id) => sensorMap.get(id)!) || []
+        }
         hourRange={sensorRecordsFormData.hourRange}
         onHourRangeChange={handleHourRangeChange}
         onAggregationChange={handleAggregationChange}

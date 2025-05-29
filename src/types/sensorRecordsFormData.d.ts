@@ -1,4 +1,8 @@
-import { AggregationType, GroupByTimeAmount, SensorDataPoint } from "./sensorDataResponse.ts";
+import {
+  AggregationType,
+  GroupByTimeAmount,
+  SensorDataPoint,
+} from "./sensorDataResponse.ts";
 import { Time } from "@internationalized/date";
 
 export type SensorRecordsFormData = {
@@ -10,4 +14,4 @@ export type SensorRecordsFormData = {
   groupBy: GroupByTimeAmount;
   aggregationType: AggregationType;
   needToFetch: boolean;
-}
+};

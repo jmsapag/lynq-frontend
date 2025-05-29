@@ -24,7 +24,6 @@ const aggregateTimeSeries = (
     { total_in: number; total_out: number; count: number }
   >();
 
-  
   data.forEach((point) => {
     const date = parseISO(point.timestamp);
     const strategy: TimeGroupingStrategy = timeGroupingStrategies[timeAmount]!;
@@ -67,4 +66,4 @@ const aggregateTimeSeries = (
     .sort((a, b) => a.timestamp.localeCompare(b.timestamp));
 };
 
-export {aggregateTimeSeries}
+export { aggregateTimeSeries };

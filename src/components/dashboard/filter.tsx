@@ -46,9 +46,13 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
       : fromDate(new Date(), getLocalTimeZone());
   });
 
-  const [selectedSensors, setSelectedSensors] = useState<string[]>(currentSensors || []);
+  const [selectedSensors, setSelectedSensors] = useState<string[]>(
+    currentSensors || [],
+  );
   const [groupBy, setGroupBy] = useState<string>("day");
-  const [aggregation, setAggregation] = useState<string>(currentAggregation || "sum");
+  const [aggregation, setAggregation] = useState<string>(
+    currentAggregation || "sum",
+  );
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
 
   const dropdownRef = useRef<HTMLDivElement>(null);

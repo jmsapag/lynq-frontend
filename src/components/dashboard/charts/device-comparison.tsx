@@ -10,14 +10,22 @@ interface DeviceComparisonChartProps {
       values: number[];
     }[];
   };
+  title?: string; // Make title optional
   className?: string;
 }
 
 export const DeviceComparisonChart: React.FC<DeviceComparisonChartProps> = ({
   data,
+  title,
   className,
 }) => {
   const option: EChartsOption = {
+    title: title
+      ? {
+          text: title,
+          left: "center",
+        }
+      : undefined,
     tooltip: {
       trigger: "axis",
       axisPointer: {
@@ -29,6 +37,7 @@ export const DeviceComparisonChart: React.FC<DeviceComparisonChartProps> = ({
     },
     legend: {
       data: data.devices.map((device) => device.name),
+      top: title ? 30 : 10, // Add some space if there's a title
     },
     xAxis: {
       type: "category",

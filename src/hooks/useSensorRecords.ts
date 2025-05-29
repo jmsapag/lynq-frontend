@@ -43,7 +43,7 @@ export function useSensorRecords(
   const [prevSensorIds, setPrevSensorIds] = useState<number[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  console.log(sensorRecordsFormData)
+  console.log(sensorRecordsFormData);
 
   // Custom hooks
   const fetchData = useFetchData();
@@ -77,7 +77,6 @@ export function useSensorRecords(
         dataInRange,
       );
 
-
       setSensorRecordsFormData((prev: SensorRecordsFormData) => {
         return {
           ...prev,
@@ -108,7 +107,6 @@ export function useSensorRecords(
             needToFetch: false,
           }));
           return;
-
         }
 
         // Fetch and process data
@@ -167,7 +165,6 @@ export function useSensorRecords(
 
     fetchAndProcessData();
   }, [sensorIds, dateRange, groupBy, aggregationType, needToFetch, hourRange]);
-
 
   return { data, loading, error };
 }
