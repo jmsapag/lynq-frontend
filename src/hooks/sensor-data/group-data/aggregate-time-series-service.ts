@@ -1,10 +1,8 @@
 import {
-  AggregationType,
   GroupByTimeAmount,
   SensorDataPoint,
 } from "../../../types/sensorDataResponse.ts";
 import { parseISO } from "date-fns";
-import { useCallback } from "react";
 import { timeGroupingStrategies } from "./index.ts";
 
 // Strategy interface
