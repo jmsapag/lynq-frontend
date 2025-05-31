@@ -2,6 +2,7 @@
   "nav": {
     "dashboard": "Tablero",
     "users": "Usuarios",
+    "comparison": "Comparación",
     "devices": "Dispositivos",
     "help": "Ayuda"
   },
@@ -87,5 +88,11 @@
   "chart": {
     "in": "Entradas",
     "out": "Salidas"
+  },
+  "comparison": {
+    "charts": {
+      "deviceComparisonIn": "Entradas",
+      "deviceComparisonOut": "Salidas"
+    }
   }
 }

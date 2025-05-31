@@ -1,4 +1,8 @@
-import { AggregationType, GroupByTimeAmount, SensorDataPoint } from "../../types/sensorDataResponse.ts";
+import {
+  AggregationType,
+  GroupByTimeAmount,
+  SensorDataPoint,
+} from "../../types/sensorDataResponse.ts";
 import { useCallback } from "react";
 import { aggregateTimeSeries } from "./group-data/aggregate-time-series-service.ts";
 

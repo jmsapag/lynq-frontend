@@ -1,8 +1,8 @@
-import { isBefore, isAfter } from 'date-fns';
+import { isBefore, isAfter } from "date-fns";
 
 export function calculateFetchRange(
   dateRange: { start: Date; end: Date },
-  fetchedDateRange: { start: Date; end: Date } | null
+  fetchedDateRange: { start: Date; end: Date } | null,
 ): { fetchStart: Date; fetchEnd: Date; shouldFetch: boolean } {
   let fetchStart = dateRange.start;
   let fetchEnd = dateRange.end;

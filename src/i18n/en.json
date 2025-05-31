@@ -1,6 +1,7 @@
 {
   "nav": {
     "dashboard": "Dashboard",
+    "comparison": "Comparison",
     "users": "Users",
     "devices": "Devices",
     "help": "Help"
@@ -87,5 +88,11 @@
   "chart": {
     "in": "Entries",
     "out": "Exits"
+  },
+  "comparison": {
+    "charts": {
+      "deviceComparisonIn": "Entries",
+      "deviceComparisonOut": "Exits"
+    }
   }
 }
