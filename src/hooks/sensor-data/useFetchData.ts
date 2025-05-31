@@ -39,7 +39,44 @@ export function useFetchData() {
         }
 
         // Return the data points from the response
-        return response.data[0]?.data || [];
+        const data = response.data[0]?.data || [];
+        const missingPoints: SensorDataPoint[] = [];
+        for (let i = 1; i < data.length; i++) {
+          const prevData = data[i - 1];
+          let prevDate = new Date(prevData.timestamp).getTime();
+          const currentData = data[i];
+          while (
+            prevDate + 5 * 60 * 1000 <
+            new Date(currentData.timestamp).getTime()
+          ) {
+            prevDate += 5 * 60 * 1000;
+            missingPoints.push({
+              timestamp: new Date(prevDate).toISOString(),
+              total_count_in: 0, // or some default value
+              total_count_out: 0, // or some default value
+            });
+          }
+        }
+
+        // Fill from last data point to now if needed
+        if (data.length > 0) {
+          const lastData = data[data.length - 1];
+          let lastDate = new Date(lastData.timestamp).getTime();
+          const now = Date.now();
+
+          while (lastDate + 5 * 60 * 1000 < now) {
+            lastDate += 5 * 60 * 1000;
+            missingPoints.push({
+              timestamp: new Date(lastDate).toISOString(),
+              total_count_in: 0,
+              total_count_out: 0,
+            });
+          }
+        }
+        // Combine the original data with the missing points
+        return [...data, ...missingPoints].sort((a, b) =>
+          a.timestamp.localeCompare(b.timestamp),
+        );
       } catch (error) {
         console.error("Error fetching sensor data:", error);
         return [];

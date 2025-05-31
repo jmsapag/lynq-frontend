@@ -1,6 +1,7 @@
 import React from "react";
 import { BaseChart } from "./base-chart.tsx";
 import type { EChartsOption } from "echarts";
+import { GroupByTimeAmount } from "../../../types/sensorDataResponse.ts";
 
 type LineChartDataItem = {
   in: number;
@@ -12,10 +13,37 @@ interface LineChartProps {
     categories: string[];
     values: LineChartDataItem[];
   };
+  groupBy: GroupByTimeAmount;
   className?: string;
 }
 
-export const LineChart: React.FC<LineChartProps> = ({ data, className }) => {
+export const LineChart: React.FC<LineChartProps> = ({
+  data,
+  groupBy,
+  className,
+}) => {
+  const start: number = (() => {
+    switch (groupBy) {
+      case "month":
+        return 0;
+      case "week":
+        return 0;
+      case "day":
+        return 0;
+      case "hour":
+        return 50;
+      case "30min":
+        return 70;
+      case "15min":
+        return 85;
+      case "10min":
+        return 90;
+      case "5min":
+        return 95;
+      default:
+        return 0;
+    }
+  })();
   const option: EChartsOption = {
     tooltip: {
       trigger: "axis",
@@ -39,7 +67,7 @@ export const LineChart: React.FC<LineChartProps> = ({ data, className }) => {
     dataZoom: [
       {
         type: "inside",
-        start: 0,
+        start,
         end: 100,
         moveOnMouseMove: true,
       },

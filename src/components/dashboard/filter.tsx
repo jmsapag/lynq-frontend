@@ -2,7 +2,10 @@ import React, { useState, useRef, useEffect } from "react";
 import { ArrowPathIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
 import { format } from "date-fns";
 import { useTranslation } from "react-i18next";
-import { DatePicker, TimeInput } from "@heroui/react";
+import {
+  DatePicker,
+  // TimeInput
+} from "@heroui/react";
 import { DateValue, Time } from "@internationalized/date";
 import { fromDate, getLocalTimeZone } from "@internationalized/date";
 
@@ -26,8 +29,8 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
   onSensorsChange,
   onAggregationChange,
   currentAggregation,
-  hourRange,
-  onHourRangeChange,
+  // hourRange,
+  // onHourRangeChange,
   onRefreshData,
   availableSensors,
   currentSensors,
@@ -46,9 +49,13 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
       : fromDate(new Date(), getLocalTimeZone());
   });
 
-  const [selectedSensors, setSelectedSensors] = useState<string[]>(currentSensors || []);
+  const [selectedSensors, setSelectedSensors] = useState<string[]>(
+    currentSensors || [],
+  );
   const [groupBy, setGroupBy] = useState<string>("day");
-  const [aggregation, setAggregation] = useState<string>(currentAggregation || "sum");
+  const [aggregation, setAggregation] = useState<string>(
+    currentAggregation || "sum",
+  );
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -92,17 +99,17 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
     onSensorsChange(updatedSensors);
   };
 
-  const handleStartTimeChange = (value: Time | null) => {
-    if (value) {
-      onHourRangeChange(value, hourRange.end);
-    }
-  };
-
-  const handleEndTimeChange = (value: Time | null) => {
-    if (value) {
-      onHourRangeChange(hourRange.start, value);
-    }
-  };
+  // const handleStartTimeChange = (value: Time | null) => {
+  //   if (value) {
+  //     onHourRangeChange(value, hourRange.end);
+  //   }
+  // };
+  //
+  // const handleEndTimeChange = (value: Time | null) => {
+  //   if (value) {
+  //     onHourRangeChange(hourRange.start, value);
+  //   }
+  // };
 
   const handleGroupByChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newGroupBy = e.target.value;
@@ -238,26 +245,26 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
         </div>
 
         <div className="flex flex-col space-y-4 md:flex-row md:items-end md:space-y-0 md:space-x-4">
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
-              {t("filters.timeRange")}
-            </label>
-            <div className="flex items-center space-x-2">
-              <TimeInput
-                value={hourRange.start}
-                variant="bordered"
-                onChange={handleStartTimeChange}
-                className="w-full"
-              />
-              <span className="text-gray-500">{t("filters.to")}</span>
-              <TimeInput
-                value={hourRange.end}
-                variant="bordered"
-                onChange={handleEndTimeChange}
-                className="w-full"
-              />
-            </div>
-          </div>
+          {/*<div className="space-y-2">*/}
+          {/*  <label className="block text-sm font-medium text-gray-700">*/}
+          {/*    {t("filters.timeRange")}*/}
+          {/*  </label>*/}
+          {/*  <div className="flex items-center space-x-2">*/}
+          {/*    <TimeInput*/}
+          {/*      value={hourRange.start}*/}
+          {/*      variant="bordered"*/}
+          {/*      onChange={handleStartTimeChange}*/}
+          {/*      className="w-full"*/}
+          {/*    />*/}
+          {/*    <span className="text-gray-500">{t("filters.to")}</span>*/}
+          {/*    <TimeInput*/}
+          {/*      value={hourRange.end}*/}
+          {/*      variant="bordered"*/}
+          {/*      onChange={handleEndTimeChange}*/}
+          {/*      className="w-full"*/}
+          {/*    />*/}
+          {/*  </div>*/}
+          {/*</div>*/}
 
           <div className="space-y-2">
             <label className="block text-sm font-medium text-gray-700">
