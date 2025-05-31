@@ -1,10 +1,8 @@
 import {
-  AggregationType,
   GroupByTimeAmount,
   SensorDataPoint,
 } from "../../../types/sensorDataResponse.ts";
 import { parseISO } from "date-fns";
-import { useCallback } from "react";
 import { timeGroupingStrategies } from "./index.ts";
 
 // Strategy interface
@@ -25,7 +23,7 @@ const aggregateTimeSeries = (
   >();
 
   data.forEach((point) => {
-    const date = parseISO(point.timestamp);
+    const date = parseISO(point.timestamp.replace("Z", "")); // Remove 'Z' for consistency
     const strategy: TimeGroupingStrategy = timeGroupingStrategies[timeAmount]!;
     const groupKey = strategy.getGroupKey(date);
 
@@ -58,7 +56,7 @@ const aggregateTimeSeries = (
       // For 'sum' and 'none', we use the total as is
 
       return {
-        timestamp,
+        timestamp: timestamp.replace("Z", ""), // Remove 'Z' for consistency
         total_count_in: total_in,
         total_count_out: total_out,
       };

@@ -253,7 +253,7 @@ const Dashboard = () => {
                   No data available. Please select sensors and date range.
                 </div>
               ) : (
-                <LineChart data={chartData} />
+                <LineChart data={chartData} groupBy={sensorRecordsFormData.groupBy} />
               )}
             </ChartCard>
           </div>
