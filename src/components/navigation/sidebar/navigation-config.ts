@@ -7,7 +7,7 @@ import {
 import { ArrowsRightLeftIcon } from "@heroicons/react/16/solid";
 
 export const navItems = [
-  { title: "dashboard", href: "/", icon: ChartBarIcon },
+  { title: "dashboard", href: "/dashboard", icon: ChartBarIcon },
   { title: "comparison", href: "/comparison", icon: ArrowsRightLeftIcon },
   { title: "users", href: "/users", icon: UserGroupIcon },
   { title: "devices", href: "/devices", icon: ComputerDesktopIcon },
