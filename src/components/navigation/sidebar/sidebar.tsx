@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { navItems } from "./navigation-config.ts";
 import { NavItem } from "./nav-item.tsx";
@@ -12,14 +12,17 @@ interface SidebarProps {
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
+  const navigate = useNavigate();
+
   const handleLogout = () => {
     console.log("Logout action triggered!");
+    navigate("/");
   };
 
   const SidebarContent = () => (
     <div className="flex h-full flex-col bg-white text-black">
       <div className="flex h-16 shrink-0 items-center justify-center border-b border-gray-200 px-4">
-        <Link to="/" className="flex items-center">
+        <Link to="/dashboard" className="flex items-center">
           <img src={logoImage} alt="Company Logo" className="h-10 w-auto" />
         </Link>
       </div>
