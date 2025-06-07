@@ -6,6 +6,15 @@
     "devices": "Dispositivos",
     "help": "Ayuda"
   },
+  "days": {
+    "sunday": "Domingo",
+    "monday": "Lunes",
+    "tuesday": "Martes",
+    "wednesday": "Miércoles",
+    "thursday": "Jueves",
+    "friday": "Viernes",
+    "saturday": "Sábado"
+  },
   "help": {
     "userGuide": "Guía de Uso",
     "userGuideText": "Aquí encontrarás información sobre cómo usar la aplicación People Counter.",
@@ -30,7 +39,17 @@
     "charts": {
       "dailyVisitors": "Visitantes Diarios",
       "weeklyTrend": "Tendencia Semanal",
-      "peopleFlow": "Flujo de Personas (Entradas/Salidas)"
+      "peopleFlow": "Flujo de Personas (Entradas/Salidas)",
+      "trafficHeatmap": "Mapa de Calor (Por Día y Hora)",
+      "entryRateOverTime": "Tasa de Entrada a lo Largo del Tiempo",
+      "entries": "Entradas",
+      "exits": "Salidas",
+      "showEntries": "Mostrar Entradas",
+      "showExits": "Mostrar Salidas",
+      "entriesByDayAndHour": "Entradas por Día y Hora",
+      "exitsByDayAndHour": "Salidas por Día y Hora",
+      "hourOfDay": "Hora del Día",
+      "dayOfWeek": "Día de la Semana"
     },
     "metrics": {
       "totalIn": "Total Entradas",

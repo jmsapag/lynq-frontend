@@ -88,5 +88,9 @@ export const LineChart: React.FC<LineChartProps> = ({
     ],
   };
 
-  return <BaseChart option={option} className={className} />;
+  return (
+    <div className="h-[300px]">
+      <BaseChart option={option} className={className} />
+    </div>
+  );
 };
