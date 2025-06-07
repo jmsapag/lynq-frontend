@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState } from "react";
 import { BaseChart } from "../base-chart.tsx";
 import { useTranslation } from "react-i18next";
 import type { EChartsOption } from "echarts";
@@ -10,46 +10,17 @@ interface HeatMapChartProps {
   data: TransformedSensorData;
   className?: string;
   selectedMetric?: "in" | "out";
-  sensorIds?: number[];
-  dateRange?: { start: Date; end: Date };
 }
 
 export const ChartHeatMap: React.FC<HeatMapChartProps> = ({
   data,
   className = "",
   selectedMetric = "in",
-  sensorIds,
-  dateRange,
 }) => {
   const { t } = useTranslation();
   const [displayMetric, setDisplayMetric] = useState<"in" | "out">(
     selectedMetric,
   );
-  const [previousData, setPreviousData] = useState<{
-    heatmapData: [number, number, number][];
-    maxValue: number;
-  }>({
-    heatmapData: [],
-    maxValue: 10,
-  });
-
-  // Cache the processed data so it doesn't recompute on every render
-  // Only update when data, dateRange or sensorIds change
-  const processDataMemo = useMemo(() => {
-    // Skip processing if we don't have data
-    if (!data || !data.timestamps || data.timestamps.length === 0) {
-      return previousData;
-    }
-
-    return processDataForHeatMap(data, displayMetric);
-  }, [data, displayMetric, dateRange, sensorIds]);
-
-  // Update cached data when the processed data changes
-  useEffect(() => {
-    if (processDataMemo.heatmapData.length > 0) {
-      setPreviousData(processDataMemo);
-    }
-  }, [processDataMemo]);
 
   const toggleMetric = () => {
     setDisplayMetric((prev) => (prev === "in" ? "out" : "in"));
@@ -58,9 +29,13 @@ export const ChartHeatMap: React.FC<HeatMapChartProps> = ({
   // Translate days of week
   const translatedDays = DAYS.map((day) => t(`days.${day.toLowerCase()}`));
 
+  // Process data directly without caching or state management
+  const { heatmapData, maxValue } = processDataForHeatMap(data, displayMetric);
+
   const option: EChartsOption = {
     tooltip: {
       position: "top",
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       formatter: (params: any) => {
         const day = translatedDays[params.value[1]];
         const hour = params.value[0];
@@ -98,7 +73,7 @@ export const ChartHeatMap: React.FC<HeatMapChartProps> = ({
     },
     visualMap: {
       min: 0,
-      max: previousData.maxValue,
+      max: maxValue || 10,
       calculable: true,
       orient: "horizontal",
       left: "center",
@@ -114,7 +89,7 @@ export const ChartHeatMap: React.FC<HeatMapChartProps> = ({
             ? t("dashboard.charts.entries")
             : t("dashboard.charts.exits"),
         type: "heatmap",
-        data: previousData.heatmapData,
+        data: heatmapData,
         label: {
           show: false,
         },
@@ -133,7 +108,7 @@ export const ChartHeatMap: React.FC<HeatMapChartProps> = ({
           : t("dashboard.charts.exitsByDayAndHour"),
       left: "center",
       top: 0,
-    }
+    },
   };
 
   return (

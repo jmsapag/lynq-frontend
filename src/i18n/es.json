@@ -41,6 +41,7 @@
       "weeklyTrend": "Tendencia Semanal",
       "peopleFlow": "Flujo de Personas (Entradas/Salidas)",
       "trafficHeatmap": "Mapa de Calor (Por Día y Hora)",
+      "entryRateOverTime": "Tasa de Entrada a lo Largo del Tiempo",
       "entries": "Entradas",
       "exits": "Salidas",
       "showEntries": "Mostrar Entradas",

@@ -41,6 +41,7 @@
       "weeklyTrend": "Weekly Trend",
       "peopleFlow": "People Flow (In/Out)",
       "trafficHeatmap": "Traffic Heatmap (By Day & Hour)",
+      "entryRateOverTime": "Entry Rate Over Time",
       "entries": "Entries",
       "exits": "Exits",
       "showEntries": "Show Entries",

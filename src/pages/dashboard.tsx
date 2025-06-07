@@ -11,10 +11,11 @@ import {
   AggregationType,
 } from "../types/sensorDataResponse";
 import { LineChart } from "../components/dashboard/charts/line-chart.tsx";
-import { ChartHeatMap } from "../components/dashboard/charts/heat-map/chart-heat-map.tsx";
+import { EntryRateChart } from "../components/dashboard/charts/entry-rate/entry-rate-chart.tsx";
 import { SensorDataCard } from "../components/dashboard/charts/card.tsx";
 import { SensorRecordsFormData } from "../types/sensorRecordsFormData";
 import { Time } from "@internationalized/date";
+import { ChartHeatMap } from "../components/dashboard/charts/heat-map/chart-heat-map.tsx";
 
 function getFirstFetchedDateRange() {
   return {
@@ -271,6 +272,22 @@ const Dashboard = () => {
                 </div>
               ) : (
                 <ChartHeatMap data={sensorData} />
+              )}
+            </ChartCard>
+
+            <ChartCard
+              title="Entry Rate Over Time"
+              translationKey="dashboard.charts.entryRateOverTime"
+            >
+              {chartData.categories.length === 0 ? (
+                <div className="flex items-center justify-center h-64 text-gray-500">
+                  No data available. Please select sensors and date range.
+                </div>
+              ) : (
+                <EntryRateChart
+                  data={chartData}
+                  groupBy={sensorRecordsFormData.groupBy}
+                />
               )}
             </ChartCard>
           </div>
