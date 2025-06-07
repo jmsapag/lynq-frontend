@@ -11,7 +11,7 @@ import {
   AggregationType,
 } from "../types/sensorDataResponse";
 import { LineChart } from "../components/dashboard/charts/line-chart.tsx";
-import { HeatMapChart } from "../components/dashboard/charts/heat-map-chart.tsx";
+import { ChartHeatMap } from "../components/dashboard/charts/heat-map/chart-heat-map.tsx";
 import { SensorDataCard } from "../components/dashboard/charts/card.tsx";
 import { SensorRecordsFormData } from "../types/sensorRecordsFormData";
 import { Time } from "@internationalized/date";
@@ -270,7 +270,7 @@ const Dashboard = () => {
                   No data available. Please select sensors and date range.
                 </div>
               ) : (
-                <HeatMapChart data={sensorData} />
+                <ChartHeatMap data={sensorData} />
               )}
             </ChartCard>
           </div>
@@ -281,4 +281,3 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-
