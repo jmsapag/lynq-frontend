@@ -206,11 +206,7 @@ const Dashboard = () => {
         onHourRangeChange={handleHourRangeChange}
         onAggregationChange={handleAggregationChange}
         onRefreshData={handleRefreshData}
-        availableSensors={
-          locations?.flatMap((s: sensorResponse): string[] =>
-            s.sensors.flatMap((m: sensorMetadata): string => m.position),
-          ) || []
-        }
+        locations={locations}
         lastUpdated={lastUpdated}
       />
       {isLoading ? (
