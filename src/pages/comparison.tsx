@@ -270,11 +270,7 @@ const Comparison = () => {
         onHourRangeChange={handleHourRangeChange}
         onAggregationChange={handleAggregationChange}
         onRefreshData={handleRefreshData}
-        availableSensors={
-          locations?.flatMap((s: sensorResponse): string[] =>
-            s.sensors.flatMap((m: sensorMetadata): string => m.position),
-          ) || []
-        }
+        locations={locations}
         lastUpdated={lastUpdated}
       />
       <div className="grid grid-cols-1 gap-6">
