@@ -11,6 +11,7 @@ import {
   AggregationType,
 } from "../types/sensorDataResponse";
 import { LineChart } from "../components/dashboard/charts/line-chart.tsx";
+import { HeatMapChart } from "../components/dashboard/charts/heat-map-chart.tsx";
 import { SensorDataCard } from "../components/dashboard/charts/card.tsx";
 import { SensorRecordsFormData } from "../types/sensorRecordsFormData";
 import { Time } from "@internationalized/date";
@@ -259,6 +260,19 @@ const Dashboard = () => {
                 />
               )}
             </ChartCard>
+
+            <ChartCard
+              title="Traffic Heatmap (By Day & Hour)"
+              translationKey="dashboard.charts.trafficHeatmap"
+            >
+              {chartData.categories.length === 0 ? (
+                <div className="flex items-center justify-center h-64 text-gray-500">
+                  No data available. Please select sensors and date range.
+                </div>
+              ) : (
+                <HeatMapChart data={sensorData} />
+              )}
+            </ChartCard>
           </div>
         </>
       )}
@@ -267,3 +281,4 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
