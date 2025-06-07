@@ -28,6 +28,10 @@
   "role": {
     "admin": "Administrador"
   },
+  "common": {
+    "apply": "Aplicar",
+    "cancel": "Cancelar"
+  },
   "dashboard": {
     "filters": {
       "selectDates": "Seleccionar fechas",
@@ -78,6 +82,7 @@
     "to": "a",
     "sensors": "Sensores",
     "selectSensors": "Seleccionar sensores",
+    "noSensorsSelected": "No se han seleccionado sensores",
     "allSensors": "Todos los sensores",
     "sensorsSelected": "{{count}} sensores seleccionados",
     "timeRange": "Horario",
