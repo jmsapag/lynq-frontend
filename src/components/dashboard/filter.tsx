@@ -1,13 +1,16 @@
-import React, { useState, useRef, useEffect } from "react";
-import { ArrowPathIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
+import React, { useState } from "react";
+import { ArrowPathIcon, FunnelIcon } from "@heroicons/react/24/outline";
 import { format } from "date-fns";
 import { useTranslation } from "react-i18next";
 import {
   DatePicker,
+  Button,
   // TimeInput
 } from "@heroui/react";
 import { DateValue, Time } from "@internationalized/date";
 import { fromDate, getLocalTimeZone } from "@internationalized/date";
+import SensorSelectionModal from "./sensors/SensorSelectionModal";
+import { SensorLocation } from "../../types/sensorLocation.ts";
 
 type DashboardFiltersProps = {
   onDateRangeChange: (startDate: Date, endDate: Date) => void;
@@ -18,7 +21,7 @@ type DashboardFiltersProps = {
   onHourRangeChange: (start: Time, end: Time) => void;
   currentAggregation?: string;
   onRefreshData?: () => void;
-  availableSensors: string[];
+  locations: SensorLocation[];
   currentSensors: string[];
   lastUpdated: Date | null;
 };
@@ -32,8 +35,9 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
   // hourRange,
   // onHourRangeChange,
   onRefreshData,
-  availableSensors,
+  locations,
   currentSensors,
+
   lastUpdated,
 }) => {
   const { t } = useTranslation();
@@ -49,16 +53,11 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
       : fromDate(new Date(), getLocalTimeZone());
   });
 
-  const [selectedSensors, setSelectedSensors] = useState<string[]>(
-    currentSensors || [],
-  );
   const [groupBy, setGroupBy] = useState<string>("day");
   const [aggregation, setAggregation] = useState<string>(
     currentAggregation || "sum",
   );
-  const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
-
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const handleStartDateChange = (value: DateValue | null) => {
     if (value) {
@@ -89,16 +88,6 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
       }
     }
   };
-
-  const handleSensorToggle = (sensor: string) => {
-    const updatedSensors = selectedSensors.includes(sensor)
-      ? selectedSensors.filter((s) => s !== sensor)
-      : [...selectedSensors, sensor];
-
-    setSelectedSensors(updatedSensors);
-    onSensorsChange(updatedSensors);
-  };
-
   // const handleStartTimeChange = (value: Time | null) => {
   //   if (value) {
   //     onHourRangeChange(value, hourRange.end);
@@ -133,34 +122,6 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
   const handleRefresh = () => {
     if (onRefreshData) {
       onRefreshData();
-    }
-  };
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setDropdownOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  const getSensorButtonText = () => {
-    if (selectedSensors.length === 0) {
-      return t("filters.selectSensors");
-    } else if (selectedSensors.length === 1) {
-      return selectedSensors[0];
-    } else if (selectedSensors.length === availableSensors.length) {
-      return t("filters.allSensors");
-    } else {
-      return t("filters.sensorsSelected", { count: selectedSensors.length });
     }
   };
 
@@ -201,46 +162,34 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
             </div>
           </div>
 
-          <div className="space-y-2 relative" ref={dropdownRef}>
+          <div className="space-y-2">
             <label className="block text-sm font-medium text-gray-700">
               {t("filters.sensors")}
             </label>
-            <button
-              type="button"
-              className="inline-flex w-full md:w-60 items-center justify-between rounded-xl border-2 border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-900 shadow-sm hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-1 transition"
-              onClick={() => setDropdownOpen(!dropdownOpen)}
+            <Button
+              variant="bordered"
+              className="w-full md:w-60 justify-between"
+              endContent={<FunnelIcon className="h-4 w-4 text-gray-500" />}
+              onClick={() => setIsModalOpen(true)}
             >
-              <span className="truncate">{getSensorButtonText()}</span>
-              <ChevronDownIcon className="h-4 w-3 text-gray-500" />
-            </button>
+              <span className="truncate">
+                {currentSensors.length === 0
+                  ? t("filters.noSensorsSelected")
+                  : currentSensors.length === locations.flatMap(sensor => sensor.sensors).length
+                    ? t("filters.allSensors")
+                    : t("filters.sensorsSelected", {
+                        count: currentSensors.length,
+                      })}
+              </span>
+            </Button>
 
-            {dropdownOpen && (
-              <div className="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-auto ring-1 ring-black ring-opacity-5 focus:outline-none">
-                {" "}
-                <div className="py-1">
-                  {availableSensors.map((sensor) => (
-                    <div
-                      key={sensor}
-                      className="px-3 py-2 flex items-center hover:bg-gray-100 cursor-pointer"
-                      onClick={() => handleSensorToggle(sensor)}
-                    >
-                      <div className="flex items-center h-5">
-                        <input
-                          type="checkbox"
-                          className="h-4 w-4 text-gray-600 border-gray-300 rounded focus:ring-gray-500"
-                          checked={selectedSensors.includes(sensor)}
-                          onChange={() => {}}
-                          onClick={(e) => e.stopPropagation()}
-                        />
-                      </div>
-                      <label className="ml-2 block text-sm text-gray-900 cursor-pointer">
-                        {sensor}
-                      </label>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
+            <SensorSelectionModal
+              isOpen={isModalOpen}
+              onClose={() => setIsModalOpen(false)}
+              locations={locations}
+              selectedSensors={currentSensors}
+              onSensorsChange={onSensorsChange}
+            />
           </div>
         </div>
 

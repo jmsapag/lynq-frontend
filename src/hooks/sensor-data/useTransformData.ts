@@ -8,7 +8,7 @@ import { useCallback } from "react";
 function useTransformData() {
   return useCallback((data: SensorDataPoint[]): TransformedSensorData => {
     const timestamps = data.map((point) => {
-      const date = parseISO(point.timestamp.replace('Z', ''));
+      const date = parseISO(point.timestamp.replace("Z", ""));
       return format(date, "MMM dd, HH:mm"); // Format for display
     });
 
