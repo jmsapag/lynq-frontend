@@ -41,7 +41,7 @@ function App() {
       <BrowserRouter basename={basename}>
         <Routes>
           <Route path="/" element={<Landing />} />
-            <Route path="/login" element={<LoginPage />} />
+          <Route path="/login" element={<LoginPage />} />
           <Route element={<AppLayoutWithState />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/comparison" element={<Comparison />} />
