@@ -10,6 +10,7 @@ import HelpPage from "./pages/help.tsx";
 import { HeroUIProvider } from "@heroui/react";
 import { ToastProvider } from "@heroui/toast";
 import Comparison from "./pages/comparison.tsx";
+import { PrivateRoute } from "./components/auth/privateRoutes.tsx";
 import Landing from "./pages/landing.tsx";
 import LoginPage from "./pages/login.tsx";
 
@@ -40,14 +41,16 @@ function App() {
     <HeroUIProvider>
       <BrowserRouter basename={basename}>
         <Routes>
-          <Route path="/" element={<Landing />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route element={<AppLayoutWithState />}>
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/comparison" element={<Comparison />} />
-            <Route path="users" element={<UsersPage />} />
-            <Route path="devices" element={<DevicesPage />} />
-            <Route path="help" element={<HelpPage />} />
+          <Route path="/" element={<Landing />} />
+          <Route element={<PrivateRoute />}>
+            <Route element={<AppLayoutWithState />}>
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/comparison" element={<Comparison />} />
+              <Route path="users" element={<UsersPage />} />
+              <Route path="devices" element={<DevicesPage />} />
+              <Route path="help" element={<HelpPage />} />
+            </Route>
           </Route>
         </Routes>
       </BrowserRouter>

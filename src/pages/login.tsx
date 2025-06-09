@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LoginForm } from "../components/login/loginForm.tsx";
 import { ContactModal } from "../components/login/contactModal.tsx";
 import {
@@ -7,13 +7,14 @@ import {
 } from "../components/login/background.tsx";
 import { useNavigate } from "react-router-dom";
 import { addToast } from "@heroui/react";
+import { useLogin } from "../hooks/useAuth.ts";
+import Cookies from "js-cookie";
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState<{ email?: string; password?: string }>(
     {},
   );
-  const [isLoading, setIsLoading] = useState(false);
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [contactForm, setContactForm] = useState({
     name: "",
@@ -26,6 +27,14 @@ export default function LoginPage() {
     comment?: string;
   }>({});
   const navigate = useNavigate();
+  const { login, loading } = useLogin();
+
+  useEffect(() => {
+    const token = Cookies.get("token");
+    if (token) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [navigate]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -50,19 +59,16 @@ export default function LoginPage() {
       return;
     }
 
-    setIsLoading(true);
     try {
-      await new Promise((r) => setTimeout(r, 2000));
-      setTimeout(() => navigate("/dashboard"), 1000);
+      await login(formData.email, formData.password);
+      navigate("/dashboard");
     } catch (error) {
       addToast({
         title: "Login Failed",
-        description: "Please try again.",
+        description: "Invalid credentials. Please try again.",
         severity: "danger",
         color: "danger",
       });
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -112,7 +118,7 @@ export default function LoginPage() {
           <LoginForm
             formData={formData}
             errors={errors}
-            isLoading={isLoading}
+            isLoading={loading}
             handleChange={handleChange}
             handleSubmit={handleSubmit}
             setIsContactModalOpen={setIsContactModalOpen}
