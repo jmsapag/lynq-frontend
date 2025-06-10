@@ -5,6 +5,7 @@ export function LoginForm({
   handleChange,
   handleSubmit,
   setIsContactModalOpen,
+  t,
 }: any) {
   return (
     <form
@@ -23,7 +24,7 @@ export function LoginForm({
           className={`block w-full px-4 py-3 bg-white border-b-2 ${
             errors.email ? "border-red-400" : "border-gray-500"
           } text-base rounded-t-md focus:outline-none focus:border-black transition placeholder-gray-400`}
-          placeholder="Email"
+          placeholder={t("login.emailPlaceholder")}
         />
         {errors.email && (
           <p className="mt-1 text-xs text-red-500">{errors.email}</p>
@@ -40,7 +41,7 @@ export function LoginForm({
           className={`block w-full px-4 py-3 bg-white border-b-2 ${
             errors.password ? "border-red-400" : "border-gray-500"
           } text-base rounded-t-md focus:outline-none focus:border-black transition placeholder-gray-400`}
-          placeholder="Password"
+          placeholder={t("login.passwordPlaceholder")}
         />
         {errors.password && (
           <p className="mt-1 text-xs text-red-500">{errors.password}</p>
@@ -52,13 +53,13 @@ export function LoginForm({
             type="checkbox"
             className="h-4 w-4 accent-black border-gray-300 rounded focus:ring-black"
           />
-          <span className="ml-2">Remember me</span>
+          <span className="ml-2">{t("login.rememberMe")}</span>
         </label>
         <a
           href="#"
           className="text-sm text-[#00A5B1] hover:underline transition"
         >
-          Forgot?
+          {t("login.forgot")}
         </a>
       </div>
       <button
@@ -90,20 +91,20 @@ export function LoginForm({
                 d="M4 12a8 8 0 018-8v8z"
               />
             </svg>
-            Logging in...
+            {t("login.loginButton")}
           </span>
         ) : (
-          "Log in"
+          t("login.loginButton")
         )}
       </button>
       <div className="mt-8 text-center text-gray-400 text-sm">
-        No account?{" "}
+        {t("login.noAccount")}{" "}
         <button
           type="button"
           onClick={() => setIsContactModalOpen(true)}
           className="text-[#00A5B1] hover:underline focus:outline-none"
         >
-          Contact us
+          {t("login.contactUs")}
         </button>
       </div>
     </form>

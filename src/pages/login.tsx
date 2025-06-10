@@ -9,8 +9,14 @@ import { useNavigate } from "react-router-dom";
 import { addToast } from "@heroui/react";
 import { useLogin } from "../hooks/useAuth.ts";
 import Cookies from "js-cookie";
+import { useTranslation } from "react-i18next";
+import { useLanguage } from "../hooks/useLanguage.ts";
+import { LanguageIcon } from "@heroicons/react/24/outline";
 
 export default function LoginPage() {
+  const { t } = useTranslation();
+  const { toggleLanguage, currentLanguage } = useLanguage();
+
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState<{ email?: string; password?: string }>(
     {},
@@ -51,8 +57,8 @@ export default function LoginPage() {
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       addToast({
-        title: "Form Error",
-        description: "Please fix the form errors before submitting.",
+        title: t("toasts.formErrorTitle"),
+        description: t("toasts.formErrorDescription"),
         severity: "danger",
         color: "danger",
       });
@@ -64,8 +70,8 @@ export default function LoginPage() {
       navigate("/dashboard");
     } catch (error) {
       addToast({
-        title: "Login Failed",
-        description: "Invalid credentials. Please try again.",
+        title: t("toasts.loginFailedTitle"),
+        description: t("toasts.loginFailedDescription"),
         severity: "danger",
         color: "danger",
       });
@@ -95,8 +101,8 @@ export default function LoginPage() {
     setContactForm({ name: "", email: "", comment: "" });
     setIsContactModalOpen(false);
     addToast({
-      title: "Message Sent Successfully",
-      description: "Thank you for contacting us! We will get back to you soon.",
+      title: t("toasts.messageSentTitle"),
+      description: t("toasts.messageSentDescription"),
       severity: "success",
       color: "success",
     });
@@ -104,15 +110,27 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-white relative flex">
+      {/* Language Switch Button */}
+      <button
+        onClick={toggleLanguage}
+        className="absolute top-4 right-4 flex items-center gap-2 rounded-full p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-600 z-20"
+        title={t("common.changeLanguage")}
+      >
+        <LanguageIcon className="h-5 w-5" />
+        <span className="text-xs font-medium">
+          {currentLanguage.toUpperCase()}
+        </span>
+      </button>
+
       {/* Left panel */}
       <div className="w-full lg:w-1/2 flex items-center justify-center px-4 relative z-10">
         <div className="max-w-md w-full">
           <div className="text-center mb-10">
             <h2 className="mt-6 text-3xl font-bold text-gray-900">
-              Welcome back!
+              {t("login.welcome", "Welcome back!")}
             </h2>
             <p className="mt-2 text-sm text-gray-500">
-              Login to continue exploring your metrics.
+              {t("login.subtitle", "Login to continue exploring your metrics.")}
             </p>
           </div>
           <LoginForm
@@ -122,6 +140,7 @@ export default function LoginPage() {
             handleChange={handleChange}
             handleSubmit={handleSubmit}
             setIsContactModalOpen={setIsContactModalOpen}
+            t={t}
           />
         </div>
         <BackgroundShapes />
@@ -142,6 +161,7 @@ export default function LoginPage() {
           handleContactChange={handleContactChange}
           handleContactSubmit={handleContactSubmit}
           onClose={() => setIsContactModalOpen(false)}
+          t={t}
         />
       )}
     </div>

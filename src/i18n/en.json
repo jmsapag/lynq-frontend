@@ -94,5 +94,24 @@
       "deviceComparisonIn": "Entries",
       "deviceComparisonOut": "Exits"
     }
+  },
+  "login": {
+    "welcome": "Welcome back!",
+    "subtitle": "Login to continue exploring your metrics.",
+    "noAccount": "No account?",
+    "contactUs": "Contact us",
+    "emailPlaceholder": "Email",
+    "passwordPlaceholder": "Password",
+    "rememberMe": "Remember me",
+    "forgot": "Forgot?",
+    "loginButton": "Log in"
+  },
+  "toasts": {
+    "formErrorTitle": "Form Error",
+    "formErrorDescription": "Please fix the form errors before submitting.",
+    "loginFailedTitle": "Login Failed",
+    "loginFailedDescription": "Invalid credentials. Please try again.",
+    "messageSentTitle": "Message Sent Successfully",
+    "messageSentDescription": "Thank you for contacting us! We will get back to you soon."
   }
 }

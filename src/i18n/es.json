@@ -94,5 +94,24 @@
       "deviceComparisonIn": "Entradas",
       "deviceComparisonOut": "Salidas"
     }
+  },
+  "login": {
+    "welcome": "¡Bienvenido de nuevo!",
+    "subtitle": "Inicia sesión para seguir explorando tus métricas.",
+    "noAccount": "¿No tienes cuenta?",
+    "contactUs": "Contáctanos",
+    "emailPlaceholder": "Correo electrónico",
+    "passwordPlaceholder": "Contraseña",
+    "rememberMe": "Recordar",
+    "forgot": "¿Te olvidaste?",
+    "loginButton": "Iniciar sesión"
+  },
+  "toasts": {
+    "formErrorTitle": "Error en el formulario",
+    "formErrorDescription": "Por favor, corrige los errores antes de enviar.",
+    "loginFailedTitle": "Error de inicio de sesión",
+    "loginFailedDescription": "Credenciales inválidas. Inténtalo de nuevo.",
+    "messageSentTitle": "Mensaje enviado correctamente",
+    "messageSentDescription": "¡Gracias por contactarnos! Nos comunicaremos pronto."
   }
 }
