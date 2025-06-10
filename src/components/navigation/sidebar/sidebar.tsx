@@ -5,6 +5,7 @@ import { navItems } from "./navigation-config.ts";
 import { NavItem } from "./nav-item.tsx";
 import { ProfileMenu } from "./profile-menu.tsx";
 import logoImage from "../../../assets/logo.png";
+import Cookies from "js-cookie";
 
 interface SidebarProps {
   isOpen?: boolean;
@@ -15,8 +16,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    console.log("Logout action triggered!");
-    navigate("/");
+    Cookies.remove("token");
+    navigate("/login", { replace: true });
   };
 
   const SidebarContent = () => (
