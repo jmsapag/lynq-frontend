@@ -118,5 +118,21 @@
       "deviceComparisonIn": "Entradas",
       "deviceComparisonOut": "Salidas"
     }
+  },
+  "landing": {
+    "title": "Contador de Personas",
+    "subtitle": "Rastrea, analiza y optimiza el flujo de personas. Información poderosa de sensores precisos y paneles inteligentes, todo en una sola plataforma.",
+    "goToDashboard": "Ir al Tablero",
+    "features": {
+      "trafficAnalytics": "Analítica de Tráfico",
+      "trafficAnalyticsDesc": "Monitorea el flujo de personas con visualizaciones completas",
+      "advancedComparisons": "Comparaciones Avanzadas",
+      "advancedComparisonsDesc": "Compara métricas entre ubicaciones y periodos de tiempo",
+      "keyMetrics": "Métricas Clave",
+      "keyMetricsDesc": "Sigue entradas, salidas y tasas de conversión"
+    }
+  },
+  "common": {
+    "changeLanguage": "Cambiar idioma"
   }
 }

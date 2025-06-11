@@ -140,13 +140,8 @@ export const EntryRateChart: React.FC<EntryRateChartProps> = ({
   };
 
   return (
-    <div
-      className="h-[300px]"
-      >
-      <BaseChart
-        option={option}
-        className={className}
-        />
+    <div className="h-[300px]">
+      <BaseChart option={option} className={className} />
     </div>
-  )
+  );
 };

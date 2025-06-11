@@ -95,7 +95,7 @@ export function parseTimestamp(timestamp: string): Date | null {
  */
 export function processDataForHeatMap(
   data: TransformedSensorData,
-  displayMetric: "in" | "out"
+  displayMetric: "in" | "out",
 ): { heatmapData: [number, number, number][]; maxValue: number } {
   // Initialize a 7x24 matrix (7 days x 24 hours) filled with zeros
   const heatmapData: [number, number, number][] = [];
@@ -116,7 +116,7 @@ export function processDataForHeatMap(
       // Validate dayOfWeek and hour are within expected ranges
       if (dayOfWeek < 0 || dayOfWeek > 6 || hour < 0 || hour > 23) {
         console.warn(
-          `Invalid day/hour: ${dayOfWeek}/${hour} from timestamp ${timestamp}`
+          `Invalid day/hour: ${dayOfWeek}/${hour} from timestamp ${timestamp}`,
         );
         return; // Skip this iteration
       }

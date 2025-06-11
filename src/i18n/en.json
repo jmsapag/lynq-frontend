@@ -118,5 +118,21 @@
       "deviceComparisonIn": "Entries",
       "deviceComparisonOut": "Exits"
     }
+  },
+  "landing": {
+    "title": "People Counter",
+    "subtitle": "Track, analyze, and optimize people flow. Powerful insights from accurate sensors and smart dashboards — all in one platform.",
+    "goToDashboard": "Go to Dashboard",
+    "features": {
+      "trafficAnalytics": "Traffic Analytics",
+      "trafficAnalyticsDesc": "Monitor people flow with comprehensive visualizations",
+      "advancedComparisons": "Advanced Comparisons",
+      "advancedComparisonsDesc": "Compare metrics across locations and time periods",
+      "keyMetrics": "Key Metrics",
+      "keyMetricsDesc": "Track entries, exits, and conversion rates"
+    }
+  },
+  "common": {
+    "changeLanguage": "Change language"
   }
 }

@@ -1,38 +1,40 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef, TouchEvent } from "react";
+import { useTranslation } from "react-i18next";
+import { useLanguage } from "../hooks/useLanguage";
+import { LanguageIcon } from "@heroicons/react/24/outline";
 import logo from "../assets/logo.png";
 
 const Landing = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
+  const { toggleLanguage, currentLanguage } = useLanguage();
+
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const intervalRef = useRef<number | null>(null);
 
-  // Touch swipe state
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
 
-  // Minimum distance required for a swipe
   const minSwipeDistance = 50;
 
   const features = [
     {
-      title: "Traffic Analytics",
-      description: "Monitor people flow with comprehensive visualizations",
+      title: t("landing.features.trafficAnalytics"),
+      description: t("landing.features.trafficAnalyticsDesc"),
     },
     {
-      title: "Advanced Comparisons",
-      description: "Compare metrics across locations and time periods",
+      title: t("landing.features.advancedComparisons"),
+      description: t("landing.features.advancedComparisonsDesc"),
     },
     {
-      title: "Key Metrics",
-      description: "Track entries, exits, and conversion rates",
+      title: t("landing.features.keyMetrics"),
+      description: t("landing.features.keyMetricsDesc"),
     },
   ];
 
-  // Auto-rotation setup
   useEffect(() => {
-    // Auto-rotate every 3 seconds if not paused
     intervalRef.current = window.setInterval(() => {
       if (!isPaused) {
         setCurrentCardIndex((prevIndex) =>
@@ -41,17 +43,15 @@ const Landing = () => {
       }
     }, 3000);
 
-    // Clean up interval on component unmount
     return () => {
       if (intervalRef.current) window.clearInterval(intervalRef.current);
     };
   }, [isPaused, features.length]);
 
-  // Touch handlers for swipe functionality
   const onTouchStart = (e: TouchEvent<HTMLDivElement>) => {
-    setTouchEnd(null); // Reset values
+    setTouchEnd(null);
     setTouchStart(e.targetTouches[0].clientX);
-    setIsPaused(true); // Pause carousel during swipe
+    setIsPaused(true);
   };
 
   const onTouchMove = (e: TouchEvent<HTMLDivElement>) => {
@@ -65,32 +65,38 @@ const Landing = () => {
     const isLeftSwipe = distance > minSwipeDistance;
     const isRightSwipe = distance < -minSwipeDistance;
 
-    // Handle left swipe (next card)
     if (isLeftSwipe) {
       setCurrentCardIndex((prevIndex) =>
         prevIndex === features.length - 1 ? 0 : prevIndex + 1,
       );
-    }
-
-    // Handle right swipe (previous card)
-    else if (isRightSwipe) {
+    } else if (isRightSwipe) {
       setCurrentCardIndex((prevIndex) =>
         prevIndex === 0 ? features.length - 1 : prevIndex - 1,
       );
     }
 
-    // Resume auto-rotation after 5 seconds
     setTimeout(() => setIsPaused(false), 5000);
   };
 
   return (
     <div className="min-h-screen bg-white flex flex-col items-center justify-center relative overflow-hidden">
+      {/* Language Switch Button */}
+      <button
+        onClick={toggleLanguage}
+        className="absolute top-4 right-4 flex items-center gap-2 rounded-full p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-600 z-20"
+        title={t("common.changeLanguage", "Change language")}
+      >
+        <LanguageIcon className="h-5 w-5" />
+        <span className="text-xs font-medium">
+          {currentLanguage.toUpperCase()}
+        </span>
+      </button>
+
       {/* Dynamic background elements */}
       <div className="absolute top-20 -left-16 w-32 h-64 bg-[#00A5B1]/10 rounded-full blur-3xl"></div>
       <div className="absolute bottom-20 -right-16 w-32 h-64 bg-[#00A5B1]/10 rounded-full blur-3xl"></div>
       <div className="absolute top-1/2 left-1/4 w-24 h-24 bg-[#00A5B1]/5 rounded-full blur-2xl"></div>
 
-      {/* Hero Section */}
       <section className="container mx-auto px-4 py-16 text-center w-full relative z-10">
         <div className="mx-auto max-w-3xl">
           {/* Logo */}
@@ -100,11 +106,13 @@ const Landing = () => {
 
           {/* Title and Description */}
           <h1 className="mb-4 text-4xl font-bold text-black md:text-5xl text-center">
-            People Counter
+            {t("landing.title", "People Counter")}
           </h1>
           <p className="mb-8 text-xl text-gray-600 mx-auto max-w-2xl text-center">
-            Track, analyze, and optimize people flow. Powerful insights from
-            accurate sensors and smart dashboards — all in one platform.
+            {t(
+              "landing.subtitle",
+              "Track, analyze, and optimize people flow. Powerful insights from accurate sensors and smart dashboards — all in one platform.",
+            )}
           </p>
 
           {/* Dashboard Button */}
@@ -114,7 +122,7 @@ const Landing = () => {
               className="px-8 py-3 bg-[#00A5B1] text-white text-lg font-medium rounded-md
                 hover:bg-[#008a94] transition-all flex items-center justify-center shadow-lg shadow-[#00A5B1]/20"
             >
-              Go to Dashboard
+              {t("landing.goToDashboard", "Go to Dashboard")}
               <span className="ml-2 transform transition-transform group-hover:translate-x-1">
                 →
               </span>
@@ -198,21 +206,6 @@ const Landing = () => {
           </div>
         </div>
       </section>
-
-      {/* Wave decoration */}
-      <div className="absolute bottom-0 left-0 right-0 h-20 overflow-hidden">
-        <svg
-          viewBox="0 0 1200 120"
-          preserveAspectRatio="none"
-          className="absolute bottom-0 w-full h-20"
-        >
-          <path
-            d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V0C108.81,20.78,211.45,35.94,321.39,56.44Z"
-            fill="#00A5B1"
-            fillOpacity="0.08"
-          ></path>
-        </svg>
-      </div>
     </div>
   );
 };

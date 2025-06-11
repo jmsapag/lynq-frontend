@@ -18,7 +18,7 @@ export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
   indeterminate = false,
   onChange,
   className = "",
-  stopPropagation = false
+  stopPropagation = false,
 }) => {
   const handleClick = (e: React.MouseEvent) => {
     if (stopPropagation) {
