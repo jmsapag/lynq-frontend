@@ -1,4 +1,4 @@
-import { sensorMetadata } from './sensorMetadata';
+import { sensorMetadata } from "./sensorMetadata";
 
 export interface SensorLocation {
   id: string;
