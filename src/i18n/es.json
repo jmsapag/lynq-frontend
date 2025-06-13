@@ -113,5 +113,14 @@
     "loginFailedDescription": "Credenciales inválidas. Inténtalo de nuevo.",
     "messageSentTitle": "Mensaje enviado correctamente",
     "messageSentDescription": "¡Gracias por contactarnos! Nos comunicaremos pronto."
+  },
+  "contactModal": {
+    "title": "Contáctanos",
+    "firstName": "Nombre",
+    "lastName": "Apellido",
+    "location": "Ubicación",
+    "cancel": "Cancelar",
+    "submit": "Enviar",
+    "close": "Cerrar"
   }
 }

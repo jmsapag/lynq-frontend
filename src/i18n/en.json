@@ -113,5 +113,14 @@
     "loginFailedDescription": "Invalid credentials. Please try again.",
     "messageSentTitle": "Message Sent Successfully",
     "messageSentDescription": "Thank you for contacting us! We will get back to you soon."
+  },
+  "contactModal": {
+    "title": "Contact Us",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "location": "Location",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "close": "Close"
   }
 }

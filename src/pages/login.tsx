@@ -22,16 +22,24 @@ export default function LoginPage() {
     {},
   );
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+
   const [contactForm, setContactForm] = useState({
-    name: "",
+    nombre: "",
+    apellido: "",
     email: "",
-    comment: "",
+    telefono: "",
+    empresa: "",
+    ubicacion: "",
   });
   const [contactErrors, setContactErrors] = useState<{
-    name?: string;
+    nombre?: string;
+    apellido?: string;
     email?: string;
-    comment?: string;
+    telefono?: string;
+    empresa?: string;
+    ubicacion?: string;
   }>({});
+
   const navigate = useNavigate();
   const { login, loading } = useLogin();
 
@@ -51,8 +59,10 @@ export default function LoginPage() {
     e.preventDefault();
 
     const newErrors: typeof errors = {};
-    if (!formData.email) newErrors.email = "Email is required";
-    if (!formData.password) newErrors.password = "Password is required";
+    if (!formData.email)
+      newErrors.email = t("users.email") + " " + t("common.isRequired");
+    if (!formData.password)
+      newErrors.password = t("users.password") + " " + t("common.isRequired");
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -89,16 +99,35 @@ export default function LoginPage() {
     e.preventDefault();
 
     const newErrors: typeof contactErrors = {};
-    if (!contactForm.name) newErrors.name = "Name is required";
-    if (!contactForm.email) newErrors.email = "Email is required";
-    if (!contactForm.comment) newErrors.comment = "Comment is required";
+    if (!contactForm.nombre)
+      newErrors.nombre =
+        t("contactModal.firstName") + " " + t("common.isRequired");
+    if (!contactForm.apellido)
+      newErrors.apellido =
+        t("contactModal.lastName") + " " + t("common.isRequired");
+    if (!contactForm.email)
+      newErrors.email = t("users.email") + " " + t("common.isRequired");
+    if (!contactForm.telefono)
+      newErrors.telefono = t("users.phone") + " " + t("common.isRequired");
+    if (!contactForm.empresa)
+      newErrors.empresa = t("users.business") + " " + t("common.isRequired");
+    if (!contactForm.ubicacion)
+      newErrors.ubicacion =
+        t("contactModal.location") + " " + t("common.isRequired");
 
     if (Object.keys(newErrors).length > 0) {
       setContactErrors(newErrors);
       return;
     }
 
-    setContactForm({ name: "", email: "", comment: "" });
+    setContactForm({
+      nombre: "",
+      apellido: "",
+      email: "",
+      telefono: "",
+      empresa: "",
+      ubicacion: "",
+    });
     setIsContactModalOpen(false);
     addToast({
       title: t("toasts.messageSentTitle"),
@@ -161,7 +190,6 @@ export default function LoginPage() {
           handleContactChange={handleContactChange}
           handleContactSubmit={handleContactSubmit}
           onClose={() => setIsContactModalOpen(false)}
-          t={t}
         />
       )}
     </div>
