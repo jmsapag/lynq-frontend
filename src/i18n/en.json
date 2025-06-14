@@ -4,7 +4,9 @@
     "comparison": "Comparison",
     "users": "Users",
     "devices": "Devices",
-    "help": "Help"
+    "help": "Help",
+    "businesses": "Businesses",
+    "manage/users": "Manage Users"
   },
   "days": {
     "sunday": "Sunday",
@@ -30,7 +32,8 @@
   },
   "common": {
     "apply": "Apply",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "changeLanguage": "Change language"
   },
   "dashboard": {
     "filters": {
@@ -131,9 +134,6 @@
       "keyMetrics": "Key Metrics",
       "keyMetricsDesc": "Track entries, exits, and conversion rates"
     }
-  },
-  "common": {
-    "changeLanguage": "Change language"
   },
   "login": {
     "welcome": "Welcome back!",

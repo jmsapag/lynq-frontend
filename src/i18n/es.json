@@ -4,7 +4,9 @@
     "users": "Usuarios",
     "comparison": "Comparación",
     "devices": "Dispositivos",
-    "help": "Ayuda"
+    "help": "Ayuda",
+    "businesses": "Empresas",
+    "manage/users": "Gestionar Usuarios"
   },
   "days": {
     "sunday": "Domingo",
@@ -30,7 +32,8 @@
   },
   "common": {
     "apply": "Aplicar",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "changeLanguage": "Cambiar idioma"
   },
   "dashboard": {
     "filters": {
@@ -131,9 +134,6 @@
       "keyMetrics": "Métricas Clave",
       "keyMetricsDesc": "Sigue entradas, salidas y tasas de conversión"
     }
-  },
-  "common": {
-    "changeLanguage": "Cambiar idioma"
   },
   "login": {
     "welcome": "¡Bienvenido de nuevo!",

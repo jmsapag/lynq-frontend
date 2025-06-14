@@ -13,6 +13,9 @@ import Comparison from "./pages/comparison.tsx";
 import { PrivateRoute } from "./components/auth/privateRoutes.tsx";
 import Landing from "./pages/landing.tsx";
 import LoginPage from "./pages/login.tsx";
+import BusinessesPage from "./pages/businesses.tsx";
+import ManageUsersPage from "./pages/manage-users.tsx";
+import RoleRedirect from "./components/auth/roleRedirect.tsx";
 
 function AppLayoutWithState() {
   const { isOpen, handleToggle, handleClose } = useSidebar();
@@ -44,12 +47,15 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/" element={<Landing />} />
           <Route element={<PrivateRoute />}>
+            <Route path="/home" element={<RoleRedirect />} />
             <Route element={<AppLayoutWithState />}>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/comparison" element={<Comparison />} />
               <Route path="users" element={<UsersPage />} />
               <Route path="devices" element={<DevicesPage />} />
               <Route path="help" element={<HelpPage />} />
+              <Route path="businesses" element={<BusinessesPage />} />
+              <Route path="manage/users" element={<ManageUsersPage />} />
             </Route>
           </Route>
         </Routes>
