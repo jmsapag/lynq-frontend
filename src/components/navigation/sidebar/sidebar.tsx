@@ -1,11 +1,12 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { navItems } from "./navigation-config.ts";
+import { navItems, superAdminNavItems } from "./navigation-config.ts";
 import { NavItem } from "./nav-item.tsx";
 import { ProfileMenu } from "./profile-menu.tsx";
 import logoImage from "../../../assets/logo.png";
 import Cookies from "js-cookie";
+import { getUserRoleFromToken } from "../../../hooks/useAuth";
 
 interface SidebarProps {
   isOpen?: boolean;
@@ -20,6 +21,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
     navigate("/login", { replace: true });
   };
 
+  const role = getUserRoleFromToken();
+  const items = role === "superadmin" ? superAdminNavItems : navItems;
+
   const SidebarContent = () => (
     <div className="flex h-full flex-col bg-white text-black">
       <div className="flex h-16 shrink-0 items-center justify-center border-b border-gray-200 px-4">
@@ -31,7 +35,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       <div className="flex flex-1 flex-col justify-between overflow-hidden">
         <div className="flex-1 overflow-y-auto">
           <nav className="grid gap-1 px-3 py-2">
-            {navItems.map((item) => (
+            {items.map((item) => (
               <NavItem key={item.href} {...item} />
             ))}
           </nav>

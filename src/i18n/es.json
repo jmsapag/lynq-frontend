@@ -30,7 +30,8 @@
   },
   "common": {
     "apply": "Aplicar",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "changeLanguage": "Cambiar idioma"
   },
   "dashboard": {
     "filters": {
@@ -131,9 +132,6 @@
       "keyMetrics": "Métricas Clave",
       "keyMetricsDesc": "Sigue entradas, salidas y tasas de conversión"
     }
-  },
-  "common": {
-    "changeLanguage": "Cambiar idioma"
   },
   "login": {
     "welcome": "¡Bienvenido de nuevo!",

@@ -30,7 +30,8 @@
   },
   "common": {
     "apply": "Apply",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "changeLanguage": "Change language"
   },
   "dashboard": {
     "filters": {
@@ -131,9 +132,6 @@
       "keyMetrics": "Key Metrics",
       "keyMetricsDesc": "Track entries, exits, and conversion rates"
     }
-  },
-  "common": {
-    "changeLanguage": "Change language"
   },
   "login": {
     "welcome": "Welcome back!",
