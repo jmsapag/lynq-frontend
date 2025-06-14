@@ -10,7 +10,9 @@ import HelpPage from "./pages/help.tsx";
 import { HeroUIProvider } from "@heroui/react";
 import { ToastProvider } from "@heroui/toast";
 import Comparison from "./pages/comparison.tsx";
+import { PrivateRoute } from "./components/auth/privateRoutes.tsx";
 import Landing from "./pages/landing.tsx";
+import LoginPage from "./pages/login.tsx";
 
 function AppLayoutWithState() {
   const { isOpen, handleToggle, handleClose } = useSidebar();
@@ -39,13 +41,16 @@ function App() {
     <HeroUIProvider>
       <BrowserRouter basename={basename}>
         <Routes>
+          <Route path="/login" element={<LoginPage />} />
           <Route path="/" element={<Landing />} />
-          <Route element={<AppLayoutWithState />}>
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/comparison" element={<Comparison />} />
-            <Route path="users" element={<UsersPage />} />
-            <Route path="devices" element={<DevicesPage />} />
-            <Route path="help" element={<HelpPage />} />
+          <Route element={<PrivateRoute />}>
+            <Route element={<AppLayoutWithState />}>
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/comparison" element={<Comparison />} />
+              <Route path="users" element={<UsersPage />} />
+              <Route path="devices" element={<DevicesPage />} />
+              <Route path="help" element={<HelpPage />} />
+            </Route>
           </Route>
         </Routes>
       </BrowserRouter>
