@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { LoginForm } from "../components/login/loginForm.tsx";
-import { ContactModal } from "../components/login/contactModal.tsx";
 import {
   BackgroundShapes,
   RightPanelGradients,
@@ -21,17 +20,7 @@ export default function LoginPage() {
   const [errors, setErrors] = useState<{ email?: string; password?: string }>(
     {},
   );
-  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
-  const [contactForm, setContactForm] = useState({
-    name: "",
-    email: "",
-    comment: "",
-  });
-  const [contactErrors, setContactErrors] = useState<{
-    name?: string;
-    email?: string;
-    comment?: string;
-  }>({});
+
   const navigate = useNavigate();
   const { login, loading } = useLogin();
 
@@ -78,36 +67,6 @@ export default function LoginPage() {
     }
   };
 
-  const handleContactChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    setContactForm({ ...contactForm, [e.target.name]: e.target.value });
-    setContactErrors({ ...contactErrors, [e.target.name]: undefined });
-  };
-
-  const handleContactSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    const newErrors: typeof contactErrors = {};
-    if (!contactForm.name) newErrors.name = "Name is required";
-    if (!contactForm.email) newErrors.email = "Email is required";
-    if (!contactForm.comment) newErrors.comment = "Comment is required";
-
-    if (Object.keys(newErrors).length > 0) {
-      setContactErrors(newErrors);
-      return;
-    }
-
-    setContactForm({ name: "", email: "", comment: "" });
-    setIsContactModalOpen(false);
-    addToast({
-      title: t("toasts.messageSentTitle"),
-      description: t("toasts.messageSentDescription"),
-      severity: "success",
-      color: "success",
-    });
-  };
-
   return (
     <div className="min-h-screen bg-white relative flex">
       {/* Language Switch Button */}
@@ -139,7 +98,6 @@ export default function LoginPage() {
             isLoading={loading}
             handleChange={handleChange}
             handleSubmit={handleSubmit}
-            setIsContactModalOpen={setIsContactModalOpen}
             t={t}
           />
         </div>
@@ -152,18 +110,6 @@ export default function LoginPage() {
           <RightPanelGradients />
         </div>
       </div>
-
-      {/* Contact Modal */}
-      {isContactModalOpen && (
-        <ContactModal
-          contactForm={contactForm}
-          contactErrors={contactErrors}
-          handleContactChange={handleContactChange}
-          handleContactSubmit={handleContactSubmit}
-          onClose={() => setIsContactModalOpen(false)}
-          t={t}
-        />
-      )}
     </div>
   );
 }

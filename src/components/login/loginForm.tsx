@@ -4,7 +4,6 @@ export function LoginForm({
   isLoading,
   handleChange,
   handleSubmit,
-  setIsContactModalOpen,
   t,
 }: any) {
   return (
@@ -97,16 +96,6 @@ export function LoginForm({
           t("login.loginButton")
         )}
       </button>
-      <div className="mt-8 text-center text-gray-400 text-sm">
-        {t("login.noAccount")}{" "}
-        <button
-          type="button"
-          onClick={() => setIsContactModalOpen(true)}
-          className="text-[#00A5B1] hover:underline focus:outline-none"
-        >
-          {t("login.contactUs")}
-        </button>
-      </div>
     </form>
   );
 }
