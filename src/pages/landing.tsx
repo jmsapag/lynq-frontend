@@ -118,7 +118,7 @@ const Landing = () => {
           {/* Dashboard Button */}
           <div className="flex justify-center">
             <button
-              onClick={() => navigate("/dashboard")}
+              onClick={() => navigate("/home")}
               className="px-8 py-3 bg-[#00A5B1] text-white text-lg font-medium rounded-md
                 hover:bg-[#008a94] transition-all flex items-center justify-center shadow-lg shadow-[#00A5B1]/20"
             >

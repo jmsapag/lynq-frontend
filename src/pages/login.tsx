@@ -27,7 +27,7 @@ export default function LoginPage() {
   useEffect(() => {
     const token = Cookies.get("token");
     if (token) {
-      navigate("/dashboard", { replace: true });
+      navigate("/home", { replace: true });
     }
   }, [navigate]);
 
@@ -56,7 +56,7 @@ export default function LoginPage() {
 
     try {
       await login(formData.email, formData.password);
-      navigate("/dashboard");
+      navigate("/home");
     } catch (error) {
       addToast({
         title: t("toasts.loginFailedTitle"),

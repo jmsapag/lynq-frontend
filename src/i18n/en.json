@@ -4,7 +4,9 @@
     "comparison": "Comparison",
     "users": "Users",
     "devices": "Devices",
-    "help": "Help"
+    "help": "Help",
+    "businesses": "Businesses",
+    "manage/users": "Manage Users"
   },
   "days": {
     "sunday": "Sunday",

@@ -5,7 +5,7 @@ import {
 } from "@heroicons/react/24/outline";
 import {
   ArrowsRightLeftIcon,
-  BuildingOfficeIcon,
+  BriefcaseIcon,
   DeviceTabletIcon,
 } from "@heroicons/react/16/solid";
 
@@ -17,7 +17,7 @@ export const navItems = [
 ];
 
 export const superAdminNavItems = [
-  { title: "businesses", href: "/businesses", icon: BuildingOfficeIcon },
+  { title: "businesses", href: "/businesses", icon: BriefcaseIcon },
   { title: "devices", href: "/devices", icon: DeviceTabletIcon },
-  { title: "users", href: "/users", icon: UserGroupIcon },
+  { title: "users", href: "/manage/users", icon: UserGroupIcon },
 ];

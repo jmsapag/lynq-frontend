@@ -4,7 +4,9 @@
     "users": "Usuarios",
     "comparison": "Comparación",
     "devices": "Dispositivos",
-    "help": "Ayuda"
+    "help": "Ayuda",
+    "businesses": "Empresas",
+    "manage/users": "Gestionar Usuarios"
   },
   "days": {
     "sunday": "Domingo",

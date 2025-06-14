@@ -22,7 +22,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   };
 
   const role = getUserRoleFromToken();
-  const items = role === "superadmin" ? superAdminNavItems : navItems;
+  const items = role === "LYNQ_TEAM" ? superAdminNavItems : navItems;
 
   const SidebarContent = () => (
     <div className="flex h-full flex-col bg-white text-black">
