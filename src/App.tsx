@@ -13,6 +13,7 @@ import Comparison from "./pages/comparison.tsx";
 import { PrivateRoute } from "./components/auth/privateRoutes.tsx";
 import Landing from "./pages/landing.tsx";
 import LoginPage from "./pages/login.tsx";
+import RegisterPage from "./pages/register.tsx";
 
 function AppLayoutWithState() {
   const { isOpen, handleToggle, handleClose } = useSidebar();
@@ -43,6 +44,7 @@ function App() {
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/" element={<Landing />} />
+          <Route path="/register" element={<RegisterPage />} />
           <Route element={<PrivateRoute />}>
             <Route element={<AppLayoutWithState />}>
               <Route path="/dashboard" element={<Dashboard />} />

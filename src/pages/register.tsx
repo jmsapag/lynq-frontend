@@ -1,35 +1,30 @@
-import { useEffect, useState } from "react";
-import { LoginForm } from "../components/auth/loginForm.tsx";
+import { useState } from "react";
+import RegisterForm, {
+  RegisterFormData,
+} from "../components/auth/registerForm";
 import {
   BackgroundShapes,
   RightPanelGradients,
-} from "../components/auth/background.tsx";
+} from "../components/auth/background";
 import { useNavigate } from "react-router-dom";
 import { addToast } from "@heroui/react";
-import { useLogin } from "../hooks/useAuth.ts";
-import Cookies from "js-cookie";
 import { useTranslation } from "react-i18next";
-import { useLanguage } from "../hooks/useLanguage.ts";
+import { useLanguage } from "../hooks/useLanguage";
 import { LanguageIcon } from "@heroicons/react/24/outline";
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const { t } = useTranslation();
   const { toggleLanguage, currentLanguage } = useLanguage();
-
-  const [formData, setFormData] = useState({ email: "", password: "" });
-  const [errors, setErrors] = useState<{ email?: string; password?: string }>(
-    {},
-  );
-
+  const [formData, setFormData] = useState<RegisterFormData>({
+    name: "",
+    surname: "",
+    email: "",
+    phone: "",
+    password: "",
+  });
+  const [errors, setErrors] = useState<Partial<RegisterFormData>>({});
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { login, loading } = useLogin();
-
-  useEffect(() => {
-    const token = Cookies.get("token");
-    if (token) {
-      navigate("/dashboard", { replace: true });
-    }
-  }, [navigate]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -38,10 +33,20 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    const newErrors: typeof errors = {};
-    if (!formData.email) newErrors.email = "Email is required";
-    if (!formData.password) newErrors.password = "Password is required";
+    const newErrors: Partial<RegisterFormData> = {};
+    if (!formData.name)
+      newErrors.name = t("register.nameRequired", "Name is required");
+    if (!formData.surname)
+      newErrors.surname = t("register.surnameRequired", "Surname is required");
+    if (!formData.email)
+      newErrors.email = t("register.emailRequired", "Email is required");
+    if (!formData.phone)
+      newErrors.phone = t("register.phoneRequired", "Phone is required");
+    if (!formData.password)
+      newErrors.password = t(
+        "register.passwordRequired",
+        "Password is required",
+      );
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -54,16 +59,29 @@ export default function LoginPage() {
       return;
     }
 
+    setLoading(true);
     try {
-      await login(formData.email, formData.password);
-      navigate("/dashboard");
+      // TODO: Replace with your registration logic (API call)
+      // await register(formData);
+      addToast({
+        title: t("toasts.registerSuccessTitle", "Registration successful"),
+        description: t(
+          "toasts.registerSuccessDescription",
+          "You can now log in.",
+        ),
+        severity: "success",
+        color: "success",
+      });
+      navigate("/login");
     } catch (error) {
       addToast({
-        title: t("toasts.loginFailedTitle"),
-        description: t("toasts.loginFailedDescription"),
+        title: t("toasts.registerFailedTitle", "Registration failed"),
+        description: t("toasts.registerFailedDescription", "Please try again."),
         severity: "danger",
         color: "danger",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -86,19 +104,22 @@ export default function LoginPage() {
         <div className="max-w-md w-full">
           <div className="text-center mb-10">
             <h2 className="mt-6 text-3xl font-bold text-gray-900">
-              {t("login.welcome", "Welcome back!")}
+              {t("register.title", "Create your account")}
             </h2>
             <p className="mt-2 text-sm text-gray-500">
-              {t("login.subtitle", "Login to continue exploring your metrics.")}
+              {t(
+                "register.subtitle",
+                "Sign up to start exploring your metrics.",
+              )}
             </p>
           </div>
-          <LoginForm
+          <RegisterForm
             formData={formData}
             errors={errors}
             isLoading={loading}
             handleChange={handleChange}
             handleSubmit={handleSubmit}
-            t={t}
+            t={t as (key: string, defaultValue?: string) => string}
           />
         </div>
         <BackgroundShapes />
