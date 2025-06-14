@@ -6,6 +6,15 @@
     "devices": "Dispositivos",
     "help": "Ayuda"
   },
+  "days": {
+    "sunday": "Domingo",
+    "monday": "Lunes",
+    "tuesday": "Martes",
+    "wednesday": "Miércoles",
+    "thursday": "Jueves",
+    "friday": "Viernes",
+    "saturday": "Sábado"
+  },
   "help": {
     "userGuide": "Guía de Uso",
     "userGuideText": "Aquí encontrarás información sobre cómo usar la aplicación People Counter.",
@@ -19,6 +28,10 @@
   "role": {
     "admin": "Administrador"
   },
+  "common": {
+    "apply": "Aplicar",
+    "cancel": "Cancelar"
+  },
   "dashboard": {
     "filters": {
       "selectDates": "Seleccionar fechas",
@@ -30,7 +43,17 @@
     "charts": {
       "dailyVisitors": "Visitantes Diarios",
       "weeklyTrend": "Tendencia Semanal",
-      "peopleFlow": "Flujo de Personas (Entradas/Salidas)"
+      "peopleFlow": "Flujo de Personas (Entradas/Salidas)",
+      "trafficHeatmap": "Mapa de Calor (Por Día y Hora)",
+      "entryRateOverTime": "Tasa de Entrada a lo Largo del Tiempo",
+      "entries": "Entradas",
+      "exits": "Salidas",
+      "showEntries": "Mostrar Entradas",
+      "showExits": "Mostrar Salidas",
+      "entriesByDayAndHour": "Entradas por Día y Hora",
+      "exitsByDayAndHour": "Salidas por Día y Hora",
+      "hourOfDay": "Hora del Día",
+      "dayOfWeek": "Día de la Semana"
     },
     "metrics": {
       "totalIn": "Total Entradas",
@@ -59,6 +82,7 @@
     "to": "a",
     "sensors": "Sensores",
     "selectSensors": "Seleccionar sensores",
+    "noSensorsSelected": "No se han seleccionado sensores",
     "allSensors": "Todos los sensores",
     "sensorsSelected": "{{count}} sensores seleccionados",
     "timeRange": "Horario",
@@ -94,6 +118,22 @@
       "deviceComparisonIn": "Entradas",
       "deviceComparisonOut": "Salidas"
     }
+  },
+  "landing": {
+    "title": "Contador de Personas",
+    "subtitle": "Rastrea, analiza y optimiza el flujo de personas. Información poderosa de sensores precisos y paneles inteligentes, todo en una sola plataforma.",
+    "goToDashboard": "Ir al Tablero",
+    "features": {
+      "trafficAnalytics": "Analítica de Tráfico",
+      "trafficAnalyticsDesc": "Monitorea el flujo de personas con visualizaciones completas",
+      "advancedComparisons": "Comparaciones Avanzadas",
+      "advancedComparisonsDesc": "Compara métricas entre ubicaciones y periodos de tiempo",
+      "keyMetrics": "Métricas Clave",
+      "keyMetricsDesc": "Sigue entradas, salidas y tasas de conversión"
+    }
+  },
+  "common": {
+    "changeLanguage": "Cambiar idioma"
   },
   "login": {
     "welcome": "¡Bienvenido de nuevo!",

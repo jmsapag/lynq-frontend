@@ -6,6 +6,15 @@
     "devices": "Devices",
     "help": "Help"
   },
+  "days": {
+    "sunday": "Sunday",
+    "monday": "Monday",
+    "tuesday": "Tuesday",
+    "wednesday": "Wednesday",
+    "thursday": "Thursday",
+    "friday": "Friday",
+    "saturday": "Saturday"
+  },
   "help": {
     "userGuide": "User Guide",
     "userGuideText": "Here you will find information on how to use the People Counter application.",
@@ -19,6 +28,10 @@
   "role": {
     "admin": "Administrator"
   },
+  "common": {
+    "apply": "Apply",
+    "cancel": "Cancel"
+  },
   "dashboard": {
     "filters": {
       "selectDates": "Select dates",
@@ -30,7 +43,17 @@
     "charts": {
       "dailyVisitors": "Daily Visitors",
       "weeklyTrend": "Weekly Trend",
-      "peopleFlow": "People Flow (In/Out)"
+      "peopleFlow": "People Flow (In/Out)",
+      "trafficHeatmap": "Traffic Heatmap (By Day & Hour)",
+      "entryRateOverTime": "Entry Rate Over Time",
+      "entries": "Entries",
+      "exits": "Exits",
+      "showEntries": "Show Entries",
+      "showExits": "Show Exits",
+      "entriesByDayAndHour": "Entries by Day and Hour",
+      "exitsByDayAndHour": "Exits by Day and Hour",
+      "hourOfDay": "Hour of Day",
+      "dayOfWeek": "Day of Week"
     },
     "metrics": {
       "totalIn": "Total In",
@@ -59,6 +82,7 @@
     "to": "to",
     "sensors": "Sensors",
     "selectSensors": "Select sensors",
+    "noSensorsSelected": "No sensors selected",
     "allSensors": "All sensors",
     "sensorsSelected": "{{count}} sensors selected",
     "timeRange": "Time Range",
@@ -94,6 +118,22 @@
       "deviceComparisonIn": "Entries",
       "deviceComparisonOut": "Exits"
     }
+  },
+  "landing": {
+    "title": "People Counter",
+    "subtitle": "Track, analyze, and optimize people flow. Powerful insights from accurate sensors and smart dashboards — all in one platform.",
+    "goToDashboard": "Go to Dashboard",
+    "features": {
+      "trafficAnalytics": "Traffic Analytics",
+      "trafficAnalyticsDesc": "Monitor people flow with comprehensive visualizations",
+      "advancedComparisons": "Advanced Comparisons",
+      "advancedComparisonsDesc": "Compare metrics across locations and time periods",
+      "keyMetrics": "Key Metrics",
+      "keyMetricsDesc": "Track entries, exits, and conversion rates"
+    }
+  },
+  "common": {
+    "changeLanguage": "Change language"
   },
   "login": {
     "welcome": "Welcome back!",
