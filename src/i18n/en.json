@@ -153,11 +153,31 @@
     "forgot": "Forgot?",
     "loginButton": "Log in"
   },
+  "register": {
+    "title": "Create your account",
+    "subtitle": "Sign up to start exploring your metrics.",
+    "namePlaceholder": "Name",
+    "surnamePlaceholder": "Surname",
+    "emailPlaceholder": "Email",
+    "phonePlaceholder": "Phone",
+    "passwordPlaceholder": "Password",
+    "registerButton": "Register",
+    "loadingButton": "Registering...",
+    "nameRequired": "Name is required",
+    "surnameRequired": "Surname is required",
+    "emailRequired": "Email is required",
+    "phoneRequired": "Phone is required",
+    "passwordRequired": "Password is required"
+  },
   "toasts": {
     "formErrorTitle": "Form Error",
     "formErrorDescription": "Please fix the form errors before submitting.",
     "loginFailedTitle": "Login Failed",
     "loginFailedDescription": "Invalid credentials. Please try again.",
+    "registerSuccessTitle": "Registration successful",
+    "registerSuccessDescription": "You can now log in.",
+    "registerFailedTitle": "Registration failed",
+    "registerFailedDescription": "Please try again.",
     "messageSentTitle": "Message Sent Successfully",
     "messageSentDescription": "Thank you for contacting us! We will get back to you soon."
   },
