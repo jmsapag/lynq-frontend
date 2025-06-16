@@ -6,7 +6,8 @@
     "devices": "Dispositivos",
     "help": "Ayuda",
     "businesses": "Empresas",
-    "manage/users": "Gestionar Usuarios"
+    "manage/users": "Gestionar Usuarios",
+    "profile": "Perfil"
   },
   "days": {
     "sunday": "Domingo",
@@ -27,6 +28,7 @@
     "rights": "© {{year}} LYNQ, People Counter. Todos los derechos reservados."
   },
   "logout": "Cerrar sesión",
+  "profile": "Perfil",
   "role": {
     "admin": "Administrador"
   },

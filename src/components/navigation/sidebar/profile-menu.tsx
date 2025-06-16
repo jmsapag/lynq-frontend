@@ -1,6 +1,7 @@
 import React, { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 interface ProfileMenuProps {
   onLogout: () => void;
@@ -8,6 +9,7 @@ interface ProfileMenuProps {
 
 export const ProfileMenu: React.FC<ProfileMenuProps> = ({ onLogout }) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   return (
     <div className="flex items-center justify-between gap-2">
@@ -28,6 +30,18 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({ onLogout }) => {
 
         <MenuTransition>
           <Menu.Items className="absolute bottom-full left-0 mb-2 w-full origin-bottom-left rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+            <Menu.Item>
+              {({ active }) => (
+                <button
+                  onClick={() => navigate("/profile")}
+                  className={`${
+                    active ? "bg-gray-100 text-gray-900" : "text-gray-700"
+                  } group flex w-full items-center rounded-md px-3 py-2 text-sm`}
+                >
+                  {t("profile")}
+                </button>
+              )}
+            </Menu.Item>
             <Menu.Item>
               {({ active }) => (
                 <button
