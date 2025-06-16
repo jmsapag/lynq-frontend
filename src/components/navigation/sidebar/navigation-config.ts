@@ -20,3 +20,9 @@ export const superAdminNavItems = [
   { title: "devices", href: "/devices", icon: DeviceTabletIcon },
   { title: "users", href: "/manage/users", icon: UserGroupIcon },
 ];
+
+export const adminNavItems = [
+  { title: "dashboard", href: "/dashboard", icon: ChartBarIcon },
+  { title: "comparison", href: "/comparison", icon: ArrowsRightLeftIcon },
+  { title: "help", href: "/help", icon: QuestionMarkCircleIcon },
+];
