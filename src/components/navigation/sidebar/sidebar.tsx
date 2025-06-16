@@ -1,7 +1,11 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { navItems, superAdminNavItems } from "./navigation-config.ts";
+import {
+  navItems,
+  superAdminNavItems,
+  adminNavItems,
+} from "./navigation-config.ts";
 import { NavItem } from "./nav-item.tsx";
 import { ProfileMenu } from "./profile-menu.tsx";
 import logoImage from "../../../assets/logo.png";
@@ -22,7 +26,14 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   };
 
   const role = getUserRoleFromToken();
-  const items = role === "LYNQ_TEAM" ? superAdminNavItems : navItems;
+  let items;
+  if (role === "LYNQ_TEAM") {
+    items = superAdminNavItems;
+  } else if (role === "ADMIN") {
+    items = adminNavItems;
+  } else {
+    items = navItems;
+  }
 
   const SidebarContent = () => (
     <div className="flex h-full flex-col bg-white text-black">

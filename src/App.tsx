@@ -3,7 +3,7 @@ import Dashboard from "./pages/dashboard";
 import { SidebarWithState } from "./components/navigation/sidebar/sidebar-with-state.tsx";
 import Header from "./components/navigation/header/header.tsx";
 import { useSidebar } from "./hooks/useSidebar.ts";
-import UsersPage from "./pages/users";
+import UsersPage from "./pages/profile.tsx";
 import DevicesPage from "./pages/devices";
 import { Footer } from "./components/navigation/footer/footer.tsx";
 import HelpPage from "./pages/help.tsx";
@@ -53,7 +53,7 @@ function App() {
             <Route element={<AppLayoutWithState />}>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/comparison" element={<Comparison />} />
-              <Route path="users" element={<UsersPage />} />
+              <Route path="/profile" element={<UsersPage />} />
               <Route path="devices" element={<DevicesPage />} />
               <Route path="help" element={<HelpPage />} />
               <Route path="businesses" element={<BusinessesPage />} />
