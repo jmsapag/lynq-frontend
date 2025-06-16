@@ -8,6 +8,7 @@ const RoleRedirect = () => {
   useEffect(() => {
     const role = getUserRoleFromToken();
     if (role === "LYNQ_TEAM") {
+      console.log(role);
       navigate("/businesses", { replace: true });
     } else {
       navigate("/dashboard", { replace: true });
