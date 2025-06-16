@@ -2,6 +2,17 @@ import { useState } from "react";
 import Cookies from "js-cookie";
 import { axiosClient } from "../services/axiosClient";
 
+export function getUserRoleFromToken() {
+  const token = Cookies.get("token");
+  if (!token) return null;
+  try {
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    return payload.role || null;
+  } catch {
+    return null;
+  }
+}
+
 export function useLogin() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

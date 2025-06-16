@@ -4,7 +4,9 @@
     "users": "Usuarios",
     "comparison": "Comparación",
     "devices": "Dispositivos",
-    "help": "Ayuda"
+    "help": "Ayuda",
+    "businesses": "Empresas",
+    "manage/users": "Gestionar Usuarios"
   },
   "days": {
     "sunday": "Domingo",
@@ -30,7 +32,15 @@
   },
   "common": {
     "apply": "Aplicar",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "changeLanguage": "Cambiar idioma",
+    "actions": "Acciones",
+    "loading": "Cargando...",
+    "error": "Error",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "page": "Página",
+    "noData": "No se encontraron empresas."
   },
   "dashboard": {
     "filters": {
@@ -132,9 +142,6 @@
       "keyMetricsDesc": "Sigue entradas, salidas y tasas de conversión"
     }
   },
-  "common": {
-    "changeLanguage": "Cambiar idioma"
-  },
   "login": {
     "welcome": "¡Bienvenido de nuevo!",
     "subtitle": "Inicia sesión para seguir explorando tus métricas.",
@@ -173,5 +180,20 @@
     "registerFailedDescription": "Por favor, inténtalo de nuevo.",
     "messageSentTitle": "Mensaje enviado correctamente",
     "messageSentDescription": "¡Gracias por contactarnos! Nos comunicaremos pronto."
+  },
+  "businesses": {
+    "management": "Gestión de Empresas",
+    "addBusiness": "Añadir Empresa",
+    "editBusiness": "Editar Empresa",
+    "deleteBusiness": "Borrar Empresa",
+    "name": "Nombre",
+    "address": "Dirección",
+    "createdAt": "Creado el",
+    "edit": "Editar",
+    "delete": "Borrar",
+    "deleteConfirm": "¿Estás seguro de que deseas borrar esta empresa? Esta acción no se puede deshacer.",
+    "createError": "Error al crear la empresa.",
+    "editError": "Error al editar la empresa.",
+    "deleteError": "Error al borrar la empresa."
   }
 }
