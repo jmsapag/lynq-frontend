@@ -47,7 +47,7 @@ function App() {
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/" element={<Landing />} />
-          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/register/:token?" element={<RegisterPage />} />
           <Route element={<PrivateRoute />}>
             <Route path="/home" element={<RoleRedirect />} />
             <Route element={<AppLayoutWithState />}>

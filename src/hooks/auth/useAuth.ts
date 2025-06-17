@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Cookies from "js-cookie";
-import { axiosClient } from "../services/axiosClient";
+import { axiosClient } from "../../services/axiosClient.ts";
 
 export function getUserRoleFromToken() {
   const token = Cookies.get("token");

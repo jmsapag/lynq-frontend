@@ -10,7 +10,7 @@ import { NavItem } from "./nav-item.tsx";
 import { ProfileMenu } from "./profile-menu.tsx";
 import logoImage from "../../../assets/logo.png";
 import Cookies from "js-cookie";
-import { getUserRoleFromToken } from "../../../hooks/useAuth";
+import { getUserRoleFromToken } from "../../../hooks/auth/useAuth.ts";
 
 interface SidebarProps {
   isOpen?: boolean;

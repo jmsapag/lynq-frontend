@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getUserRoleFromToken } from "../../hooks/useAuth";
+import { getUserRoleFromToken } from "../../hooks/auth/useAuth.ts";
 
 const RoleRedirect = () => {
   const navigate = useNavigate();
