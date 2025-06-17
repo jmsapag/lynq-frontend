@@ -169,7 +169,8 @@
     "surnameRequired": "Surname is required",
     "emailRequired": "Email is required",
     "phoneRequired": "Phone is required",
-    "passwordRequired": "Password is required"
+    "passwordRequired": "Password is required",
+    "tokenInfo": "Registration token detected"
   },
   "toasts": {
     "formErrorTitle": "Form Error",
@@ -197,5 +198,25 @@
     "createError": "Error creating business.",
     "editError": "Error editing business.",
     "deleteError": "Error deleting business."
+  },
+  "manageUsers": {
+    "addUsers": "Add Users",
+    "role": "Role",
+    "count": "Count",
+    "business": "Business",
+    "create": "Create",
+    "cancel": "Cancel",
+    "registrationLinks": "Registration Links",
+    "copyAllLinks": "Copy All Links",
+    "close": "Close",
+    "formErrorTitle": "Form Error",
+    "formErrorDescription": "Please fill in all fields.",
+    "successTitle": "Success",
+    "successDescription": "Registration tokens created successfully!",
+    "errorTitle": "Error",
+    "errorDescription": "Failed to create registration tokens.",
+    "copiedTitle": "Copied",
+    "copiedDescription": "All registration links copied to clipboard.",
+    "noTokens": "No tokens received."
   }
 }

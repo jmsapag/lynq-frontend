@@ -12,9 +12,11 @@ import {
   addToast,
 } from "@heroui/react";
 import { useBusinesses } from "../hooks/business/useBusiness";
-import { useCreateRegistrationTokens } from "../hooks/useCreateRegistrationTokens";
+import { useCreateRegistrationTokens } from "../hooks/auth/useCreateRegistrationTokens.ts";
+import { useTranslation } from "react-i18next";
 
 const ManageUsersPage: React.FC = () => {
+  const { t } = useTranslation();
   const [showModal, setShowModal] = useState(false);
   const [role, setRole] = useState<"ADMIN" | "STANDARD">("STANDARD");
   const [count, setCount] = useState(1);
@@ -35,8 +37,8 @@ const ManageUsersPage: React.FC = () => {
     e.preventDefault();
     if (!role || !count || !selectedBusiness) {
       addToast({
-        title: "Form Error",
-        description: "Please fill in all fields.",
+        title: t("manageUsers.formErrorTitle"),
+        description: t("manageUsers.formErrorDescription"),
         severity: "danger",
         color: "danger",
       });
@@ -48,16 +50,16 @@ const ManageUsersPage: React.FC = () => {
         setShowModal(false);
         setShowTokensModal(true);
         addToast({
-          title: "Success",
-          description: "Registration tokens created successfully!",
+          title: t("manageUsers.successTitle"),
+          description: t("manageUsers.successDescription"),
           severity: "success",
           color: "success",
         });
       }
     } catch (err) {
       addToast({
-        title: "Error",
-        description: error || "Failed to create registration tokens.",
+        title: t("manageUsers.errorTitle"),
+        description: error || t("manageUsers.errorDescription"),
         severity: "danger",
         color: "danger",
       });
@@ -69,18 +71,35 @@ const ManageUsersPage: React.FC = () => {
     setTokens(null);
   };
 
+  // Generate registration links
+  const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
+  const registrationLinks =
+    tokens?.map((token) => `${baseUrl}/register/${token}`) || [];
+
+  const handleCopyLinks = async () => {
+    if (registrationLinks.length > 0) {
+      await navigator.clipboard.writeText(registrationLinks.join("\n"));
+      addToast({
+        title: t("manageUsers.copiedTitle"),
+        description: t("manageUsers.copiedDescription"),
+        severity: "success",
+        color: "success",
+      });
+    }
+  };
+
   return (
     <div className="w-full max-w-7xl mx-auto">
       <div className="flex justify-end items-center mb-10">
         <Button variant="solid" size="sm" onPress={() => setShowModal(true)}>
-          Add Users
+          {t("manageUsers.addUsers")}
         </Button>
       </div>
 
       {/* Create Users Modal */}
       <Modal isOpen={showModal} onOpenChange={setShowModal}>
         <ModalContent>
-          <ModalHeader>Add Users</ModalHeader>
+          <ModalHeader>{t("manageUsers.addUsers")}</ModalHeader>
           <ModalBody>
             <form
               className="space-y-4"
@@ -88,7 +107,7 @@ const ManageUsersPage: React.FC = () => {
               onSubmit={handleCreateUser}
             >
               <Select
-                label="Role"
+                label={t("manageUsers.role")}
                 value={role}
                 onChange={(e) => {
                   const value = (e.target as HTMLSelectElement).value;
@@ -100,7 +119,7 @@ const ManageUsersPage: React.FC = () => {
                 <SelectItem key="STANDARD">STANDARD</SelectItem>
               </Select>
               <Input
-                label="Count"
+                label={t("manageUsers.count")}
                 type="number"
                 min={1}
                 value={count.toString()}
@@ -108,7 +127,7 @@ const ManageUsersPage: React.FC = () => {
                 required
               />
               <Select
-                label="Business"
+                label={t("manageUsers.business")}
                 value={selectedBusiness?.toString() || ""}
                 onChange={(e) =>
                   setSelectedBusiness(
@@ -132,7 +151,7 @@ const ManageUsersPage: React.FC = () => {
               onPress={() => setShowModal(false)}
               isDisabled={creating}
             >
-              Cancel
+              {t("manageUsers.cancel")}
             </Button>
             <Button
               type="submit"
@@ -141,7 +160,7 @@ const ManageUsersPage: React.FC = () => {
               size="sm"
               isLoading={creating}
             >
-              Create
+              {t("manageUsers.create")}
             </Button>
           </ModalFooter>
         </ModalContent>
@@ -150,26 +169,43 @@ const ManageUsersPage: React.FC = () => {
       {/* Tokens Modal */}
       <Modal isOpen={showTokensModal} onOpenChange={handleCloseTokensModal}>
         <ModalContent>
-          <ModalHeader>Registration Tokens</ModalHeader>
+          <ModalHeader>{t("manageUsers.registrationLinks")}</ModalHeader>
           <ModalBody>
-            {tokens && tokens.length > 0 ? (
-              <ul className="space-y-2">
-                {tokens.map((token, idx) => (
-                  <li
-                    key={idx}
-                    className="bg-gray-100 rounded px-3 py-2 font-mono break-all"
-                  >
-                    {token}
-                  </li>
-                ))}
-              </ul>
+            {registrationLinks.length > 0 ? (
+              <>
+                <ul className="space-y-2">
+                  {registrationLinks.map((link, idx) => (
+                    <li
+                      key={idx}
+                      className="bg-gray-100 rounded px-3 py-2 font-mono break-all"
+                    >
+                      <a
+                        href={link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 underline"
+                      >
+                        {link}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+                <Button
+                  variant="solid"
+                  size="sm"
+                  className="mt-4"
+                  onPress={handleCopyLinks}
+                >
+                  {t("manageUsers.copyAllLinks")}
+                </Button>
+              </>
             ) : (
-              <div>No tokens received.</div>
+              <div>{t("manageUsers.noTokens")}</div>
             )}
           </ModalBody>
           <ModalFooter>
             <Button variant="solid" size="sm" onPress={handleCloseTokensModal}>
-              Close
+              {t("manageUsers.close")}
             </Button>
           </ModalFooter>
         </ModalContent>

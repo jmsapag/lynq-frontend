@@ -169,7 +169,8 @@
     "surnameRequired": "El apellido es obligatorio",
     "emailRequired": "El correo electrónico es obligatorio",
     "phoneRequired": "El teléfono es obligatorio",
-    "passwordRequired": "La contraseña es obligatoria"
+    "passwordRequired": "La contraseña es obligatoria",
+    "tokenInfo": "Token de registro detectado"
   },
   "toasts": {
     "formErrorTitle": "Error en el formulario",
@@ -197,5 +198,25 @@
     "createError": "Error al crear la empresa.",
     "editError": "Error al editar la empresa.",
     "deleteError": "Error al borrar la empresa."
+  },
+  "manageUsers": {
+    "addUsers": "Añadir Usuarios",
+    "role": "Rol",
+    "count": "Cantidad",
+    "business": "Empresa",
+    "create": "Crear",
+    "cancel": "Cancelar",
+    "registrationLinks": "Enlaces de Registro",
+    "copyAllLinks": "Copiar Todos los Enlaces",
+    "close": "Cerrar",
+    "formErrorTitle": "Error en el formulario",
+    "formErrorDescription": "Por favor, completa todos los campos.",
+    "successTitle": "Éxito",
+    "successDescription": "¡Tokens de registro creados exitosamente!",
+    "errorTitle": "Error",
+    "errorDescription": "No se pudieron crear los tokens de registro.",
+    "copiedTitle": "Copiado",
+    "copiedDescription": "Todos los enlaces de registro copiados al portapapeles.",
+    "noTokens": "No se recibieron tokens."
   }
 }

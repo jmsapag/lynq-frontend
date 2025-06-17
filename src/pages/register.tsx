@@ -6,11 +6,12 @@ import {
   BackgroundShapes,
   RightPanelGradients,
 } from "../components/auth/background";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { addToast } from "@heroui/react";
 import { useTranslation } from "react-i18next";
 import { useLanguage } from "../hooks/useLanguage";
 import { LanguageIcon } from "@heroicons/react/24/outline";
+import { useRegister } from "../hooks/auth/useRegister";
 
 export default function RegisterPage() {
   const { t } = useTranslation();
@@ -25,6 +26,8 @@ export default function RegisterPage() {
   const [errors, setErrors] = useState<Partial<RegisterFormData>>({});
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { token } = useParams<{ token?: string }>();
+  const { register, loading: apiLoading } = useRegister();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -61,8 +64,12 @@ export default function RegisterPage() {
 
     setLoading(true);
     try {
-      // TODO: Replace with your registration logic (API call)
-      // await register(formData);
+      await register({
+        token,
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+      });
       addToast({
         title: t("toasts.registerSuccessTitle", "Registration successful"),
         description: t(
@@ -73,10 +80,12 @@ export default function RegisterPage() {
         color: "success",
       });
       navigate("/login");
-    } catch (error) {
+    } catch (error: any) {
       addToast({
         title: t("toasts.registerFailedTitle", "Registration failed"),
-        description: t("toasts.registerFailedDescription", "Please try again."),
+        description:
+          error?.message ||
+          t("toasts.registerFailedDescription", "Please try again."),
         severity: "danger",
         color: "danger",
       });
@@ -112,11 +121,16 @@ export default function RegisterPage() {
                 "Sign up to start exploring your metrics.",
               )}
             </p>
+            {token && (
+              <div className="mt-4 text-xs text-green-600">
+                {t("register.tokenInfo", "Registration token detected.")}
+              </div>
+            )}
           </div>
           <RegisterForm
             formData={formData}
             errors={errors}
-            isLoading={loading}
+            isLoading={loading || apiLoading}
             handleChange={handleChange}
             handleSubmit={handleSubmit}
             t={t as (key: string, defaultValue?: string) => string}

@@ -6,7 +6,7 @@ import {
 } from "../components/auth/background.tsx";
 import { useNavigate } from "react-router-dom";
 import { addToast } from "@heroui/react";
-import { useLogin } from "../hooks/useAuth.ts";
+import { useLogin } from "../hooks/auth/useAuth.ts";
 import Cookies from "js-cookie";
 import { useTranslation } from "react-i18next";
 import { useLanguage } from "../hooks/useLanguage.ts";

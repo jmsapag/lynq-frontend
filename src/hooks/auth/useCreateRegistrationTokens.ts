@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { axiosPrivate } from "../services/axiosClient";
+import { axiosPrivate } from "../../services/axiosClient.ts";
 
 export function useCreateRegistrationTokens() {
   const [loading, setLoading] = useState(false);
