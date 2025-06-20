@@ -218,5 +218,28 @@
     "copiedTitle": "Copied",
     "copiedDescription": "All registration links copied to clipboard.",
     "noTokens": "No tokens received."
+  },
+  "devices": {
+    "management": "Device Management",
+    "addDevice": "Add Device",
+    "editDevice": "Edit Device",
+    "deleteDevice": "Delete Device",
+    "serialNumber": "Serial Number",
+    "provider": "Provider",
+    "position": "Position",
+    "createdAt": "Created At",
+    "actions": "Actions",
+    "noDevices": "No devices found",
+    "deleteConfirm": "Are you sure you want to delete this device?",
+    "createSuccessTitle": "Device Created",
+    "createSuccessDesc": "Device created successfully.",
+    "createErrorTitle": "Creation Failed",
+    "createErrorDesc": "Failed to create device.",
+    "deleteSuccessTitle": "Device Deleted",
+    "deleteSuccessDesc": "Device deleted successfully.",
+    "deleteErrorTitle": "Delete Failed",
+    "deleteErrorDesc": "Failed to delete device.",
+    "formErrorTitle": "Form Error",
+    "formErrorDesc": "Please fill in all required fields."
   }
 }
