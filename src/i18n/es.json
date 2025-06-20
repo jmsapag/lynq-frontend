@@ -218,5 +218,28 @@
     "copiedTitle": "Copiado",
     "copiedDescription": "Todos los enlaces de registro copiados al portapapeles.",
     "noTokens": "No se recibieron tokens."
+  },
+  "devices": {
+    "management": "Gestión de Dispositivos",
+    "addDevice": "Añadir Dispositivo",
+    "editDevice": "Editar Dispositivo",
+    "deleteDevice": "Borrar Dispositivo",
+    "serialNumber": "Número de Serie",
+    "provider": "Proveedor",
+    "position": "Posición",
+    "createdAt": "Creación",
+    "actions": "Acciones",
+    "noDevices": "No se encontraron dispositivos",
+    "deleteConfirm": "¿Estás seguro de que deseas borrar este dispositivo?",
+    "createSuccessTitle": "Dispositivo Creado",
+    "createSuccessDesc": "Dispositivo creado correctamente.",
+    "createErrorTitle": "Error al Crear",
+    "createErrorDesc": "No se pudo crear el dispositivo.",
+    "deleteSuccessTitle": "Dispositivo Borrado",
+    "deleteSuccessDesc": "Dispositivo borrado correctamente.",
+    "deleteErrorTitle": "Error al Borrar",
+    "deleteErrorDesc": "No se pudo borrar el dispositivo.",
+    "formErrorTitle": "Error en el Formulario",
+    "formErrorDesc": "Por favor, completa todos los campos requeridos."
   }
 }
