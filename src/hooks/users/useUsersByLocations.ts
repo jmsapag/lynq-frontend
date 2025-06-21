@@ -60,5 +60,5 @@ export function useUsersByLocations(pageSize = 100, index = 0) {
     fetchUsers();
   }, [index, pageSize]);
 
-  return { users, loading, error };
+  return { users, setUsers,  loading, error };
 }

@@ -1,3 +1,4 @@
+import { useMemo, useState } from "react";
 import { useUsersByLocations } from "../../hooks/users/useUsersByLocations";
 import { UserWithLocations } from "../../types/location";
 import {
@@ -9,10 +10,45 @@ import {
   TableCell,
   Spinner,
   Chip,
+  Button,
 } from "@heroui/react";
+import LocationSelectionModal from "./LocationSelectionModal";
+import { useFetchLocations } from "../../hooks/users/useFetchLocations";
 
 export default function UserByLocationList() {
-  const { users, loading, error } = useUsersByLocations();
+  const {
+    users,
+    setUsers,
+    loading: usersLoading,
+    error: usersError,
+  } = useUsersByLocations();
+  const {
+    locations,
+    loading: locationsLoading,
+    error: locationsError,
+  } = useFetchLocations();
+  const loading = usersLoading || locationsLoading;
+  const error = usersError || locationsError;
+  const [selectedUser, setSelectedUser] = useState<UserWithLocations | null>(
+    null,
+  );
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const sortedUsers = useMemo(
+    () => [...users].sort((a, b) => a.name.localeCompare(b.name)),
+    [users],
+  );
+
+  // Function to open the location selection modal
+  const handleEditLocations = (user: UserWithLocations) => {
+    setSelectedUser(user);
+    setIsModalOpen(true);
+  };
+
+  // Function to close the modal
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedUser(null);
+  };
 
   // Function to render location names with emojis
   const renderLocations = (locations: UserWithLocations["locations"]) => {
@@ -46,6 +82,7 @@ export default function UserByLocationList() {
     { key: "email", label: "EMAIL" },
     { key: "role", label: "ROLE" },
     { key: "locations", label: "LOCATIONS" },
+    { key: "actions", label: "ACTIONS" },
   ];
 
   return (
@@ -79,17 +116,43 @@ export default function UserByLocationList() {
               <TableColumn key={column.key}>{column.label}</TableColumn>
             )}
           </TableHeader>
-          <TableBody items={users} emptyContent={<p>No users found</p>}>
+          <TableBody items={sortedUsers} emptyContent={<p>No users found</p>}>
             {(user) => (
               <TableRow key={user.id}>
                 <TableCell>{user.name}</TableCell>
                 <TableCell>{user.email}</TableCell>
                 <TableCell>{renderRole(user.role)}</TableCell>
-                <TableCell>{renderLocations(user.locations)}</TableCell>
+                <TableCell>
+                  {renderLocations(
+                    user.locations.sort((a, b) => a.name.localeCompare(b.name)),
+                  )}
+                </TableCell>
+                <TableCell>
+                  <Button
+                    size="sm"
+                    onPress={() => handleEditLocations(user)}
+                    color="primary"
+                  >
+                    Edit Locations
+                  </Button>
+                </TableCell>
               </TableRow>
             )}
           </TableBody>
         </Table>
+      )}
+
+      {selectedUser && (
+        <LocationSelectionModal
+          isOpen={isModalOpen}
+          locations={locations}
+          onClose={handleCloseModal}
+          userId={selectedUser.id}
+          userName={selectedUser.name}
+          users={users}
+          setUsers={setUsers}
+          selectedLocationIds={selectedUser.locations.map((loc) => loc.id)}
+        />
       )}
     </div>
   );
