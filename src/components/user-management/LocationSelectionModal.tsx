@@ -10,7 +10,7 @@ import {
   Checkbox,
 } from "@heroui/react";
 import { axiosPrivate } from "../../services/axiosClient";
-import { Location } from "../../types/location";
+import { Location, UserWithLocations } from "../../types/location";
 
 interface LocationSelectionModalProps {
   isOpen: boolean;
@@ -18,6 +18,8 @@ interface LocationSelectionModalProps {
   userId: number;
   userName: string;
   locations: Location[];
+  users: UserWithLocations[];
+  setUsers: (users: UserWithLocations[]) => void;
   selectedLocationIds: number[];
 }
 
@@ -25,14 +27,16 @@ const LocationSelectionModal: React.FC<LocationSelectionModalProps> = ({
   isOpen,
   onClose,
   userId,
+  users,
   userName,
   locations,
+  setUsers,
   selectedLocationIds,
 }) => {
   const { t } = useTranslation();
   const [error, setError] = useState<string | null>(null);
   const [selectedLocations, setSelectedLocations] = useState<Set<number>>(
-    new Set(selectedLocationIds)
+    new Set(selectedLocationIds),
   );
   const [saving, setSaving] = useState<boolean>(false);
 
@@ -48,7 +52,6 @@ const LocationSelectionModal: React.FC<LocationSelectionModalProps> = ({
     locations.length > 0 &&
     locations.every((location) => selectedLocations.has(location.id));
 
-  // Handle "All locations" checkbox change
   const handleAllLocationsChange = (checked: boolean) => {
     if (checked) {
       const allLocationIds = locations.map((location) => location.id);
@@ -79,10 +82,21 @@ const LocationSelectionModal: React.FC<LocationSelectionModalProps> = ({
         userId: userId,
         location_ids: Array.from(selectedLocations),
       });
-      
+      setError(null);
+      setUsers(
+        users.map((user) => {
+          if (user.id === userId) {
+            return {
+              ...user,
+              locations: locations.filter((location) =>
+                selectedLocations.has(location.id),
+              ),
+            };
+          }
+          return user;
+        }),
+      );
       onClose();
-      // Reload page or update data
-      window.location.reload();
     } catch (err) {
       console.error("Error updating user locations:", err);
       setError("Failed to update locations");
@@ -101,9 +115,7 @@ const LocationSelectionModal: React.FC<LocationSelectionModalProps> = ({
         </ModalHeader>
         <ModalBody>
           {error ? (
-            <div className="bg-danger-50 text-danger p-4 rounded">
-              {error}
-            </div>
+            <div className="bg-danger-50 text-danger p-4 rounded">{error}</div>
           ) : (
             <div className="flex flex-col space-y-4">
               <div className="flex items-center">
@@ -140,9 +152,9 @@ const LocationSelectionModal: React.FC<LocationSelectionModalProps> = ({
           <Button variant="ghost" onPress={onClose} className="mr-2">
             {t("common.cancel", "Cancel")}
           </Button>
-          <Button 
+          <Button
             variant="solid"
-            onPress={handleApply} 
+            onPress={handleApply}
             isDisabled={saving}
             isLoading={saving}
           >

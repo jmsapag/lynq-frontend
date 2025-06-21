@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useUsersByLocations } from "../../hooks/users/useUsersByLocations";
 import { UserWithLocations } from "../../types/location";
 import {
@@ -18,6 +18,7 @@ import { useFetchLocations } from "../../hooks/users/useFetchLocations";
 export default function UserByLocationList() {
   const {
     users,
+    setUsers,
     loading: usersLoading,
     error: usersError,
   } = useUsersByLocations();
@@ -32,6 +33,10 @@ export default function UserByLocationList() {
     null,
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const sortedUsers = useMemo(
+    () => [...users].sort((a, b) => a.name.localeCompare(b.name)),
+    [users],
+  );
 
   // Function to open the location selection modal
   const handleEditLocations = (user: UserWithLocations) => {
@@ -111,10 +116,7 @@ export default function UserByLocationList() {
               <TableColumn key={column.key}>{column.label}</TableColumn>
             )}
           </TableHeader>
-          <TableBody
-            items={[...users].sort((a, b) => a.name.localeCompare(b.name))}
-            emptyContent={<p>No users found</p>}
-          >
+          <TableBody items={sortedUsers} emptyContent={<p>No users found</p>}>
             {(user) => (
               <TableRow key={user.id}>
                 <TableCell>{user.name}</TableCell>
@@ -147,6 +149,8 @@ export default function UserByLocationList() {
           onClose={handleCloseModal}
           userId={selectedUser.id}
           userName={selectedUser.name}
+          users={users}
+          setUsers={setUsers}
           selectedLocationIds={selectedUser.locations.map((loc) => loc.id)}
         />
       )}
