@@ -16,7 +16,9 @@ import LoginPage from "./pages/login.tsx";
 import RegisterPage from "./pages/register.tsx";
 import BusinessesPage from "./pages/businesses.tsx";
 import ManageUsersPage from "./pages/manage-users.tsx";
+import UserManagement from "./pages/user-management.tsx";
 import RoleRedirect from "./components/auth/roleRedirect.tsx";
+import { RoleRoute } from "./components/auth/roleRoute.tsx";
 
 function AppLayoutWithState() {
   const { isOpen, handleToggle, handleClose } = useSidebar();
@@ -54,10 +56,19 @@ function App() {
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/comparison" element={<Comparison />} />
               <Route path="/profile" element={<UsersPage />} />
-              <Route path="devices" element={<DevicesPage />} />
               <Route path="help" element={<HelpPage />} />
-              <Route path="businesses" element={<BusinessesPage />} />
-              <Route path="manage/users" element={<ManageUsersPage />} />
+
+              {/* LYNQ_TEAM only routes */}
+              <Route element={<RoleRoute allowedRoles="LYNQ_TEAM" />}>
+                <Route path="devices" element={<DevicesPage />} />
+                <Route path="businesses" element={<BusinessesPage />} />
+                <Route path="manage/users" element={<ManageUsersPage />} />
+              </Route>
+
+              {/* ADMIN only routes */}
+              <Route element={<RoleRoute allowedRoles="ADMIN" />}>
+                <Route path="user-management" element={<UserManagement />} />
+              </Route>
             </Route>
           </Route>
         </Routes>

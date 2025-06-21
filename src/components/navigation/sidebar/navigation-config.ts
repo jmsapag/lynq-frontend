@@ -24,5 +24,6 @@ export const superAdminNavItems = [
 export const adminNavItems = [
   { title: "dashboard", href: "/dashboard", icon: ChartBarIcon },
   { title: "comparison", href: "/comparison", icon: ArrowsRightLeftIcon },
+  { title: "user-management", href: "/user-management", icon: UserGroupIcon },
   { title: "help", href: "/help", icon: QuestionMarkCircleIcon },
 ];

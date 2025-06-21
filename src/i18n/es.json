@@ -7,7 +7,8 @@
     "help": "Ayuda",
     "businesses": "Empresas",
     "manage/users": "Gestionar Usuarios",
-    "profile": "Perfil"
+    "profile": "Perfil",
+    "user-management": "Gestión de Usuarios"
   },
   "days": {
     "sunday": "Domingo",
