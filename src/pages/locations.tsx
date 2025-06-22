@@ -41,10 +41,7 @@ export default function Locations() {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-row gap-2 justify-between">
-        <div className="flex flex-col gap-1">
-          <h1 className="text-2xl font-bold">{t("locations.management")}</h1>
-          <p className="text-default-500">{t("locations.description")}</p>
-        </div>
+        <div className="flex flex-col gap-1"></div>
         <div className="flex flex-row gap-2">
           <Button color="primary" onPress={() => setIsCreateModalOpen(true)}>
             {t("locations.addLocation")}
