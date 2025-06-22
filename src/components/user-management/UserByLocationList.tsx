@@ -70,7 +70,7 @@ export default function UserByLocationList({
 
   // Function to render location names with emojis
   const renderLocations = (locations: UserWithLocations["locations"]) => {
-    if (!locations.length) return "No locations";
+    if (!locations.length) return <Chip size="sm" variant="flat" color="danger">No Locations</Chip>;
 
     return locations.map((location, index) => {
       return (

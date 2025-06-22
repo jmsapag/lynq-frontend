@@ -35,12 +35,15 @@ export function useUsersByLocations(pageSize = 100, index = 0) {
                 name: user.name,
                 email: user.email,
                 role: user.role,
-                locations: [
-                  {
-                    id: location.id,
-                    name: location.name,
-                  },
-                ],
+                locations:
+                  location.id !== null && location.name !== "Unassigned"
+                    ? [
+                        {
+                          id: location.id,
+                          name: location.name,
+                        },
+                      ]
+                    : [],
               });
             }
           });
