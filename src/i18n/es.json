@@ -264,6 +264,7 @@
     "serialNumber": "Número de Serie",
     "provider": "Proveedor",
     "position": "Posición",
+    "location": "Ubicación",
     "createdAt": "Creación",
     "actions": "Acciones",
     "noDevices": "No se encontraron dispositivos",

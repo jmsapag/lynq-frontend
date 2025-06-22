@@ -34,8 +34,8 @@ export default function DevicesPage() {
     devices,
     loading: loadingDevices,
     error: devicesError,
+    pagination,
   } = useDevices(page, limit);
-  const hasNextPage = Array.isArray(devices) && devices.length === limit;
 
   const { createDevice, loading: creating } = useCreateDevice();
   const {
@@ -175,6 +175,9 @@ export default function DevicesPage() {
                 {t("devices.position")}
               </th>
               <th className="py-2 px-3 font-medium text-gray-700">
+                {t("devices.location")}
+              </th>
+              <th className="py-2 px-3 font-medium text-gray-700">
                 {t("devices.createdAt")}
               </th>
               <th className="py-2 px-3 font-medium text-gray-700 text-center">
@@ -191,6 +194,7 @@ export default function DevicesPage() {
                 <td className="py-2 px-3 text-gray-900">{d.serial_number}</td>
                 <td className="py-2 px-3 text-gray-800">{d.provider}</td>
                 <td className="py-2 px-3 text-gray-800">{d.position}</td>
+                <td className="py-2 px-3 text-gray-600">{d.location_name || '-'}</td>
                 <td className="py-2 px-3 text-gray-500">
                   {new Date(d.created_at).toLocaleString()}
                 </td>
@@ -208,7 +212,7 @@ export default function DevicesPage() {
             ))}
             {(!devices || devices.length === 0) && !loadingDevices && (
               <tr>
-                <td colSpan={5} className="py-4 px-3 text-gray-400">
+                <td colSpan={6} className="py-4 px-3 text-gray-400">
                   {t("devices.noDevices")}
                 </td>
               </tr>
@@ -222,18 +226,18 @@ export default function DevicesPage() {
           variant="bordered"
           size="sm"
           onPress={() => setPage((p) => Math.max(1, p - 1))}
-          isDisabled={page === 1 || loadingDevices}
+          isDisabled={!pagination?.hasPreviousPage || loadingDevices}
         >
           {t("common.previous")}
         </Button>
         <span className="text-sm text-gray-600">
-          {t("common.page")} {page}
+          {t("common.page")} {page} {pagination?.totalPages ? `of ${pagination.totalPages}` : ''}
         </span>
         <Button
           variant="bordered"
           size="sm"
           onPress={() => setPage((p) => p + 1)}
-          isDisabled={!hasNextPage || loadingDevices}
+          isDisabled={!pagination?.hasNextPage || loadingDevices}
         >
           {t("common.next")}
         </Button>

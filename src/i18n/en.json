@@ -264,6 +264,7 @@
     "serialNumber": "Serial Number",
     "provider": "Provider",
     "position": "Position",
+    "location": "Location",
     "createdAt": "Created At",
     "actions": "Actions",
     "noDevices": "No devices found",
