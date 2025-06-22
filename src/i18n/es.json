@@ -290,6 +290,7 @@
   },
   "locations": {
     "management": "Gestión de Ubicaciones",
+    "description": "Esta página muestra las ubicaciones asociadas a su empresa.",
     "addLocation": "Añadir Ubicación",
     "editLocation": "Editar Ubicación",
     "deleteLocation": "Borrar Ubicación",

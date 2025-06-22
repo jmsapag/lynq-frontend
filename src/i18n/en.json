@@ -290,6 +290,7 @@
   },
   "locations": {
     "management": "Location Management",
+    "description": "This page displays the locations associated with your business.",
     "addLocation": "Add Location",
     "editLocation": "Edit Location",
     "deleteLocation": "Delete Location",

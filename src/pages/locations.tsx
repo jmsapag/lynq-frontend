@@ -42,7 +42,7 @@ export default function Locations() {
         <div className="flex flex-col gap-1">
           <h1 className="text-2xl font-bold">{t("locations.management")}</h1>
           <p className="text-default-500">
-            {t("nav.locations")} - {t("locations.management")}
+            {t("locations.description")}
           </p>
         </div>
         <div className="flex flex-row gap-2">
