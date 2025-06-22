@@ -8,7 +8,8 @@
     "businesses": "Empresas",
     "manage/users": "Gestionar Usuarios",
     "profile": "Perfil",
-    "user-management": "Gestión de Usuarios"
+    "user-management": "Gestión de Usuarios",
+    "locations": "Ubicaciones"
   },
   "days": {
     "sunday": "Domingo",
@@ -286,5 +287,35 @@
     "formErrorTitle": "Error en el Formulario",
     "formErrorDesc": "Por favor, completa todos los campos requeridos.",
     "businessName": "Nombre de la Empresa"
+  },
+  "locations": {
+    "management": "Gestión de Ubicaciones",
+    "description": "Esta página muestra las ubicaciones asociadas a su empresa.",
+    "addLocation": "Añadir Ubicación",
+    "editLocation": "Editar Ubicación",
+    "deleteLocation": "Borrar Ubicación",
+    "name": "Nombre",
+    "address": "Dirección",
+    "createdAt": "Creado el",
+    "actions": "Acciones",
+    "delete": "Borrar",
+    "noLocations": "No se encontraron ubicaciones",
+    "deleteConfirm": "¿Estás seguro de que deseas borrar esta ubicación? Esta acción no se puede deshacer.",
+    "createSuccessTitle": "Ubicación Creada",
+    "createSuccessDesc": "Ubicación creada correctamente.",
+    "createErrorTitle": "Error al Crear",
+    "createErrorDesc": "No se pudo crear la ubicación.",
+    "updateSuccessTitle": "Ubicación Actualizada",
+    "updateSuccessDesc": "Ubicación actualizada correctamente.",
+    "updateErrorTitle": "Error al Actualizar",
+    "updateErrorDesc": "No se pudo actualizar la ubicación.",
+    "deleteSuccessTitle": "Ubicación Borrada",
+    "deleteSuccessDesc": "Ubicación borrada correctamente.",
+    "deleteErrorTitle": "Error al Borrar",
+    "deleteErrorDesc": "No se pudo borrar la ubicación.",
+    "formErrorTitle": "Error en el Formulario",
+    "formErrorDesc": "Por favor, completa todos los campos requeridos.",
+    "locationName": "Nombre de la Ubicación",
+    "locationAddress": "Dirección"
   }
 }

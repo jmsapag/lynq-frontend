@@ -17,6 +17,7 @@ import RegisterPage from "./pages/register.tsx";
 import BusinessesPage from "./pages/businesses.tsx";
 import ManageUsersPage from "./pages/manage-users.tsx";
 import UserManagement from "./pages/user-management.tsx";
+import Locations from "./pages/locations.tsx";
 import RoleRedirect from "./components/auth/roleRedirect.tsx";
 import { RoleRoute } from "./components/auth/roleRoute.tsx";
 
@@ -68,6 +69,7 @@ function App() {
               {/* ADMIN only routes */}
               <Route element={<RoleRoute allowedRoles="ADMIN" />}>
                 <Route path="user-management" element={<UserManagement />} />
+                <Route path="locations" element={<Locations />} />
               </Route>
             </Route>
           </Route>

@@ -8,7 +8,8 @@
     "businesses": "Businesses",
     "manage/users": "Manage Users",
     "profile": "Profile",
-    "user-management": "User Management"
+    "user-management": "User Management",
+    "locations": "Locations"
   },
   "days": {
     "sunday": "Sunday",
@@ -286,5 +287,35 @@
     "formErrorTitle": "Form Error",
     "formErrorDesc": "Please fill in all required fields.",
     "businessName": "Business Name"
+  },
+  "locations": {
+    "management": "Location Management",
+    "description": "This page displays the locations associated with your business.",
+    "addLocation": "Add Location",
+    "editLocation": "Edit Location",
+    "deleteLocation": "Delete Location",
+    "name": "Name",
+    "address": "Address",
+    "createdAt": "Created At",
+    "actions": "Actions",
+    "delete": "Delete",
+    "noLocations": "No locations found",
+    "deleteConfirm": "Are you sure you want to delete this location? This action cannot be undone.",
+    "createSuccessTitle": "Location Created",
+    "createSuccessDesc": "Location created successfully.",
+    "createErrorTitle": "Creation Failed",
+    "createErrorDesc": "Failed to create location.",
+    "updateSuccessTitle": "Location Updated",
+    "updateSuccessDesc": "Location updated successfully.",
+    "updateErrorTitle": "Update Failed",
+    "updateErrorDesc": "Failed to update location.",
+    "deleteSuccessTitle": "Location Deleted",
+    "deleteSuccessDesc": "Location deleted successfully.",
+    "deleteErrorTitle": "Delete Failed",
+    "deleteErrorDesc": "Failed to delete location.",
+    "formErrorTitle": "Form Error",
+    "formErrorDesc": "Please fill in all required fields.",
+    "locationName": "Location Name",
+    "locationAddress": "Address"
   }
 }
