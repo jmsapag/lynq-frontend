@@ -1,5 +1,17 @@
 import React, { useState } from "react";
-import { Button } from "@heroui/react";
+import {
+  Button,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Select,
+  SelectItem,
+  addToast,
+  Switch,
+} from "@heroui/react";
+import { TrashIcon } from "@heroicons/react/24/outline";
 import { useCreateRegistrationTokens } from "../hooks/auth/useCreateRegistrationTokens.ts";
 import { useUsers } from "../hooks/users/useUsers";
 import { useDeleteUser } from "../hooks/users/useDeleteUser";
@@ -12,13 +24,103 @@ const ManageUsersPage: React.FC = () => {
   const { t } = useTranslation();
   const [showModal, setShowModal] = useState(false);
   const [showTokensModal, setShowTokensModal] = useState(false);
-  const { tokens, setTokens } = useCreateRegistrationTokens();
 
+  const [page, setPage] = useState(1);
+  const limit = 15;
+
+  const {
+    tokens,
+    setTokens,
+  } = useCreateRegistrationTokens();
+
+  const { users, loading: usersLoading, pagination } = useUsers(page, limit);
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [userToDelete, setUserToDelete] = useState<number | null>(null);
+  const [deleting, setDeleting] = useState(false);
+
+  const handleDeleteError = (error: Error) => {
+    setDeleting(false);
+    addToast({
+      title: t("users.deleteErrorTitle"),
+      description: error.message || t("users.deleteErrorDesc"),
+      severity: "danger",
+      color: "danger",
+    });
+  };
+
+  const { handleDeleteUser } = useDeleteUser(handleDeleteError);
+
+  const { toggleUserActive, error: toggleError } = useToggleUserActive();
+  const [switchLoadingId, setSwitchLoadingId] = useState<number | null>(null);
+
+  const hasNextPage = pagination.hasNextPage;
+
+  const [activeFilter, setActiveFilter] = useState<
+    "all" | "active" | "inactive"
+  >("all");
 
   const handleCloseTokensModal = () => {
     setShowTokensModal(false);
     setTokens(null);
   };
+
+    const handleDeleteClick = (id: number) => {
+    setUserToDelete(id);
+    setShowDeleteModal(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (userToDelete !== null) {
+      setDeleting(true);
+      const onSuccess = () => {
+        setShowDeleteModal(false);
+        setUserToDelete(null);
+        addToast({
+          title: t("users.deleteSuccessTitle"),
+          description: t("users.deleteSuccessDesc"),
+          severity: "success",
+          color: "success",
+        });
+        window.location.reload();
+      };
+
+      handleDeleteUser(userToDelete, onSuccess);
+    }
+  };
+
+  const handleToggleActive = async (userId: number, currentActive: boolean) => {
+    setSwitchLoadingId(userId);
+    const success = await toggleUserActive(userId);
+    setSwitchLoadingId(null);
+    if (success) {
+      addToast({
+        title: t("users.active"),
+        description: currentActive ? t("common.no") : t("common.yes"),
+        severity: "success",
+        color: "success",
+      });
+      window.location.reload();
+    } else {
+      addToast({
+        title: t("common.error"),
+        description: toggleError || t("users.toggleErrorDesc"),
+        severity: "danger",
+        color: "danger",
+      });
+    }
+  };
+
+  const filteredUsers = Array.isArray(users)
+    ? users.filter((u) =>
+        activeFilter === "all"
+          ? true
+          : activeFilter === "active"
+            ? u.is_active
+            : !u.is_active,
+      )
+    : [];
+
   return (
     <div className="w-full max-w-7xl mx-auto">
       <div className="flex justify-end items-center mb-4">
@@ -154,9 +256,7 @@ const ManageUsersPage: React.FC = () => {
         isOpen={showModal}
         onClose={() => setShowModal(false)}
         onSuccess={(createdTokens) => {
-          // Update tokens state with the tokens received from the modal
           setTokens(createdTokens);
-          // Show the tokens modal
           setShowTokensModal(true);
         }}
       />
@@ -168,6 +268,32 @@ const ManageUsersPage: React.FC = () => {
         tokens={tokens}
       />
 
+      {/* Delete Confirmation Modal */}
+      <Modal isOpen={showDeleteModal} onOpenChange={setShowDeleteModal}>
+        <ModalContent>
+          <ModalHeader>{t("users.deleteUser")}</ModalHeader>
+          <ModalBody>{t("users.deleteConfirm")}</ModalBody>
+          <ModalFooter>
+            <Button
+              variant="bordered"
+              size="sm"
+              onPress={() => setShowDeleteModal(false)}
+              isDisabled={deleting}
+            >
+              {t("common.cancel")}
+            </Button>
+            <Button
+              variant="solid"
+              color="danger"
+              size="sm"
+              onPress={handleConfirmDelete}
+              isLoading={deleting}
+            >
+              {t("users.delete")}
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </div>
   );
 };
