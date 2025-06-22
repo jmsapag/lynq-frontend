@@ -1,10 +1,16 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { navItems } from "./navigation-config.ts";
+import {
+  navItems,
+  superAdminNavItems,
+  adminNavItems,
+} from "./navigation-config.ts";
 import { NavItem } from "./nav-item.tsx";
 import { ProfileMenu } from "./profile-menu.tsx";
 import logoImage from "../../../assets/logo.png";
+import Cookies from "js-cookie";
+import { useSelfUserProfile } from "../../../hooks/users/useSelfUserProfile";
 
 interface SidebarProps {
   isOpen?: boolean;
@@ -13,11 +19,19 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
+  const { user, loading } = useSelfUserProfile();
 
   const handleLogout = () => {
-    console.log("Logout action triggered!");
-    navigate("/");
+    Cookies.remove("token");
+    navigate("/login", { replace: true });
   };
+
+  let items = navItems;
+  if (user?.role === "LYNQ_TEAM") {
+    items = superAdminNavItems;
+  } else if (user?.role === "ADMIN") {
+    items = adminNavItems;
+  }
 
   const SidebarContent = () => (
     <div className="flex h-full flex-col bg-white text-black">
@@ -30,13 +44,20 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       <div className="flex flex-1 flex-col justify-between overflow-hidden">
         <div className="flex-1 overflow-y-auto">
           <nav className="grid gap-1 px-3 py-2">
-            {navItems.map((item) => (
+            {items.map((item) => (
               <NavItem key={item.href} {...item} />
             ))}
           </nav>
         </div>
         <div className="border-t border-gray-200 p-2">
-          <ProfileMenu onLogout={handleLogout} />
+          {loading || !user ? (
+            <div className="text-xs text-gray-400 px-2 py-3">Loading...</div>
+          ) : (
+            <ProfileMenu
+              user={{ name: user.name, role: user.role }}
+              onLogout={handleLogout}
+            />
+          )}
         </div>
       </div>
     </div>

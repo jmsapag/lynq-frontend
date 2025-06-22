@@ -1,150 +1,124 @@
-import { Tab } from "@headlessui/react";
-import { useTranslation } from "react-i18next";
-import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { PencilSquareIcon } from "@heroicons/react/24/outline";
+
+interface Business {
+  id: number;
+  name: string;
+  address: string;
+  created_at?: string;
+}
 
 interface User {
+  id: number;
   name: string;
   email: string;
   phone: string;
   role: string;
-  business: string;
+  created_at: string;
+  business_id: number;
+  is_active?: boolean;
+  business: Business;
 }
 
-const currentUser: User = {
-  name: "John Doe",
-  email: "john.doe@example.com",
-  phone: "+1 234 567 890",
-  role: "Administrator",
-  business: "ACME Inc.",
-};
-
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(" ");
+interface UserProfileProps {
+  user: User;
+  onEdit: () => void;
+  t: (key: string) => string;
 }
 
-export default function UserProfile() {
-  const { t } = useTranslation();
-
-  const handleEdit = () => {
-    console.log("Edit action triggered");
-  };
-
-  const handleDelete = () => {
-    console.log("Delete action triggered");
-  };
-
+export default function UserProfile({ user, onEdit, t }: UserProfileProps) {
   return (
     <div className="w-full px-2 pb-4 sm:px-0">
-      <Tab.Group>
-        <Tab.List className="flex border-b border-gray-300">
-          <Tab
-            className={({ selected }) =>
-              classNames(
-                "w-full py-2.5 text-sm font-medium leading-5 text-gray-700",
-                "focus:outline-none",
-                selected
-                  ? "border-b-2 border-gray-600 font-semibold text-gray-800"
-                  : "hover:font-semibold hover:text-gray-900",
-              )
-            }
-          >
-            {t("users.profile")}
-          </Tab>
-          <Tab
-            className={({ selected }) =>
-              classNames(
-                "w-full py-2.5 text-sm font-medium leading-5 text-gray-700",
-                "focus:outline-none",
-                selected
-                  ? "border-b-2 border-gray-600 font-semibold text-gray-800"
-                  : "hover:font-semibold hover:text-gray-900",
-              )
-            }
-          >
-            {t("users.addUser")}
-          </Tab>
-        </Tab.List>
-        <Tab.Panels className="mt-4">
-          <Tab.Panel
-            className={classNames(
-              "bg-white p-3 rounded-md",
-              "focus:outline-none",
-            )}
-          >
-            <div className="bg-white border border-gray-300 p-4 sm:p-6 rounded-md shadow-sm">
-              <div className="flex justify-between items-start mb-4">
-                <div>
-                  <h3 className="text-xl font-semibold text-black">
-                    {currentUser.name}
-                  </h3>
-                  <div className="mt-2">
-                    <span className="inline-block bg-gray-600 text-white text-xs px-2 py-0.5 rounded-md font-medium tracking-wide">
-                      {currentUser.role}
-                    </span>
-                  </div>
-                </div>
-                <div className="flex space-x-2">
-                  <button
-                    onClick={handleEdit}
-                    title={t("users.edit") || "Edit"}
-                    className="p-2 text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-500 rounded-md"
-                  >
-                    <PencilSquareIcon className="h-5 w-5" aria-hidden="true" />
-                    <span className="sr-only">{t("users.edit")}</span>
-                  </button>
-                  <button
-                    onClick={handleDelete}
-                    title={t("users.delete") || "Delete"}
-                    className="p-2 text-gray-500 hover:text-red-600 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-red-500 rounded-md"
-                  >
-                    <TrashIcon className="h-5 w-5" aria-hidden="true" />
-                    <span className="sr-only">{t("users.delete")}</span>
-                  </button>
-                </div>
-              </div>
-
-              <div className="mt-5 pt-4 border-t border-gray-200">
-                <h4 className="text-sm font-semibold text-black">
-                  {t("users.contactInformation")}
-                </h4>
-                <div className="mt-3 space-y-2">
-                  <div>
-                    <span className="text-xs font-medium">
-                      {t("users.email")}:
-                    </span>
-                    <p className="text-sm text-gray-700">{currentUser.email}</p>
-                  </div>
-                  <div>
-                    <span className="text-xs font-medium">
-                      {t("users.phone")}:
-                    </span>
-                    <p className="text-sm text-gray-700">{currentUser.phone}</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-5 pt-4 border-t border-gray-200">
-                <h4 className="text-sm font-semibold text-black">
-                  {t("users.business")}
-                </h4>
-                <p className="text-sm text-gray-700 mt-1">
-                  {currentUser.business}
-                </p>
-              </div>
+      <div className="bg-white border border-gray-300 p-4 sm:p-6 rounded-md shadow-sm">
+        <div className="flex justify-between items-start mb-4">
+          <div>
+            <h3 className="text-xl font-semibold text-black">{user.name}</h3>
+            <div className="mt-2 flex gap-2 items-center">
+              <span className="inline-block bg-gray-600 text-white text-xs px-2 py-0.5 rounded-md font-medium tracking-wide min-w-[64px] text-center">
+                {user.role}
+              </span>
+              <span
+                className={`inline-block text-xs px-2 py-0.5 rounded-md font-medium min-w-[64px] text-center ${
+                  user.is_active === undefined
+                    ? "bg-gray-100 text-gray-700"
+                    : user.is_active
+                      ? "bg-green-100 text-green-700"
+                      : "bg-red-100 text-red-700"
+                }`}
+              >
+                {user.is_active === undefined
+                  ? t("users.unknown") || "Unknown"
+                  : user.is_active
+                    ? t("users.active") || "Active"
+                    : t("users.inactive") || "Inactive"}
+              </span>
             </div>
-          </Tab.Panel>
-          <Tab.Panel
-            className={classNames(
-              "bg-white p-3 rounded-md",
-              "focus:outline-none", // Also ensure panel has no unwanted focus ring
-            )}
-          >
-            <div className="py-10 text-center text-gray-600">
-              {t("users.addUserContentComingSoon")}
+          </div>
+          <div>
+            <button
+              onClick={onEdit}
+              title={t("users.edit") || "Edit"}
+              className="p-2 text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-500 rounded-md"
+            >
+              <PencilSquareIcon className="h-5 w-5" aria-hidden="true" />
+              <span className="sr-only">{t("users.edit")}</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Contact Information */}
+        <div className="mt-5 pt-4 border-t border-gray-200">
+          <h4 className="text-sm font-semibold text-black mb-3">
+            {t("users.contactInformation")}
+          </h4>
+          <div className="space-y-2">
+            <div>
+              <span className="text-xs font-medium text-gray-600">
+                {t("users.email")}:
+              </span>
+              <span className="ml-2 text-sm text-gray-700">{user.email}</span>
             </div>
-          </Tab.Panel>
-        </Tab.Panels>
-      </Tab.Group>
+            <div>
+              <span className="text-xs font-medium text-gray-600">
+                {t("users.phone")}:
+              </span>
+              <span className="ml-2 text-sm text-gray-700">{user.phone}</span>
+            </div>
+            <div>
+              <span className="text-xs font-medium text-gray-600">
+                {t("users.createdAt") || "Created"}:
+              </span>
+              <span className="ml-2 text-sm text-gray-700">
+                {new Date(user.created_at).toLocaleString()}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Business Information */}
+        <div className="mt-5 pt-4 border-t border-gray-200">
+          <h4 className="text-sm font-semibold text-black mb-3">
+            {t("users.business")}
+          </h4>
+          <div className="space-y-2">
+            <div>
+              <span className="text-xs font-medium text-gray-600">
+                {t("users.businessName") || "Business Name"}:
+              </span>
+              <span className="ml-2 text-sm text-gray-700">
+                {user.business?.name}
+              </span>
+            </div>
+            <div>
+              <span className="text-xs font-medium text-gray-600">
+                {t("users.businessLocation") || "Business Location"}:
+              </span>
+              <span className="ml-2 text-sm text-gray-700">
+                {user.business?.address}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

@@ -64,10 +64,7 @@ export const DeviceComparisonChart: React.FC<DeviceComparisonChartProps> = ({
 
   return (
     <div className="h-[300px]">
-      <BaseChart
-        option={option}
-        className={className}
-      />
+      <BaseChart option={option} className={className} />
     </div>
-  )
+  );
 };

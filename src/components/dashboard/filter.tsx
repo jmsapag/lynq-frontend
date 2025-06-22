@@ -175,7 +175,8 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
               <span className="truncate">
                 {currentSensors.length === 0
                   ? t("filters.noSensorsSelected")
-                  : currentSensors.length === locations.flatMap(sensor => sensor.sensors).length
+                  : currentSensors.length ===
+                      locations.flatMap((sensor) => sensor.sensors).length
                     ? t("filters.allSensors")
                     : t("filters.sensorsSelected", {
                         count: currentSensors.length,

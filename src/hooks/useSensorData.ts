@@ -1,24 +1,19 @@
 import { sensorResponse } from "../types/deviceResponse";
 import { useEffect, useState } from "react";
-import { axiosClient } from "../services/axiosClient.ts";
+import { axiosPrivate } from "../services/axiosClient.ts";
 
 function useSensorData() {
-  const id = 1;
   const [sensors, setSensors] = useState<sensorResponse[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const controller = new AbortController();
-    const fetchSensors = async (id: number) => {
+    const fetchSensors = async () => {
       setError(null);
       setLoading(true);
       try {
-        const response = await axiosClient.get("/devices", {
-          params: {
-            business_id: id,
-          },
-        });
+        const response = await axiosPrivate.get("/devices/accessible", {});
         if (response.status !== 200) {
           setError("Error fetching sensors");
         }
@@ -28,11 +23,11 @@ function useSensorData() {
         setLoading(false);
       }
     };
-    fetchSensors(id);
+    fetchSensors();
     return () => {
       controller.abort();
     };
-  }, [id]);
+  }, []);
 
   return {
     locations: sensors,
