@@ -37,7 +37,9 @@ const LocationsTable: React.FC<LocationsTableProps> = ({
 }) => {
   const { t } = useTranslation();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [locationToDelete, setLocationToDelete] = useState<Location | null>(null);
+  const [locationToDelete, setLocationToDelete] = useState<Location | null>(
+    null,
+  );
   const [deleting, setDeleting] = useState(false);
 
   const { handleDeleteLocation } = useDeleteLocation((error) => {
@@ -88,7 +90,9 @@ const LocationsTable: React.FC<LocationsTableProps> = ({
   if (error) {
     return (
       <div className="text-center text-danger p-4">
-        <p>{t("common.error")}: {error}</p>
+        <p>
+          {t("common.error")}: {error}
+        </p>
       </div>
     );
   }
@@ -178,4 +182,4 @@ const LocationsTable: React.FC<LocationsTableProps> = ({
   );
 };
 
-export default LocationsTable; 
+export default LocationsTable;

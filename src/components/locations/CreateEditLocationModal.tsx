@@ -10,8 +10,14 @@ import {
   addToast,
 } from "@heroui/react";
 import { useTranslation } from "react-i18next";
-import { useCreateLocation, CreateLocationInput } from "../../hooks/locations/useCreateLocation";
-import { useEditLocation, EditLocationInput } from "../../hooks/locations/useEditLocation";
+import {
+  useCreateLocation,
+  CreateLocationInput,
+} from "../../hooks/locations/useCreateLocation";
+import {
+  useEditLocation,
+  EditLocationInput,
+} from "../../hooks/locations/useEditLocation";
 import { Location } from "../../types/location";
 
 interface CreateEditLocationModalProps {
@@ -31,8 +37,16 @@ const CreateEditLocationModal: React.FC<CreateEditLocationModalProps> = ({
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
 
-  const { createLocation, loading: creating, error: createError } = useCreateLocation();
-  const { editLocation, loading: editing, error: editError } = useEditLocation();
+  const {
+    createLocation,
+    loading: creating,
+    error: createError,
+  } = useCreateLocation();
+  const {
+    editLocation,
+    loading: editing,
+    error: editError,
+  } = useEditLocation();
 
   const isEditing = !!location;
   const loading = creating || editing;
@@ -50,7 +64,7 @@ const CreateEditLocationModal: React.FC<CreateEditLocationModalProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!name.trim() || !address.trim()) {
       addToast({
         title: t("locations.formErrorTitle"),
@@ -88,10 +102,19 @@ const CreateEditLocationModal: React.FC<CreateEditLocationModalProps> = ({
       onSuccess();
       onClose();
     } catch (err) {
-      console.error(`Error ${isEditing ? 'updating' : 'creating'} location:`, err);
+      console.error(
+        `Error ${isEditing ? "updating" : "creating"} location:`,
+        err,
+      );
       addToast({
-        title: isEditing ? t("locations.updateErrorTitle") : t("locations.createErrorTitle"),
-        description: error || (isEditing ? t("locations.updateErrorDesc") : t("locations.createErrorDesc")),
+        title: isEditing
+          ? t("locations.updateErrorTitle")
+          : t("locations.createErrorTitle"),
+        description:
+          error ||
+          (isEditing
+            ? t("locations.updateErrorDesc")
+            : t("locations.createErrorDesc")),
         severity: "danger",
         color: "danger",
       });
@@ -154,7 +177,9 @@ const CreateEditLocationModal: React.FC<CreateEditLocationModalProps> = ({
             isLoading={loading}
             color="primary"
           >
-            {isEditing ? t("locations.editLocation") : t("locations.addLocation")}
+            {isEditing
+              ? t("locations.editLocation")
+              : t("locations.addLocation")}
           </Button>
         </ModalFooter>
       </ModalContent>
@@ -162,4 +187,4 @@ const CreateEditLocationModal: React.FC<CreateEditLocationModalProps> = ({
   );
 };
 
-export default CreateEditLocationModal; 
+export default CreateEditLocationModal;

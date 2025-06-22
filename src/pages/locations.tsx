@@ -10,7 +10,9 @@ export default function Locations() {
   const { t } = useTranslation();
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [selectedLocation, setSelectedLocation] = useState<Location | null>(null);
+  const [selectedLocation, setSelectedLocation] = useState<Location | null>(
+    null,
+  );
 
   const {
     locations,
@@ -41,15 +43,10 @@ export default function Locations() {
       <div className="flex flex-row gap-2 justify-between">
         <div className="flex flex-col gap-1">
           <h1 className="text-2xl font-bold">{t("locations.management")}</h1>
-          <p className="text-default-500">
-            {t("locations.description")}
-          </p>
+          <p className="text-default-500">{t("locations.description")}</p>
         </div>
         <div className="flex flex-row gap-2">
-          <Button
-            color="primary"
-            onPress={() => setIsCreateModalOpen(true)}
-          >
+          <Button color="primary" onPress={() => setIsCreateModalOpen(true)}>
             {t("locations.addLocation")}
           </Button>
         </div>
@@ -82,4 +79,4 @@ export default function Locations() {
       />
     </div>
   );
-} 
+}
