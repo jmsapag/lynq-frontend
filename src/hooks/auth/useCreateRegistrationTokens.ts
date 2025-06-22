@@ -8,8 +8,8 @@ export function useCreateRegistrationTokens() {
 
   const createTokens = async (
     count: number,
-    role: "ADMIN" | "STANDARD",
-    business_id: number,
+    role: "ADMIN" | "STANDARD" | "LYNQ_TEAM",
+    business_id: number | null = null,
   ) => {
     setLoading(true);
     setError(null);

@@ -13,6 +13,17 @@ export function getUserRoleFromToken() {
   }
 }
 
+export function getBusinessIdFromToken() {
+  const token = Cookies.get("token");
+  if (!token) return null;
+  try {
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    return payload.businessId || null;
+  } catch {
+    return null;
+  }
+}
+
 export function useLogin() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

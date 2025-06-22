@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { axiosClient } from "../../services/axiosClient";
+import { axiosPrivate } from "../../services/axiosClient";
 import {
   SensorDataPoint,
   SensorDataResponse,
@@ -19,7 +19,7 @@ export function useFetchData() {
         const formattedEndDate = endDate.toISOString();
 
         // Make API request
-        const response = await axiosClient.get<SensorDataResponse[]>(
+        const response = await axiosPrivate.get<SensorDataResponse[]>(
           "/devices/sensor-data",
           {
             params: {
