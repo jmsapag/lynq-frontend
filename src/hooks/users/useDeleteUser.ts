@@ -1,24 +1,19 @@
-import { useState } from "react";
 import { axiosPrivate } from "../../services/axiosClient.ts";
 
-export const useDeleteUser = () => {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const deleteUser = async (id: number) => {
-    setLoading(true);
-    setError(null);
-
+export const useDeleteUser = (onError: (error: Error) => void) => {
+  const handleDeleteUser = async (userId: number, onSuccess: () => void) => {
     try {
-      await axiosPrivate.delete(`/users/${id}`);
-      setLoading(false);
-      return true;
-    } catch (err: any) {
-      setLoading(false);
-      setError(err.response?.data?.message || "Error deleting user");
-      return false;
+      const response = await axiosPrivate.delete(`/users/${userId}`);
+      if (response.status === 200) {
+        onSuccess();
+      } else {
+        throw new Error("Failed to delete user");
+      }
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      onError(error instanceof Error ? error : new Error("Unknown error"));
     }
   };
 
-  return { deleteUser, loading, error };
+  return { handleDeleteUser };
 };
