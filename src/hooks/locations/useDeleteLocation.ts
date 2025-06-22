@@ -1,7 +1,10 @@
 import { axiosPrivate } from "../../services/axiosClient.ts";
 
 export const useDeleteLocation = (onError: (error: Error) => void) => {
-  const handleDeleteLocation = async (locationId: number, onSuccess: () => void) => {
+  const handleDeleteLocation = async (
+    locationId: number,
+    onSuccess: () => void,
+  ) => {
     try {
       const response = await axiosPrivate.delete(`/locations/${locationId}`);
       if (response.status === 200) {
@@ -16,4 +19,4 @@ export const useDeleteLocation = (onError: (error: Error) => void) => {
   };
 
   return { handleDeleteLocation };
-}; 
+};

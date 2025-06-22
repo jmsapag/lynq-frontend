@@ -26,4 +26,4 @@ export function useCreateLocation() {
   };
 
   return { createLocation, loading, error };
-} 
+}
