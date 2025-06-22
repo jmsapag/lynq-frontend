@@ -219,7 +219,13 @@
     "profileUpdateSuccessTitle": "Perfil actualizado",
     "profileUpdateSuccessDescription": "Tu perfil se actualizó correctamente.",
     "profileUpdateErrorTitle": "Error al actualizar",
-    "profileUpdateErrorDescription": "No se pudo actualizar tu perfil. Inténtalo de nuevo."
+    "profileUpdateErrorDescription": "No se pudo actualizar tu perfil. Inténtalo de nuevo.",
+    "createFailedTitle": "Error al crear",
+    "createFailedDescription": "No se pudo crear la empresa.",
+    "editFailedTitle": "Error al editar",
+    "editFailedDescription": "No se pudo editar la empresa.",
+    "deleteFailedTitle": "Error al borrar",
+    "deleteFailedDescription": "No se pudo borrar la empresa."
   },
   "businesses": {
     "management": "Gestión de Empresas",
@@ -278,6 +284,7 @@
     "deleteErrorTitle": "Error al Borrar",
     "deleteErrorDesc": "No se pudo borrar el dispositivo.",
     "formErrorTitle": "Error en el Formulario",
-    "formErrorDesc": "Por favor, completa todos los campos requeridos."
+    "formErrorDesc": "Por favor, completa todos los campos requeridos.",
+    "businessName": "Nombre de la Empresa"
   }
 }

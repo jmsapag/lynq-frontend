@@ -12,6 +12,7 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
+  addToast,
 } from "@heroui/react";
 import { TrashIcon, PencilIcon } from "@heroicons/react/24/outline";
 
@@ -19,7 +20,7 @@ const BusinessesPage: React.FC = () => {
   const { t } = useTranslation();
   const [page, setPage] = useState(1);
   const limit = 15;
-  const { businesses, loading, error } = useBusinesses(page, limit);
+  const { businesses, loading } = useBusinesses(page, limit);
 
   const [showModal, setShowModal] = useState(false);
   const [name, setName] = useState("");
@@ -59,6 +60,13 @@ const BusinessesPage: React.FC = () => {
       setName("");
       setAddress("");
       window.location.reload();
+    } else if (createError) {
+      addToast({
+        title: t("toasts.createFailedTitle"),
+        description: t("toasts.createFailedDescription"),
+        severity: "danger",
+        color: "danger",
+      });
     }
   };
 
@@ -74,6 +82,13 @@ const BusinessesPage: React.FC = () => {
       setBusinessToDelete(null);
       if (success) {
         window.location.reload();
+      } else if (deleteError) {
+        addToast({
+          title: t("toasts.deleteFailedTitle"),
+          description: t("toasts.deleteFailedDescription"),
+          severity: "danger",
+          color: "danger",
+        });
       }
     }
   };
@@ -99,6 +114,13 @@ const BusinessesPage: React.FC = () => {
       setEditAddress("");
       if (success) {
         window.location.reload();
+      } else if (editError) {
+        addToast({
+          title: t("toasts.editFailedTitle"),
+          description: t("toasts.editFailedDescription"),
+          severity: "danger",
+          color: "danger",
+        });
       }
     }
   };
@@ -113,21 +135,6 @@ const BusinessesPage: React.FC = () => {
 
       {loading && (
         <div className="text-sm text-gray-500 mb-3">{t("common.loading")}</div>
-      )}
-      {error && (
-        <div className="text-sm text-red-500 mb-3">
-          {t("common.error")}: {error}
-        </div>
-      )}
-      {deleteError && (
-        <div className="text-sm text-red-500 mb-3">
-          {t("businesses.deleteError")}: {deleteError}
-        </div>
-      )}
-      {editError && (
-        <div className="text-sm text-red-500 mb-3">
-          {t("businesses.editError")}: {editError}
-        </div>
       )}
 
       <div className="overflow-x-auto border border-gray-200 rounded-md">

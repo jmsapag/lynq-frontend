@@ -219,7 +219,13 @@
     "profileUpdateSuccessTitle": "Profile Updated",
     "profileUpdateSuccessDescription": "Your profile was updated successfully.",
     "profileUpdateErrorTitle": "Update Failed",
-    "profileUpdateErrorDescription": "Could not update your profile. Please try again."
+    "profileUpdateErrorDescription": "Could not update your profile. Please try again.",
+    "createFailedTitle": "Creation Failed",
+    "createFailedDescription": "Failed to create business.",
+    "editFailedTitle": "Edit Failed",
+    "editFailedDescription": "Failed to edit business.",
+    "deleteFailedTitle": "Delete Failed",
+    "deleteFailedDescription": "Failed to delete business."
   },
   "businesses": {
     "management": "Business Management",
@@ -278,6 +284,7 @@
     "deleteErrorTitle": "Delete Failed",
     "deleteErrorDesc": "Failed to delete device.",
     "formErrorTitle": "Form Error",
-    "formErrorDesc": "Please fill in all required fields."
+    "formErrorDesc": "Please fill in all required fields.",
+    "businessName": "Business Name"
   }
 }

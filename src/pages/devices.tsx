@@ -275,7 +275,7 @@ export default function DevicesPage() {
                 required
               />
               <Select
-                label={t("businesses.name")}
+                label={t("devices.businessName")}
                 value={businessId ? String(businessId) : ""}
                 onChange={(e) => {
                   const val = (e.target as HTMLSelectElement).value;
@@ -291,7 +291,7 @@ export default function DevicesPage() {
                 <div className="text-red-500 text-sm">{businessesError}</div>
               )}
               <Select
-                label={t("devices.position")}
+                label={t("devices.location")}
                 value={locationId ? String(locationId) : ""}
                 onChange={(e) =>
                   setLocationId(Number((e.target as HTMLSelectElement).value))

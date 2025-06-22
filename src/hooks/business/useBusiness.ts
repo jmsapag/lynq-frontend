@@ -19,7 +19,6 @@ export function useBusinesses(page: number, limit: number) {
     axiosPrivate
       .get("/business/list", { params: { page, limit } })
       .then((res) => {
-        // Extract the array from res.data.data
         if (Array.isArray(res.data?.data)) {
           setBusinesses(res.data.data);
         } else {
