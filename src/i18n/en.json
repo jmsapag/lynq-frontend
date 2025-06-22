@@ -31,7 +31,10 @@
   "logout": "Log out",
   "profile": "Profile",
   "role": {
-    "admin": "Administrator"
+    "admin": "Administrator",
+    "LYNQ_TEAM": "Lynq Team",
+    "ADMIN": "Administrator",
+    "USER": "Standard"
   },
   "common": {
     "apply": "Apply",
@@ -104,7 +107,9 @@
     "filterByStatus": "Filter by status",
     "filterAll": "All",
     "filterActive": "Active",
-    "filterInactive": "Inactive"
+    "filterInactive": "Inactive",
+    "businessName": "Name",
+    "businessLocation": "Location"
   },
   "filters": {
     "dateRange": "Date Range",
@@ -210,7 +215,11 @@
     "deleteSuccessTitle": "User Deleted",
     "deleteSuccessDesc": "User deleted successfully.",
     "deleteErrorTitle": "Delete Failed",
-    "deleteErrorDesc": "Failed to delete user."
+    "deleteErrorDesc": "Failed to delete user.",
+    "profileUpdateSuccessTitle": "Profile Updated",
+    "profileUpdateSuccessDescription": "Your profile was updated successfully.",
+    "profileUpdateErrorTitle": "Update Failed",
+    "profileUpdateErrorDescription": "Could not update your profile. Please try again."
   },
   "businesses": {
     "management": "Business Management",
