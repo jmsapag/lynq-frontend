@@ -12,7 +12,7 @@ export function useUsersByLocations(pageSize = 100, index = 0) {
       try {
         setLoading(true);
         const response = await axiosPrivate.get<LocationWithUsers[]>(
-          `/locations/users?index=${index}&pageSize=${pageSize}`
+          `/locations/users?index=${index}&pageSize=${pageSize}`,
         );
 
         // Transform data from locations with users to users with locations

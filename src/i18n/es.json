@@ -43,7 +43,9 @@
     "previous": "Anterior",
     "next": "Siguiente",
     "page": "Página",
-    "noData": "No se encontraron empresas."
+    "noData": "No se encontraron empresas.",
+    "yes": "Sí",
+    "no": "No"
   },
   "dashboard": {
     "filters": {
@@ -88,7 +90,21 @@
     "addUserContentComingSoon": "La funcionalidad para añadir usuarios estará disponible próximamente",
     "contactInformation": "Información de Contacto",
     "edit": "Editar",
-    "delete": "Borrar"
+    "delete": "Borrar",
+    "createdAt": "Creación",
+    "noUsers": "No se encontraron usuarios",
+    "deleteSuccessTitle": "Usuario Borrado",
+    "deleteSuccessDesc": "Usuario borrado correctamente.",
+    "deleteErrorTitle": "Error al Borrar",
+    "deleteErrorDesc": "No se pudo borrar el usuario.",
+    "deleteUser": "Borrar Usuario",
+    "deleteConfirm": "¿Estás seguro de que deseas borrar este usuario? Esta acción no se puede deshacer.",
+    "active": "Activo",
+    "toggleErrorDesc": "No se pudo actualizar el estado del usuario.",
+    "filterByStatus": "Filtrar por estado",
+    "filterAll": "Todos",
+    "filterActive": "Activos",
+    "filterInactive": "Inactivos"
   },
   "filters": {
     "dateRange": "Rango de fechas",
@@ -183,7 +199,18 @@
     "registerFailedTitle": "Registro fallido",
     "registerFailedDescription": "Por favor, inténtalo de nuevo.",
     "messageSentTitle": "Mensaje enviado correctamente",
-    "messageSentDescription": "¡Gracias por contactarnos! Nos comunicaremos pronto."
+    "messageSentDescription": "¡Gracias por contactarnos! Nos comunicaremos pronto.",
+    "successTitle": "Éxito",
+    "successDescription": "¡Tokens de registro creados exitosamente!",
+    "errorTitle": "Error",
+    "errorDescription": "No se pudieron crear los tokens de registro.",
+    "copiedTitle": "Copiado",
+    "copiedDescription": "Todos los enlaces de registro copiados al portapapeles.",
+    "noTokens": "No se recibieron tokens.",
+    "deleteSuccessTitle": "Usuario Borrado",
+    "deleteSuccessDesc": "Usuario borrado correctamente.",
+    "deleteErrorTitle": "Error al Borrar",
+    "deleteErrorDesc": "No se pudo borrar el usuario."
   },
   "businesses": {
     "management": "Gestión de Empresas",
