@@ -297,6 +297,7 @@
     "address": "Dirección",
     "createdAt": "Creado el",
     "actions": "Acciones",
+    "delete": "Borrar",
     "noLocations": "No se encontraron ubicaciones",
     "deleteConfirm": "¿Estás seguro de que deseas borrar esta ubicación? Esta acción no se puede deshacer.",
     "createSuccessTitle": "Ubicación Creada",

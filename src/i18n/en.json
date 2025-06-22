@@ -297,6 +297,7 @@
     "address": "Address",
     "createdAt": "Created At",
     "actions": "Actions",
+    "delete": "Delete",
     "noLocations": "No locations found",
     "deleteConfirm": "Are you sure you want to delete this location? This action cannot be undone.",
     "createSuccessTitle": "Location Created",

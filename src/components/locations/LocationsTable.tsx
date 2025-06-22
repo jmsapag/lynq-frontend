@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Table,
   TableHeader,
@@ -9,6 +9,11 @@ import {
   Button,
   Spinner,
   addToast,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
 } from "@heroui/react";
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useTranslation } from "react-i18next";
@@ -31,7 +36,12 @@ const LocationsTable: React.FC<LocationsTableProps> = ({
   onLocationDeleted,
 }) => {
   const { t } = useTranslation();
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [locationToDelete, setLocationToDelete] = useState<Location | null>(null);
+  const [deleting, setDeleting] = useState(false);
+
   const { handleDeleteLocation } = useDeleteLocation((error) => {
+    setDeleting(false);
     addToast({
       title: t("locations.deleteErrorTitle"),
       description: error.message || t("locations.deleteErrorDesc"),
@@ -40,9 +50,18 @@ const LocationsTable: React.FC<LocationsTableProps> = ({
     });
   });
 
-  const handleDelete = (location: Location) => {
-    if (window.confirm(t("locations.deleteConfirm"))) {
-      handleDeleteLocation(location.id, () => {
+  const handleDeleteClick = (location: Location) => {
+    setLocationToDelete(location);
+    setShowDeleteModal(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (locationToDelete) {
+      setDeleting(true);
+      handleDeleteLocation(locationToDelete.id, () => {
+        setShowDeleteModal(false);
+        setLocationToDelete(null);
+        setDeleting(false);
         addToast({
           title: t("locations.deleteSuccessTitle"),
           description: t("locations.deleteSuccessDesc"),
@@ -75,53 +94,87 @@ const LocationsTable: React.FC<LocationsTableProps> = ({
   }
 
   return (
-    <Table aria-label="Locations table">
-      <TableHeader>
-        <TableColumn>{t("locations.name").toUpperCase()}</TableColumn>
-        <TableColumn>{t("locations.address").toUpperCase()}</TableColumn>
-        <TableColumn>{t("locations.createdAt").toUpperCase()}</TableColumn>
-        <TableColumn>{t("locations.actions").toUpperCase()}</TableColumn>
-      </TableHeader>
-      <TableBody emptyContent={loading ? " " : t("locations.noLocations")}>
-        {locations.map((location) => (
-          <TableRow key={location.id}>
-            <TableCell>
-              <div className="font-medium">{location.name}</div>
-            </TableCell>
-            <TableCell>
-              <div className="text-default-600">{location.address}</div>
-            </TableCell>
-            <TableCell>
-              <div className="text-default-600">
-                {formatDate(location.created_at)}
-              </div>
-            </TableCell>
-            <TableCell>
-              <div className="flex gap-2">
-                <Button
-                  isIconOnly
-                  size="sm"
-                  variant="light"
-                  onPress={() => onEdit(location)}
-                  className="text-primary"
-                >
-                  <PencilIcon className="h-4 w-4" />
-                </Button>
-                <Button
-                  isIconOnly
-                  size="sm"
-                  variant="light"
-                  onPress={() => handleDelete(location)}
-                  className="text-danger"
-                >
-                  <TrashIcon className="h-4 w-4" />
-                </Button>
-              </div>
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+    <>
+      <Table aria-label="Locations table" isStriped>
+        <TableHeader>
+          <TableColumn>{t("locations.name").toUpperCase()}</TableColumn>
+          <TableColumn>{t("locations.address").toUpperCase()}</TableColumn>
+          <TableColumn>{t("locations.createdAt").toUpperCase()}</TableColumn>
+          <TableColumn>{t("locations.actions").toUpperCase()}</TableColumn>
+        </TableHeader>
+        <TableBody emptyContent={loading ? " " : t("locations.noLocations")}>
+          {locations.map((location) => (
+            <TableRow key={location.id}>
+              <TableCell>
+                <div className="font-medium">{location.name}</div>
+              </TableCell>
+              <TableCell>
+                <div className="text-default-600">{location.address}</div>
+              </TableCell>
+              <TableCell>
+                <div className="text-default-600">
+                  {formatDate(location.created_at)}
+                </div>
+              </TableCell>
+              <TableCell>
+                <div className="flex gap-2">
+                  <Button
+                    isIconOnly
+                    size="sm"
+                    variant="light"
+                    onPress={() => onEdit(location)}
+                    className="text-primary"
+                  >
+                    <PencilIcon className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    isIconOnly
+                    size="sm"
+                    variant="light"
+                    onPress={() => handleDeleteClick(location)}
+                    className="text-danger"
+                  >
+                    <TrashIcon className="h-4 w-4" />
+                  </Button>
+                </div>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+
+      {/* Delete Confirmation Modal */}
+      <Modal isOpen={showDeleteModal} onOpenChange={setShowDeleteModal}>
+        <ModalContent>
+          <ModalHeader>{t("locations.deleteLocation")}</ModalHeader>
+          <ModalBody>
+            <p>
+              {t("locations.deleteConfirm")}
+              {locationToDelete && ` "${locationToDelete.name}"`}
+            </p>
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              variant="bordered"
+              size="sm"
+              onPress={() => setShowDeleteModal(false)}
+              isDisabled={deleting}
+            >
+              {t("common.cancel")}
+            </Button>
+            <Button
+              variant="solid"
+              color="danger"
+              size="sm"
+              onPress={handleConfirmDelete}
+              isLoading={deleting}
+            >
+              {t("locations.delete")}
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
   );
 };
 
