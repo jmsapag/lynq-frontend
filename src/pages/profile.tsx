@@ -1,7 +1,6 @@
 import { useTranslation } from "react-i18next";
 import UserProfile from "../components/users/user-profile";
-import { useUserProfile } from "../hooks/users/useUserProfile";
-import { useUserId } from "../hooks/auth/useUserId";
+import { useSelfUserProfile } from "../hooks/users/useSelfUserProfile";
 import {
   useEditUserProfile,
   EditUserData,
@@ -20,8 +19,7 @@ import {
 
 export default function ProfilePage() {
   const { t } = useTranslation();
-  const userId = useUserId();
-  const { user, loading, error, setUser } = useUserProfile(userId);
+  const { user, loading, error, setUser } = useSelfUserProfile();
 
   const { editUser, loading: editLoading } = useEditUserProfile();
   const [editMode, setEditMode] = useState(false);
