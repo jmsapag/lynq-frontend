@@ -12,6 +12,13 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
+  Table,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  TableRow,
+  TableCell,
+  Spinner,
   addToast,
 } from "@heroui/react";
 import { TrashIcon, PencilIcon } from "@heroicons/react/24/outline";
@@ -127,73 +134,71 @@ const BusinessesPage: React.FC = () => {
 
   return (
     <div className="w-full max-w-7xl mx-auto">
-      <div className="flex justify-end items-center mb-10">
+      <div className="flex justify-end items-center mb-4">
         <Button variant="solid" size="sm" onPress={() => setShowModal(true)}>
           {t("businesses.addBusiness")}
         </Button>
       </div>
 
-      {loading && (
-        <div className="text-sm text-gray-500 mb-3">{t("common.loading")}</div>
-      )}
-
-      <div className="overflow-x-auto border border-gray-200 rounded-md">
-        <table className="w-full text-left text-sm">
-          <thead className="border-b border-gray-200 bg-gray-50">
-            <tr>
-              <th className="py-2 px-3 font-medium text-gray-700">
-                {t("businesses.name")}
-              </th>
-              <th className="py-2 px-3 font-medium text-gray-700">
-                {t("businesses.address")}
-              </th>
-              <th className="py-2 px-3 font-medium text-gray-700">
-                {t("businesses.createdAt")}
-              </th>
-              <th className="py-2 px-3 font-medium text-gray-700 text-center">
+      <div>
+        {loading ? (
+          <div className="flex justify-center items-center h-32">
+            <Spinner size="lg" />
+          </div>
+        ) : (
+          <Table aria-label="Businesses table" isStriped>
+            <TableHeader>
+              <TableColumn>{t("businesses.name")}</TableColumn>
+              <TableColumn>{t("businesses.address")}</TableColumn>
+              <TableColumn>{t("businesses.createdAt")}</TableColumn>
+              <TableColumn className="text-center">
                 {t("common.actions")}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {(Array.isArray(businesses) ? businesses : []).map((b, idx) => (
-              <tr
-                key={b.id}
-                className={idx % 2 === 0 ? "bg-white" : "bg-gray-50"}
-              >
-                <td className="py-2 px-3 text-gray-900">{b.name}</td>
-                <td className="py-2 px-3 text-gray-800">{b.address}</td>
-                <td className="py-2 px-3 text-gray-500">
-                  {new Date(b.created_at).toLocaleString()}
-                </td>
-                <td className="py-2 px-3 flex justify-center gap-2">
-                  <button
-                    className="text-blue-500 hover:text-blue-700 p-1"
-                    onClick={() => handleEditClick(b)}
-                    title={t("businesses.edit")}
-                  >
-                    <PencilIcon className="h-5 w-5" />
-                  </button>
-                  <button
-                    className="text-red-500 hover:text-red-700 p-1"
-                    onClick={() => handleDeleteClick(b.id)}
-                    disabled={deleting}
-                    title={t("businesses.delete")}
-                  >
-                    <TrashIcon className="h-5 w-5" />
-                  </button>
-                </td>
-              </tr>
-            ))}
-            {(!businesses || businesses.length === 0) && !loading && (
-              <tr>
-                <td colSpan={4} className="py-4 px-3 text-gray-400">
-                  {t("common.noData")}
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+              </TableColumn>
+            </TableHeader>
+            <TableBody emptyContent={t("common.noData")}>
+              {(Array.isArray(businesses) ? businesses : []).map((b) => (
+                <TableRow key={b.id}>
+                  <TableCell>
+                    <div className="font-medium">{b.name}</div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="text-default-600">{b.address}</div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="text-default-600">
+                      {new Date(b.created_at).toLocaleString()}
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-center">
+                    <div className="flex gap-2 justify-center">
+                      <Button
+                        isIconOnly
+                        size="sm"
+                        variant="light"
+                        onPress={() => handleEditClick(b)}
+                        className="text-primary"
+                        title={t("businesses.edit")}
+                      >
+                        <PencilIcon className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        isIconOnly
+                        size="sm"
+                        variant="light"
+                        onPress={() => handleDeleteClick(b.id)}
+                        className="text-danger"
+                        isDisabled={deleting}
+                        title={t("businesses.delete")}
+                      >
+                        <TrashIcon className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        )}
       </div>
 
       <div className="mt-6 flex justify-center items-center gap-4">

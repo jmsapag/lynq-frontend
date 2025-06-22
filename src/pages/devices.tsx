@@ -9,6 +9,14 @@ import {
   ModalFooter,
   Select,
   SelectItem,
+  Table,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  TableRow,
+  TableCell,
+  Spinner,
+  addToast,
 } from "@heroui/react";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import { useDevices } from "../hooks/devices/useDevices";
@@ -16,7 +24,6 @@ import { useBusinesses } from "../hooks/business/useBusiness";
 import { useLocations } from "../hooks/devices/useLocations";
 import { useCreateDevice } from "../hooks/devices/useCreateDevice";
 import { useDeleteDevice } from "../hooks/devices/useDeleteDevice";
-import { addToast } from "@heroui/react";
 import { useTranslation } from "react-i18next";
 
 export default function DevicesPage() {
@@ -145,14 +152,16 @@ export default function DevicesPage() {
 
   return (
     <div className="w-full max-w-7xl mx-auto">
-      <div className="flex justify-end items-center mb-10">
+      <div className="flex justify-end items-center mb-4">
         <Button variant="solid" size="sm" onPress={() => setShowModal(true)}>
           {t("devices.addDevice")}
         </Button>
       </div>
 
       {loadingDevices && (
-        <div className="text-sm text-gray-500 mb-3">{t("common.loading")}</div>
+        <div className="flex justify-center items-center h-32">
+          <Spinner size="lg" />
+        </div>
       )}
       {devicesError && (
         <div className="text-sm text-red-500 mb-3">{devicesError}</div>
@@ -161,66 +170,47 @@ export default function DevicesPage() {
         <div className="text-sm text-red-500 mb-3">{deleteError}</div>
       )}
 
-      <div className="overflow-x-auto border border-gray-200 rounded-md">
-        <table className="w-full text-left text-sm">
-          <thead className="border-b border-gray-200 bg-gray-50">
-            <tr>
-              <th className="py-2 px-3 font-medium text-gray-700">
-                {t("devices.serialNumber")}
-              </th>
-              <th className="py-2 px-3 font-medium text-gray-700">
-                {t("devices.provider")}
-              </th>
-              <th className="py-2 px-3 font-medium text-gray-700">
-                {t("devices.position")}
-              </th>
-              <th className="py-2 px-3 font-medium text-gray-700">
-                {t("devices.location")}
-              </th>
-              <th className="py-2 px-3 font-medium text-gray-700">
-                {t("devices.createdAt")}
-              </th>
-              <th className="py-2 px-3 font-medium text-gray-700 text-center">
-                {t("devices.actions")}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {(Array.isArray(devices) ? devices : []).map((d, idx) => (
-              <tr
-                key={d.id}
-                className={idx % 2 === 0 ? "bg-white" : "bg-gray-50"}
-              >
-                <td className="py-2 px-3 text-gray-900">{d.serial_number}</td>
-                <td className="py-2 px-3 text-gray-800">{d.provider}</td>
-                <td className="py-2 px-3 text-gray-800">{d.position}</td>
-                <td className="py-2 px-3 text-gray-600">
-                  {d.location_name || "-"}
-                </td>
-                <td className="py-2 px-3 text-gray-500">
-                  {new Date(d.created_at).toLocaleString()}
-                </td>
-                <td className="py-2 px-3 flex justify-center gap-2">
-                  <button
-                    className="text-red-500 hover:text-red-700 p-1"
-                    onClick={() => handleDeleteClick(d)}
-                    disabled={deleting}
-                    title={t("devices.deleteDevice")}
-                  >
-                    <TrashIcon className="h-5 w-5" />
-                  </button>
-                </td>
-              </tr>
+      <div>
+        <Table aria-label="Devices table" isStriped>
+          <TableHeader>
+            <TableColumn>{t("devices.serialNumber")}</TableColumn>
+            <TableColumn>{t("devices.provider")}</TableColumn>
+            <TableColumn>{t("devices.position")}</TableColumn>
+            <TableColumn>{t("devices.location")}</TableColumn>
+            <TableColumn>{t("devices.createdAt")}</TableColumn>
+            <TableColumn className="text-center">
+              {t("devices.actions")}
+            </TableColumn>
+          </TableHeader>
+          <TableBody
+            emptyContent={loadingDevices ? " " : t("devices.noDevices")}
+          >
+            {(Array.isArray(devices) ? devices : []).map((d) => (
+              <TableRow key={d.id}>
+                <TableCell>{d.serial_number}</TableCell>
+                <TableCell>{d.provider}</TableCell>
+                <TableCell>{d.position}</TableCell>
+                <TableCell>{d.location_name || "-"}</TableCell>
+                <TableCell>{new Date(d.created_at).toLocaleString()}</TableCell>
+                <TableCell className="text-center">
+                  <div className="flex justify-center gap-2">
+                    <Button
+                      isIconOnly
+                      size="sm"
+                      variant="light"
+                      onPress={() => handleDeleteClick(d)}
+                      className="text-danger"
+                      isDisabled={deleting}
+                      title={t("devices.deleteDevice")}
+                    >
+                      <TrashIcon className="h-5 w-5" />
+                    </Button>
+                  </div>
+                </TableCell>
+              </TableRow>
             ))}
-            {(!devices || devices.length === 0) && !loadingDevices && (
-              <tr>
-                <td colSpan={6} className="py-4 px-3 text-gray-400">
-                  {t("devices.noDevices")}
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       </div>
 
       <div className="mt-6 flex justify-center items-center gap-4">

@@ -10,6 +10,13 @@ import {
   SelectItem,
   addToast,
   Switch,
+  Table,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  TableRow,
+  TableCell,
+  Spinner,
 } from "@heroui/react";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import { useCreateRegistrationTokens } from "../hooks/auth/useCreateRegistrationTokens.ts";
@@ -147,59 +154,47 @@ const ManageUsersPage: React.FC = () => {
       {/* Users Table */}
       <div className="mb-10">
         {usersLoading && (
-          <div className="text-sm text-gray-500 mb-3">
-            {t("common.loading")}
+          <div className="flex justify-center items-center h-32">
+            <Spinner size="lg" />
           </div>
         )}
-        <div className="overflow-x-auto border border-gray-200 rounded-md">
-          <table className="w-full text-left text-sm">
-            <thead className="border-b border-gray-200 bg-gray-50">
-              <tr>
-                <th className="py-2 px-3 font-medium text-gray-700">
-                  {t("users.email")}
-                </th>
-                <th className="py-2 px-3 font-medium text-gray-700">
-                  {t("users.role")}
-                </th>
-                <th className="py-2 px-3 font-medium text-gray-700">
-                  {t("users.business")}
-                </th>
-                <th className="py-2 px-3 font-medium text-gray-700">
-                  {t("users.createdAt")}
-                </th>
-                <th className="py-2 px-3 font-medium text-gray-700 text-center">
-                  {t("common.actions")}
-                </th>
-                <th className="py-2 px-3 font-medium text-gray-700">
-                  {t("users.active")}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredUsers.map((u, idx) => (
-                <tr
-                  key={u.id}
-                  className={idx % 2 === 0 ? "bg-white" : "bg-gray-50"}
-                >
-                  <td className="py-2 px-3 text-gray-900">{u.email}</td>
-                  <td className="py-2 px-3 text-gray-800">{u.role}</td>
-                  <td className="py-2 px-3 text-gray-800">
-                    {u.business?.name || "-"}
-                  </td>
-                  <td className="py-2 px-3 text-gray-500">
+        <div>
+          <Table aria-label="Users table" isStriped>
+            <TableHeader>
+              <TableColumn>{t("users.email")}</TableColumn>
+              <TableColumn>{t("users.role")}</TableColumn>
+              <TableColumn>{t("users.business")}</TableColumn>
+              <TableColumn>{t("users.createdAt")}</TableColumn>
+              <TableColumn className="text-center">
+                {t("common.actions")}
+              </TableColumn>
+              <TableColumn>{t("users.active")}</TableColumn>
+            </TableHeader>
+            <TableBody emptyContent={usersLoading ? " " : t("users.noUsers")}>
+              {filteredUsers.map((u) => (
+                <TableRow key={u.id}>
+                  <TableCell>{u.email}</TableCell>
+                  <TableCell>{u.role}</TableCell>
+                  <TableCell>{u.business?.name || "-"}</TableCell>
+                  <TableCell>
                     {new Date(u.created_at).toLocaleString()}
-                  </td>
-                  <td className="py-2 px-3 flex justify-center gap-2">
-                    <button
-                      className="text-red-500 hover:text-red-700 p-1"
-                      onClick={() => handleDeleteClick(u.id)}
-                      disabled={deleting}
-                      title={t("users.delete")}
-                    >
-                      <TrashIcon className="h-5 w-5" />
-                    </button>
-                  </td>
-                  <td className="py-2 px-3 text-gray-800">
+                  </TableCell>
+                  <TableCell className="text-center">
+                    <div className="flex justify-center gap-2">
+                      <Button
+                        isIconOnly
+                        size="sm"
+                        variant="light"
+                        onPress={() => handleDeleteClick(u.id)}
+                        className="text-danger"
+                        isDisabled={deleting}
+                        title={t("users.delete")}
+                      >
+                        <TrashIcon className="h-5 w-5" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                  <TableCell>
                     <Switch
                       isSelected={u.is_active}
                       onChange={() => handleToggleActive(u.id, u.is_active)}
@@ -210,18 +205,11 @@ const ManageUsersPage: React.FC = () => {
                     >
                       {u.is_active}
                     </Switch>
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               ))}
-              {filteredUsers.length === 0 && !usersLoading && (
-                <tr>
-                  <td colSpan={6} className="py-4 px-3 text-gray-400">
-                    {t("users.noUsers")}
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         </div>
       </div>
 

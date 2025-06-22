@@ -47,13 +47,7 @@ export default function UserManagement() {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-row gap-2 justify-between">
-        <div className="flex flex-col gap-1">
-          <h1 className="text-2xl font-bold">Users by Location</h1>
-          <p className="text-default-500">
-            This page displays a list of users grouped by their respective
-            locations.
-          </p>
-        </div>
+        <div className="flex flex-col gap-1"></div>
         <div className="flex flex-row gap-2">
           <Button
             color="primary"
