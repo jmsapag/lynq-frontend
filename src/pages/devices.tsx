@@ -40,7 +40,6 @@ export default function DevicesPage() {
   const {
     devices,
     loading: loadingDevices,
-    error: devicesError,
     pagination,
   } = useDevices(page, limit);
 
@@ -162,12 +161,6 @@ export default function DevicesPage() {
         <div className="flex justify-center items-center h-32">
           <Spinner size="lg" />
         </div>
-      )}
-      {devicesError && (
-        <div className="text-sm text-red-500 mb-3">{devicesError}</div>
-      )}
-      {deleteError && (
-        <div className="text-sm text-red-500 mb-3">{deleteError}</div>
       )}
 
       <div>
