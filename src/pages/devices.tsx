@@ -194,7 +194,9 @@ export default function DevicesPage() {
                 <td className="py-2 px-3 text-gray-900">{d.serial_number}</td>
                 <td className="py-2 px-3 text-gray-800">{d.provider}</td>
                 <td className="py-2 px-3 text-gray-800">{d.position}</td>
-                <td className="py-2 px-3 text-gray-600">{d.location_name || '-'}</td>
+                <td className="py-2 px-3 text-gray-600">
+                  {d.location_name || "-"}
+                </td>
                 <td className="py-2 px-3 text-gray-500">
                   {new Date(d.created_at).toLocaleString()}
                 </td>
@@ -231,7 +233,8 @@ export default function DevicesPage() {
           {t("common.previous")}
         </Button>
         <span className="text-sm text-gray-600">
-          {t("common.page")} {page} {pagination?.totalPages ? `of ${pagination.totalPages}` : ''}
+          {t("common.page")} {page}{" "}
+          {pagination?.totalPages ? `of ${pagination.totalPages}` : ""}
         </span>
         <Button
           variant="bordered"

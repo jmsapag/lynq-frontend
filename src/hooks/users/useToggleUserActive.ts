@@ -5,11 +5,12 @@ export const useToggleUserActive = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const toggleUserActive = async (id: number) => {
+  const toggleUserActive = async (id: number, enable: boolean) => {
     setLoading(true);
     setError(null);
     try {
-      await axiosPrivate.patch(`/users/soft-delete/${id}`);
+      const path = enable ? `/users/enable/${id}` : `/users/soft-delete/${id}`;
+      await axiosPrivate.patch(path);
       setLoading(false);
       return true;
     } catch (err: any) {

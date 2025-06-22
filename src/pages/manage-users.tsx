@@ -28,10 +28,7 @@ const ManageUsersPage: React.FC = () => {
   const [page, setPage] = useState(1);
   const limit = 15;
 
-  const {
-    tokens,
-    setTokens,
-  } = useCreateRegistrationTokens();
+  const { tokens, setTokens } = useCreateRegistrationTokens();
 
   const { users, loading: usersLoading, pagination } = useUsers(page, limit);
 
@@ -65,7 +62,7 @@ const ManageUsersPage: React.FC = () => {
     setTokens(null);
   };
 
-    const handleDeleteClick = (id: number) => {
+  const handleDeleteClick = (id: number) => {
     setUserToDelete(id);
     setShowDeleteModal(true);
   };
@@ -91,7 +88,7 @@ const ManageUsersPage: React.FC = () => {
 
   const handleToggleActive = async (userId: number, currentActive: boolean) => {
     setSwitchLoadingId(userId);
-    const success = await toggleUserActive(userId);
+    const success = await toggleUserActive(userId, !currentActive);
     setSwitchLoadingId(null);
     if (success) {
       addToast({

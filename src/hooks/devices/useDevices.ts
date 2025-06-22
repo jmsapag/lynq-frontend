@@ -31,16 +31,18 @@ export function useDevices(page: number = 1, limit: number = 15) {
       .get("/devices/accessible")
       .then((res) => {
         // El nuevo formato es un array de locations con sensors
-        const locations: LocationWithSensors[] = Array.isArray(res.data) ? res.data : [];
-        
+        const locations: LocationWithSensors[] = Array.isArray(res.data)
+          ? res.data
+          : [];
+
         // Aplanar todos los sensores de todas las ubicaciones
-        const flatDevices: Device[] = locations.flatMap(location => 
-          location.sensors.map(sensor => ({
+        const flatDevices: Device[] = locations.flatMap((location) =>
+          location.sensors.map((sensor) => ({
             ...sensor,
-            location_name: location.name // Agregar el nombre de la ubicación para referencia
-          }))
+            location_name: location.name, // Agregar el nombre de la ubicación para referencia
+          })),
         );
-        
+
         setAllDevices(flatDevices);
       })
       .catch((err) => setError(err.response?.data?.message || err.message))
