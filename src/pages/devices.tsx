@@ -194,7 +194,9 @@ export default function DevicesPage() {
                 <td className="py-2 px-3 text-gray-900">{d.serial_number}</td>
                 <td className="py-2 px-3 text-gray-800">{d.provider}</td>
                 <td className="py-2 px-3 text-gray-800">{d.position}</td>
-                <td className="py-2 px-3 text-gray-600">{d.location_name || '-'}</td>
+                <td className="py-2 px-3 text-gray-600">
+                  {d.location_name || "-"}
+                </td>
                 <td className="py-2 px-3 text-gray-500">
                   {new Date(d.created_at).toLocaleString()}
                 </td>
@@ -231,7 +233,8 @@ export default function DevicesPage() {
           {t("common.previous")}
         </Button>
         <span className="text-sm text-gray-600">
-          {t("common.page")} {page} {pagination?.totalPages ? `of ${pagination.totalPages}` : ''}
+          {t("common.page")} {page}{" "}
+          {pagination?.totalPages ? `of ${pagination.totalPages}` : ""}
         </span>
         <Button
           variant="bordered"
@@ -272,7 +275,7 @@ export default function DevicesPage() {
                 required
               />
               <Select
-                label={t("businesses.name")}
+                label={t("devices.businessName")}
                 value={businessId ? String(businessId) : ""}
                 onChange={(e) => {
                   const val = (e.target as HTMLSelectElement).value;
@@ -288,7 +291,7 @@ export default function DevicesPage() {
                 <div className="text-red-500 text-sm">{businessesError}</div>
               )}
               <Select
-                label={t("devices.position")}
+                label={t("devices.location")}
                 value={locationId ? String(locationId) : ""}
                 onChange={(e) =>
                   setLocationId(Number((e.target as HTMLSelectElement).value))
