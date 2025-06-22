@@ -10,7 +10,8 @@ import { NavItem } from "./nav-item.tsx";
 import { ProfileMenu } from "./profile-menu.tsx";
 import logoImage from "../../../assets/logo.png";
 import Cookies from "js-cookie";
-import { getUserRoleFromToken } from "../../../hooks/auth/useAuth.ts";
+import { useUserProfile } from "../../../hooks/users/useUserProfile";
+import { useUserId } from "../../../hooks/auth/useUserId";
 
 interface SidebarProps {
   isOpen?: boolean;
@@ -19,20 +20,19 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
+  const userId = useUserId();
+  const { user, loading } = useUserProfile(userId);
 
   const handleLogout = () => {
     Cookies.remove("token");
     navigate("/login", { replace: true });
   };
 
-  const role = getUserRoleFromToken();
-  let items;
-  if (role === "LYNQ_TEAM") {
+  let items = navItems;
+  if (user?.role === "LYNQ_TEAM") {
     items = superAdminNavItems;
-  } else if (role === "ADMIN") {
+  } else if (user?.role === "ADMIN") {
     items = adminNavItems;
-  } else {
-    items = navItems;
   }
 
   const SidebarContent = () => (
@@ -52,7 +52,14 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           </nav>
         </div>
         <div className="border-t border-gray-200 p-2">
-          <ProfileMenu onLogout={handleLogout} />
+          {loading || !user ? (
+            <div className="text-xs text-gray-400 px-2 py-3">Loading...</div>
+          ) : (
+            <ProfileMenu
+              user={{ name: user.name, role: user.role }}
+              onLogout={handleLogout}
+            />
+          )}
         </div>
       </div>
     </div>
