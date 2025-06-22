@@ -4,7 +4,7 @@ interface Business {
   id: number;
   name: string;
   address: string;
-  created_at: string;
+  created_at?: string;
 }
 
 interface User {
@@ -15,7 +15,7 @@ interface User {
   role: string;
   created_at: string;
   business_id: number;
-  is_active: boolean;
+  is_active?: boolean;
   business: Business;
 }
 
@@ -37,11 +37,19 @@ export default function UserProfile({ user, onEdit, t }: UserProfileProps) {
                 {user.role}
               </span>
               <span
-                className={`inline-block text-xs px-2 py-0.5 rounded-md font-medium min-w-[64px] text-center ${user.is_active ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}
+                className={`inline-block text-xs px-2 py-0.5 rounded-md font-medium min-w-[64px] text-center ${
+                  user.is_active === undefined
+                    ? "bg-gray-100 text-gray-700"
+                    : user.is_active
+                      ? "bg-green-100 text-green-700"
+                      : "bg-red-100 text-red-700"
+                }`}
               >
-                {user.is_active
-                  ? t("users.active") || "Active"
-                  : t("users.inactive") || "Inactive"}
+                {user.is_active === undefined
+                  ? t("users.unknown") || "Unknown"
+                  : user.is_active
+                    ? t("users.active") || "Active"
+                    : t("users.inactive") || "Inactive"}
               </span>
             </div>
           </div>
@@ -97,7 +105,7 @@ export default function UserProfile({ user, onEdit, t }: UserProfileProps) {
                 {t("users.businessName") || "Business Name"}:
               </span>
               <span className="ml-2 text-sm text-gray-700">
-                {user.business.name}
+                {user.business?.name}
               </span>
             </div>
             <div>
@@ -105,7 +113,7 @@ export default function UserProfile({ user, onEdit, t }: UserProfileProps) {
                 {t("users.businessLocation") || "Business Location"}:
               </span>
               <span className="ml-2 text-sm text-gray-700">
-                {user.business.address}
+                {user.business?.address}
               </span>
             </div>
           </div>

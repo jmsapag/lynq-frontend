@@ -10,8 +10,7 @@ import { NavItem } from "./nav-item.tsx";
 import { ProfileMenu } from "./profile-menu.tsx";
 import logoImage from "../../../assets/logo.png";
 import Cookies from "js-cookie";
-import { useUserProfile } from "../../../hooks/users/useUserProfile";
-import { useUserId } from "../../../hooks/auth/useUserId";
+import { useSelfUserProfile } from "../../../hooks/users/useSelfUserProfile";
 
 interface SidebarProps {
   isOpen?: boolean;
@@ -20,8 +19,7 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
-  const userId = useUserId();
-  const { user, loading } = useUserProfile(userId);
+  const { user, loading } = useSelfUserProfile();
 
   const handleLogout = () => {
     Cookies.remove("token");
