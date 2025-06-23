@@ -60,10 +60,10 @@ export default function UserByLocationList({
     });
   };
 
-  const onDeleteError = () => {
+  const onDeleteError = (error: Error) => {
     addToast({
       title: "Error",
-      description: "Failed to delete user. Please try again.",
+      description: `Failed to delete user: ${error.message}`,
       severity: "danger",
       color: "danger",
     });
