@@ -70,7 +70,7 @@ export default function UserByLocationList({
   };
 
   const { handleChangeRole } = useChangeRole();
-  const { handleDeleteUser } = useDeleteUser(onDeleteError);
+  const { handleDeleteUser} = useDeleteUser(onDeleteError);
 
   // Function to render location names with emojis
   const renderLocations = (locations: UserWithLocations["locations"]) => {
