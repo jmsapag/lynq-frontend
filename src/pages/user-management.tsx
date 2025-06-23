@@ -55,7 +55,6 @@ export default function UserManagement() {
           >
             Invite Users
           </Button>
-          <Button>Add Location</Button>
         </div>
       </div>
 
