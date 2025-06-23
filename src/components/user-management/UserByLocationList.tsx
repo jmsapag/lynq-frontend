@@ -12,7 +12,7 @@ import {
   addToast,
 } from "@heroui/react";
 import { useFetchLocations } from "../../hooks/users/useFetchLocations";
-import { getUserRoleFromToken } from "../../hooks/auth/useAuth.ts";
+import { getUserIdFromToken, getUserRoleFromToken } from "../../hooks/auth/useAuth.ts";
 import RoleSelector from "./role-selector.tsx";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import { useDeleteUser } from "../../hooks/users/useDeleteUser.ts";
@@ -43,8 +43,12 @@ export default function UserByLocationList({
   const loading = externalLoading || locationsLoading;
   const error = externalError || locationsError;
 
-  const sortedUsers = [...users].sort((a, b) => a.name.localeCompare(b.name));
   const userRole: string = getUserRoleFromToken();
+  const userId: number = getUserIdFromToken();
+
+  const sortedUsers = [...users]
+    .sort((a, b) => a.name.localeCompare(b.name))
+    .filter((user) => user.id !== userId);
 
   const onDeleteSuccess = (userName: string, userId: number) => {
     setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));

@@ -24,6 +24,17 @@ export function getBusinessIdFromToken() {
   }
 }
 
+export function getUserIdFromToken() {
+  const token = Cookies.get("token");
+  if (!token) return null;
+  try {
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    return payload.userId || null;
+  } catch {
+    return null;
+  }
+}
+
 export function useLogin() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
