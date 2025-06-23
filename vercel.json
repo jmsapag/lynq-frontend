@@ -7,6 +7,10 @@
     {
       "source": "/api/(.*)",
       "destination": "https://peoplecounter.2lynq.com/$1"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/"
     }
   ]
 }
