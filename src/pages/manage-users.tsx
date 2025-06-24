@@ -39,6 +39,10 @@ const ManageUsersPage: React.FC = () => {
 
   const { users, loading: usersLoading, pagination } = useUsers(page, limit);
 
+  const [roleFilter, setRoleFilter] = useState<
+    "all" | "LYNQ_TEAM" | "ADMIN" | "STANDARD"
+  >("all");
+
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [userToDelete, setUserToDelete] = useState<number | null>(null);
   const [deleting, setDeleting] = useState(false);
@@ -116,12 +120,14 @@ const ManageUsersPage: React.FC = () => {
   };
 
   const filteredUsers = Array.isArray(users)
-    ? users.filter((u) =>
-        activeFilter === "all"
-          ? true
-          : activeFilter === "active"
-            ? u.is_active
-            : !u.is_active,
+    ? users.filter(
+        (u) =>
+          (activeFilter === "all"
+            ? true
+            : activeFilter === "active"
+              ? u.is_active
+              : !u.is_active) &&
+          (roleFilter === "all" ? true : u.role === roleFilter),
       )
     : [];
 
@@ -129,7 +135,7 @@ const ManageUsersPage: React.FC = () => {
     <div className="w-full max-w-7xl mx-auto">
       <div className="flex justify-end items-center mb-4">
         <Select
-          placeholder={t("users.filterAll")}
+          placeholder={t("users.filterByStatus")}
           value={activeFilter}
           onChange={(e) =>
             setActiveFilter((e.target as HTMLSelectElement).value as any)
@@ -140,6 +146,20 @@ const ManageUsersPage: React.FC = () => {
           <SelectItem key="all">{t("users.filterAll")}</SelectItem>
           <SelectItem key="active">{t("users.filterActive")}</SelectItem>
           <SelectItem key="inactive">{t("users.filterInactive")}</SelectItem>
+        </Select>
+        <Select
+          placeholder={t("users.filterRole")}
+          value={roleFilter}
+          onChange={(e) =>
+            setRoleFilter((e.target as HTMLSelectElement).value as any)
+          }
+          size="sm"
+          className="w-48 ml-4"
+        >
+          <SelectItem key="all">{t("users.filterAllRoles")}</SelectItem>
+          <SelectItem key="LYNQ_TEAM">LYNQ_TEAM</SelectItem>
+          <SelectItem key="ADMIN">ADMIN</SelectItem>
+          <SelectItem key="STANDARD">STANDARD</SelectItem>
         </Select>
         <Button
           variant="solid"
