@@ -22,6 +22,7 @@ import {
   addToast,
 } from "@heroui/react";
 import { TrashIcon, PencilIcon } from "@heroicons/react/24/outline";
+import SearchBar from "../components/search/SearchBar.tsx";
 
 const BusinessesPage: React.FC = () => {
   const { t } = useTranslation();
@@ -132,10 +133,32 @@ const BusinessesPage: React.FC = () => {
     }
   };
 
+  const [search, setSearch] = useState("");
+
+  const filteredBusinesses = Array.isArray(businesses)
+    ? businesses.filter(
+        (b) =>
+          search.trim() === "" ||
+          b.name.toLowerCase().includes(search.toLowerCase()) ||
+          b.address.toLowerCase().includes(search.toLowerCase()),
+      )
+    : [];
+
   return (
-    <div className="w-full max-w-7xl mx-auto">
-      <div className="flex justify-end items-center mb-4">
-        <Button variant="solid" size="sm" onPress={() => setShowModal(true)}>
+    <div className="w-full mx-1">
+      <div className="flex justify-end items-center mb-4 gap-4">
+        <SearchBar
+          value={search}
+          onChange={setSearch}
+          placeholder={t("common.search") || "Search businesses..."}
+          className="w-64"
+        />
+        <Button
+          color="primary"
+          variant="solid"
+          size="sm"
+          onPress={() => setShowModal(true)}
+        >
           {t("businesses.addBusiness")}
         </Button>
       </div>
@@ -156,7 +179,10 @@ const BusinessesPage: React.FC = () => {
               </TableColumn>
             </TableHeader>
             <TableBody emptyContent={t("common.noData")}>
-              {(Array.isArray(businesses) ? businesses : []).map((b) => (
+              {(Array.isArray(filteredBusinesses)
+                ? filteredBusinesses
+                : []
+              ).map((b) => (
                 <TableRow key={b.id}>
                   <TableCell>
                     <div className="font-medium">{b.name}</div>
