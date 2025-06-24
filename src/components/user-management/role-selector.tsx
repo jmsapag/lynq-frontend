@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Select, SelectItem } from "@heroui/react";
+import { useTranslation } from "react-i18next";
 
 interface RoleSelectorProps {
   userId: number;
@@ -14,6 +15,7 @@ export const RoleSelector = ({
   currentUserRole,
   onRoleChange,
 }: RoleSelectorProps) => {
+  const { t } = useTranslation();
   const [currentRole, setCurrentRole] = useState(initialRole);
   const availableRoles = ["LYNQ_TEAM", "ADMIN", "STANDARD"];
 
@@ -31,9 +33,9 @@ export const RoleSelector = ({
     | undefined;
 
   const roleColors: Record<string, colorType> = {
-    LYNQ_TEAM: "success",
-    ADMIN: "primary",
-    STANDARD: "secondary",
+    LYNQ_TEAM: "danger",
+    ADMIN: "warning",
+    STANDARD: "success",
   };
 
   const roleIndex = roles.indexOf(currentRole);
@@ -49,12 +51,13 @@ export const RoleSelector = ({
   return (
     <Select
       defaultSelectedKeys={roleIndex !== -1 ? [`${roleIndex}`] : []}
-      className={"w-36"}
       color={roleColors[currentRole] || "default"}
       onChange={handleChange}
+      size="sm"
+      className="w-36"
     >
       {roles.map((r, index) => (
-        <SelectItem key={`${index}`}>{r}</SelectItem>
+        <SelectItem key={`${index}`}>{t(`role.${r}`)}</SelectItem>
       ))}
     </Select>
   );

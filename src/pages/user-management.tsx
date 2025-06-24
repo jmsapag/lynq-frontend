@@ -9,7 +9,7 @@ import { useFetchLocations } from "../hooks/users/useFetchLocations";
 import { UserWithLocations } from "../types/location";
 import { useUsersByLocations } from "../hooks/users/useUsersByLocations";
 import { useTranslation } from "react-i18next";
-import SearchBar from "../components/search/SearchBar"; // Add this import
+import SearchBar from "../components/search/SearchBar";
 
 export default function UserManagement() {
   const { t } = useTranslation();
@@ -24,6 +24,7 @@ export default function UserManagement() {
   const [roleFilter, setRoleFilter] = useState<"all" | "ADMIN" | "STANDARD">(
     "all",
   );
+  const [locationFilter, setLocationFilter] = useState<string>("all"); // NEW
 
   const { locations } = useFetchLocations();
   const {
@@ -57,9 +58,20 @@ export default function UserManagement() {
           (roleFilter === "all" ? true : u.role === roleFilter) &&
           (search.trim() === "" ||
             u.email.toLowerCase().includes(search.toLowerCase()) ||
-            (u.name && u.name.toLowerCase().includes(search.toLowerCase()))),
+            (u.name && u.name.toLowerCase().includes(search.toLowerCase()))) &&
+          (locationFilter === "all"
+            ? true
+            : u.locations.some((loc) => String(loc.id) === locationFilter)),
       )
     : [];
+
+  const locationOptions = [
+    { key: "all", label: t("users.allLocations") },
+    ...(locations?.map((loc) => ({
+      key: String(loc.id),
+      label: loc.name,
+    })) || []),
+  ];
 
   return (
     <div className="w-full mx-1">
@@ -73,9 +85,23 @@ export default function UserManagement() {
           size="sm"
           className="w-48"
         >
-          <SelectItem key="all">All Roles</SelectItem>
+          <SelectItem key="all">
+            {t("users.filterAllRoles") || "All Roles"}
+          </SelectItem>
           <SelectItem key="ADMIN">ADMIN</SelectItem>
           <SelectItem key="STANDARD">STANDARD</SelectItem>
+        </Select>
+        <Select
+          placeholder={t("users.filterLocation")}
+          value={locationFilter}
+          onChange={(e) =>
+            setLocationFilter((e.target as HTMLSelectElement).value)
+          }
+          size="sm"
+          className="w-48"
+          items={locationOptions}
+        >
+          {(item) => <SelectItem key={item.key}>{item.label}</SelectItem>}
         </Select>
         <SearchBar
           value={search}
@@ -89,7 +115,7 @@ export default function UserManagement() {
           size="sm"
           onPress={() => setIsCreateUserModalOpen(true)}
         >
-          Invite Users
+          {t("users.addUser")}
         </Button>
       </div>
 
@@ -99,6 +125,7 @@ export default function UserManagement() {
         onEditLocations={handleEditLocations}
         loading={usersLoading}
         error={usersError}
+        t={t}
       />
 
       {selectedUser && (
@@ -114,14 +141,12 @@ export default function UserManagement() {
         />
       )}
 
-      {/* Registration Tokens Modal */}
       <TokensModal
         isOpen={isTokensModalOpen}
         onClose={handleCloseTokensModal}
         tokens={tokens}
       />
 
-      {/* Create Users Modal */}
       <CreateUsersModal
         isOpen={isCreateUserModalOpen}
         onClose={() => setIsCreateUserModalOpen(false)}
