@@ -89,10 +89,12 @@ export default function DevicesPage() {
   const filteredDevices = Array.isArray(devices)
     ? devices.filter(
         (d) =>
-          (providerFilter === "all" ? true : d.provider === providerFilter) &&
-          (search.trim() === "" ||
-            d.serial_number.toLowerCase().includes(search.toLowerCase()) ||
-            d.provider.toLowerCase().includes(search.toLowerCase())),
+          ((providerFilter === "all" ? true : d.provider === providerFilter) &&
+            (search.trim() === "" ||
+              d.serial_number.toLowerCase().includes(search.toLowerCase()) ||
+              d.provider.toLowerCase().includes(search.toLowerCase()))) ||
+          d.location_name?.toLowerCase().includes(search.toLowerCase()) ||
+          d.position.toLowerCase().includes(search.toLowerCase()),
       )
     : [];
 
