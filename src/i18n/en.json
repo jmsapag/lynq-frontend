@@ -113,7 +113,10 @@
     "businessName": "Name",
     "businessLocation": "Location",
     "filterAllRoles": "All Roles",
-    "filterRole": "Filter by Role"
+    "filterRole": "Filter by Role",
+    "editLocation": "Edit Location",
+    "filterLocation": "Filter by Location",
+    "allLocations": "All Locations"
   },
   "filters": {
     "dateRange": "Date Range",

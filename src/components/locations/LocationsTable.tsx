@@ -101,10 +101,10 @@ const LocationsTable: React.FC<LocationsTableProps> = ({
     <>
       <Table aria-label="Locations table" isStriped>
         <TableHeader>
-          <TableColumn>{t("locations.name").toUpperCase()}</TableColumn>
-          <TableColumn>{t("locations.address").toUpperCase()}</TableColumn>
-          <TableColumn>{t("locations.createdAt").toUpperCase()}</TableColumn>
-          <TableColumn>{t("locations.actions").toUpperCase()}</TableColumn>
+          <TableColumn>{t("locations.name")}</TableColumn>
+          <TableColumn>{t("locations.address")}</TableColumn>
+          <TableColumn>{t("locations.createdAt")}</TableColumn>
+          <TableColumn>{t("locations.actions")}</TableColumn>
         </TableHeader>
         <TableBody emptyContent={loading ? " " : t("locations.noLocations")}>
           {locations.map((location) => (

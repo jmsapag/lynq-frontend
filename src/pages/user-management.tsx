@@ -9,7 +9,7 @@ import { useFetchLocations } from "../hooks/users/useFetchLocations";
 import { UserWithLocations } from "../types/location";
 import { useUsersByLocations } from "../hooks/users/useUsersByLocations";
 import { useTranslation } from "react-i18next";
-import SearchBar from "../components/search/SearchBar"; // Add this import
+import SearchBar from "../components/search/SearchBar";
 
 export default function UserManagement() {
   const { t } = useTranslation();
@@ -24,6 +24,11 @@ export default function UserManagement() {
   const [roleFilter, setRoleFilter] = useState<"all" | "ADMIN" | "STANDARD">(
     "all",
   );
+  const [locationFilter, setLocationFilter] = useState<string>("all");
+  const [search, setSearch] = useState("");
+
+  const [page, setPage] = useState(1);
+  const limit = 15;
 
   const { locations } = useFetchLocations();
   const {
@@ -49,17 +54,31 @@ export default function UserManagement() {
     setTokens(null);
   };
 
-  const [search, setSearch] = useState("");
-
   const filteredUsers = Array.isArray(users)
     ? users.filter(
         (u) =>
           (roleFilter === "all" ? true : u.role === roleFilter) &&
+          (locationFilter === "all"
+            ? true
+            : u.locations.some((loc) => String(loc.id) === locationFilter)) &&
           (search.trim() === "" ||
             u.email.toLowerCase().includes(search.toLowerCase()) ||
             (u.name && u.name.toLowerCase().includes(search.toLowerCase()))),
       )
     : [];
+
+  const start = (page - 1) * limit;
+  const end = start + limit;
+  const paginatedUsers = filteredUsers.slice(start, end);
+  const hasNextPage = end < filteredUsers.length;
+
+  const locationOptions = [
+    { key: "all", label: t("users.allLocations") },
+    ...(locations?.map((loc) => ({
+      key: String(loc.id),
+      label: loc.name,
+    })) || []),
+  ];
 
   return (
     <div className="w-full mx-1">
@@ -73,9 +92,23 @@ export default function UserManagement() {
           size="sm"
           className="w-48"
         >
-          <SelectItem key="all">All Roles</SelectItem>
+          <SelectItem key="all">
+            {t("users.filterAllRoles") || "All Roles"}
+          </SelectItem>
           <SelectItem key="ADMIN">ADMIN</SelectItem>
           <SelectItem key="STANDARD">STANDARD</SelectItem>
+        </Select>
+        <Select
+          placeholder={t("users.filterLocation")}
+          value={locationFilter}
+          onChange={(e) =>
+            setLocationFilter((e.target as HTMLSelectElement).value)
+          }
+          size="sm"
+          className="w-48"
+          items={locationOptions}
+        >
+          {(item) => <SelectItem key={item.key}>{item.label}</SelectItem>}
         </Select>
         <SearchBar
           value={search}
@@ -89,17 +122,40 @@ export default function UserManagement() {
           size="sm"
           onPress={() => setIsCreateUserModalOpen(true)}
         >
-          Invite Users
+          {t("users.addUser")}
         </Button>
       </div>
 
       <UserByLocationList
-        users={filteredUsers}
+        users={paginatedUsers}
         setUsers={setUsers}
         onEditLocations={handleEditLocations}
         loading={usersLoading}
         error={usersError}
+        t={t}
       />
+
+      <div className="mt-6 flex justify-center items-center gap-4">
+        <Button
+          variant="bordered"
+          size="sm"
+          onPress={() => setPage((p) => Math.max(1, p - 1))}
+          isDisabled={page === 1 || usersLoading}
+        >
+          {t("common.previous")}
+        </Button>
+        <span className="text-sm text-gray-600">
+          {t("common.page") + " " + page}
+        </span>
+        <Button
+          variant="bordered"
+          size="sm"
+          onPress={() => setPage((p) => p + 1)}
+          isDisabled={!hasNextPage || usersLoading}
+        >
+          {t("common.next")}
+        </Button>
+      </div>
 
       {selectedUser && (
         <LocationSelectionModal
@@ -114,14 +170,12 @@ export default function UserManagement() {
         />
       )}
 
-      {/* Registration Tokens Modal */}
       <TokensModal
         isOpen={isTokensModalOpen}
         onClose={handleCloseTokensModal}
         tokens={tokens}
       />
 
-      {/* Create Users Modal */}
       <CreateUsersModal
         isOpen={isCreateUserModalOpen}
         onClose={() => setIsCreateUserModalOpen(false)}
