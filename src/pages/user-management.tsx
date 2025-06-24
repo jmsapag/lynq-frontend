@@ -24,7 +24,11 @@ export default function UserManagement() {
   const [roleFilter, setRoleFilter] = useState<"all" | "ADMIN" | "STANDARD">(
     "all",
   );
-  const [locationFilter, setLocationFilter] = useState<string>("all"); // NEW
+  const [locationFilter, setLocationFilter] = useState<string>("all");
+  const [search, setSearch] = useState("");
+
+  const [page, setPage] = useState(1);
+  const limit = 15;
 
   const { locations } = useFetchLocations();
   const {
@@ -50,20 +54,23 @@ export default function UserManagement() {
     setTokens(null);
   };
 
-  const [search, setSearch] = useState("");
-
   const filteredUsers = Array.isArray(users)
     ? users.filter(
         (u) =>
           (roleFilter === "all" ? true : u.role === roleFilter) &&
-          (search.trim() === "" ||
-            u.email.toLowerCase().includes(search.toLowerCase()) ||
-            (u.name && u.name.toLowerCase().includes(search.toLowerCase()))) &&
           (locationFilter === "all"
             ? true
-            : u.locations.some((loc) => String(loc.id) === locationFilter)),
+            : u.locations.some((loc) => String(loc.id) === locationFilter)) &&
+          (search.trim() === "" ||
+            u.email.toLowerCase().includes(search.toLowerCase()) ||
+            (u.name && u.name.toLowerCase().includes(search.toLowerCase()))),
       )
     : [];
+
+  const start = (page - 1) * limit;
+  const end = start + limit;
+  const paginatedUsers = filteredUsers.slice(start, end);
+  const hasNextPage = end < filteredUsers.length;
 
   const locationOptions = [
     { key: "all", label: t("users.allLocations") },
@@ -120,13 +127,35 @@ export default function UserManagement() {
       </div>
 
       <UserByLocationList
-        users={filteredUsers}
+        users={paginatedUsers}
         setUsers={setUsers}
         onEditLocations={handleEditLocations}
         loading={usersLoading}
         error={usersError}
         t={t}
       />
+
+      <div className="mt-6 flex justify-center items-center gap-4">
+        <Button
+          variant="bordered"
+          size="sm"
+          onPress={() => setPage((p) => Math.max(1, p - 1))}
+          isDisabled={page === 1 || usersLoading}
+        >
+          {t("common.previous")}
+        </Button>
+        <span className="text-sm text-gray-600">
+          {t("common.page") + " " + page}
+        </span>
+        <Button
+          variant="bordered"
+          size="sm"
+          onPress={() => setPage((p) => p + 1)}
+          isDisabled={!hasNextPage || usersLoading}
+        >
+          {t("common.next")}
+        </Button>
+      </div>
 
       {selectedUser && (
         <LocationSelectionModal
