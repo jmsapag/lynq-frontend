@@ -73,6 +73,23 @@ export default function DevicesPage() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deviceToDelete, setDeviceToDelete] = useState<any | null>(null);
 
+  const [providerFilter, setProviderFilter] = useState<"all" | string>("all");
+
+  const uniqueProviders = Array.isArray(devices)
+    ? Array.from(new Set(devices.map((d) => d.provider).filter(Boolean)))
+    : [];
+
+  const filteredDevices = Array.isArray(devices)
+    ? devices.filter((d) =>
+        providerFilter === "all" ? true : d.provider === providerFilter,
+      )
+    : [];
+
+  const providerOptions = [
+    { key: "all", label: t("devices.allProviders") || "All Providers" },
+    ...uniqueProviders.map((p) => ({ key: p, label: p })),
+  ];
+
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -151,7 +168,19 @@ export default function DevicesPage() {
 
   return (
     <div className="w-full max-w-7xl mx-auto">
-      <div className="flex justify-end items-center mb-4">
+      <div className="flex justify-end items-center mb-4 gap-4">
+        <Select
+          placeholder={t("devices.filterProvider") || "Filter by provider"}
+          value={providerFilter}
+          onChange={(e) =>
+            setProviderFilter((e.target as HTMLSelectElement).value)
+          }
+          size="sm"
+          className="w-48"
+          items={providerOptions}
+        >
+          {(item) => <SelectItem key={item.key}>{item.label}</SelectItem>}
+        </Select>
         <Button variant="solid" size="sm" onPress={() => setShowModal(true)}>
           {t("devices.addDevice")}
         </Button>
@@ -178,30 +207,34 @@ export default function DevicesPage() {
           <TableBody
             emptyContent={loadingDevices ? " " : t("devices.noDevices")}
           >
-            {(Array.isArray(devices) ? devices : []).map((d) => (
-              <TableRow key={d.id}>
-                <TableCell>{d.serial_number}</TableCell>
-                <TableCell>{d.provider}</TableCell>
-                <TableCell>{d.position}</TableCell>
-                <TableCell>{d.location_name || "-"}</TableCell>
-                <TableCell>{new Date(d.created_at).toLocaleString()}</TableCell>
-                <TableCell className="text-center">
-                  <div className="flex justify-center gap-2">
-                    <Button
-                      isIconOnly
-                      size="sm"
-                      variant="light"
-                      onPress={() => handleDeleteClick(d)}
-                      className="text-danger"
-                      isDisabled={deleting}
-                      title={t("devices.deleteDevice")}
-                    >
-                      <TrashIcon className="h-5 w-5" />
-                    </Button>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
+            {(Array.isArray(filteredDevices) ? filteredDevices : []).map(
+              (d) => (
+                <TableRow key={d.id}>
+                  <TableCell>{d.serial_number}</TableCell>
+                  <TableCell>{d.provider}</TableCell>
+                  <TableCell>{d.position}</TableCell>
+                  <TableCell>{d.location_name || "-"}</TableCell>
+                  <TableCell>
+                    {new Date(d.created_at).toLocaleString()}
+                  </TableCell>
+                  <TableCell className="text-center">
+                    <div className="flex justify-center gap-2">
+                      <Button
+                        isIconOnly
+                        size="sm"
+                        variant="light"
+                        onPress={() => handleDeleteClick(d)}
+                        className="text-danger"
+                        isDisabled={deleting}
+                        title={t("devices.deleteDevice")}
+                      >
+                        <TrashIcon className="h-5 w-5" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ),
+            )}
           </TableBody>
         </Table>
       </div>
@@ -216,8 +249,7 @@ export default function DevicesPage() {
           {t("common.previous")}
         </Button>
         <span className="text-sm text-gray-600">
-          {t("common.page")} {page}{" "}
-          {pagination?.totalPages ? `of ${pagination.totalPages}` : ""}
+          {t("common.page")} {page}
         </span>
         <Button
           variant="bordered"

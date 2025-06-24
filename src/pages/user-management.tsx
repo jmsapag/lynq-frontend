@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button } from "@heroui/react";
+import { Button, Select, SelectItem } from "@heroui/react";
 import UserByLocationList from "../components/user-management/UserByLocationList.tsx";
 import LocationSelectionModal from "../components/user-management/LocationSelectionModal";
 import TokensModal from "../components/auth/TokensModal";
@@ -8,14 +8,21 @@ import { useCreateRegistrationTokens } from "../hooks/auth/useCreateRegistration
 import { useFetchLocations } from "../hooks/users/useFetchLocations";
 import { UserWithLocations } from "../types/location";
 import { useUsersByLocations } from "../hooks/users/useUsersByLocations";
+import { useTranslation } from "react-i18next";
 
 export default function UserManagement() {
+  const { t } = useTranslation();
+
   const [selectedUser, setSelectedUser] = useState<UserWithLocations | null>(
     null,
   );
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
   const [isTokensModalOpen, setIsTokensModalOpen] = useState(false);
   const [isCreateUserModalOpen, setIsCreateUserModalOpen] = useState(false);
+
+  const [roleFilter, setRoleFilter] = useState<"all" | "ADMIN" | "STANDARD">(
+    "all",
+  );
 
   const { locations } = useFetchLocations();
   const {
@@ -26,32 +33,48 @@ export default function UserManagement() {
   } = useUsersByLocations();
   const { tokens, setTokens } = useCreateRegistrationTokens();
 
-  // Function to open the location selection modal
   const handleEditLocations = (user: UserWithLocations) => {
     setSelectedUser(user);
     setIsLocationModalOpen(true);
   };
 
-  // Function to close the location selection modal
   const handleCloseLocationModal = () => {
     setIsLocationModalOpen(false);
     setSelectedUser(null);
   };
 
-  // Function to handle closing the tokens modal
   const handleCloseTokensModal = () => {
     setIsTokensModalOpen(false);
     setTokens(null);
   };
+
+  const filteredUsers = Array.isArray(users)
+    ? users.filter((u) => (roleFilter === "all" ? true : u.role === roleFilter))
+    : [];
 
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-row gap-2 justify-between">
         <div className="flex flex-col gap-1"></div>
         <div className="flex flex-row gap-2">
+          <Select
+            placeholder={t("users.filterByStatus")}
+            value={roleFilter}
+            onChange={(e) =>
+              setRoleFilter((e.target as HTMLSelectElement).value as any)
+            }
+            size="sm"
+            className="w-48"
+          >
+            <SelectItem key="all">All Roles</SelectItem>
+            <SelectItem key="ADMIN">ADMIN</SelectItem>
+            <SelectItem key="STANDARD">STANDARD</SelectItem>
+          </Select>
           <Button
-            color="primary"
+            variant="solid"
+            size="sm"
             onPress={() => setIsCreateUserModalOpen(true)}
+            className="ml-4"
           >
             Invite Users
           </Button>
@@ -59,7 +82,7 @@ export default function UserManagement() {
       </div>
 
       <UserByLocationList
-        users={users}
+        users={filteredUsers}
         setUsers={setUsers}
         onEditLocations={handleEditLocations}
         loading={usersLoading}
@@ -91,9 +114,7 @@ export default function UserManagement() {
         isOpen={isCreateUserModalOpen}
         onClose={() => setIsCreateUserModalOpen(false)}
         onSuccess={(createdTokens) => {
-          // Update tokens state with the tokens received from the modal
           setTokens(createdTokens);
-          // Show the tokens modal
           setIsTokensModalOpen(true);
         }}
       />

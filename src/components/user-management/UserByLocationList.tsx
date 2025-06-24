@@ -12,7 +12,10 @@ import {
   addToast,
 } from "@heroui/react";
 import { useFetchLocations } from "../../hooks/users/useFetchLocations";
-import { getUserIdFromToken, getUserRoleFromToken } from "../../hooks/auth/useAuth.ts";
+import {
+  getUserIdFromToken,
+  getUserRoleFromToken,
+} from "../../hooks/auth/useAuth.ts";
 import RoleSelector from "./role-selector.tsx";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import { useDeleteUser } from "../../hooks/users/useDeleteUser.ts";
@@ -70,11 +73,16 @@ export default function UserByLocationList({
   };
 
   const { handleChangeRole } = useChangeRole();
-  const { handleDeleteUser} = useDeleteUser(onDeleteError);
+  const { handleDeleteUser } = useDeleteUser(onDeleteError);
 
   // Function to render location names with emojis
   const renderLocations = (locations: UserWithLocations["locations"]) => {
-    if (!locations.length) return <Chip size="sm" variant="flat" color="danger">No Locations</Chip>;
+    if (!locations.length)
+      return (
+        <Chip size="sm" variant="flat" color="danger">
+          No Locations
+        </Chip>
+      );
 
     return locations.map((location, index) => {
       return (
