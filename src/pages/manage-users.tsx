@@ -26,6 +26,7 @@ import { useToggleUserActive } from "../hooks/users/useToggleUserActive";
 import { useTranslation } from "react-i18next";
 import TokensModal from "../components/auth/TokensModal";
 import CreateUsersModal from "../components/user-management/CreateUsersModal";
+import SearchBar from "../components/search/SearchBar";
 
 const ManageUsersPage: React.FC = () => {
   const { t } = useTranslation();
@@ -119,6 +120,8 @@ const ManageUsersPage: React.FC = () => {
     }
   };
 
+  const [search, setSearch] = useState("");
+
   const filteredUsers = Array.isArray(users)
     ? users.filter(
         (u) =>
@@ -127,13 +130,17 @@ const ManageUsersPage: React.FC = () => {
             : activeFilter === "active"
               ? u.is_active
               : !u.is_active) &&
-          (roleFilter === "all" ? true : u.role === roleFilter),
+          (roleFilter === "all" ? true : u.role === roleFilter) &&
+          (search.trim() === "" ||
+            u.email.toLowerCase().includes(search.toLowerCase()) ||
+            (u.business?.name &&
+              u.business.name.toLowerCase().includes(search.toLowerCase()))),
       )
     : [];
 
   return (
-    <div className="w-full max-w-7xl mx-auto">
-      <div className="flex justify-end items-center mb-4">
+    <div className="w-full mx-1">
+      <div className="flex justify-end items-center mb-4 gap-4">
         <Select
           placeholder={t("users.filterByStatus")}
           value={activeFilter}
@@ -154,18 +161,24 @@ const ManageUsersPage: React.FC = () => {
             setRoleFilter((e.target as HTMLSelectElement).value as any)
           }
           size="sm"
-          className="w-48 ml-4"
+          className="w-48"
         >
           <SelectItem key="all">{t("users.filterAllRoles")}</SelectItem>
           <SelectItem key="LYNQ_TEAM">LYNQ_TEAM</SelectItem>
           <SelectItem key="ADMIN">ADMIN</SelectItem>
           <SelectItem key="STANDARD">STANDARD</SelectItem>
         </Select>
+        <SearchBar
+          value={search}
+          onChange={setSearch}
+          placeholder={t("common.search") || "Search users..."}
+          className="w-64"
+        />
         <Button
+          color="primary"
           variant="solid"
           size="sm"
           onPress={() => setShowModal(true)}
-          className="ml-4"
         >
           {t("manageUsers.addUsers")}
         </Button>

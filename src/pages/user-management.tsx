@@ -9,6 +9,7 @@ import { useFetchLocations } from "../hooks/users/useFetchLocations";
 import { UserWithLocations } from "../types/location";
 import { useUsersByLocations } from "../hooks/users/useUsersByLocations";
 import { useTranslation } from "react-i18next";
+import SearchBar from "../components/search/SearchBar"; // Add this import
 
 export default function UserManagement() {
   const { t } = useTranslation();
@@ -48,37 +49,48 @@ export default function UserManagement() {
     setTokens(null);
   };
 
+  const [search, setSearch] = useState("");
+
   const filteredUsers = Array.isArray(users)
-    ? users.filter((u) => (roleFilter === "all" ? true : u.role === roleFilter))
+    ? users.filter(
+        (u) =>
+          (roleFilter === "all" ? true : u.role === roleFilter) &&
+          (search.trim() === "" ||
+            u.email.toLowerCase().includes(search.toLowerCase()) ||
+            (u.name && u.name.toLowerCase().includes(search.toLowerCase()))),
+      )
     : [];
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex flex-row gap-2 justify-between">
-        <div className="flex flex-col gap-1"></div>
-        <div className="flex flex-row gap-2">
-          <Select
-            placeholder={t("users.filterByStatus")}
-            value={roleFilter}
-            onChange={(e) =>
-              setRoleFilter((e.target as HTMLSelectElement).value as any)
-            }
-            size="sm"
-            className="w-48"
-          >
-            <SelectItem key="all">All Roles</SelectItem>
-            <SelectItem key="ADMIN">ADMIN</SelectItem>
-            <SelectItem key="STANDARD">STANDARD</SelectItem>
-          </Select>
-          <Button
-            variant="solid"
-            size="sm"
-            onPress={() => setIsCreateUserModalOpen(true)}
-            className="ml-4"
-          >
-            Invite Users
-          </Button>
-        </div>
+    <div className="w-full mx-1">
+      <div className="flex justify-end items-center mb-4 gap-4">
+        <Select
+          placeholder={t("users.filterByStatus")}
+          value={roleFilter}
+          onChange={(e) =>
+            setRoleFilter((e.target as HTMLSelectElement).value as any)
+          }
+          size="sm"
+          className="w-48"
+        >
+          <SelectItem key="all">All Roles</SelectItem>
+          <SelectItem key="ADMIN">ADMIN</SelectItem>
+          <SelectItem key="STANDARD">STANDARD</SelectItem>
+        </Select>
+        <SearchBar
+          value={search}
+          onChange={setSearch}
+          placeholder={t("common.search") || "Search users..."}
+          className="w-64"
+        />
+        <Button
+          color="primary"
+          variant="solid"
+          size="sm"
+          onPress={() => setIsCreateUserModalOpen(true)}
+        >
+          Invite Users
+        </Button>
       </div>
 
       <UserByLocationList

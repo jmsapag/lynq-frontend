@@ -25,6 +25,7 @@ import { useLocations } from "../hooks/devices/useLocations";
 import { useCreateDevice } from "../hooks/devices/useCreateDevice";
 import { useDeleteDevice } from "../hooks/devices/useDeleteDevice";
 import { useTranslation } from "react-i18next";
+import SearchBar from "../components/search/SearchBar";
 
 export default function DevicesPage() {
   const { t } = useTranslation();
@@ -74,21 +75,26 @@ export default function DevicesPage() {
   const [deviceToDelete, setDeviceToDelete] = useState<any | null>(null);
 
   const [providerFilter, setProviderFilter] = useState<"all" | string>("all");
+  const [search, setSearch] = useState("");
 
   const uniqueProviders = Array.isArray(devices)
     ? Array.from(new Set(devices.map((d) => d.provider).filter(Boolean)))
-    : [];
-
-  const filteredDevices = Array.isArray(devices)
-    ? devices.filter((d) =>
-        providerFilter === "all" ? true : d.provider === providerFilter,
-      )
     : [];
 
   const providerOptions = [
     { key: "all", label: t("devices.allProviders") || "All Providers" },
     ...uniqueProviders.map((p) => ({ key: p, label: p })),
   ];
+
+  const filteredDevices = Array.isArray(devices)
+    ? devices.filter(
+        (d) =>
+          (providerFilter === "all" ? true : d.provider === providerFilter) &&
+          (search.trim() === "" ||
+            d.serial_number.toLowerCase().includes(search.toLowerCase()) ||
+            d.provider.toLowerCase().includes(search.toLowerCase())),
+      )
+    : [];
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -167,7 +173,7 @@ export default function DevicesPage() {
   };
 
   return (
-    <div className="w-full max-w-7xl mx-auto">
+    <div className="w-full mx-1">
       <div className="flex justify-end items-center mb-4 gap-4">
         <Select
           placeholder={t("devices.filterProvider") || "Filter by provider"}
@@ -181,7 +187,20 @@ export default function DevicesPage() {
         >
           {(item) => <SelectItem key={item.key}>{item.label}</SelectItem>}
         </Select>
-        <Button variant="solid" size="sm" onPress={() => setShowModal(true)}>
+
+        <SearchBar
+          value={search}
+          onChange={setSearch}
+          placeholder={t("common.search") || "Search devices..."}
+          className="w-64"
+        />
+
+        <Button
+          color="primary"
+          variant="solid"
+          size="sm"
+          onPress={() => setShowModal(true)}
+        >
           {t("devices.addDevice")}
         </Button>
       </div>
