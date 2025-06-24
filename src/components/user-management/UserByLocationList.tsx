@@ -60,17 +60,17 @@ export default function UserByLocationList({
     });
   };
 
-  const onDeleteError = () => {
+  const onDeleteError = (error: Error) => {
     addToast({
       title: "Error",
-      description: "Failed to delete user. Please try again.",
+      description: `Failed to delete user: ${error.message}`,
       severity: "danger",
       color: "danger",
     });
   };
 
   const { handleChangeRole } = useChangeRole();
-  const { handleDeleteUser } = useDeleteUser(onDeleteError);
+  const { handleDeleteUser} = useDeleteUser(onDeleteError);
 
   // Function to render location names with emojis
   const renderLocations = (locations: UserWithLocations["locations"]) => {
