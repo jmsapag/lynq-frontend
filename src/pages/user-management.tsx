@@ -84,7 +84,7 @@ export default function UserManagement() {
     <div className="w-full mx-1">
       <div className="flex justify-end items-center mb-4 gap-4">
         <Select
-          placeholder={t("users.filterByStatus")}
+          placeholder={t("users.filterRole")}
           value={roleFilter}
           onChange={(e) =>
             setRoleFilter((e.target as HTMLSelectElement).value as any)
@@ -132,7 +132,6 @@ export default function UserManagement() {
         onEditLocations={handleEditLocations}
         loading={usersLoading}
         error={usersError}
-        t={t}
       />
 
       <div className="mt-6 flex justify-center items-center gap-4">

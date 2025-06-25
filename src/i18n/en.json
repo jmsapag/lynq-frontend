@@ -116,7 +116,8 @@
     "filterRole": "Filter by Role",
     "editLocation": "Edit Location",
     "filterLocation": "Filter by Location",
-    "allLocations": "All Locations"
+    "allLocations": "All Locations",
+    "selectLocations": "Select locations"
   },
   "filters": {
     "dateRange": "Date Range",

@@ -39,7 +39,6 @@ interface UserByLocationListProps {
   onEditLocations: (user: UserWithLocations) => void;
   loading?: boolean;
   error?: string | null;
-  t: ReturnType<typeof useTranslation>["t"];
 }
 
 export default function UserByLocationList({
@@ -48,8 +47,8 @@ export default function UserByLocationList({
   onEditLocations,
   loading: externalLoading,
   error: externalError,
-  t = useTranslation().t,
 }: UserByLocationListProps) {
+  const { t, i18n } = useTranslation();
   const { loading: locationsLoading, error: locationsError } =
     useFetchLocations();
   const loading = externalLoading || locationsLoading;
@@ -137,7 +136,7 @@ export default function UserByLocationList({
   };
 
   return (
-    <>
+    <div key={i18n.language}>
       {loading ? (
         <div className="flex justify-center items-center h-40">
           <Spinner size="lg" label={t("common.loading")} />
@@ -263,6 +262,6 @@ export default function UserByLocationList({
           </ModalFooter>
         </ModalContent>
       </Modal>
-    </>
+    </div>
   );
 }
