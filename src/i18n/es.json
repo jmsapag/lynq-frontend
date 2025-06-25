@@ -49,7 +49,8 @@
     "page": "Página",
     "noData": "No se encontraron empresas.",
     "yes": "Sí",
-    "no": "No"
+    "no": "No",
+    "search": "Buscar"
   },
   "dashboard": {
     "filters": {
@@ -105,12 +106,18 @@
     "deleteConfirm": "¿Estás seguro de que deseas borrar este usuario? Esta acción no se puede deshacer.",
     "active": "Activo",
     "toggleErrorDesc": "No se pudo actualizar el estado del usuario.",
-    "filterByStatus": "Filtrar por estado",
-    "filterAll": "Todos",
+    "filterByStatus": "Filtrar por Estado",
+    "filterByActive": "Filtrar por actividad",
     "filterActive": "Activos",
     "filterInactive": "Inactivos",
     "businessName": "Nombre",
-    "businessLocation": "Ubicación"
+    "businessLocation": "Ubicación",
+    "filterAllRoles": "Todos los roles",
+    "filterRole": "Filtrar por Rol",
+    "editLocation": "Editar Ubicación",
+    "filterLocation": "Filtrar por Ubicación",
+    "allLocations": "Todas las Ubicaciones",
+    "selectLocations": "Seleccionar Ubicaciones"
   },
   "filters": {
     "dateRange": "Rango de fechas",
@@ -193,7 +200,12 @@
     "emailRequired": "El correo electrónico es obligatorio",
     "phoneRequired": "El teléfono es obligatorio",
     "passwordRequired": "La contraseña es obligatoria",
-    "tokenInfo": "Token de registro detectado"
+    "tokenInfo": "Token de registro detectado",
+    "fullNamePlaceholder": "Nombre completo",
+    "fullNameRequired": "El nombre completo es obligatorio",
+    "confirmPasswordPlaceholder": "Confirmar contraseña",
+    "confirmPasswordRequired": "Por favor, confirma tu contraseña",
+    "passwordsDoNotMatch": "Las contraseñas no coinciden"
   },
   "toasts": {
     "formErrorTitle": "Error en el formulario",
@@ -286,7 +298,9 @@
     "deleteErrorDesc": "No se pudo borrar el dispositivo.",
     "formErrorTitle": "Error en el Formulario",
     "formErrorDesc": "Por favor, completa todos los campos requeridos.",
-    "businessName": "Nombre de la Empresa"
+    "businessName": "Nombre de la Empresa",
+    "allProviders": "Todos los Proveedores",
+    "filterProvider": "Filtrar por Proveedor"
   },
   "locations": {
     "management": "Gestión de Ubicaciones",

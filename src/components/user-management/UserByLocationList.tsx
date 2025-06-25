@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { UserWithLocations } from "../../types/location";
 import {
   Table,
@@ -10,14 +11,23 @@ import {
   Chip,
   Button,
   addToast,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
 } from "@heroui/react";
 import { useFetchLocations } from "../../hooks/users/useFetchLocations";
-import { getUserIdFromToken, getUserRoleFromToken } from "../../hooks/auth/useAuth.ts";
+import {
+  getUserIdFromToken,
+  getUserRoleFromToken,
+} from "../../hooks/auth/useAuth.ts";
 import RoleSelector from "./role-selector.tsx";
-import { TrashIcon } from "@heroicons/react/24/outline";
+import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useDeleteUser } from "../../hooks/users/useDeleteUser.ts";
 import { useChangeRole } from "../../hooks/users/useChangeRole.ts";
 import { UserRole, UpdateUserResponse } from "../../types/user.ts";
+import { useTranslation } from "react-i18next";
 
 interface UserByLocationListProps {
   users: UserWithLocations[];
@@ -38,6 +48,7 @@ export default function UserByLocationList({
   loading: externalLoading,
   error: externalError,
 }: UserByLocationListProps) {
+  const { t, i18n } = useTranslation();
   const { loading: locationsLoading, error: locationsError } =
     useFetchLocations();
   const loading = externalLoading || locationsLoading;
@@ -50,20 +61,27 @@ export default function UserByLocationList({
     .sort((a, b) => a.name.localeCompare(b.name))
     .filter((user) => user.id !== userId);
 
-  const onDeleteSuccess = (userName: string, userId: number) => {
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [userToDelete, setUserToDelete] = useState<UserWithLocations | null>(
+    null,
+  );
+  const [deleting, setDeleting] = useState(false);
+
+  const onDeleteSuccess = (_user: string, userId: number) => {
     setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
     addToast({
-      title: "Success",
-      description: `User ${userName} deleted successfully.`,
+      title: t("toasts.deleteSuccessTitle"),
+      description: t("toasts.deleteSuccessDesc"),
       severity: "success",
       color: "success",
     });
   };
 
-  const onDeleteError = () => {
+  const onDeleteError = (error: Error) => {
+    setDeleting(false);
     addToast({
-      title: "Error",
-      description: "Failed to delete user. Please try again.",
+      title: t("toasts.deleteErrorTitle"),
+      description: t("toasts.deleteErrorDesc") + `: ${error.message}`,
       severity: "danger",
       color: "danger",
     });
@@ -72,9 +90,13 @@ export default function UserByLocationList({
   const { handleChangeRole } = useChangeRole();
   const { handleDeleteUser } = useDeleteUser(onDeleteError);
 
-  // Function to render location names with emojis
   const renderLocations = (locations: UserWithLocations["locations"]) => {
-    if (!locations.length) return <Chip size="sm" variant="flat" color="danger">No Locations</Chip>;
+    if (!locations.length)
+      return (
+        <Chip size="sm" variant="flat" color="danger">
+          {t("users.businessLocation")}
+        </Chip>
+      );
 
     return locations.map((location, index) => {
       return (
@@ -88,40 +110,52 @@ export default function UserByLocationList({
     });
   };
 
-  // Column definitions for the Table
   const columns = [
-    { key: "name", label: "NAME" },
-    { key: "email", label: "EMAIL" },
-    { key: "role", label: "ROLE" },
-    { key: "locations", label: "LOCATIONS" },
-    { key: "actions", label: "ACTIONS" },
-    { key: "delete", label: "DELETE" },
+    { key: "name", label: t("users.fullName") },
+    { key: "email", label: t("users.email") },
+    { key: "role", label: t("users.role") },
+    { key: "locations", label: t("users.businessLocation") },
+    { key: "actions", label: t("common.actions") },
   ];
 
+  const handleDeleteClick = (user: UserWithLocations) => {
+    setUserToDelete(user);
+    setShowDeleteModal(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (userToDelete) {
+      setDeleting(true);
+      handleDeleteUser(userToDelete.id, () => {
+        onDeleteSuccess(userToDelete.name, userToDelete.id);
+        setShowDeleteModal(false);
+        setUserToDelete(null);
+        setDeleting(false);
+      });
+    }
+  };
+
   return (
-    <>
+    <div key={i18n.language}>
       {loading ? (
         <div className="flex justify-center items-center h-40">
-          <Spinner size="lg" label="Loading users..." />
+          <Spinner size="lg" label={t("common.loading")} />
         </div>
       ) : error ? (
         <div className="bg-danger-50 text-danger px-4 py-3 rounded">
           {error}
         </div>
       ) : (
-        <Table
-          aria-label="Users by locations table"
-          removeWrapper={false}
-          isStriped
-          isHeaderSticky
-          className="h-full"
-        >
+        <Table aria-label={t("users.management")} isStriped>
           <TableHeader columns={columns}>
             {(column) => (
               <TableColumn key={column.key}>{column.label}</TableColumn>
             )}
           </TableHeader>
-          <TableBody items={sortedUsers} emptyContent={<p>No users found</p>}>
+          <TableBody
+            items={sortedUsers}
+            emptyContent={<p>{t("users.noUsers")}</p>}
+          >
             {(user) => (
               <TableRow key={user.id}>
                 <TableCell>{user.name}</TableCell>
@@ -144,16 +178,20 @@ export default function UserByLocationList({
                             ),
                           );
                           addToast({
-                            title: "Success",
-                            description: `Role updated to ${updatedUser.role} for ${updatedUser.name}`,
+                            title: t("toasts.successTitle"),
+                            description:
+                              t("users.role") +
+                              `: ${t(`role.${updatedUser.role}`)} - ${updatedUser.name}`,
                             severity: "success",
                             color: "success",
                           });
                         },
                         (error: Error) => {
                           addToast({
-                            title: "Error",
-                            description: `Failed to update role: ${error.message}`,
+                            title: t("toasts.errorTitle"),
+                            description:
+                              t("toasts.profileUpdateErrorDescription") +
+                              `: ${error.message}`,
                             severity: "danger",
                             color: "danger",
                           });
@@ -168,35 +206,62 @@ export default function UserByLocationList({
                   )}
                 </TableCell>
                 <TableCell>
-                  <Button
-                    size="sm"
-                    onPress={() => onEditLocations(user)}
-                    color="primary"
-                  >
-                    Edit Locations
-                  </Button>
-                </TableCell>
-                <TableCell>
-                  <Button
-                    size="md"
-                    color="danger"
-                    onPress={() => {
-                      handleDeleteUser(user.id, () =>
-                        onDeleteSuccess(user.name, user.id),
-                      );
-                    }}
-                    isIconOnly
-                    radius={"lg"}
-                    variant={"flat"}
-                  >
-                    <TrashIcon className={"m-2"} />
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button
+                      size="sm"
+                      onPress={() => onEditLocations(user)}
+                      startContent={<PencilIcon className="w-4 h-4 mr-1" />}
+                    >
+                      {t("users.editLocation")}
+                    </Button>
+                    <Button
+                      size="sm"
+                      color="danger"
+                      onPress={() => handleDeleteClick(user)}
+                      isIconOnly
+                      variant="light"
+                    >
+                      <TrashIcon className="m-2" />
+                    </Button>
+                  </div>
                 </TableCell>
               </TableRow>
             )}
           </TableBody>
         </Table>
       )}
-    </>
+
+      {/* Delete Confirmation Modal */}
+      <Modal isOpen={showDeleteModal} onOpenChange={setShowDeleteModal}>
+        <ModalContent>
+          <ModalHeader>{t("users.deleteUser")}</ModalHeader>
+          <ModalBody>
+            <p>
+              {t("users.deleteConfirm")}
+              {userToDelete && ` "${userToDelete.name}"`}
+            </p>
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              variant="bordered"
+              size="sm"
+              onPress={() => setShowDeleteModal(false)}
+              isDisabled={deleting}
+            >
+              {t("common.cancel")}
+            </Button>
+            <Button
+              variant="solid"
+              color="danger"
+              size="sm"
+              onPress={handleConfirmDelete}
+              isLoading={deleting}
+            >
+              {t("users.delete")}
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </div>
   );
 }

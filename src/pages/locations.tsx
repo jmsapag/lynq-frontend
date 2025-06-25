@@ -5,6 +5,7 @@ import LocationsTable from "../components/locations/LocationsTable";
 import CreateEditLocationModal from "../components/locations/CreateEditLocationModal";
 import { useLocations } from "../hooks/locations/useLocations";
 import { Location } from "../types/location";
+import SearchBar from "../components/search/SearchBar"; // Add this import
 
 export default function Locations() {
   const { t } = useTranslation();
@@ -21,36 +22,52 @@ export default function Locations() {
     refetch,
   } = useLocations();
 
-  // Function to handle editing a location
   const handleEditLocation = (location: Location) => {
     setSelectedLocation(location);
     setIsEditModalOpen(true);
   };
 
-  // Function to close the edit modal
   const handleCloseEditModal = () => {
     setIsEditModalOpen(false);
     setSelectedLocation(null);
   };
 
-  // Function to handle successful create/edit operations
   const handleLocationSuccess = () => {
-    refetch(); // Refresh the locations list
+    refetch();
   };
 
+  const [search, setSearch] = useState("");
+
+  const filteredLocations = Array.isArray(locations)
+    ? locations.filter(
+        (loc) =>
+          search.trim() === "" ||
+          loc.name.toLowerCase().includes(search.toLowerCase()) ||
+          loc.address.toLowerCase().includes(search.toLowerCase()),
+      )
+    : [];
+
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex flex-row gap-2 justify-between">
-        <div className="flex flex-col gap-1"></div>
-        <div className="flex flex-row gap-2">
-          <Button color="primary" onPress={() => setIsCreateModalOpen(true)}>
-            {t("locations.addLocation")}
-          </Button>
-        </div>
+    <div className="w-full mx-1">
+      <div className="flex justify-end items-center mb-4 gap-4">
+        <SearchBar
+          value={search}
+          onChange={setSearch}
+          placeholder={t("common.search") || "Search locations..."}
+          className="w-64"
+        />
+        <Button
+          color="primary"
+          variant="solid"
+          size="sm"
+          onPress={() => setIsCreateModalOpen(true)}
+        >
+          {t("locations.addLocation")}
+        </Button>
       </div>
 
       <LocationsTable
-        locations={locations}
+        locations={filteredLocations}
         loading={locationsLoading}
         error={locationsError}
         onEdit={handleEditLocation}

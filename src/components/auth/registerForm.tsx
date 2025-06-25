@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 
 export interface RegisterFormData {
-  name: string;
-  surname: string;
+  fullName: string;
   email: string;
-  phone: string;
   password: string;
+  confirmPassword: string;
 }
 
 interface RegisterFormProps {
@@ -25,6 +25,9 @@ export function RegisterForm({
   handleSubmit,
   t,
 }: RegisterFormProps) {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   return (
     <form
       className="w-full space-y-6"
@@ -33,32 +36,17 @@ export function RegisterForm({
     >
       <div>
         <input
-          name="name"
-          placeholder={t("register.namePlaceholder", "Name")}
-          value={formData.name}
+          name="fullName"
+          placeholder={t("register.fullNamePlaceholder", "Full Name")}
+          value={formData.fullName}
           onChange={handleChange}
           className={`block w-full px-4 py-3 bg-white border-b-2 ${
-            errors.name ? "border-red-400" : "border-gray-500"
+            errors.fullName ? "border-red-400" : "border-gray-500"
           } text-base rounded-t-md focus:outline-none focus:border-black transition placeholder-gray-400`}
           required
         />
-        {errors.name && (
-          <p className="mt-1 text-xs text-red-500">{errors.name}</p>
-        )}
-      </div>
-      <div>
-        <input
-          name="surname"
-          placeholder={t("register.surnamePlaceholder", "Surname")}
-          value={formData.surname}
-          onChange={handleChange}
-          className={`block w-full px-4 py-3 bg-white border-b-2 ${
-            errors.surname ? "border-red-400" : "border-gray-500"
-          } text-base rounded-t-md focus:outline-none focus:border-black transition placeholder-gray-400`}
-          required
-        />
-        {errors.surname && (
-          <p className="mt-1 text-xs text-red-500">{errors.surname}</p>
+        {errors.fullName && (
+          <p className="mt-1 text-xs text-red-500">{errors.fullName}</p>
         )}
       </div>
       <div>
@@ -77,25 +65,10 @@ export function RegisterForm({
           <p className="mt-1 text-xs text-red-500">{errors.email}</p>
         )}
       </div>
-      <div>
-        <input
-          name="phone"
-          placeholder={t("register.phonePlaceholder", "Phone")}
-          value={formData.phone}
-          onChange={handleChange}
-          className={`block w-full px-4 py-3 bg-white border-b-2 ${
-            errors.phone ? "border-red-400" : "border-gray-500"
-          } text-base rounded-t-md focus:outline-none focus:border-black transition placeholder-gray-400`}
-          required
-        />
-        {errors.phone && (
-          <p className="mt-1 text-xs text-red-500">{errors.phone}</p>
-        )}
-      </div>
-      <div>
+      <div className="relative">
         <input
           name="password"
-          type="password"
+          type={showPassword ? "text" : "password"}
           placeholder={t("register.passwordPlaceholder", "Password")}
           value={formData.password}
           onChange={handleChange}
@@ -104,8 +77,51 @@ export function RegisterForm({
           } text-base rounded-t-md focus:outline-none focus:border-black transition placeholder-gray-400`}
           required
         />
+        <button
+          type="button"
+          tabIndex={-1}
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+          onClick={() => setShowPassword((v) => !v)}
+        >
+          {showPassword ? (
+            <EyeSlashIcon className="h-5 w-5" />
+          ) : (
+            <EyeIcon className="h-5 w-5" />
+          )}
+        </button>
         {errors.password && (
           <p className="mt-1 text-xs text-red-500">{errors.password}</p>
+        )}
+      </div>
+      <div className="relative">
+        <input
+          name="confirmPassword"
+          type={showConfirmPassword ? "text" : "password"}
+          placeholder={t(
+            "register.confirmPasswordPlaceholder",
+            "Confirm Password",
+          )}
+          value={formData.confirmPassword}
+          onChange={handleChange}
+          className={`block w-full px-4 py-3 bg-white border-b-2 ${
+            errors.confirmPassword ? "border-red-400" : "border-gray-500"
+          } text-base rounded-t-md focus:outline-none focus:border-black transition placeholder-gray-400`}
+          required
+        />
+        <button
+          type="button"
+          tabIndex={-1}
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+          onClick={() => setShowConfirmPassword((v) => !v)}
+        >
+          {showConfirmPassword ? (
+            <EyeSlashIcon className="h-5 w-5" />
+          ) : (
+            <EyeIcon className="h-5 w-5" />
+          )}
+        </button>
+        {errors.confirmPassword && (
+          <p className="mt-1 text-xs text-red-500">{errors.confirmPassword}</p>
         )}
       </div>
       <button

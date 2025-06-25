@@ -79,7 +79,7 @@ export default function ProfilePage() {
     }
   };
 
-  if (loading) return <div>{t("common.loading")}</div>;
+  if (loading) return <div></div>;
   if (error)
     return (
       <div>
