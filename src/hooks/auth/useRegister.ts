@@ -17,7 +17,6 @@ export function useRegister() {
       const response = await axiosClient.post("/auth/register", payload);
       return response.data;
     } catch (error: any) {
-      // Try to extract error message from response
       const message =
         error?.response?.data?.message ||
         error?.message ||
