@@ -199,7 +199,12 @@
     "emailRequired": "Email is required",
     "phoneRequired": "Phone is required",
     "passwordRequired": "Password is required",
-    "tokenInfo": "Registration token detected"
+    "tokenInfo": "Registration token detected",
+    "fullNamePlaceholder": "Full Name",
+    "fullNameRequired": "Full name is required",
+    "confirmPasswordPlaceholder": "Confirm Password",
+    "confirmPasswordRequired": "Please confirm your password",
+    "passwordsDoNotMatch": "Passwords do not match"
   },
   "toasts": {
     "formErrorTitle": "Form Error",

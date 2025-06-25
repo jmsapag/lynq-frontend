@@ -17,11 +17,10 @@ export default function RegisterPage() {
   const { t } = useTranslation();
   const { toggleLanguage, currentLanguage } = useLanguage();
   const [formData, setFormData] = useState<RegisterFormData>({
-    name: "",
-    surname: "",
+    fullName: "",
     email: "",
-    phone: "",
     password: "",
+    confirmPassword: "",
   });
   const [errors, setErrors] = useState<Partial<RegisterFormData>>({});
   const [loading, setLoading] = useState(false);
@@ -37,19 +36,33 @@ export default function RegisterPage() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const newErrors: Partial<RegisterFormData> = {};
-    if (!formData.name)
-      newErrors.name = t("register.nameRequired", "Name is required");
-    if (!formData.surname)
-      newErrors.surname = t("register.surnameRequired", "Surname is required");
+    if (!formData.fullName)
+      newErrors.fullName = t(
+        "register.fullNameRequired",
+        "Full name is required",
+      );
     if (!formData.email)
       newErrors.email = t("register.emailRequired", "Email is required");
-    if (!formData.phone)
-      newErrors.phone = t("register.phoneRequired", "Phone is required");
     if (!formData.password)
       newErrors.password = t(
         "register.passwordRequired",
         "Password is required",
       );
+    if (!formData.confirmPassword)
+      newErrors.confirmPassword = t(
+        "register.confirmPasswordRequired",
+        "Please confirm your password",
+      );
+    if (
+      formData.password &&
+      formData.confirmPassword &&
+      formData.password !== formData.confirmPassword
+    ) {
+      newErrors.confirmPassword = t(
+        "register.passwordsDoNotMatch",
+        "Passwords do not match",
+      );
+    }
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -66,7 +79,7 @@ export default function RegisterPage() {
     try {
       await register({
         token,
-        name: formData.name,
+        name: formData.fullName,
         email: formData.email,
         password: formData.password,
       });

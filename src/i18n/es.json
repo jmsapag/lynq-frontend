@@ -199,7 +199,12 @@
     "emailRequired": "El correo electrónico es obligatorio",
     "phoneRequired": "El teléfono es obligatorio",
     "passwordRequired": "La contraseña es obligatoria",
-    "tokenInfo": "Token de registro detectado"
+    "tokenInfo": "Token de registro detectado",
+    "fullNamePlaceholder": "Nombre completo",
+    "fullNameRequired": "El nombre completo es obligatorio",
+    "confirmPasswordPlaceholder": "Confirmar contraseña",
+    "confirmPasswordRequired": "Por favor, confirma tu contraseña",
+    "passwordsDoNotMatch": "Las contraseñas no coinciden"
   },
   "toasts": {
     "formErrorTitle": "Error en el formulario",
