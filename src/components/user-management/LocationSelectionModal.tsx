@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useTranslation } from "react-i18next";
 import {
   Modal,
   ModalBody,
@@ -11,6 +10,7 @@ import {
 } from "@heroui/react";
 import { axiosPrivate } from "../../services/axiosClient";
 import { Location, UserWithLocations } from "../../types/location";
+import { useTranslation } from "react-i18next";
 
 interface LocationSelectionModalProps {
   isOpen: boolean;
@@ -33,21 +33,19 @@ const LocationSelectionModal: React.FC<LocationSelectionModalProps> = ({
   setUsers,
   selectedLocationIds,
 }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [error, setError] = useState<string | null>(null);
   const [selectedLocations, setSelectedLocations] = useState<Set<number>>(
     new Set(selectedLocationIds),
   );
   const [saving, setSaving] = useState<boolean>(false);
 
-  // Fetch all available locations when modal opens
   useEffect(() => {
     if (isOpen) {
       setSelectedLocations(new Set(selectedLocationIds));
     }
   }, [isOpen, selectedLocationIds]);
 
-  // Check if all locations are selected
   const allSelected =
     locations.length > 0 &&
     locations.every((location) => selectedLocations.has(location.id));
@@ -61,7 +59,6 @@ const LocationSelectionModal: React.FC<LocationSelectionModalProps> = ({
     }
   };
 
-  // Handle individual location checkbox change
   const handleLocationChange = (locationId: number, checked: boolean) => {
     setSelectedLocations((prev) => {
       const newSet = new Set(prev);
@@ -74,7 +71,6 @@ const LocationSelectionModal: React.FC<LocationSelectionModalProps> = ({
     });
   };
 
-  // Save changes
   const handleApply = async () => {
     try {
       setSaving(true);
@@ -106,11 +102,11 @@ const LocationSelectionModal: React.FC<LocationSelectionModalProps> = ({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="md">
+    <Modal key={i18n.language} isOpen={isOpen} onClose={onClose} size="md">
       <ModalContent>
         <ModalHeader>
           <div className="text-xl font-medium">
-            {t("user.selectLocations", "Select Locations for")}: {userName}
+            {t("users.selectLocations", "Select Locations for")}: {userName}
           </div>
         </ModalHeader>
         <ModalBody>
