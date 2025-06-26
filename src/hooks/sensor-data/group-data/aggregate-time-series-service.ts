@@ -23,7 +23,8 @@ const aggregateTimeSeries = (
   >();
 
   data.forEach((point) => {
-    const date = parseISO(point.timestamp.replace("Z", "")); // Remove 'Z' for consistency
+    // Parse the ISO timestamp directly (keeping the Z if present) to properly handle UTC time
+    const date = parseISO(point.timestamp);
     const strategy: TimeGroupingStrategy = timeGroupingStrategies[timeAmount]!;
     const groupKey = strategy.getGroupKey(date);
 
