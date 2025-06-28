@@ -18,8 +18,8 @@ interface SensorSelectionModalProps {
   isOpen: boolean;
   onClose: () => void;
   locations: SensorLocation[];
-  selectedSensors: string[];
-  onSensorsChange: (sensors: string[]) => void;
+  selectedSensors: number[];
+  onSensorsChange: (sensors: number[]) => void;
 }
 
 const SensorSelectionModal: React.FC<SensorSelectionModalProps> = ({
@@ -32,7 +32,7 @@ const SensorSelectionModal: React.FC<SensorSelectionModalProps> = ({
   const { t } = useTranslation();
 
   // Local state for tracking selected sensors within the modal
-  const [localSelectedSensors, setLocalSelectedSensors] = useState<Set<string>>(
+  const [localSelectedSensors, setLocalSelectedSensors] = useState<Set<number>>(
     new Set(selectedSensors),
   );
 
@@ -50,7 +50,7 @@ const SensorSelectionModal: React.FC<SensorSelectionModalProps> = ({
 
   // Helper to get all sensors across all locations
   const allSensors = locations.flatMap((location) =>
-    location.sensors.map((sensor: sensorMetadata) => sensor.position),
+    location.sensors.map((sensor: sensorMetadata) => sensor.id),
   );
 
   // Check if all sensors are selected in local state
@@ -68,7 +68,7 @@ const SensorSelectionModal: React.FC<SensorSelectionModalProps> = ({
   };
 
   // Handle location checkbox change
-  const handleLocationChange = (sensors: string[], checked: boolean) => {
+  const handleLocationChange = (sensors: number[], checked: boolean) => {
     if (checked) {
       // Add all sensors from this location
       setLocalSelectedSensors((prev) => {
@@ -87,7 +87,7 @@ const SensorSelectionModal: React.FC<SensorSelectionModalProps> = ({
   };
 
   // Handle individual sensor checkbox change
-  const handleSensorChange = (sensor: string, checked: boolean) => {
+  const handleSensorChange = (sensor: number, checked: boolean) => {
     setLocalSelectedSensors((prev) => {
       const newSet = new Set(prev);
       if (checked) {
@@ -106,7 +106,7 @@ const SensorSelectionModal: React.FC<SensorSelectionModalProps> = ({
   };
 
   // Check if all sensors in a location are selected
-  const areAllLocationSensorsSelected = (sensors: string[]): boolean => {
+  const areAllLocationSensorsSelected = (sensors: number[]): boolean => {
     return (
       sensors.length > 0 &&
       sensors.every((sensor) => localSelectedSensors.has(sensor))
@@ -114,7 +114,7 @@ const SensorSelectionModal: React.FC<SensorSelectionModalProps> = ({
   };
 
   // Check if some (but not all) sensors in a location are selected
-  const areSomeLocationSensorsSelected = (sensors: string[]): boolean => {
+  const areSomeLocationSensorsSelected = (sensors: number[]): boolean => {
     return (
       sensors.some((sensor) => localSelectedSensors.has(sensor)) &&
       !sensors.every((sensor) => localSelectedSensors.has(sensor))
@@ -144,7 +144,7 @@ const SensorSelectionModal: React.FC<SensorSelectionModalProps> = ({
             <Accordion className="gap-2">
               {locations.map((location) => {
                 const locationSensors = location.sensors.map(
-                  (sensor: sensorMetadata) => sensor.position,
+                  (sensor: sensorMetadata) => sensor.id,
                 );
                 const allChecked =
                   areAllLocationSensorsSelected(locationSensors);
@@ -180,9 +180,9 @@ const SensorSelectionModal: React.FC<SensorSelectionModalProps> = ({
                           key={`sensor-${location.id}-${sensor.id}`}
                           id={`sensor-${location.id}-${sensor.id}`}
                           label={sensor.position}
-                          checked={localSelectedSensors.has(sensor.position)}
+                          checked={localSelectedSensors.has(sensor.id)}
                           onChange={(checked) =>
-                            handleSensorChange(sensor.position, checked)
+                            handleSensorChange(sensor.id, checked)
                           }
                         />
                       ))}
