@@ -15,14 +15,14 @@ import { SensorLocation } from "../../types/sensorLocation.ts";
 type DashboardFiltersProps = {
   onDateRangeChange: (startDate: Date, endDate: Date) => void;
   currentDateRange: { start: Date; end: Date };
-  onSensorsChange: (sensors: string[]) => void;
+  onSensorsChange: (sensors: number[]) => void;
   onAggregationChange?: (aggregation: string) => void;
   hourRange: { start: Time; end: Time };
   onHourRangeChange: (start: Time, end: Time) => void;
   currentAggregation?: string;
   onRefreshData?: () => void;
   locations: SensorLocation[];
-  currentSensors: string[];
+  currentSensors: number[];
   lastUpdated: Date | null;
 };
 

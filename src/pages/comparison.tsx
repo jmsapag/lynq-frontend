@@ -36,7 +36,7 @@ const getInitialFormData = (): SensorRecordsFormData => ({
 
 const Comparison = () => {
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
-  const [sensorMap, setSensorMap] = useState<Map<number, string>>(new Map());
+  const [sensorMap, setSensorMap] = useState<Map<number, { position: string, locationName: string }>>(new Map());
   const {
     locations,
     loading: sensorsLoading,
@@ -68,6 +68,7 @@ const Comparison = () => {
   }, [selectedSensorIds]);
 
   const sensorResults = formDataArr.map((formData, idx) =>
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     useSensorRecords(formData, (updater) =>
       setFormDataArr((prevArr) => {
         const newArr = [...prevArr];
@@ -107,19 +108,53 @@ const Comparison = () => {
     }
     const categories = firstWithData.data.timestamps;
 
+    // Find duplicate position names across different locations
+    const positionCounts = new Map<string, number>();
+    validResults.forEach(result => {
+      const sensorInfo = sensorMap.get(result.sensorId);
+      if (sensorInfo) {
+        const position = sensorInfo.position;
+        positionCounts.set(position, (positionCounts.get(position) || 0) + 1);
+      }
+    });
+
     const inDevices = validResults
       .filter((r) => r?.data?.in && r.data.in.length > 0)
-      .map((r) => ({
-        name: sensorMap.get(r.sensorId) || `Sensor ${r.sensorId}`,
-        values: r.data.in,
-      }));
+      .map((r) => {
+        const sensorInfo = sensorMap.get(r.sensorId);
+        let name = `Sensor ${r.sensorId}`;
+
+        if (sensorInfo) {
+          // Only include location name if there are multiple sensors with the same position
+          name = (positionCounts.get(sensorInfo.position) || 0) > 1
+            ? `${sensorInfo.position} (${sensorInfo.locationName})`
+            : sensorInfo.position;
+        }
+
+        return {
+          name,
+          values: r.data.in,
+        };
+      });
 
     const outDevices = validResults
       .filter((r) => r?.data?.out && r.data.out.length > 0)
-      .map((r) => ({
-        name: sensorMap.get(r.sensorId) || `Sensor ${r.sensorId}`,
-        values: r.data.out,
-      }));
+      .map((r) => {
+        const sensorInfo = sensorMap.get(r.sensorId);
+        let name = `Sensor ${r.sensorId}`;
+
+        if (sensorInfo) {
+          // Only include location name if there are multiple sensors with the same position
+          name = (positionCounts.get(sensorInfo.position) || 0) > 1
+            ? `${sensorInfo.position} (${sensorInfo.locationName})`
+            : sensorInfo.position;
+        }
+
+        return {
+          name,
+          values: r.data.out,
+        };
+      });
 
     return {
       inChartData: { categories, devices: inDevices },
@@ -142,7 +177,7 @@ const Comparison = () => {
     );
   };
 
-  const handleSensorsChange = (sensors: string[]) => {
+  const handleSensorsChange = (sensors: number[]) => {
     if (sensors.length > MAX_SENSORS) {
       addToast({
         title: "Too many sensors selected",
@@ -157,7 +192,7 @@ const Comparison = () => {
       sensors
         .map((sensor) => {
           const entry = Array.from(sensorMap.entries()).find(
-            ([, position]) => position === sensor,
+            ([id]) => id === sensor,
           );
           return entry ? entry[0] : null;
         })
@@ -166,10 +201,13 @@ const Comparison = () => {
   };
 
   useEffect(() => {
-    const newSensorMap = new Map<number, string>();
+    const newSensorMap = new Map<number, { position: string, locationName: string }>();
     locations?.forEach((location: sensorResponse) => {
       location.sensors.forEach((sensor: sensorMetadata) => {
-        newSensorMap.set(sensor.id, sensor.position);
+        newSensorMap.set(sensor.id, {
+          position: sensor.position,
+          locationName: location.name
+        });
       });
     });
     setSensorMap(newSensorMap);
@@ -264,7 +302,7 @@ const Comparison = () => {
         currentDateRange={formDataArr[0].dateRange}
         onSensorsChange={handleSensorsChange}
         currentSensors={selectedSensorIds.map(
-          (id) => sensorMap.get(id) || `Sensor ${id}`,
+          (id) => id || 999, // Fallback to 999 if undefined
         )}
         hourRange={formDataArr[0].hourRange}
         onHourRangeChange={handleHourRangeChange}

@@ -78,14 +78,14 @@ const Dashboard = () => {
     }));
   };
 
-  const handleSensorsChange = (sensors: string[]) => {
+  const handleSensorsChange = (sensors: number[]) => {
     setSensorRecordsFormData((prev: SensorRecordsFormData) => {
       return {
         ...prev,
         sensorIds: sensors
           .map((sensor) => {
             const sensorEntry = Array.from(sensorMap.entries()).find(
-              ([, position]) => position === sensor,
+              ([id]) => id === sensor,
             );
             return sensorEntry ? sensorEntry[0] : null;
           })
@@ -200,7 +200,7 @@ const Dashboard = () => {
         currentDateRange={sensorRecordsFormData.dateRange}
         onSensorsChange={handleSensorsChange}
         currentSensors={
-          sensorRecordsFormData.sensorIds?.map((id) => sensorMap.get(id)!) || []
+          sensorRecordsFormData.sensorIds?.map((id) => id) || []
         }
         hourRange={sensorRecordsFormData.hourRange}
         onHourRangeChange={handleHourRangeChange}
