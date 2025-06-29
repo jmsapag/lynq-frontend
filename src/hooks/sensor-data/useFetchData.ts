@@ -39,7 +39,27 @@ export function useFetchData() {
         }
 
         // Return the data points from the response
-        const data = response.data[0]?.data || [];
+        const mergedMap = new Map<string, SensorDataPoint>();
+
+        response.data.forEach((location) => {
+          (location.data || []).forEach((point) => {
+            if (mergedMap.has(point.timestamp)) {
+              const existing = mergedMap.get(point.timestamp)!;
+              mergedMap.set(point.timestamp, {
+                timestamp: point.timestamp,
+                total_count_in: existing.total_count_in + point.total_count_in,
+                total_count_out:
+                  existing.total_count_out + point.total_count_out,
+              });
+            } else {
+              mergedMap.set(point.timestamp, { ...point });
+            }
+          });
+        });
+
+        const data = Array.from(mergedMap.values()).sort((a, b) =>
+          a.timestamp.localeCompare(b.timestamp),
+        );
         const missingPoints: SensorDataPoint[] = [];
         for (let i = 1; i < data.length; i++) {
           const prevData = data[i - 1];
