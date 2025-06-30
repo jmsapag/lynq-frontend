@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export function LoginForm({
   formData,
@@ -9,6 +10,7 @@ export function LoginForm({
   t,
 }: any) {
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <form
@@ -100,12 +102,13 @@ export function LoginForm({
         )}
       </div>
       <div className="flex justify-end items-center">
-        <a
-          href="#"
+        <button
+          type="button"
+          onClick={() => navigate("/auth/forgot-password")}
           className="text-sm text-[#00A5B1] hover:underline transition"
         >
           {t("login.forgot")}
-        </a>
+        </button>
       </div>
       <button
         type="submit"

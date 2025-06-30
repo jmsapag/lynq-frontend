@@ -14,6 +14,8 @@ import { PrivateRoute } from "./components/auth/privateRoutes.tsx";
 import Landing from "./pages/landing.tsx";
 import LoginPage from "./pages/login.tsx";
 import RegisterPage from "./pages/register.tsx";
+import ForgotPasswordPage from "./pages/forgot-password.tsx";
+import ChangePasswordPage from "./pages/change-password.tsx";
 import BusinessesPage from "./pages/businesses.tsx";
 import ManageUsersPage from "./pages/manage-users.tsx";
 import UserManagement from "./pages/user-management.tsx";
@@ -51,6 +53,8 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/" element={<Landing />} />
           <Route path="/register/:token?" element={<RegisterPage />} />
+          <Route path="/auth/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/auth/change-password" element={<ChangePasswordPage />} />
           <Route element={<PrivateRoute />}>
             <Route path="/home" element={<RoleRedirect />} />
             <Route element={<AppLayoutWithState />}>
