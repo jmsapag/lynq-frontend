@@ -50,7 +50,8 @@
     "noData": "No se encontraron empresas.",
     "yes": "Sí",
     "no": "No",
-    "search": "Buscar"
+    "search": "Buscar",
+    "warning": "Advertencia"
   },
   "dashboard": {
     "filters": {
@@ -330,6 +331,7 @@
     "formErrorTitle": "Error en el Formulario",
     "formErrorDesc": "Por favor, completa todos los campos requeridos.",
     "locationName": "Nombre de la Ubicación",
-    "locationAddress": "Dirección"
+    "locationAddress": "Dirección",
+    "deleteWarning": "Advertencia: Esta acción eliminará permanentemente la ubicación. Los sensores asociados a esta ubicación también serán eliminados y toda su información ya no será accesible."
   }
 }

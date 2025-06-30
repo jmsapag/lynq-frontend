@@ -50,7 +50,8 @@
     "noData": "No businesses found.",
     "yes": "Yes",
     "no": "No",
-    "search": "Search"
+    "search": "Search",
+    "warning": "Warning"
   },
   "dashboard": {
     "filters": {
@@ -330,6 +331,7 @@
     "formErrorTitle": "Form Error",
     "formErrorDesc": "Please fill in all required fields.",
     "locationName": "Location Name",
-    "locationAddress": "Address"
+    "locationAddress": "Address",
+    "deleteWarning": "Deleting this location will permanently remove it from the system. All sensors and devices associated with this location will also be deleted and their data will no longer be accessible."
   }
 }

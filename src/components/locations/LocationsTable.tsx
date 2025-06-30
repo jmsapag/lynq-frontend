@@ -152,10 +152,16 @@ const LocationsTable: React.FC<LocationsTableProps> = ({
         <ModalContent>
           <ModalHeader>{t("locations.deleteLocation")}</ModalHeader>
           <ModalBody>
-            <p>
+            <p className="mb-2">
               {t("locations.deleteConfirm")}
               {locationToDelete && ` "${locationToDelete.name}"`}
             </p>
+            <div className="bg-danger-50 border border-danger-200 text-danger-700 p-3 rounded-md mt-2">
+              <p className="font-semibold mb-1">{t("common.warning")}</p>
+              <p className="text-sm">
+                {t("locations.deleteWarning")}
+              </p>
+            </div>
           </ModalBody>
           <ModalFooter>
             <Button
