@@ -140,7 +140,7 @@ export const EntryRateChart: React.FC<EntryRateChartProps> = ({
   };
 
   return (
-    <div className="h-[300px]">
+    <div className="w-full h-full" style={{ minHeight: '300px', height: '100%' }}>
       <BaseChart option={option} className={className} />
     </div>
   );

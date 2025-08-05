@@ -8,15 +8,19 @@ interface DashboardWidgetProps {
   id: string;
   type: DashboardWidgetType;
   title: string;
+  category?: 'metric' | 'chart';
   children: React.ReactNode;
   isDragging?: boolean;
+  enableDrag?: boolean; // New prop to control drag behavior
 }
 
 export const DashboardWidget: React.FC<DashboardWidgetProps> = ({
   type,
   title,
+  category,
   children,
   isDragging = false,
+  enableDrag = true,
 }) => {
   const {
     attributes,
@@ -26,28 +30,30 @@ export const DashboardWidget: React.FC<DashboardWidgetProps> = ({
     isDragging: isCurrentlyDragging,
   } = useDraggable({
     id: type,
+    disabled: !enableDrag,
     data: {
-      type: type,
+      type: category || type,
       title: title,
     },
   });
 
   const style = {
-    transform: CSS.Translate.toString(transform),
-    opacity: isCurrentlyDragging ? 0.5 : 1,
-    cursor: isCurrentlyDragging ? "grabbing" : "grab",
+    // Completely disable transform for non-draggable widgets
+    transform: enableDrag && isCurrentlyDragging ? CSS.Translate.toString(transform) : 'none',
+    opacity: 1,
+    cursor: enableDrag ? (isCurrentlyDragging ? "grabbing" : "grab") : "default",
   };
 
   return (
     <div
       ref={setNodeRef}
       style={style}
-      {...listeners}
-      {...attributes}
+      {...(enableDrag ? listeners : {})}
+      {...(enableDrag ? attributes : {})}
       className={`${
-        isDragging || isCurrentlyDragging 
+        enableDrag && (isDragging || isCurrentlyDragging) 
           ? "scale-105 shadow-lg border-2 border-blue-500" 
-          : "hover:shadow-md"
+          : enableDrag ? "hover:shadow-md" : ""
       }`}
     >
       {children}

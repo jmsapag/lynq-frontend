@@ -3,8 +3,9 @@ import React, { useState, useMemo } from "react";
 import { DndContext, DragEndEvent, DragStartEvent } from "@dnd-kit/core";
 import { Button, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Switch } from "@heroui/react";
 import { Squares2X2Icon, ChevronDownIcon, PencilIcon, EyeIcon } from "@heroicons/react/24/outline";
-import DroppableZone from "../drag-drop/droppable/droppable";
 import { DashboardWidget } from "./DashboardWidget";
+import { LayoutSidebar } from "./LayoutSidebar";
+import { WidgetDropZone } from "./WidgetDropZone";
 import { LAYOUT_SCHEMAS } from "../drag-drop/layouts/schemas";
 import { LayoutType } from "../drag-drop/layouts/types";
 import { SensorDataCard } from "../charts/card";
@@ -43,6 +44,7 @@ interface WidgetConfig {
   type: DashboardWidgetType;
   title: string;
   translationKey?: string;
+  category: 'metric' | 'chart';
   component: React.ReactNode;
 }
 
@@ -56,16 +58,18 @@ export const LayoutDashboard: React.FC<LayoutDashboardProps> = ({
 }) => {
   const [selectedLayout, setSelectedLayout] = useState<LayoutType>("dashboard");
   const [isEditing, setIsEditing] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [draggedWidget, setDraggedWidget] = useState<DashboardWidgetType | null>(null);
-  const [widgetPlacements, setWidgetPlacements] = useState<Record<string, DashboardWidgetType[]>>({});
+  const [widgetPlacements, setWidgetPlacements] = useState<Record<string, DashboardWidgetType | null>>({});
 
-  // Define all available widgets with their components
+  // Define all available widgets with their components and categories
   const availableWidgets: WidgetConfig[] = useMemo(() => [
     {
       id: "total-in",
       type: "total-in",
       title: "Total In",
       translationKey: "dashboard.metrics.totalIn",
+      category: "metric",
       component: (
         <SensorDataCard
           title="Total In"
@@ -80,6 +84,7 @@ export const LayoutDashboard: React.FC<LayoutDashboardProps> = ({
       type: "total-out",
       title: "Total Out",
       translationKey: "dashboard.metrics.totalOut",
+      category: "metric",
       component: (
         <SensorDataCard
           title="Total Out"
@@ -94,6 +99,7 @@ export const LayoutDashboard: React.FC<LayoutDashboardProps> = ({
       type: "entry-rate",
       title: "Entry Rate",
       translationKey: "dashboard.metrics.entryRate",
+      category: "metric",
       component: (
         <SensorDataCard
           title="Entry Rate"
@@ -108,6 +114,7 @@ export const LayoutDashboard: React.FC<LayoutDashboardProps> = ({
       type: "people-flow-chart",
       title: "People Flow Chart",
       translationKey: "dashboard.charts.peopleFlow",
+      category: "chart",
       component: (
         <ChartCard
           title="Flujo de Personas (In/Out)"
@@ -131,6 +138,7 @@ export const LayoutDashboard: React.FC<LayoutDashboardProps> = ({
       type: "traffic-heatmap",
       title: "Traffic Heatmap",
       translationKey: "dashboard.charts.trafficHeatmap",
+      category: "chart",
       component: (
         <ChartCard
           title="Traffic Heatmap (By Day & Hour)"
@@ -151,6 +159,7 @@ export const LayoutDashboard: React.FC<LayoutDashboardProps> = ({
       type: "entry-rate-chart",
       title: "Entry Rate Chart",
       translationKey: "dashboard.charts.entryRateOverTime",
+      category: "chart",
       component: (
         <ChartCard
           title="Entry Rate Over Time"
@@ -178,11 +187,20 @@ export const LayoutDashboard: React.FC<LayoutDashboardProps> = ({
   React.useEffect(() => {
     if (selectedLayout === "dashboard" && Object.keys(widgetPlacements).length === 0) {
       setWidgetPlacements({
-        "metrics-row": ["total-in", "total-out", "entry-rate"],
-        "charts-column": ["people-flow-chart", "traffic-heatmap", "entry-rate-chart"],
+        "metric-1": "total-in",
+        "metric-2": "total-out", 
+        "metric-3": "entry-rate",
+        "chart-1": "people-flow-chart",
+        "chart-2": "traffic-heatmap",
+        "chart-3": "entry-rate-chart",
       });
     }
   }, [selectedLayout, widgetPlacements]);
+
+  // Toggle sidebar when entering/exiting edit mode
+  React.useEffect(() => {
+    setIsSidebarOpen(isEditing);
+  }, [isEditing]);
 
   const handleDragStart = (event: DragStartEvent) => {
     setDraggedWidget(event.active.id as DashboardWidgetType);
@@ -195,17 +213,30 @@ export const LayoutDashboard: React.FC<LayoutDashboardProps> = ({
       const widgetType = active.id as DashboardWidgetType;
       const targetZone = over.id as string;
       
-      // Remove widget from all zones
+      // Handle removal zone
+      if (targetZone === 'widget-removal-zone') {
+        // Remove widget from all zones
+        const newPlacements = { ...widgetPlacements };
+        Object.keys(newPlacements).forEach(zone => {
+          if (newPlacements[zone] === widgetType) {
+            delete newPlacements[zone];
+          }
+        });
+        setWidgetPlacements(newPlacements);
+        setDraggedWidget(null);
+        return;
+      }
+      
+      // Remove widget from all zones first
       const newPlacements = { ...widgetPlacements };
       Object.keys(newPlacements).forEach(zone => {
-        newPlacements[zone] = newPlacements[zone]?.filter(w => w !== widgetType) || [];
+        if (newPlacements[zone] === widgetType) {
+          delete newPlacements[zone];
+        }
       });
       
       // Add to target zone
-      if (!newPlacements[targetZone]) {
-        newPlacements[targetZone] = [];
-      }
-      newPlacements[targetZone].push(widgetType);
+      newPlacements[targetZone] = widgetType;
       
       setWidgetPlacements(newPlacements);
     }
@@ -221,9 +252,11 @@ export const LayoutDashboard: React.FC<LayoutDashboardProps> = ({
       return (
         <DashboardWidget
           id={widget.id}
-          type={widgetType}
+          type={widget.type}
           title={widget.title}
-          isDragging={draggedWidget === widgetType}
+          category={widget.category}
+          enableDrag={false} // Disable drag for widgets in layout zones
+          isDragging={draggedWidget === widget.type}
         >
           {widget.component}
         </DashboardWidget>
@@ -233,61 +266,57 @@ export const LayoutDashboard: React.FC<LayoutDashboardProps> = ({
     return widget.component;
   };
 
-  const renderDroppableZone = (zone: any) => {
-    const zoneWidgets = widgetPlacements[zone.id] || [];
-    
-    if (isEditing) {
-      return (
-        <DroppableZone
-          key={zone.id}
-          id={zone.id}
-          acceptedTypes={zone.acceptedTypes}
-        >
-          <div className={zone.className}>
-            {zoneWidgets.map(widgetType => renderWidget(widgetType))}
-          </div>
-        </DroppableZone>
-      );
-    }
-
-    // In view mode, render widgets directly without droppable zones
-    return (
-      <div key={zone.id} className={zone.className}>
-        {zoneWidgets.map(widgetType => renderWidget(widgetType))}
-      </div>
-    );
+  // Get placed widgets set for sidebar indication
+  const getPlacedWidgets = (): Set<DashboardWidgetType> => {
+    return new Set(Object.values(widgetPlacements).filter(Boolean) as DashboardWidgetType[]);
   };
 
-  const renderAvailableWidgets = () => {
-    if (!isEditing) return null;
-
-    const placedWidgets = new Set(
-      Object.values(widgetPlacements).flat()
-    );
-    
-    const unplacedWidgets = availableWidgets.filter(
-      widget => !placedWidgets.has(widget.type)
-    );
-
-    if (unplacedWidgets.length === 0) return null;
+  // Generate individual drop zones for the dashboard layout
+  const renderDashboardLayout = () => {
+    if (selectedLayout !== "dashboard") return null;
 
     return (
-      <div className="bg-white rounded-lg border border-gray-200 p-4 mb-6">
-        <h4 className="text-lg font-medium text-gray-900 mb-4">Available Widgets</h4>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {unplacedWidgets.map(widget => (
-            <DashboardWidget
-              key={widget.id}
-              id={widget.id}
-              type={widget.type}
-              title={widget.title}
-              isDragging={draggedWidget === widget.type}
-            >
-              <div className="h-20 bg-gray-50 rounded border border-gray-200 flex items-center justify-center text-gray-500 text-sm">
-                {widget.title}
-              </div>
-            </DashboardWidget>
-          ))}
+      <div className="space-y-6">
+        {/* Metrics Row */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {[1, 2, 3].map(index => {
+            const zoneId = `metric-${index}`;
+            const placedWidget = widgetPlacements[zoneId];
+            
+            return (
+              <WidgetDropZone
+                key={zoneId}
+                id={zoneId}
+                acceptedTypes={['metric']}
+                isEmpty={!placedWidget}
+                zoneTitle={`Metric Card ${index}`}
+                className="min-h-[120px]"
+              >
+                {placedWidget && renderWidget(placedWidget)}
+              </WidgetDropZone>
+            );
+          })}
+        </div>
+
+        {/* Charts Column */}
+        <div className="grid grid-cols-1 gap-6">
+          {[1, 2, 3].map(index => {
+            const zoneId = `chart-${index}`;
+            const placedWidget = widgetPlacements[zoneId];
+            
+            return (
+              <WidgetDropZone
+                key={zoneId}
+                id={zoneId}
+                acceptedTypes={['chart']}
+                isEmpty={!placedWidget}
+                zoneTitle={`Chart ${index}`}
+                className="min-h-[400px] h-96"
+              >
+                {placedWidget && renderWidget(placedWidget)}
+              </WidgetDropZone>
+            );
+          })}
         </div>
       </div>
     );
@@ -357,13 +386,23 @@ export const LayoutDashboard: React.FC<LayoutDashboardProps> = ({
       </div>
 
       <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-        {/* Available Widgets Pool (only in edit mode) */}
-        {renderAvailableWidgets()}
+        <div className="flex h-full">
+          {/* Main Content */}
+          <div className="flex-1 p-6 overflow-auto">
+            {renderDashboardLayout()}
+          </div>
 
-        {/* Layout Zones - using exact LYNQ styling */}
-        <div className={currentLayout.containerClass}>
-          {currentLayout.zones.map(renderDroppableZone)}
+          {/* Collapsible Sidebar for widgets */}
+          <LayoutSidebar
+            isOpen={isSidebarOpen}
+            onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
+            isEditMode={isEditing}
+            allWidgets={availableWidgets}
+            placedWidgets={getPlacedWidgets()}
+            draggedWidget={draggedWidget}
+          />
         </div>
+
       </DndContext>
     </div>
   );

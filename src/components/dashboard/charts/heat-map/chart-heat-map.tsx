@@ -112,15 +112,15 @@ export const ChartHeatMap: React.FC<HeatMapChartProps> = ({
   };
 
   return (
-    <div className="w-full">
-      <div className="flex justify-end mb-4">
+    <div className="w-full h-full flex flex-col" style={{ minHeight: '450px' }}>
+      <div className="flex justify-end mb-4 flex-shrink-0">
         <Button onPress={toggleMetric} variant="solid" className="w-24">
           {displayMetric === "in"
             ? t("dashboard.charts.showExits")
             : t("dashboard.charts.showEntries")}
         </Button>
       </div>
-      <div className="h-[400px]">
+      <div className="flex-1 w-full" style={{ minHeight: '400px' }}>
         <BaseChart option={option} className={className} />
       </div>
     </div>
