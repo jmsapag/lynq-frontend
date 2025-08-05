@@ -5,13 +5,14 @@
 The LYNQ system is deployed using Docker Compose with the following services:
 
 ### Production docker-compose.yml structure
+
 ```yaml
 services:
   postgres:
     image: postgres:14
     environment:
       POSTGRES_USER: ${PG_USER}
-      POSTGRES_PASSWORD: ${PG_PASSWORD} 
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
       POSTGRES_DB: ${PG_NAME}
     ports:
       - "5432:5432"
@@ -48,6 +49,7 @@ services:
 ## Container Images
 
 ### API Dockerfile (Multi-stage)
+
 ```dockerfile
 FROM node:20-alpine AS dependencies
 WORKDIR /app
@@ -70,6 +72,7 @@ CMD ["node", "dist/main.js"]
 ```
 
 ### Normalizer Dockerfile
+
 ```dockerfile
 FROM node:20-alpine AS build
 WORKDIR /app
@@ -93,7 +96,7 @@ name: Build and Deploy
 on:
   push:
     branches: [main, develop]
-    tags: ['v*.*.*']
+    tags: ["v*.*.*"]
 
 jobs:
   build-api:
@@ -138,6 +141,7 @@ jobs:
 ## Deployment Process
 
 ### 1. Infrastructure Setup
+
 ```bash
 # Clone repository
 git clone https://github.com/austral-lynq/infra
@@ -152,6 +156,7 @@ docker-compose up -d
 ```
 
 ### 2. Database Setup
+
 ```bash
 # Run database migrations
 docker exec lynq-api npx prisma migrate deploy
@@ -163,6 +168,7 @@ docker exec lynq-api npm run prisma:seed
 ### 3. Service Configuration
 
 #### Environment Variables
+
 ```bash
 # Database
 DATABASE_URL=postgresql://user:pass@postgres:5432/lynq_db
@@ -183,28 +189,31 @@ SSL_CERT_PATH=/etc/letsencrypt/live/domain/fullchain.pem
 
 ## Service Resource Requirements
 
-| Service    | CPU   | Memory | Notes                              |
-|------------|-------|--------|------------------------------------|
-| postgres   | 0.5   | 512 MB | Adjust based on data volume        |
-| mosquitto  | 0.1   | 64 MB  | Lightweight message broker         |
-| lynq-api   | 1.0   | 512 MB | Main application service           |
-| normalizer | 0.5   | 256 MB | MQTT message processing            |
+| Service    | CPU | Memory | Notes                       |
+| ---------- | --- | ------ | --------------------------- |
+| postgres   | 0.5 | 512 MB | Adjust based on data volume |
+| mosquitto  | 0.1 | 64 MB  | Lightweight message broker  |
+| lynq-api   | 1.0 | 512 MB | Main application service    |
+| normalizer | 0.5 | 256 MB | MQTT message processing     |
 
 ## Health Checks
 
 ### API Health Check
+
 ```bash
 curl http://localhost:8000/
 # Should return application greeting
 ```
 
 ### Database Health
+
 ```bash
 docker exec lynq-api npx prisma db pull
 # Should connect successfully
 ```
 
 ### MQTT Health
+
 ```bash
 docker logs mosquitto
 # Should show client connections
@@ -213,6 +222,7 @@ docker logs mosquitto
 ## Monitoring
 
 ### Application Logs
+
 ```bash
 # View API logs
 docker logs -f lynq-api
@@ -225,6 +235,7 @@ docker-compose logs -f
 ```
 
 ### Swagger Documentation
+
 - Available at: `http://localhost:8000/api/docs`
 - Auto-generated from NestJS decorators
 - Includes authentication testing
@@ -232,6 +243,7 @@ docker-compose logs -f
 ## Backup Strategy
 
 ### Database Backup
+
 ```bash
 # Create backup
 docker exec postgres pg_dump -U ${PG_USER} ${PG_NAME} > backup.sql
@@ -241,6 +253,7 @@ docker exec -i postgres psql -U ${PG_USER} ${PG_NAME} < backup.sql
 ```
 
 ### Configuration Backup
+
 - Store `.env` files securely
 - Version control `docker-compose.yml`
 - Backup Mosquitto configuration files

@@ -1,6 +1,7 @@
 # 03_code_base.md
 
 ## Repository structure
+
 ```
 lynq/
 ├── lynq-api/               # NestJS backend
@@ -41,23 +42,24 @@ lynq/
 ```
 
 ## NestJS controller example (`lynq-api/src/devices/devices.controller.ts`)
+
 ```ts
-@Controller('devices')
+@Controller("devices")
 @UseGuards(AuthGuard, RolesGuard)
-@ApiTags('devices')
+@ApiTags("devices")
 export class DevicesController {
   constructor(private readonly devicesService: DevicesService) {}
 
-  @Get('sensor-data')
+  @Get("sensor-data")
   @ApiOperation({
-    summary: 'Get aggregated sensor data with role-based permissions'
+    summary: "Get aggregated sensor data with role-based permissions",
   })
   async getSensorData(
-    @Query('sensor_ids', new ParseArrayPipe({ items: Number, separator: ',' }))
+    @Query("sensor_ids", new ParseArrayPipe({ items: Number, separator: "," }))
     sensorIds: number[],
     @Req() req: UserRequest,
-    @Query('from') from?: string,
-    @Query('to') to?: string,
+    @Query("from") from?: string,
+    @Query("to") to?: string,
   ): Promise<GroupedSensorDataDto[]> {
     const query: GetLocationSensorDataDto = {
       sensor_ids: sensorIds,
@@ -70,10 +72,11 @@ export class DevicesController {
 ```
 
 ## Normalizer controller example (`normalizer/src/controllers/xovisController.ts`)
+
 ```ts
-import { globalService } from '../services/globalService';
-import { doorSensorRecord } from '../adapters/types';
-import { Xovis } from '../models/xovis';
+import { globalService } from "../services/globalService";
+import { doorSensorRecord } from "../adapters/types";
+import { Xovis } from "../models/xovis";
 
 const xovisAdapter = (xovisJson: Xovis): doorSensorRecord => {
   return {
@@ -82,11 +85,11 @@ const xovisAdapter = (xovisJson: Xovis): doorSensorRecord => {
     type: xovisJson.type,
     data: {
       in: xovisJson.data.in,
-      out: xovisJson.data.out
+      out: xovisJson.data.out,
     },
-    timestamp: xovisJson.timestamp
+    timestamp: xovisJson.timestamp,
   };
-}
+};
 
 export const xovisController = (message: string): void => {
   let xovis: Xovis;
@@ -95,12 +98,13 @@ export const xovisController = (message: string): void => {
     const xovisRecord: doorSensorRecord = xovisAdapter(xovis);
     globalService.processDoorRecord(xovisRecord);
   } catch (error) {
-    console.error('Error parsing Xovis message:', error);
+    console.error("Error parsing Xovis message:", error);
   }
-}
+};
 ```
 
 ## Environment variables (`.env.sample`)
+
 ```
 # Database
 DATABASE_URL=postgresql://user:pass@db:5432/lynq_db
@@ -124,6 +128,7 @@ NODE_ENV=production
 ```
 
 ## Prisma schema structure (`lynq-api/prisma/schema.prisma`)
+
 ```prisma
 model Business {
   id          Int      @id @default(autoincrement())
@@ -157,19 +162,20 @@ model Sensor {
 ```
 
 ## Role-based access control
+
 ```ts
 // Guards example
 @UseGuards(AuthGuard, RolesGuard)
 @Roles(Role.ADMIN)
-@Controller('business')
+@Controller("business")
 export class BusinessController {
   // Only ADMIN users can access business endpoints
 }
 
 // Three-tier role system:
 enum Role {
-  LYNQ_TEAM = 'LYNQ_TEAM',    // Super admin - all businesses
-  ADMIN = 'ADMIN',            // Business admin - single business
-  STANDARD = 'STANDARD'       // Location user - assigned locations only
+  LYNQ_TEAM = "LYNQ_TEAM", // Super admin - all businesses
+  ADMIN = "ADMIN", // Business admin - single business
+  STANDARD = "STANDARD", // Location user - assigned locations only
 }
 ```

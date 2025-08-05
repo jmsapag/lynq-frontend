@@ -24,6 +24,8 @@ type DashboardFiltersProps = {
   locations: SensorLocation[];
   currentSensors: number[];
   lastUpdated: Date | null;
+  hideGroupBy?: boolean;
+  hideAggregation?: boolean;
 };
 
 export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
@@ -37,8 +39,9 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
   onRefreshData,
   locations,
   currentSensors,
-
   lastUpdated,
+  hideGroupBy = false,
+  hideAggregation = false,
 }) => {
   const { t } = useTranslation();
   const [startDate, setStartDate] = useState<DateValue>(() => {
@@ -216,41 +219,53 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
           {/*  </div>*/}
           {/*</div>*/}
 
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
-              {t("filters.groupBy")}
-            </label>
-            <select
-              className="inline-flex w-full md:w-60 items-center justify-between rounded-xl border-2 border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-900 shadow-sm hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-1 transition-colors duration-150"
-              value={groupBy}
-              onChange={handleGroupByChange}
-            >
-              <option value="5min">{t("filters.groupOptions.5min")}</option>
-              <option value="10min">{t("filters.groupOptions.10min")}</option>
-              <option value="15min">{t("filters.groupOptions.15min")}</option>
-              <option value="30min">{t("filters.groupOptions.30min")}</option>
-              <option value="hour">{t("filters.groupOptions.hour")}</option>
-              <option value="day">{t("filters.groupOptions.day")}</option>
-              <option value="week">{t("filters.groupOptions.week")}</option>
-              <option value="month">{t("filters.groupOptions.month")}</option>
-            </select>
-          </div>
+          {!hideGroupBy && (
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                {t("filters.groupBy")}
+              </label>
+              <select
+                className="inline-flex w-full md:w-60 items-center justify-between rounded-xl border-2 border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-900 shadow-sm hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-1 transition-colors duration-150"
+                value={groupBy}
+                onChange={handleGroupByChange}
+              >
+                <option value="5min">{t("filters.groupOptions.5min")}</option>
+                <option value="10min">{t("filters.groupOptions.10min")}</option>
+                <option value="15min">{t("filters.groupOptions.15min")}</option>
+                <option value="30min">{t("filters.groupOptions.30min")}</option>
+                <option value="hour">{t("filters.groupOptions.hour")}</option>
+                <option value="day">{t("filters.groupOptions.day")}</option>
+                <option value="week">{t("filters.groupOptions.week")}</option>
+                <option value="month">{t("filters.groupOptions.month")}</option>
+              </select>
+            </div>
+          )}
 
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
-              {t("filters.aggregation")}
-            </label>
-            <select
-              className="inline-flex w-full md:w-60 items-center justify-between rounded-xl border-2 border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-900 shadow-sm hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-1 transition-colors duration-150"
-              value={aggregation}
-              onChange={handleAggregationChange}
-            >
-              <option value="sum">{t("filters.aggregationOptions.sum")}</option>
-              <option value="avg">{t("filters.aggregationOptions.avg")}</option>
-              <option value="min">{t("filters.aggregationOptions.min")}</option>
-              <option value="max">{t("filters.aggregationOptions.max")}</option>
-            </select>
-          </div>
+          {!hideAggregation && (
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                {t("filters.aggregation")}
+              </label>
+              <select
+                className="inline-flex w-full md:w-60 items-center justify-between rounded-xl border-2 border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-900 shadow-sm hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-1 transition-colors duration-150"
+                value={aggregation}
+                onChange={handleAggregationChange}
+              >
+                <option value="sum">
+                  {t("filters.aggregationOptions.sum")}
+                </option>
+                <option value="avg">
+                  {t("filters.aggregationOptions.avg")}
+                </option>
+                <option value="min">
+                  {t("filters.aggregationOptions.min")}
+                </option>
+                <option value="max">
+                  {t("filters.aggregationOptions.max")}
+                </option>
+              </select>
+            </div>
+          )}
 
           <div className="space-y-2">
             <div className="text-xs text-gray-500 text-center">
