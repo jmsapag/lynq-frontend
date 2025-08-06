@@ -29,6 +29,7 @@ export const createDragHandlers = (
     if (over && active.id !== over.id) {
       const widgetType = active.id as DashboardWidgetType;
       const targetZone = over.id as string;
+      const draggedWidgetCategory = active.data?.current?.type as 'metric' | 'chart';
       
       // Handle removal zone
       if (targetZone === 'widget-removal-zone') {
@@ -39,6 +40,14 @@ export const createDragHandlers = (
           }
         });
         actions.setWidgetPlacements(newPlacements);
+        actions.setDraggedWidget(null);
+        return;
+      }
+      
+      // Check if the target zone accepts this widget type
+      const acceptedTypes = over.data?.current?.accepts as ('metric' | 'chart')[];
+      if (acceptedTypes && draggedWidgetCategory && !acceptedTypes.includes(draggedWidgetCategory)) {
+        // Incompatible drop - do nothing and just reset drag state
         actions.setDraggedWidget(null);
         return;
       }

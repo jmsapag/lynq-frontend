@@ -252,7 +252,7 @@ const Dashboard = () => {
 
   return (
     <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-      <div className={`min-h-screen bg-gray-50 transition-all duration-300 ${
+      <div className={`min-h-screen  transition-all duration-300 ${
         isSidebarOpen ? 'pr-80' : ''
       }`}>
         {/* Main Content Area */}
