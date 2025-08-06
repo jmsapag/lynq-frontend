@@ -275,6 +275,28 @@ export const LayoutDashboard: React.FC<LayoutDashboardProps> = ({
   const renderDashboardLayout = () => {
     if (selectedLayout !== "dashboard") return null;
 
+    if (!isEditing) {
+      // View mode - simple layout like Dashboard.tsx
+      return (
+        <div className="space-y-6">
+          {/* Metrics Row */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {widgetPlacements["metric-1"] && renderWidget(widgetPlacements["metric-1"])}
+            {widgetPlacements["metric-2"] && renderWidget(widgetPlacements["metric-2"])}
+            {widgetPlacements["metric-3"] && renderWidget(widgetPlacements["metric-3"])}
+          </div>
+
+          {/* Charts Column */}
+          <div className="grid grid-cols-1 gap-6">
+            {widgetPlacements["chart-1"] && renderWidget(widgetPlacements["chart-1"])}
+            {widgetPlacements["chart-2"] && renderWidget(widgetPlacements["chart-2"])}
+            {widgetPlacements["chart-3"] && renderWidget(widgetPlacements["chart-3"])}
+          </div>
+        </div>
+      );
+    }
+
+    // Edit mode - with drop zones
     return (
       <div className="space-y-6">
         {/* Metrics Row */}
