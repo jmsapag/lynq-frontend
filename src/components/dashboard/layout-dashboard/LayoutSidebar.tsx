@@ -67,14 +67,14 @@ export const LayoutSidebar: React.FC<LayoutSidebarProps> = ({
 
   return (
     <>
-      {/* Sidebar - now displaces content instead of overlaying */}
+      {/* Sidebar - fixed position on the right */}
       <div className={`
-        bg-white border-l border-gray-200 shadow-lg
-        transition-all duration-300 ease-in-out flex-shrink-0
-        ${isOpen ? 'w-80' : 'w-0 overflow-hidden'}
+        fixed top-0 right-0 h-full bg-white border-l border-gray-200 shadow-lg z-50
+        transition-all duration-300 ease-in-out
+        ${isOpen ? 'w-80 translate-x-0' : 'w-80 translate-x-full'}
       `}>
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-200 min-w-80">
+        <div className="flex items-center justify-between p-4 border-b border-gray-200">
           <h2 className="text-lg font-semibold text-gray-900">Widget Library</h2>
           <button
             onClick={onToggle}
@@ -85,7 +85,7 @@ export const LayoutSidebar: React.FC<LayoutSidebarProps> = ({
         </div>
 
         {/* Content */}
-        <div className="p-4 space-y-6 overflow-y-auto h-full pb-32 min-w-80">
+        <div className="p-4 space-y-6 overflow-y-auto h-[calc(100vh-73px)]">
           {/* Info Cards Section */}
           <div>
             <div className="flex items-center gap-2 mb-3">
