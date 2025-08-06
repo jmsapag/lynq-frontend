@@ -7,7 +7,7 @@ import { sensorResponse } from "../types/deviceResponse";
 import { sensorMetadata } from "../types/sensorMetadata";
 import {
   GroupByTimeAmount,
-  AggregationType,
+  // AggregationType, // Commented out since aggregation filter is hidden
 } from "../types/sensorDataResponse";
 import { SensorRecordsFormData } from "../types/sensorRecordsFormData";
 import { Time } from "@internationalized/date";
@@ -16,15 +16,17 @@ import { Time } from "@internationalized/date";
 import { DndContext } from "@dnd-kit/core";
 import { PencilIcon, EyeIcon } from "@heroicons/react/24/outline";
 import { LayoutSidebar } from "../components/dashboard/layout-dashboard/LayoutSidebar";
-import { LayoutRenderer } from "../components/dashboard/layout-dashboard/components";
+import { LayoutRenderer, LayoutSelector } from "../components/dashboard/layout-dashboard/components";
 import { createWidgetConfig, type WidgetConfig, type DashboardWidgetType, type WidgetFactoryParams } from "../components/dashboard/layout-dashboard/widgets";
 import { 
   createDragHandlers, 
   getPlacedWidgets, 
-  getDefaultWidgetPlacements,
+  saveLayoutToLocalStorage,
+  loadLayoutFromLocalStorage,
   type DashboardLayoutState,
   type DashboardLayoutActions 
 } from "../components/dashboard/layout-dashboard/utils";
+import { AVAILABLE_LAYOUTS, getDefaultLayout, type DashboardLayout } from "../components/dashboard/layout-dashboard/layouts";
 
 function getFirstFetchedDateRange() {
   return {
@@ -42,6 +44,7 @@ const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [draggedWidget, setDraggedWidget] = useState<DashboardWidgetType | null>(null);
   const [widgetPlacements, setWidgetPlacements] = useState<Record<string, DashboardWidgetType | null>>({});
+  const [currentLayout, setCurrentLayout] = useState<DashboardLayout>(getDefaultLayout());
   
   const {
     locations,
@@ -121,12 +124,13 @@ const Dashboard = () => {
     setSensorMap(newSensorMap);
   }, [locations]);
 
-  const handleAggregationChange = (aggregation: string) => {
-    setSensorRecordsFormData((prev) => ({
-      ...prev,
-      aggregationType: aggregation as AggregationType,
-    }));
-  };
+  // Aggregation handler - commented out since aggregation filter is hidden
+  // const handleAggregationChange = (aggregation: string) => {
+  //   setSensorRecordsFormData((prev) => ({
+  //     ...prev,
+  //     aggregationType: aggregation as AggregationType,
+  //   }));
+  // };
 
   const handleGroupByChange = (groupByValue: string) => {
     setSensorRecordsFormData((prev) => ({
@@ -238,17 +242,50 @@ const Dashboard = () => {
   // Create drag handlers using the utility function
   const { handleDragStart, handleDragEnd } = createDragHandlers(layoutState, layoutActions);
 
-  // Initialize widget placements with default dashboard layout
+  // Handle layout changes
+  const handleLayoutChange = (newLayout: DashboardLayout) => {
+    // Save current layout changes if any exist
+    if (Object.keys(widgetPlacements).length > 0) {
+      saveLayoutToLocalStorage(currentLayout.id, widgetPlacements);
+    }
+    
+    // Load the new layout
+    let newPlacements = newLayout.widgetPlacements;
+    
+    // Try to load saved placements for this layout
+    const savedPlacements = loadLayoutFromLocalStorage(newLayout.id);
+    if (savedPlacements) {
+      newPlacements = savedPlacements;
+    }
+    
+    setCurrentLayout(newLayout);
+    setWidgetPlacements(newPlacements);
+  };
+
+  // Initialize widget placements with current layout
   useEffect(() => {
     if (Object.keys(widgetPlacements).length === 0) {
-      setWidgetPlacements(getDefaultWidgetPlacements());
+      let initialPlacements = currentLayout.widgetPlacements;
+      
+      // Try to load saved placements for this layout
+      const savedPlacements = loadLayoutFromLocalStorage(currentLayout.id);
+      if (savedPlacements) {
+        initialPlacements = savedPlacements;
+      }
+      
+      setWidgetPlacements(initialPlacements);
     }
-  }, [widgetPlacements]);
+  }, [currentLayout, widgetPlacements]);
 
-  // Toggle sidebar when entering/exiting edit mode
+  // Toggle sidebar when entering/exiting edit mode and save changes
   useEffect(() => {
     setIsSidebarOpen(isEditing);
-  }, [isEditing]);
+    
+    // Save changes when exiting edit mode
+    if (!isEditing && Object.keys(widgetPlacements).length > 0) {
+      saveLayoutToLocalStorage(currentLayout.id, widgetPlacements);
+    }
+  }, [isEditing, currentLayout.id, widgetPlacements]);
 
   return (
     <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
@@ -268,7 +305,6 @@ const Dashboard = () => {
                 }
                 hourRange={sensorRecordsFormData.hourRange}
                 onHourRangeChange={handleHourRangeChange}
-                onAggregationChange={handleAggregationChange}
                 onRefreshData={handleRefreshData}
                 locations={locations}
                 lastUpdated={lastUpdated}
@@ -277,6 +313,14 @@ const Dashboard = () => {
             
             {/* Edit Mode Toggle */}
             <div className="flex items-center gap-3 ml-4">
+              {/* Layout Selector */}
+              <LayoutSelector
+                currentLayout={currentLayout}
+                onLayoutChange={handleLayoutChange}
+                availableLayouts={AVAILABLE_LAYOUTS}
+                isEditing={isEditing}
+              />
+              
               <Button
                 variant={isEditing ? "flat" : "solid"}
                 color="primary"
@@ -300,6 +344,7 @@ const Dashboard = () => {
           ) : (
             <LayoutRenderer
               isEditing={isEditing}
+              currentLayout={currentLayout}
               widgetPlacements={widgetPlacements}
               availableWidgets={availableWidgets}
               draggedWidget={draggedWidget}

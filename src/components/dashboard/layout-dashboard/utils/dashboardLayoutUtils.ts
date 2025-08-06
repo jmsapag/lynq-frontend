@@ -84,3 +84,21 @@ export const getDefaultWidgetPlacements = (): Record<string, DashboardWidgetType
   "chart-2": "traffic-heatmap",
   "chart-3": "entry-rate-chart",
 });
+
+export const saveLayoutToLocalStorage = (layoutId: string, placements: Record<string, DashboardWidgetType | null>) => {
+  try {
+    localStorage.setItem(`dashboard-layout-${layoutId}`, JSON.stringify(placements));
+  } catch (error) {
+    console.warn('Failed to save layout to localStorage:', error);
+  }
+};
+
+export const loadLayoutFromLocalStorage = (layoutId: string): Record<string, DashboardWidgetType | null> | null => {
+  try {
+    const saved = localStorage.getItem(`dashboard-layout-${layoutId}`);
+    return saved ? JSON.parse(saved) : null;
+  } catch (error) {
+    console.warn('Failed to load layout from localStorage:', error);
+    return null;
+  }
+};

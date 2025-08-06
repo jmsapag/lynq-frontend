@@ -78,9 +78,15 @@ export const LayoutSidebar: React.FC<LayoutSidebarProps> = ({
           <h2 className="text-lg font-semibold text-gray-900">Widget Library</h2>
           <button
             onClick={onToggle}
-            className="p-1 rounded-md hover:bg-gray-100 transition-colors"
+            className={`
+              absolute left-0 top-1/2 -translate-y-1/2 p-2 
+              rounded-full hover:bg-gray-100 border border-gray-300 
+              bg-white focus:outline-none shadow-sm
+              transition-all duration-300 ease-in-out
+              ${isOpen ? '-translate-x-1/2' : '-translate-x-full'}
+            `}
           >
-            <ChevronRightIcon className="w-5 h-5 text-gray-500" />
+            <ChevronRightIcon className={`w-5 h-5 text-gray-500 transition-transform duration-300 ${!isOpen ? 'rotate-180' : ''}`} />
           </button>
         </div>
 
@@ -211,8 +217,9 @@ export const LayoutSidebar: React.FC<LayoutSidebarProps> = ({
             <ul className="text-xs text-blue-700 space-y-1">
               <li>• Drag widgets to layout zones to place them</li>
               <li>• Drag placed widgets back here to remove them</li>
-              <li>• Blue/Green badges indicate placed widgets</li>
+              <li>• All layouts are editable and save automatically</li>
               <li>• Use layout selector to switch between layouts</li>
+              <li>• Changes are saved when you exit edit mode</li>
             </ul>
           </div>
 

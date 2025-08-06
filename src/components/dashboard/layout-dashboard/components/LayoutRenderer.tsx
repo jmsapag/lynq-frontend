@@ -2,9 +2,11 @@ import React from "react";
 import { DashboardWidget } from "../DashboardWidget";
 import { WidgetDropZone } from "../WidgetDropZone";
 import { DashboardWidgetType, WidgetConfig } from "../widgets/types";
+import { DashboardLayout, DropZone } from "../layouts";
 
 interface LayoutRendererProps {
   isEditing: boolean;
+  currentLayout: DashboardLayout;
   widgetPlacements: Record<string, DashboardWidgetType | null>;
   availableWidgets: WidgetConfig[];
   draggedWidget: DashboardWidgetType | null;
@@ -12,6 +14,7 @@ interface LayoutRendererProps {
 
 export const LayoutRenderer: React.FC<LayoutRendererProps> = ({
   isEditing,
+  currentLayout,
   widgetPlacements,
   availableWidgets,
   draggedWidget,
@@ -38,71 +41,56 @@ export const LayoutRenderer: React.FC<LayoutRendererProps> = ({
     return widget.component;
   };
 
+  const renderDropZone = (zone: DropZone) => {
+    const placedWidget = widgetPlacements[zone.id];
+    const widget = placedWidget ? availableWidgets.find(w => w.type === placedWidget) : null;
+    
+    return (
+      <WidgetDropZone
+        key={zone.id}
+        id={zone.id}
+        acceptedTypes={zone.type === 'any' ? ['metric', 'chart'] : [zone.type]}
+        isEmpty={!placedWidget}
+        className={zone.className}
+      >
+        {placedWidget && widget ? renderWidget(placedWidget) : null}
+      </WidgetDropZone>
+    );
+  };
+
   if (!isEditing) {
-    // View mode - simple layout like original Dashboard.tsx
+    // View mode - render sections with actual widgets (no drop zones)
     return (
       <div className="space-y-6">
-        {/* Metrics Row */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {widgetPlacements["metric-1"] && renderWidget(widgetPlacements["metric-1"])}
-          {widgetPlacements["metric-2"] && renderWidget(widgetPlacements["metric-2"])}
-          {widgetPlacements["metric-3"] && renderWidget(widgetPlacements["metric-3"])}
-        </div>
-
-        {/* Charts Column */}
-        <div className="grid grid-cols-1 gap-6">
-          {widgetPlacements["chart-1"] && renderWidget(widgetPlacements["chart-1"])}
-          {widgetPlacements["chart-2"] && renderWidget(widgetPlacements["chart-2"])}
-          {widgetPlacements["chart-3"] && renderWidget(widgetPlacements["chart-3"])}
-        </div>
+        {currentLayout.sections.map(section => {
+          const hasWidgets = section.zones.some(zone => widgetPlacements[zone.id]);
+          if (!hasWidgets) return null;
+          
+          return (
+            <div key={section.id} className={section.className}>
+              {section.zones.map(zone => {
+                const placedWidget = widgetPlacements[zone.id];
+                return placedWidget ? (
+                  <div key={zone.id}>
+                    {renderWidget(placedWidget)}
+                  </div>
+                ) : null;
+              })}
+            </div>
+          );
+        })}
       </div>
     );
   }
 
-  // Edit mode - with drop zones
+  // Edit mode - render sections with drop zones
   return (
     <div className="space-y-6">
-      {/* Metrics Row */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {[1, 2, 3].map(index => {
-          const zoneId = `metric-${index}`;
-          const placedWidget = widgetPlacements[zoneId];
-          
-          return (
-            <WidgetDropZone
-              key={zoneId}
-              id={zoneId}
-              acceptedTypes={['metric']}
-              isEmpty={!placedWidget}
-              zoneTitle={`Metric Card ${index}`}
-              className="min-h-[120px]"
-            >
-              {placedWidget && renderWidget(placedWidget)}
-            </WidgetDropZone>
-          );
-        })}
-      </div>
-
-      {/* Charts Column */}
-      <div className="grid grid-cols-1 gap-6">
-        {[1, 2, 3].map(index => {
-          const zoneId = `chart-${index}`;
-          const placedWidget = widgetPlacements[zoneId];
-          
-          return (
-            <WidgetDropZone
-              key={zoneId}
-              id={zoneId}
-              acceptedTypes={['chart']}
-              isEmpty={!placedWidget}
-              zoneTitle={`Chart ${index}`}
-              className="min-h-[400px] h-96"
-            >
-              {placedWidget && renderWidget(placedWidget)}
-            </WidgetDropZone>
-          );
-        })}
-      </div>
+      {currentLayout.sections.map(section => (
+        <div key={section.id} className={section.className}>
+          {section.zones.map(zone => renderDropZone(zone))}
+        </div>
+      ))}
     </div>
   );
 };

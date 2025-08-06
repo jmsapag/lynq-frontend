@@ -2,7 +2,8 @@
 export {
   createDragHandlers,
   getPlacedWidgets,
-  getDefaultWidgetPlacements,
+  saveLayoutToLocalStorage,
+  loadLayoutFromLocalStorage,
   type DashboardLayoutState,
   type DashboardLayoutActions,
 } from './dashboardLayoutUtils';
