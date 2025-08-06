@@ -5,6 +5,7 @@
 MCP represents the set of policies and automations that guarantee all code reaching production meets security and quality requirements for the LYNQ multi-tenant platform.
 
 ### 1. Controls on every PR
+
 - **Lint + Tests:** ESLint and Jest must pass for all services.
 - **TypeScript:** Strict type checking across API, Frontend, and Normalizer.
 - **SCA:** `npm audit --audit-level=high` with zero critical findings.
@@ -13,11 +14,13 @@ MCP represents the set of policies and automations that guarantee all code reach
 - **Role-based Access:** Verification of permission controls.
 
 ### 2. Dependencies
+
 - Automated dependency updates via Renovate or Dependabot.
 - Security vulnerability scanning for all packages.
 - Regular audit of third-party libraries.
 
 ### 3. Secret management
+
 - `.env` files never committed to version control.
 - Environment variables for all configuration.
 - JWT secrets generated with high entropy.
@@ -25,6 +28,7 @@ MCP represents the set of policies and automations that guarantee all code reach
 - MQTT authentication credentials secured.
 
 ### 4. Multi-tenant security
+
 - **Data Isolation:** Business-level data separation enforced.
 - **Role Validation:** LYNQ_TEAM, ADMIN, STANDARD permissions verified.
 - **Location Access:** STANDARD users restricted to assigned locations only.
@@ -32,6 +36,7 @@ MCP represents the set of policies and automations that guarantee all code reach
 - **Database Queries:** Business ID filtering on all data access.
 
 ### 5. Database security
+
 - **Prisma ORM:** Prevents SQL injection attacks.
 - **Connection Pooling:** Secure database connection management.
 - **Audit Trail:** User actions logged with timestamps.
@@ -39,6 +44,7 @@ MCP represents the set of policies and automations that guarantee all code reach
 - **Migration Safety:** All schema changes reviewed and tested.
 
 ### 6. Container hardening
+
 - **Non-root User:** All containers run as unprivileged users.
 - **Minimal Base Images:** Alpine Linux for smaller attack surface.
 - **Read-only Filesystem:** Where possible, containers use read-only mode.
@@ -46,6 +52,7 @@ MCP represents the set of policies and automations that guarantee all code reach
 - **Health Checks:** Container health monitoring enabled.
 
 ### 7. API security
+
 - **JWT Validation:** All protected routes verify token validity.
 - **Rate Limiting:** Protection against brute force attacks.
 - **Input Validation:** class-validator for all DTOs.
@@ -54,6 +61,7 @@ MCP represents the set of policies and automations that guarantee all code reach
 - **Swagger Security:** API documentation includes auth schemes.
 
 ### 8. Frontend security
+
 - **Token Storage:** Secure cookie-based JWT storage.
 - **Route Protection:** Private routes require authentication.
 - **Role-based UI:** Interface elements shown based on permissions.
@@ -61,12 +69,14 @@ MCP represents the set of policies and automations that guarantee all code reach
 - **CSP Headers:** Content Security Policy implementation.
 
 ### 9. MQTT security
+
 - **Authentication:** Username/password for MQTT connections.
 - **Topic Restrictions:** Sensor-specific topic patterns.
 - **Message Validation:** Payload structure verification.
 - **Connection Monitoring:** Client connection logging.
 
 ### 10. Logging & audit trail
+
 - **Structured Logging:** Winston with JSON format.
 - **User Actions:** All CRUD operations logged with user context.
 - **Security Events:** Failed logins, permission violations tracked.
@@ -74,6 +84,7 @@ MCP represents the set of policies and automations that guarantee all code reach
 - **Error Handling:** Sensitive information excluded from error messages.
 
 ### 11. Development practices
+
 - **Code Reviews:** All changes require peer review.
 - **Feature Branches:** No direct commits to main branch.
 - **Test Coverage:** Minimum coverage requirements.
@@ -81,6 +92,7 @@ MCP represents the set of policies and automations that guarantee all code reach
 - **Documentation:** Security procedures documented and updated.
 
 ### 12. Compliance requirements
+
 - **Data Privacy:** User data handling according to regulations.
 - **Business Isolation:** Complete separation of business data.
 - **Audit Logs:** Comprehensive activity tracking.
@@ -88,6 +100,7 @@ MCP represents the set of policies and automations that guarantee all code reach
 - **Incident Response:** Security incident procedures defined.
 
 ### 13. Monitoring & alerting
+
 - **Failed Authentication:** Multiple failed login attempts.
 - **Permission Violations:** Unauthorized access attempts.
 - **Data Anomalies:** Unusual business data access patterns.
@@ -95,6 +108,7 @@ MCP represents the set of policies and automations that guarantee all code reach
 - **Performance Metrics:** Response time and error rate tracking.
 
 ### 14. Backup & recovery
+
 - **Database Backups:** Regular automated backups with encryption.
 - **Configuration Backup:** Infrastructure as code versioning.
 - **Disaster Recovery:** Business continuity procedures.

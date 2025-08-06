@@ -1,11 +1,13 @@
 # GitHub Copilot Instructions - LYNQ Frontend
 
 ## Repository Context
+
 You are working in the **LYNQ Frontend** repository, which is the React-based web application for the LYNQ pedestrian analytics platform. This is a **React 18 + Vite** application using **TypeScript** and **Hero UI** for the design system.
 
 ## Repository-Specific Guidelines
 
 ### Architecture & Framework
+
 - **React 18** with **TypeScript** and **Vite** as the build tool
 - **Hero UI** design system for consistent UI components
 - **Tailwind CSS** for styling and layout
@@ -14,6 +16,7 @@ You are working in the **LYNQ Frontend** repository, which is the React-based we
 - **npm** as the package manager
 
 ### Key Directories & Structure
+
 - **Pages** (`src/pages/`): Main application pages (Dashboard, Comparison, UserManagement, etc.)
 - **Components** (`src/components/`): Reusable UI components and layout components
 - **Services** (`src/services/`): API clients and data fetching logic
@@ -23,11 +26,13 @@ You are working in the **LYNQ Frontend** repository, which is the React-based we
 - **i18n** (`src/i18n/`): Internationalization configuration
 
 ### Role-Based UI Patterns
+
 - **LYNQ_TEAM**: Access to all businesses, system management, user management
 - **ADMIN**: Business dashboard, location management, user management within business
 - **STANDARD**: Location-specific dashboards, limited to assigned locations
 
 ### Development Practices
+
 - Use **TypeScript** with strict typing for all components
 - Implement **role-based route protection** using `<RoleRoute>` components
 - Use **Hero UI components** for consistent design language
@@ -37,6 +42,7 @@ You are working in the **LYNQ Frontend** repository, which is the React-based we
 - Store authentication tokens in **secure cookies** (js-cookie)
 
 ### Authentication & Authorization
+
 - JWT tokens stored in **httpOnly cookies** for security
 - **Private routes** require authentication (`<PrivateRoute>`)
 - **Role-based routes** restrict access by user role (`<RoleRoute>`)
@@ -44,6 +50,7 @@ You are working in the **LYNQ Frontend** repository, which is the React-based we
 - **Logout** functionality clears tokens and redirects
 
 ### API Integration Patterns
+
 - Use **axiosPrivate** for authenticated requests
 - Implement **automatic token injection** via interceptors
 - Handle **401 responses** with automatic logout
@@ -51,6 +58,7 @@ You are working in the **LYNQ Frontend** repository, which is the React-based we
 - Implement **error handling** with user-friendly messages
 
 ### UI/UX Standards
+
 - Follow **Hero UI** design patterns and components
 - Use **responsive design** with Tailwind breakpoints
 - Implement **loading states** for async operations
@@ -59,6 +67,7 @@ You are working in the **LYNQ Frontend** repository, which is the React-based we
 - Implement **accessibility** standards (ARIA labels, keyboard navigation)
 
 ### Chart & Data Visualization
+
 - Use **ECharts** for sensor data visualization
 - Implement **responsive charts** that adapt to screen size
 - Use **date pickers** for time range selection
@@ -70,6 +79,7 @@ You are working in the **LYNQ Frontend** repository, which is the React-based we
 Refer to the `.ai/` folder in this repository for comprehensive documentation:
 
 ### Key Documentation Files
+
 - **Architecture Overview**: `.ai/00_architecture.md` - System design and frontend's role
 - **API Standards**: `.ai/01_standard_formats.md` - API response formats for frontend consumption
 - **Code Structure**: `.ai/03_code_base.md` - Repository organization patterns
@@ -79,6 +89,7 @@ Refer to the `.ai/` folder in this repository for comprehensive documentation:
 - **System Flows**: `.ai/08_system_flows.md` - User authentication and data flow
 
 ### When to Reference Documentation
+
 - **For component patterns**: Check `.ai/03_code_base.md` for established React patterns
 - **API integration**: Reference `.ai/01_standard_formats.md` for response structure
 - **Authentication flows**: See `.ai/08_system_flows.md` for login/logout patterns
@@ -91,6 +102,7 @@ Refer to the `.ai/` folder in this repository for comprehensive documentation:
 When suggesting code, follow these patterns established in the codebase:
 
 ### Route Protection Pattern
+
 ```typescript
 <Route element={<RoleRoute allowedRoles={["ADMIN", "LYNQ_TEAM"]} />}>
   <Route path="user-management" element={<UserManagement />} />
@@ -98,14 +110,18 @@ When suggesting code, follow these patterns established in the codebase:
 ```
 
 ### API Service Pattern
+
 ```typescript
-export const getLocationData = async (locationId: number): Promise<LocationData> => {
+export const getLocationData = async (
+  locationId: number,
+): Promise<LocationData> => {
   const response = await axiosPrivate.get(`/locations/${locationId}`);
   return response.data;
 };
 ```
 
 ### Component with Hero UI
+
 ```typescript
 import { Button, Card, CardBody } from "@heroui/react";
 
@@ -120,6 +136,7 @@ export const DashboardCard = ({ title, children }: Props) => (
 ```
 
 ### Authentication Hook Usage
+
 ```typescript
 const userRole = getUserRoleFromToken();
 const isAdmin = userRole === "ADMIN" || userRole === "LYNQ_TEAM";

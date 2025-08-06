@@ -199,9 +199,7 @@ const Dashboard = () => {
         onDateRangeChange={handleDateRangeChange}
         currentDateRange={sensorRecordsFormData.dateRange}
         onSensorsChange={handleSensorsChange}
-        currentSensors={
-          sensorRecordsFormData.sensorIds?.map((id) => id) || []
-        }
+        currentSensors={sensorRecordsFormData.sensorIds?.map((id) => id) || []}
         hourRange={sensorRecordsFormData.hourRange}
         onHourRangeChange={handleHourRangeChange}
         onAggregationChange={handleAggregationChange}

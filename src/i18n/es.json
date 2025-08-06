@@ -9,7 +9,8 @@
     "manage/users": "Gestionar Usuarios",
     "profile": "Perfil",
     "user-management": "Gestión de Usuarios",
-    "locations": "Ubicaciones"
+    "locations": "Ubicaciones",
+    "overview": "Resumen General"
   },
   "days": {
     "sunday": "Domingo",
@@ -78,8 +79,21 @@
     },
     "metrics": {
       "totalIn": "Total Entradas",
+      "totalInDescription": "Número total de personas que entraron al área monitoreada durante el período seleccionado.",
       "totalOut": "Total Salidas",
-      "entryRate": "Tasa de Entrada"
+      "totalOutDescription": "Número total de personas que salieron del área monitoreada durante el período seleccionado.",
+      "entryRate": "Tasa de Entrada",
+      "entryRateDescription": "Porcentaje del tráfico total que entró al área monitoreada (Entradas dividido por movimientos totales).",
+      "dailyAverageIn": "Promedio Diario Entradas",
+      "dailyAverageInDescription": "Promedio diario de personas que ingresaron, calculado a partir de los datos del período seleccionado.",
+      "dailyAverageOut": "Promedio Diario Salidas",
+      "dailyAverageOutDescription": "Promedio diario de personas que salieron, calculado a partir de los datos del período seleccionado.",
+      "percentageChange": "Porcentaje de aumento o caída",
+      "percentageChangeDescription": "Variación porcentual de entradas respecto al período anterior. Indica si la afluencia aumentó o disminuyó en términos relativos.",
+      "mostCrowdedDay": "Día más concurrido",
+      "mostCrowdedDayDescription": "Día del período seleccionado con mayor cantidad de entradas registradas.",
+      "leastCrowdedDay": "Día menos concurrido",
+      "leastCrowdedDayDescription": "Día del período seleccionado con menor cantidad de entradas registradas."
     }
   },
   "users": {
