@@ -267,7 +267,7 @@ export const Overview: React.FC = () => {
         </div>
       ) : (
         <div className="mt-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
             <SensorDataCard
               title="Total In"
               value={metrics.totalIn.toLocaleString()}
@@ -285,16 +285,6 @@ export const Overview: React.FC = () => {
             />
 
             <SensorDataCard
-              title="Entry Rate"
-              value={metrics.entryRate}
-              translationKey="dashboard.metrics.entryRate"
-              descriptionTranslationKey="dashboard.metrics.entryRateDescription"
-              unit="%"
-            />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            <SensorDataCard
               title="Daily Average In"
               value={metrics.dailyAverageIn.toLocaleString()}
               translationKey="dashboard.metrics.dailyAverageIn"
@@ -309,20 +299,9 @@ export const Overview: React.FC = () => {
               descriptionTranslationKey="dashboard.metrics.dailyAverageOutDescription"
               unit="people/day"
             />
-
-            <SensorDataCard
-              title="Percentage Increase/Decrease"
-              value={
-                (metrics.percentageChange > 0 ? "+" : "") +
-                metrics.percentageChange.toLocaleString()
-              }
-              translationKey="dashboard.metrics.percentageChange"
-              descriptionTranslationKey="dashboard.metrics.percentageChangeDescription"
-              unit="%"
-            />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
             <SensorDataCard
               title="Most Crowded Day"
               value={
@@ -353,6 +332,25 @@ export const Overview: React.FC = () => {
                   ? `(${metrics.leastCrowdedDay.value.toLocaleString()} people)`
                   : ""
               }
+            />
+
+            <SensorDataCard
+              title="Entry Rate"
+              value={metrics.entryRate}
+              translationKey="dashboard.metrics.entryRate"
+              descriptionTranslationKey="dashboard.metrics.entryRateDescription"
+              unit="%"
+            />
+
+            <SensorDataCard
+              title="Percentage Increase/Decrease"
+              value={
+                (metrics.percentageChange > 0 ? "+" : "") +
+                metrics.percentageChange.toLocaleString()
+              }
+              translationKey="dashboard.metrics.percentageChange"
+              descriptionTranslationKey="dashboard.metrics.percentageChangeDescription"
+              unit="%"
             />
           </div>
         </div>

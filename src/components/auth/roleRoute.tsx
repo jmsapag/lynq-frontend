@@ -22,6 +22,6 @@ export function RoleRoute({ allowedRoles }: RoleRouteProps) {
   if (hasAccess()) {
     return <Outlet />;
   } else {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to="/overview" replace />;
   }
 }
