@@ -1,5 +1,4 @@
-import { ChartCard } from "../components/dashboard/charts/chart-card.tsx";
-import { Spinner } from "@heroui/react";
+import { Spinner, Button } from "@heroui/react";
 import { DashboardFilters } from "../components/dashboard/filter.tsx";
 import { useEffect, useState, useMemo } from "react";
 import { useSensorData } from "../hooks/useSensorData.ts";
@@ -8,14 +7,26 @@ import { sensorResponse } from "../types/deviceResponse";
 import { sensorMetadata } from "../types/sensorMetadata";
 import {
   GroupByTimeAmount,
-  AggregationType,
+  // AggregationType, // Commented out since aggregation filter is hidden
 } from "../types/sensorDataResponse";
-import { LineChart } from "../components/dashboard/charts/line-chart.tsx";
-import { EntryRateChart } from "../components/dashboard/charts/entry-rate/entry-rate-chart.tsx";
-import { SensorDataCard } from "../components/dashboard/charts/card.tsx";
 import { SensorRecordsFormData } from "../types/sensorRecordsFormData";
 import { Time } from "@internationalized/date";
-import { ChartHeatMap } from "../components/dashboard/charts/heat-map/chart-heat-map.tsx";
+
+// Layout Dashboard imports
+import { DndContext } from "@dnd-kit/core";
+import { PencilIcon, EyeIcon } from "@heroicons/react/24/outline";
+import { LayoutSidebar } from "../components/dashboard/layout-dashboard/LayoutSidebar";
+import { LayoutRenderer, LayoutSelector } from "../components/dashboard/layout-dashboard/components";
+import { createWidgetConfig, type WidgetConfig, type DashboardWidgetType, type WidgetFactoryParams } from "../components/dashboard/layout-dashboard/widgets";
+import { 
+  createDragHandlers, 
+  getPlacedWidgets, 
+  saveLayoutToLocalStorage,
+  loadLayoutFromLocalStorage,
+  type DashboardLayoutState,
+  type DashboardLayoutActions 
+} from "../components/dashboard/layout-dashboard/utils";
+import { AVAILABLE_LAYOUTS, getDefaultLayout, type DashboardLayout } from "../components/dashboard/layout-dashboard/layouts";
 
 function getFirstFetchedDateRange() {
   return {
@@ -27,6 +38,14 @@ function getFirstFetchedDateRange() {
 const Dashboard = () => {
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
   const [sensorMap, setSensorMap] = useState<Map<number, string>>(new Map());
+  
+  // Layout Dashboard state
+  const [isEditing, setIsEditing] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [draggedWidget, setDraggedWidget] = useState<DashboardWidgetType | null>(null);
+  const [widgetPlacements, setWidgetPlacements] = useState<Record<string, DashboardWidgetType | null>>({});
+  const [currentLayout, setCurrentLayout] = useState<DashboardLayout>(getDefaultLayout());
+  
   const {
     locations,
     loading: sensorsLoading,
@@ -105,13 +124,13 @@ const Dashboard = () => {
     setSensorMap(newSensorMap);
   }, [locations]);
 
-  const handleAggregationChange = (aggregation: string) => {
-    setSensorRecordsFormData((prev) => ({
-      ...prev,
-      aggregationType: aggregation as AggregationType,
-    }));
-  };
-
+  // Aggregation handler - commented out since aggregation filter is hidden
+  // const handleAggregationChange = (aggregation: string) => {
+  //   setSensorRecordsFormData((prev) => ({
+  //     ...prev,
+  //     aggregationType: aggregation as AggregationType,
+  //   }));
+  // };
   const handleGroupByChange = (groupByValue: string) => {
     setSensorRecordsFormData((prev) => ({
       ...prev,
@@ -193,103 +212,161 @@ const Dashboard = () => {
     };
   }, [sensorData]);
 
+  // Create widget configurations using the factory
+  const availableWidgets: WidgetConfig[] = useMemo(() => {
+    const params: WidgetFactoryParams = {
+      metrics,
+      chartData,
+      sensorData,
+      sensorRecordsFormData,
+    };
+    return createWidgetConfig(params);
+  }, [metrics, chartData, sensorData, sensorRecordsFormData]);
+
+  // Dashboard layout state and actions
+  const layoutState: DashboardLayoutState = {
+    isEditing,
+    isSidebarOpen,
+    draggedWidget,
+    widgetPlacements,
+  };
+
+  const layoutActions: DashboardLayoutActions = {
+    setIsEditing,
+    setIsSidebarOpen,
+    setDraggedWidget,
+    setWidgetPlacements,
+  };
+
+  // Create drag handlers using the utility function
+  const { handleDragStart, handleDragEnd } = createDragHandlers(layoutState, layoutActions);
+
+  // Handle layout changes
+  const handleLayoutChange = (newLayout: DashboardLayout) => {
+    // Save current layout changes if any exist
+    if (Object.keys(widgetPlacements).length > 0) {
+      saveLayoutToLocalStorage(currentLayout.id, widgetPlacements);
+    }
+    
+    // Load the new layout
+    let newPlacements = newLayout.widgetPlacements;
+    
+    // Try to load saved placements for this layout
+    const savedPlacements = loadLayoutFromLocalStorage(newLayout.id);
+    if (savedPlacements) {
+      newPlacements = savedPlacements;
+    }
+    
+    setCurrentLayout(newLayout);
+    setWidgetPlacements(newPlacements);
+  };
+
+  // Initialize widget placements with current layout
+  useEffect(() => {
+    if (Object.keys(widgetPlacements).length === 0) {
+      let initialPlacements = currentLayout.widgetPlacements;
+      
+      // Try to load saved placements for this layout
+      const savedPlacements = loadLayoutFromLocalStorage(currentLayout.id);
+      if (savedPlacements) {
+        initialPlacements = savedPlacements;
+      }
+      
+      setWidgetPlacements(initialPlacements);
+    }
+  }, [currentLayout, widgetPlacements]);
+
+  // Toggle sidebar when entering/exiting edit mode and save changes
+  useEffect(() => {
+    setIsSidebarOpen(isEditing);
+    
+    // Save changes when exiting edit mode
+    if (!isEditing && Object.keys(widgetPlacements).length > 0) {
+      saveLayoutToLocalStorage(currentLayout.id, widgetPlacements);
+    }
+  }, [isEditing, currentLayout.id, widgetPlacements]);
+
   return (
-    <div className="space-y-6">
-      <DashboardFilters
-        onDateRangeChange={handleDateRangeChange}
-        currentDateRange={sensorRecordsFormData.dateRange}
-        onSensorsChange={handleSensorsChange}
-        currentSensors={
-          sensorRecordsFormData.sensorIds?.map((id) => id) || []
-        }
-        hourRange={sensorRecordsFormData.hourRange}
-        onHourRangeChange={handleHourRangeChange}
-        onAggregationChange={handleAggregationChange}
-        onRefreshData={handleRefreshData}
-        locations={locations}
-        lastUpdated={lastUpdated}
-      />
-      {isLoading ? (
-        <div className="flex items-center justify-center h-screen">
-          <Spinner size="lg" />
-        </div>
-      ) : hasError ? (
-        <div className="flex items-center justify-center h-screen text-red-500">
-          Error loading data. Please try again.
-        </div>
-      ) : (
-        <>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            <SensorDataCard
-              title="Total In"
-              value={metrics.totalIn}
-              translationKey="dashboard.metrics.totalIn"
-              unit="people"
-            />
-
-            <SensorDataCard
-              title="Total Out"
-              value={metrics.totalOut}
-              translationKey="dashboard.metrics.totalOut"
-              unit="people"
-            />
-
-            <SensorDataCard
-              title="Entry Rate"
-              value={metrics.entryRate}
-              translationKey="dashboard.metrics.entryRate"
-              unit="%"
-            />
+    <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+      <div className={`min-h-screen  transition-all duration-300 ${
+        isSidebarOpen ? 'pr-80' : ''
+      }`}>
+        {/* Main Content Area */}
+        <div className="p-6 space-y-6">
+          <div className="flex items-center justify-between">
+            <div className="flex-1">
+              <DashboardFilters
+                onDateRangeChange={handleDateRangeChange}
+                currentDateRange={sensorRecordsFormData.dateRange}
+                onSensorsChange={handleSensorsChange}
+                currentSensors={
+                  sensorRecordsFormData.sensorIds?.map((id) => id) || []
+                }
+                hourRange={sensorRecordsFormData.hourRange}
+                onHourRangeChange={handleHourRangeChange}
+                onRefreshData={handleRefreshData}
+                locations={locations}
+                lastUpdated={lastUpdated}
+              />
+            </div>
+            
+            {/* Edit Mode Toggle */}
+            <div className="flex items-center gap-3 ml-4">
+              {/* Layout Selector */}
+              <LayoutSelector
+                currentLayout={currentLayout}
+                onLayoutChange={handleLayoutChange}
+                availableLayouts={AVAILABLE_LAYOUTS}
+                isEditing={isEditing}
+              />
+              
+              <Button
+                variant={isEditing ? "flat" : "solid"}
+                color="primary"
+                startContent={isEditing ? <EyeIcon className="w-4 h-4" /> : <PencilIcon className="w-4 h-4" />}
+                onPress={() => setIsEditing(!isEditing)}
+                size="sm"
+              >
+                {isEditing ? "View Mode" : "Edit Layout"}
+              </Button>
+            </div>
           </div>
-          <div className="grid grid-cols-1 gap-6">
-            <ChartCard
-              title="Flujo de Personas (In/Out)"
-              translationKey="dashboard.charts.peopleFlow"
-            >
-              {chartData.categories.length === 0 ? (
-                <div className="flex items-center justify-center h-64 text-gray-500">
-                  No data available. Please select sensors and date range.
-                </div>
-              ) : (
-                <LineChart
-                  data={chartData}
-                  groupBy={sensorRecordsFormData.groupBy}
-                />
-              )}
-            </ChartCard>
 
-            <ChartCard
-              title="Traffic Heatmap (By Day & Hour)"
-              translationKey="dashboard.charts.trafficHeatmap"
-            >
-              {chartData.categories.length === 0 ? (
-                <div className="flex items-center justify-center h-64 text-gray-500">
-                  No data available. Please select sensors and date range.
-                </div>
-              ) : (
-                <ChartHeatMap data={sensorData} />
-              )}
-            </ChartCard>
+          {isLoading ? (
+            <div className="flex items-center justify-center h-64">
+              <Spinner size="lg" />
+            </div>
+          ) : hasError ? (
+            <div className="flex items-center justify-center h-64 text-red-500">
+              Error loading data. Please try again.
+            </div>
+          ) : (
+            <LayoutRenderer
+              isEditing={isEditing}
+              currentLayout={currentLayout}
+              widgetPlacements={widgetPlacements}
+              availableWidgets={availableWidgets}
+              draggedWidget={draggedWidget}
+            />
+          )}
+        </div>
 
-            <ChartCard
-              title="Entry Rate Over Time"
-              translationKey="dashboard.charts.entryRateOverTime"
-            >
-              {chartData.categories.length === 0 ? (
-                <div className="flex items-center justify-center h-64 text-gray-500">
-                  No data available. Please select sensors and date range.
-                </div>
-              ) : (
-                <EntryRateChart
-                  data={chartData}
-                  groupBy={sensorRecordsFormData.groupBy}
-                />
-              )}
-            </ChartCard>
-          </div>
-        </>
-      )}
-    </div>
+        {/* Layout Sidebar */}
+        <LayoutSidebar
+          isOpen={isSidebarOpen}
+          onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
+          isEditMode={isEditing}
+          allWidgets={availableWidgets.map(widget => ({
+            id: widget.id,
+            type: widget.type,
+            title: widget.title,
+            category: widget.category
+          }))}
+          placedWidgets={getPlacedWidgets(widgetPlacements)}
+          draggedWidget={draggedWidget}
+        />
+      </div>
+    </DndContext>
   );
 };
 
