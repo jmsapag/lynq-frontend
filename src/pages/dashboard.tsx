@@ -131,7 +131,6 @@ const Dashboard = () => {
   //     aggregationType: aggregation as AggregationType,
   //   }));
   // };
-
   const handleGroupByChange = (groupByValue: string) => {
     setSensorRecordsFormData((prev) => ({
       ...prev,
