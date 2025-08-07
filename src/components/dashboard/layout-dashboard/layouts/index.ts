@@ -40,7 +40,7 @@ export const AVAILABLE_LAYOUTS: DashboardLayout[] = [
       },
       {
         id: "charts-grid",
-        className: "grid grid-rows-1 lg:grid-rows-2 xl:grid-rows-3 gap-6",
+        className: " grid grid-rows-1 lg:grid-rows-2 xl:grid-rows-3 gap-6",
         zones: [
           { id: "chart-1", type: "chart", title: "Chart 1" },
           { id: "chart-2", type: "chart", title: "Chart 2" },

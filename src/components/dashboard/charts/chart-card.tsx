@@ -27,7 +27,7 @@ export const ChartCard: React.FC<ChartCardProps> = ({
       className={`bg-white rounded-lg border border-gray-200 p-4 h-full flex flex-col ${className}`}
     >
       <h3 className="text-lg font-medium text-gray-900 mb-4 flex-shrink-0">{displayTitle}</h3>
-      <div className="w-full flex-1 min-h-0">{children}</div>
+      <div className=" flex-1 min-h-0">{children}</div>
     </div>
   );
 };

@@ -53,7 +53,7 @@ export const DashboardWidget: React.FC<DashboardWidgetProps> = ({
       className={`${
         enableDrag && (isDragging || isCurrentlyDragging) 
           ? "scale-105 shadow-lg border-2 border-blue-500" 
-          : enableDrag ? "hover:shadow-md" : ""
+          : enableDrag ? "hover:shadow-md " : ""
       }`}
     >
       {children}

@@ -94,6 +94,8 @@ export const LayoutSidebar: React.FC<LayoutSidebarProps> = ({
         <div className="p-4 space-y-6 overflow-y-auto h-[calc(100vh-73px)]">
           {/* Info Cards Section */}
           <div>
+          {/* Removal Zone */}
+          <RemovalZone />
             <div className="flex items-center gap-2 mb-3">
               <Squares2X2Icon className="w-4 h-4 text-blue-600" />
               <h3 className="font-medium text-gray-900">Info Cards</h3>
@@ -223,8 +225,6 @@ export const LayoutSidebar: React.FC<LayoutSidebarProps> = ({
             </ul>
           </div>
 
-          {/* Removal Zone */}
-          <RemovalZone />
         </div>
       </div>
 
