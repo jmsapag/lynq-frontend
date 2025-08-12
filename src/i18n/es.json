@@ -52,7 +52,10 @@
     "yes": "Sí",
     "no": "No",
     "search": "Buscar",
-    "warning": "Advertencia"
+    "warning": "Advertencia",
+    "exportAsPng": "Exportar como PNG",
+    "exportAsPdf": "Exportar como PDF",
+    "exportAsCSV": "Exportar como CSV"
   },
   "dashboard": {
     "filters": {

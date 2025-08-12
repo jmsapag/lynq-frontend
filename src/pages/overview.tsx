@@ -1,35 +1,20 @@
-import { Spinner } from "@heroui/react";
+import { useEffect, useState } from "react";
 import {
   DashboardFilters,
   PredefinedPeriod,
-} from "../components/dashboard/filter.tsx";
-import { useEffect, useState, useMemo } from "react";
-import { useSensorData } from "../hooks/useSensorData.ts";
-import { useSensorRecords } from "../hooks/useSensorRecords.ts";
+} from "../components/dashboard/filter";
+import { Time } from "@internationalized/date";
+import { useSensorData } from "../hooks/useSensorData";
+import { useSensorRecords } from "../hooks/useSensorRecords";
 import { sensorResponse } from "../types/deviceResponse";
 import { sensorMetadata } from "../types/sensorMetadata";
 import { SensorRecordsFormData } from "../types/sensorRecordsFormData";
-import { Time } from "@internationalized/date";
-import { SensorDataCard } from "../components/dashboard/charts/card.tsx";
-import { useTranslation } from "react-i18next";
-import { format } from "date-fns";
-
-function getFirstFetchedDateRange() {
-  const end = new Date();
-  end.setHours(23, 59, 59, 999);
-
-  const start = new Date();
-  start.setDate(start.getDate() - 6);
-  start.setHours(0, 0, 0, 0);
-
-  return {
-    start,
-    end,
-  };
-}
+import { getFirstFetchedDateRange } from "../utils/dateUtils";
+import { useOverviewMetrics } from "../hooks/dashboard/useOverviewMetrics";
+import { MetricsCardGrid } from "../components/dashboard/overview/card-grid.tsx";
+import { LoadingState } from "../components/loading/loading-state.tsx";
 
 export const Overview: React.FC = () => {
-  const { t } = useTranslation();
   const GROUP_BY = "day";
   const AGGREGATION_TYPE = "sum";
   const [selectedPeriod, setSelectedPeriod] =
@@ -42,6 +27,7 @@ export const Overview: React.FC = () => {
     loading: sensorsLoading,
     error: sensorsError,
   } = useSensorData();
+
   const [sensorRecordsFormData, setSensorRecordsFormData] =
     useState<SensorRecordsFormData>({
       sensorIds: [],
@@ -60,104 +46,13 @@ export const Overview: React.FC = () => {
     error: dataError,
   } = useSensorRecords(sensorRecordsFormData, setSensorRecordsFormData);
 
-  const metrics = useMemo(() => {
-    if (!sensorData || !sensorData.in || !sensorData.out) {
-      return {
-        totalIn: 0,
-        totalOut: 0,
-        entryRate: 0,
-        dailyAverageIn: 0,
-        dailyAverageOut: 0,
-        percentageChange: 0,
-        mostCrowdedDay: null,
-        leastCrowdedDay: null,
-      };
-    }
-
-    const totalIn = sensorData.in.reduce((sum, value) => sum + value, 0);
-    const totalOut = sensorData.out.reduce((sum, value) => sum + value, 0);
-
-    const totalMovements = totalIn + totalOut;
-
-    const entryRate =
-      totalMovements > 0 ? Math.round((totalIn / totalMovements) * 100) : 0;
-
-    const startDate = sensorRecordsFormData.dateRange.start;
-    const endDate = sensorRecordsFormData.dateRange.end;
-    const daysDiff = Math.max(
-      1,
-      Math.ceil(
-        (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24),
-      ),
-    );
-
-    const dailyAverageIn = Math.round(totalIn / daysDiff);
-    const dailyAverageOut = Math.round(totalOut / daysDiff);
-
-    let percentageChange = 0;
-    if (
-      sensorData.timestamps &&
-      sensorData.timestamps.length > 0 &&
-      sensorData.in.length > 0
-    ) {
-      const firstDayIn = sensorData.in[0];
-      const lastDayIn = sensorData.in[sensorData.in.length - 1];
-      if (firstDayIn !== 0) {
-        percentageChange = ((lastDayIn - firstDayIn) / firstDayIn) * 100;
-      } else if (lastDayIn > 0) {
-        percentageChange = 100;
-      }
-    }
-
-    let mostCrowdedDayIndex = -1;
-    let leastCrowdedDayIndex = -1;
-    let maxInValue = -1;
-    let minInValue = Number.MAX_SAFE_INTEGER;
-
-    sensorData.in.forEach((value, index) => {
-      if (value > maxInValue) {
-        maxInValue = value;
-        mostCrowdedDayIndex = index;
-      }
-
-      if (value < minInValue && value > 0) {
-        minInValue = value;
-        leastCrowdedDayIndex = index;
-      }
-    });
-
-    if (leastCrowdedDayIndex === -1 && sensorData.in.length > 0) {
-      leastCrowdedDayIndex = sensorData.in.findIndex((value) => value === 0);
-      minInValue = 0;
-    }
-
-    const mostCrowdedDay =
-      mostCrowdedDayIndex >= 0
-        ? {
-            date: new Date(sensorData.timestamps[mostCrowdedDayIndex]),
-            value: maxInValue,
-          }
-        : null;
-
-    const leastCrowdedDay =
-      leastCrowdedDayIndex >= 0
-        ? {
-            date: new Date(sensorData.timestamps[leastCrowdedDayIndex]),
-            value: minInValue,
-          }
-        : null;
-
-    return {
-      totalIn,
-      totalOut,
-      entryRate,
-      dailyAverageIn,
-      dailyAverageOut,
-      percentageChange: Math.round(percentageChange),
-      mostCrowdedDay,
-      leastCrowdedDay,
-    };
-  }, [sensorData, sensorRecordsFormData.dateRange]);
+  // Get calculated metrics using the custom hook
+  const { metrics, getSensorDetails, sensorIdsList } = useOverviewMetrics(
+    sensorData,
+    sensorRecordsFormData.dateRange,
+    sensorMap,
+    locations || [],
+  );
 
   const handleDateRangeChange = (startDate: Date, endDate: Date) => {
     setSensorRecordsFormData((prev) => ({
@@ -188,30 +83,6 @@ export const Overview: React.FC = () => {
     });
   };
 
-  useEffect(() => {
-    if (locations && locations.length > 0) {
-      const allSensorIds = locations.flatMap((location) =>
-        location.sensors.map((sensor) => sensor.id),
-      );
-
-      setSensorRecordsFormData((prev) => ({
-        ...prev,
-        sensorIds: allSensorIds,
-        needToFetch: true,
-      }));
-    }
-  }, [locations]);
-
-  useEffect(() => {
-    const newSensorMap = new Map<number, string>();
-    locations?.forEach((location: sensorResponse) => {
-      location.sensors.forEach((sensor: sensorMetadata) => {
-        newSensorMap.set(sensor.id, sensor.position);
-      });
-    });
-    setSensorMap(newSensorMap);
-  }, [locations]);
-
   const handleAggregationChange = () => {};
 
   const handleRefreshData = () => {
@@ -237,6 +108,33 @@ export const Overview: React.FC = () => {
     }));
   };
 
+  // Effect to handle initial sensor IDs
+  useEffect(() => {
+    if (locations && locations.length > 0) {
+      const allSensorIds = locations.flatMap((location) =>
+        location.sensors.map((sensor) => sensor.id),
+      );
+
+      setSensorRecordsFormData((prev) => ({
+        ...prev,
+        sensorIds: allSensorIds,
+        needToFetch: true,
+      }));
+    }
+  }, [locations]);
+
+  // Effect to build sensor map
+  useEffect(() => {
+    const newSensorMap = new Map<number, string>();
+    locations?.forEach((location: sensorResponse) => {
+      location.sensors.forEach((sensor: sensorMetadata) => {
+        newSensorMap.set(sensor.id, sensor.position);
+      });
+    });
+    setSensorMap(newSensorMap);
+  }, [locations]);
+
+  // Effect to load last updated time from localStorage
   useEffect(() => {
     const storedLastUpdated = localStorage.getItem("lastUpdated");
     if (storedLastUpdated) {
@@ -266,102 +164,17 @@ export const Overview: React.FC = () => {
         currentPredefinedPeriod={selectedPeriod}
         onPredefinedPeriodChange={handlePredefinedPeriodChange}
       />
-      {isLoading ? (
-        <div className="flex items-center justify-center h-64">
-          <Spinner size="lg" />
-        </div>
-      ) : hasError ? (
-        <div className="flex items-center justify-center h-64 text-red-500">
-          {t("common.error")}
-        </div>
-      ) : (
+
+      <LoadingState isLoading={isLoading} hasError={hasError} />
+
+      {!isLoading && !hasError && (
         <div className="mt-4">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            <SensorDataCard
-              title="Total In"
-              value={metrics.totalIn.toLocaleString()}
-              translationKey="dashboard.metrics.totalIn"
-              descriptionTranslationKey="dashboard.metrics.totalInDescription"
-              unit="people"
-            />
-
-            <SensorDataCard
-              title="Total Out"
-              value={metrics.totalOut.toLocaleString()}
-              translationKey="dashboard.metrics.totalOut"
-              descriptionTranslationKey="dashboard.metrics.totalOutDescription"
-              unit="people"
-            />
-
-            <SensorDataCard
-              title="Daily Average In"
-              value={metrics.dailyAverageIn.toLocaleString()}
-              translationKey="dashboard.metrics.dailyAverageIn"
-              descriptionTranslationKey="dashboard.metrics.dailyAverageInDescription"
-              unit="people/day"
-            />
-
-            <SensorDataCard
-              title="Daily Average Out"
-              value={metrics.dailyAverageOut.toLocaleString()}
-              translationKey="dashboard.metrics.dailyAverageOut"
-              descriptionTranslationKey="dashboard.metrics.dailyAverageOutDescription"
-              unit="people/day"
-            />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            <SensorDataCard
-              title="Most Crowded Day"
-              value={
-                metrics.mostCrowdedDay
-                  ? format(metrics.mostCrowdedDay.date, "d MMM")
-                  : "-"
-              }
-              translationKey="dashboard.metrics.mostCrowdedDay"
-              descriptionTranslationKey="dashboard.metrics.mostCrowdedDayDescription"
-              unit={
-                metrics.mostCrowdedDay
-                  ? `(${metrics.mostCrowdedDay.value.toLocaleString()} people)`
-                  : ""
-              }
-            />
-
-            <SensorDataCard
-              title="Least Crowded Day"
-              value={
-                metrics.leastCrowdedDay
-                  ? format(metrics.leastCrowdedDay.date, "d MMM")
-                  : "-"
-              }
-              translationKey="dashboard.metrics.leastCrowdedDay"
-              descriptionTranslationKey="dashboard.metrics.leastCrowdedDayDescription"
-              unit={
-                metrics.leastCrowdedDay
-                  ? `(${metrics.leastCrowdedDay.value.toLocaleString()} people)`
-                  : ""
-              }
-            />
-
-            <SensorDataCard
-              title="Entry Rate"
-              value={metrics.entryRate}
-              translationKey="dashboard.metrics.entryRate"
-              descriptionTranslationKey="dashboard.metrics.entryRateDescription"
-              unit="%"
-            />
-
-            <SensorDataCard
-              title="Percentage Increase/Decrease"
-              value={
-                (metrics.percentageChange > 0 ? "+" : "") +
-                metrics.percentageChange.toLocaleString()
-              }
-              translationKey="dashboard.metrics.percentageChange"
-              descriptionTranslationKey="dashboard.metrics.percentageChangeDescription"
-              unit="%"
-            />
-          </div>
+          <MetricsCardGrid
+            metrics={metrics}
+            dateRange={sensorRecordsFormData.dateRange}
+            sensorIdsList={sensorIdsList}
+            getSensorDetails={getSensorDetails}
+          />
         </div>
       )}
     </div>
