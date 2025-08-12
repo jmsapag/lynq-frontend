@@ -115,11 +115,16 @@ export const SensorDataCard: React.FC<SensorDataCardProps> = ({
     setShowDropdown(false);
 
     try {
+      const sensorDetails = Array.isArray(data?.sensorDetails)
+        ? data.sensorDetails
+        : [];
+
       const csvData = {
         metric: displayTitle,
         value: value.toString().replace(/,/g, ""),
         unit: unit,
         ...(data || {}),
+        sensors: sensorDetails.length > 0 ? sensorDetails : data?.sensors || "",
         date_range: dateRange
           ? `${formatDateRangeForFilename(dateRange.start, dateRange.end)}`
           : "",
