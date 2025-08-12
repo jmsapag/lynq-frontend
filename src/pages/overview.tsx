@@ -247,6 +247,9 @@ export const Overview: React.FC = () => {
   const isLoading = sensorsLoading || dataLoading;
   const hasError = sensorsError || dataError;
 
+  // Extract sensor IDs for export data
+  const sensorIdsList = sensorRecordsFormData.sensorIds.join(",");
+
   return (
     <div className="space-y-6">
       <DashboardFilters
@@ -283,6 +286,19 @@ export const Overview: React.FC = () => {
               translationKey="dashboard.metrics.totalIn"
               descriptionTranslationKey="dashboard.metrics.totalInDescription"
               unit="people"
+              dateRange={sensorRecordsFormData.dateRange}
+              data={{
+                total_in: metrics.totalIn,
+                date_range_start: format(
+                  sensorRecordsFormData.dateRange.start,
+                  "yyyy-MM-dd",
+                ),
+                date_range_end: format(
+                  sensorRecordsFormData.dateRange.end,
+                  "yyyy-MM-dd",
+                ),
+                sensors: sensorIdsList,
+              }}
             />
 
             <SensorDataCard
@@ -291,6 +307,19 @@ export const Overview: React.FC = () => {
               translationKey="dashboard.metrics.totalOut"
               descriptionTranslationKey="dashboard.metrics.totalOutDescription"
               unit="people"
+              dateRange={sensorRecordsFormData.dateRange}
+              data={{
+                total_out: metrics.totalOut,
+                date_range_start: format(
+                  sensorRecordsFormData.dateRange.start,
+                  "yyyy-MM-dd",
+                ),
+                date_range_end: format(
+                  sensorRecordsFormData.dateRange.end,
+                  "yyyy-MM-dd",
+                ),
+                sensors: sensorIdsList,
+              }}
             />
 
             <SensorDataCard
@@ -299,6 +328,19 @@ export const Overview: React.FC = () => {
               translationKey="dashboard.metrics.dailyAverageIn"
               descriptionTranslationKey="dashboard.metrics.dailyAverageInDescription"
               unit="people/day"
+              dateRange={sensorRecordsFormData.dateRange}
+              data={{
+                daily_average_in: metrics.dailyAverageIn,
+                date_range_start: format(
+                  sensorRecordsFormData.dateRange.start,
+                  "yyyy-MM-dd",
+                ),
+                date_range_end: format(
+                  sensorRecordsFormData.dateRange.end,
+                  "yyyy-MM-dd",
+                ),
+                sensors: sensorIdsList,
+              }}
             />
 
             <SensorDataCard
@@ -307,6 +349,19 @@ export const Overview: React.FC = () => {
               translationKey="dashboard.metrics.dailyAverageOut"
               descriptionTranslationKey="dashboard.metrics.dailyAverageOutDescription"
               unit="people/day"
+              dateRange={sensorRecordsFormData.dateRange}
+              data={{
+                daily_average_out: metrics.dailyAverageOut,
+                date_range_start: format(
+                  sensorRecordsFormData.dateRange.start,
+                  "yyyy-MM-dd",
+                ),
+                date_range_end: format(
+                  sensorRecordsFormData.dateRange.end,
+                  "yyyy-MM-dd",
+                ),
+                sensors: sensorIdsList,
+              }}
             />
           </div>
 
@@ -325,6 +380,22 @@ export const Overview: React.FC = () => {
                   ? `(${metrics.mostCrowdedDay.value.toLocaleString()} people)`
                   : ""
               }
+              dateRange={sensorRecordsFormData.dateRange}
+              data={{
+                most_crowded_day: metrics.mostCrowdedDay
+                  ? format(metrics.mostCrowdedDay.date, "yyyy-MM-dd")
+                  : "-",
+                most_crowded_value: metrics.mostCrowdedDay?.value || 0,
+                date_range_start: format(
+                  sensorRecordsFormData.dateRange.start,
+                  "yyyy-MM-dd",
+                ),
+                date_range_end: format(
+                  sensorRecordsFormData.dateRange.end,
+                  "yyyy-MM-dd",
+                ),
+                sensors: sensorIdsList,
+              }}
             />
 
             <SensorDataCard
@@ -341,6 +412,22 @@ export const Overview: React.FC = () => {
                   ? `(${metrics.leastCrowdedDay.value.toLocaleString()} people)`
                   : ""
               }
+              dateRange={sensorRecordsFormData.dateRange}
+              data={{
+                least_crowded_day: metrics.leastCrowdedDay
+                  ? format(metrics.leastCrowdedDay.date, "yyyy-MM-dd")
+                  : "-",
+                least_crowded_value: metrics.leastCrowdedDay?.value || 0,
+                date_range_start: format(
+                  sensorRecordsFormData.dateRange.start,
+                  "yyyy-MM-dd",
+                ),
+                date_range_end: format(
+                  sensorRecordsFormData.dateRange.end,
+                  "yyyy-MM-dd",
+                ),
+                sensors: sensorIdsList,
+              }}
             />
 
             <SensorDataCard
@@ -349,6 +436,19 @@ export const Overview: React.FC = () => {
               translationKey="dashboard.metrics.entryRate"
               descriptionTranslationKey="dashboard.metrics.entryRateDescription"
               unit="%"
+              dateRange={sensorRecordsFormData.dateRange}
+              data={{
+                entry_rate: metrics.entryRate,
+                date_range_start: format(
+                  sensorRecordsFormData.dateRange.start,
+                  "yyyy-MM-dd",
+                ),
+                date_range_end: format(
+                  sensorRecordsFormData.dateRange.end,
+                  "yyyy-MM-dd",
+                ),
+                sensors: sensorIdsList,
+              }}
             />
 
             <SensorDataCard
@@ -360,6 +460,19 @@ export const Overview: React.FC = () => {
               translationKey="dashboard.metrics.percentageChange"
               descriptionTranslationKey="dashboard.metrics.percentageChangeDescription"
               unit="%"
+              dateRange={sensorRecordsFormData.dateRange}
+              data={{
+                percentage_change: metrics.percentageChange,
+                date_range_start: format(
+                  sensorRecordsFormData.dateRange.start,
+                  "yyyy-MM-dd",
+                ),
+                date_range_end: format(
+                  sensorRecordsFormData.dateRange.end,
+                  "yyyy-MM-dd",
+                ),
+                sensors: sensorIdsList,
+              }}
             />
           </div>
         </div>
