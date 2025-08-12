@@ -2,6 +2,11 @@ import React, { useState } from "react";
 import { ArrowPathIcon, FunnelIcon } from "@heroicons/react/24/outline";
 import { format } from "date-fns";
 import { useTranslation } from "react-i18next";
+import {
+  Select,
+  SelectItem,
+  // TimeInput
+} from "@heroui/react";
 import { DatePicker, Button } from "@heroui/react";
 import { DateValue, Time } from "@internationalized/date";
 import { fromDate, getLocalTimeZone } from "@internationalized/date";
@@ -39,8 +44,8 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
   onDateRangeChange,
   currentDateRange,
   onSensorsChange,
-  onAggregationChange,
-  currentAggregation,
+  // onAggregationChange, // Hidden aggregation functionality
+  // currentAggregation,   // Hidden aggregation functionality
   // hourRange,
   // onHourRangeChange,
   onRefreshData,
@@ -70,9 +75,10 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
     currentPredefinedPeriod,
   );
   const [groupBy, setGroupBy] = useState<string>("day");
-  const [aggregation, setAggregation] = useState<string>(
-    currentAggregation || "sum",
-  );
+  // Aggregation state - hidden from UI but kept for potential future use
+  // const [aggregation, setAggregation] = useState<string>(
+  //   currentAggregation || "sum",
+  // );
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const getDateRangeForPeriod = (
@@ -163,24 +169,41 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
       }
     }
   };
+  // const handleStartTimeChange = (value: Time | null) => {
+  //   if (value) {
+  //     onHourRangeChange(value, hourRange.end);
+  //   }
+  // };
+  //
+  // const handleEndTimeChange = (value: Time | null) => {
+  //   if (value) {
+  //     onHourRangeChange(hourRange.start, value);
+  //   }
+  // };
 
-  const handleGroupByChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newGroupBy = e.target.value;
-    setGroupBy(newGroupBy);
+  const handleGroupByChange = (keys: any) => {
+    // Hero UI Select returns a Set of selected keys, we want the first (and only) value
+    const selectedKey = Array.from(keys)[0];
+    if (selectedKey) {
+      const newGroupBy = selectedKey as string;
+      setGroupBy(newGroupBy);
 
-    const event = new CustomEvent("groupByChange", {
-      detail: { groupBy: newGroupBy },
-    });
-    window.dispatchEvent(event);
-  };
-
-  const handleAggregationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newAggregation = e.target.value;
-    setAggregation(newAggregation);
-    if (onAggregationChange) {
-      onAggregationChange(newAggregation);
+      // Dispatch a custom event to notify the dashboard component
+      const event = new CustomEvent("groupByChange", {
+        detail: { groupBy: newGroupBy },
+      });
+      window.dispatchEvent(event);
     }
   };
+
+  // Aggregation change handler - commented out since UI is hidden
+  // const handleAggregationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  //   const newAggregation = e.target.value;
+  //   setAggregation(newAggregation);
+  //   if (onAggregationChange) {
+  //     onAggregationChange(newAggregation);
+  //   }
+  // };
 
   const handleRefresh = () => {
     if (onRefreshData) {
@@ -291,53 +314,87 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
         </div>
 
         <div className="flex flex-col space-y-4 md:flex-row md:items-end md:space-y-0 md:space-x-4">
-          {!hideGroupBy && (
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
-                {t("filters.groupBy")}
-              </label>
-              <select
-                className="inline-flex w-full md:w-60 items-center justify-between rounded-xl border-2 border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-900 shadow-sm hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-1 transition-colors duration-150"
-                value={groupBy}
-                onChange={handleGroupByChange}
-              >
-                <option value="5min">{t("filters.groupOptions.5min")}</option>
-                <option value="10min">{t("filters.groupOptions.10min")}</option>
-                <option value="15min">{t("filters.groupOptions.15min")}</option>
-                <option value="30min">{t("filters.groupOptions.30min")}</option>
-                <option value="hour">{t("filters.groupOptions.hour")}</option>
-                <option value="day">{t("filters.groupOptions.day")}</option>
-                <option value="week">{t("filters.groupOptions.week")}</option>
-                <option value="month">{t("filters.groupOptions.month")}</option>
-              </select>
-            </div>
-          )}
+          {/*<div className="space-y-2">*/}
+          {/*  <label className="block text-sm font-medium text-gray-700">*/}
+          {/*    {t("filters.timeRange")}*/}
+          {/*  </label>*/}
+          {/*  <div className="flex items-center space-x-2">*/}
+          {/*    <TimeInput*/}
+          {/*      value={hourRange.start}*/}
+          {/*      variant="bordered"*/}
+          {/*      onChange={handleStartTimeChange}*/}
+          {/*      className="w-full"*/}
+          {/*    />*/}
+          {/*    <span className="text-gray-500">{t("filters.to")}</span>*/}
+          {/*    <TimeInput*/}
+          {/*      value={hourRange.end}*/}
+          {/*      variant="bordered"*/}
+          {/*      onChange={handleEndTimeChange}*/}
+          {/*      className="w-full"*/}
+          {/*    />*/}
+          {/*  </div>*/}
+          {/*</div>*/}
 
-          {!hideAggregation && (
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
-                {t("filters.aggregation")}
-              </label>
-              <select
-                className="inline-flex w-full md:w-60 items-center justify-between rounded-xl border-2 border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-900 shadow-sm hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-1 transition-colors duration-150"
-                value={aggregation}
-                onChange={handleAggregationChange}
-              >
-                <option value="sum">
-                  {t("filters.aggregationOptions.sum")}
-                </option>
-                <option value="avg">
-                  {t("filters.aggregationOptions.avg")}
-                </option>
-                <option value="min">
-                  {t("filters.aggregationOptions.min")}
-                </option>
-                <option value="max">
-                  {t("filters.aggregationOptions.max")}
-                </option>
-              </select>
-            </div>
-          )}
+          <div className="space-y-2">
+            <Select
+              className="w-full md:w-60"
+              selectedKeys={new Set([groupBy])}
+              onSelectionChange={handleGroupByChange}
+              placeholder="Select time grouping"
+              label={t("filters.groupBy")}
+              size="sm"
+              variant="bordered"
+              radius="lg"
+              selectionMode="single"
+              classNames={{
+                trigger: "border-gray-100 hover:border-gray-300 focus:border-gray-300 data-[focus=true]:border-gray-300 data-[hover=true]:border-gray-300",
+                value: "text-gray-900",
+                label: "text-gray-700"
+              }}
+            >
+              <SelectItem key="5min">
+                {t("filters.groupOptions.5min")}
+              </SelectItem>
+              <SelectItem key="10min">
+                {t("filters.groupOptions.10min")}
+              </SelectItem>
+              <SelectItem key="15min">
+                {t("filters.groupOptions.15min")}
+              </SelectItem>
+              <SelectItem key="30min">
+                {t("filters.groupOptions.30min")}
+              </SelectItem>
+              <SelectItem key="hour">
+                {t("filters.groupOptions.hour")}
+              </SelectItem>
+              <SelectItem key="day">
+                {t("filters.groupOptions.day")}
+              </SelectItem>
+              <SelectItem key="week">
+                {t("filters.groupOptions.week")}
+              </SelectItem>
+              <SelectItem key="month">
+                {t("filters.groupOptions.month")}
+              </SelectItem>
+            </Select>
+          </div>
+
+          {/* Aggregation filter - hidden as requested */}
+          {/* <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-700">
+              {t("filters.aggregation")}
+            </label>
+            <select
+              className="inline-flex w-full md:w-60 items-center justify-between rounded-xl border-2 border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-900 shadow-sm hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-1 transition-colors duration-150"
+              value={aggregation}
+              onChange={handleAggregationChange}
+            >
+              <option value="sum">{t("filters.aggregationOptions.sum")}</option>
+              <option value="avg">{t("filters.aggregationOptions.avg")}</option>
+              <option value="min">{t("filters.aggregationOptions.min")}</option>
+              <option value="max">{t("filters.aggregationOptions.max")}</option>
+            </select>
+          </div> */}
 
           <div className="space-y-2">
             <div className="text-xs text-gray-500 text-center">

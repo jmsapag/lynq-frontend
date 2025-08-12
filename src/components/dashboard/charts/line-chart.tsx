@@ -89,7 +89,7 @@ export const LineChart: React.FC<LineChartProps> = ({
   };
 
   return (
-    <div className="h-[300px]">
+    <div className="w-full h-full" style={{ minWidth: '100px', height: '100%', minHeight: '300px' }}>
       <BaseChart option={option} className={className} />
     </div>
   );

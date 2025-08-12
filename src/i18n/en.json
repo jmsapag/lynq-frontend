@@ -210,7 +210,29 @@
     "passwordPlaceholder": "Password",
     "rememberMe": "Remember me",
     "forgot": "Forgot?",
-    "loginButton": "Log in"
+    "loginButton": "Log in",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password"
+  },
+  "forgotPassword": {
+    "title": "Forgot your password?",
+    "subtitle": "Enter your email address and we'll send you a link to reset your password.",
+    "emailPlaceholder": "Email",
+    "submitButton": "Send recovery email",
+    "backToLogin": "Back to login",
+    "emailRequired": "Email is required",
+    "invalidEmail": "Please enter a valid email address"
+  },
+  "changePassword": {
+    "title": "Change your password",
+    "subtitle": "Enter your new password below.",
+    "passwordPlaceholder": "New password",
+    "confirmPasswordPlaceholder": "Confirm new password",
+    "submitButton": "Change password",
+    "passwordRequired": "Password is required",
+    "confirmPasswordRequired": "Please confirm your password",
+    "passwordsDoNotMatch": "Passwords do not match",
+    "passwordTooShort": "Password must be at least 6 characters long"
   },
   "register": {
     "title": "Create your account",
@@ -265,7 +287,15 @@
     "editFailedTitle": "Edit Failed",
     "editFailedDescription": "Failed to edit business.",
     "deleteFailedTitle": "Delete Failed",
-    "deleteFailedDescription": "Failed to delete business."
+    "deleteFailedDescription": "Failed to delete business.",
+    "forgotPasswordSuccessTitle": "Email Sent",
+    "forgotPasswordSuccessDescription": "If an account with that email exists, you will receive a password recovery link.",
+    "forgotPasswordErrorTitle": "Error",
+    "forgotPasswordErrorDescription": "Failed to send recovery email. Please try again.",
+    "changePasswordSuccessTitle": "Password Changed",
+    "changePasswordSuccessDescription": "Your password has been changed successfully. You can now log in.",
+    "changePasswordErrorTitle": "Error",
+    "changePasswordErrorDescription": "Failed to change password. The link may be invalid or expired."
   },
   "businesses": {
     "management": "Business Management",

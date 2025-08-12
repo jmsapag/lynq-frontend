@@ -210,7 +210,29 @@
     "passwordPlaceholder": "Contraseña",
     "rememberMe": "Recordar",
     "forgot": "¿Te olvidaste?",
-    "loginButton": "Iniciar sesión"
+    "loginButton": "Iniciar sesión",
+    "showPassword": "Mostrar contraseña",
+    "hidePassword": "Ocultar contraseña"
+  },
+  "forgotPassword": {
+    "title": "¿Olvidaste tu contraseña?",
+    "subtitle": "Ingresa tu dirección de correo electrónico y te enviaremos un enlace para restablecer tu contraseña.",
+    "emailPlaceholder": "Correo electrónico",
+    "submitButton": "Enviar correo de recuperación",
+    "backToLogin": "Volver al inicio de sesión",
+    "emailRequired": "El correo electrónico es obligatorio",
+    "invalidEmail": "Por favor, ingresa un correo electrónico válido"
+  },
+  "changePassword": {
+    "title": "Cambia tu contraseña",
+    "subtitle": "Ingresa tu nueva contraseña a continuación.",
+    "passwordPlaceholder": "Nueva contraseña",
+    "confirmPasswordPlaceholder": "Confirmar nueva contraseña",
+    "submitButton": "Cambiar contraseña",
+    "passwordRequired": "La contraseña es obligatoria",
+    "confirmPasswordRequired": "Por favor, confirma tu contraseña",
+    "passwordsDoNotMatch": "Las contraseñas no coinciden",
+    "passwordTooShort": "La contraseña debe tener al menos 6 caracteres"
   },
   "register": {
     "title": "Crea tu cuenta",
@@ -265,7 +287,15 @@
     "editFailedTitle": "Error al editar",
     "editFailedDescription": "No se pudo editar la empresa.",
     "deleteFailedTitle": "Error al borrar",
-    "deleteFailedDescription": "No se pudo borrar la empresa."
+    "deleteFailedDescription": "No se pudo borrar la empresa.",
+    "forgotPasswordSuccessTitle": "Correo Enviado",
+    "forgotPasswordSuccessDescription": "Si existe una cuenta con ese correo, recibirás un enlace de recuperación.",
+    "forgotPasswordErrorTitle": "Error",
+    "forgotPasswordErrorDescription": "No se pudo enviar el correo de recuperación. Inténtalo de nuevo.",
+    "changePasswordSuccessTitle": "Contraseña Cambiada",
+    "changePasswordSuccessDescription": "Tu contraseña se cambió correctamente. Ya puedes iniciar sesión.",
+    "changePasswordErrorTitle": "Error",
+    "changePasswordErrorDescription": "No se pudo cambiar la contraseña. El enlace puede ser inválido o haber expirado."
   },
   "businesses": {
     "management": "Gestión de Empresas",
