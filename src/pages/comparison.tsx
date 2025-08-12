@@ -36,7 +36,9 @@ const getInitialFormData = (): SensorRecordsFormData => ({
 
 const Comparison = () => {
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
-  const [sensorMap, setSensorMap] = useState<Map<number, { position: string, locationName: string }>>(new Map());
+  const [sensorMap, setSensorMap] = useState<
+    Map<number, { position: string; locationName: string }>
+  >(new Map());
   const {
     locations,
     loading: sensorsLoading,
@@ -110,7 +112,7 @@ const Comparison = () => {
 
     // Find duplicate position names across different locations
     const positionCounts = new Map<string, number>();
-    validResults.forEach(result => {
+    validResults.forEach((result) => {
       const sensorInfo = sensorMap.get(result.sensorId);
       if (sensorInfo) {
         const position = sensorInfo.position;
@@ -126,9 +128,10 @@ const Comparison = () => {
 
         if (sensorInfo) {
           // Only include location name if there are multiple sensors with the same position
-          name = (positionCounts.get(sensorInfo.position) || 0) > 1
-            ? `${sensorInfo.position} (${sensorInfo.locationName})`
-            : sensorInfo.position;
+          name =
+            (positionCounts.get(sensorInfo.position) || 0) > 1
+              ? `${sensorInfo.position} (${sensorInfo.locationName})`
+              : sensorInfo.position;
         }
 
         return {
@@ -145,9 +148,10 @@ const Comparison = () => {
 
         if (sensorInfo) {
           // Only include location name if there are multiple sensors with the same position
-          name = (positionCounts.get(sensorInfo.position) || 0) > 1
-            ? `${sensorInfo.position} (${sensorInfo.locationName})`
-            : sensorInfo.position;
+          name =
+            (positionCounts.get(sensorInfo.position) || 0) > 1
+              ? `${sensorInfo.position} (${sensorInfo.locationName})`
+              : sensorInfo.position;
         }
 
         return {
@@ -201,12 +205,15 @@ const Comparison = () => {
   };
 
   useEffect(() => {
-    const newSensorMap = new Map<number, { position: string, locationName: string }>();
+    const newSensorMap = new Map<
+      number,
+      { position: string; locationName: string }
+    >();
     locations?.forEach((location: sensorResponse) => {
       location.sensors.forEach((sensor: sensorMetadata) => {
         newSensorMap.set(sensor.id, {
           position: sensor.position,
-          locationName: location.name
+          locationName: location.name,
         });
       });
     });

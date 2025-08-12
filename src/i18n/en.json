@@ -9,7 +9,8 @@
     "manage/users": "Manage Users",
     "profile": "Profile",
     "user-management": "User Management",
-    "locations": "Locations"
+    "locations": "Locations",
+    "overview": "Overview"
   },
   "days": {
     "sunday": "Sunday",
@@ -51,7 +52,10 @@
     "yes": "Yes",
     "no": "No",
     "search": "Search",
-    "warning": "Warning"
+    "warning": "Warning",
+    "exportAsPng": "Export as PNG",
+    "exportAsPdf": "Export as PDF",
+    "exportAsCSV": "Export as CSV"
   },
   "dashboard": {
     "filters": {
@@ -78,8 +82,21 @@
     },
     "metrics": {
       "totalIn": "Total In",
+      "totalInDescription": "Total number of people who entered the monitored area during the selected period.",
       "totalOut": "Total Out",
-      "entryRate": "Entry Rate"
+      "totalOutDescription": "Total number of people who exited the monitored area during the selected period.",
+      "entryRate": "Entry Rate",
+      "entryRateDescription": "Percentage of total traffic that entered the monitored area (In divided by total movements).",
+      "dailyAverageIn": "Daily Average In",
+      "dailyAverageInDescription": "Daily average of people entering, calculated from the selected period data.",
+      "dailyAverageOut": "Daily Average Out",
+      "dailyAverageOutDescription": "Daily average of people exiting, calculated from the selected period data.",
+      "percentageChange": "Percentage Increase/Decrease",
+      "percentageChangeDescription": "Percentage change in entries from the first to the last day of the selected period. Indicates whether foot traffic increased or decreased in relative terms.",
+      "mostCrowdedDay": "Most Crowded Day",
+      "mostCrowdedDayDescription": "Day with the highest number of entries within the selected period.",
+      "leastCrowdedDay": "Least Crowded Day",
+      "leastCrowdedDayDescription": "Day with the lowest number of entries within the selected period."
     }
   },
   "users": {
@@ -150,7 +167,16 @@
     },
     "refresh": "Refresh",
     "lastUpdated": "Updated",
-    "neverUpdated": "Never updated"
+    "neverUpdated": "Never updated",
+    "predefinedPeriods": "Time Period",
+    "periodOptions": {
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "last7Days": "Last 7 days",
+      "last14Days": "Last 14 days",
+      "last30Days": "Last 30 days",
+      "custom": "Custom"
+    }
   },
   "chart": {
     "in": "Entries",

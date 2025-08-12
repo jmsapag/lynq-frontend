@@ -3,6 +3,7 @@ import {
   UserGroupIcon,
   QuestionMarkCircleIcon,
   MapPinIcon,
+  HomeIcon,
 } from "@heroicons/react/24/outline";
 import {
   ArrowsRightLeftIcon,
@@ -11,6 +12,7 @@ import {
 } from "@heroicons/react/16/solid";
 
 export const navItems = [
+  { title: "overview", href: "/overview", icon: HomeIcon },
   { title: "dashboard", href: "/dashboard", icon: ChartBarIcon },
   { title: "comparison", href: "/comparison", icon: ArrowsRightLeftIcon },
   { title: "help", href: "/help", icon: QuestionMarkCircleIcon },
@@ -23,6 +25,7 @@ export const superAdminNavItems = [
 ];
 
 export const adminNavItems = [
+  { title: "overview", href: "/overview", icon: HomeIcon },
   { title: "dashboard", href: "/dashboard", icon: ChartBarIcon },
   { title: "comparison", href: "/comparison", icon: ArrowsRightLeftIcon },
   { title: "user-management", href: "/user-management", icon: UserGroupIcon },

@@ -1,12 +1,14 @@
 # 01_standard_formats.md
 
 ## General conventions
-* **Timestamps:** ISO‑8601 in UTC (`YYYY‑MM‑DDTHH:MM:SSZ`)
-* **IDs:** Auto-incrementing integers for database entities, UUIDs for tokens
-* **JSON keys:** camelCase for frontend, snake_case for database
-* **Payload versioning:** Handled per sensor brand in normalizer
+
+- **Timestamps:** ISO‑8601 in UTC (`YYYY‑MM‑DDTHH:MM:SSZ`)
+- **IDs:** Auto-incrementing integers for database entities, UUIDs for tokens
+- **JSON keys:** camelCase for frontend, snake_case for database
+- **Payload versioning:** Handled per sensor brand in normalizer
 
 ## 1. Normalized sensor event (Internal Database Schema)
+
 ```json
 {
   "id": 1,
@@ -19,10 +21,12 @@
   }
 }
 ```
-* `type` values: `DOOR`, `AREA`
-* Supports different sensor data structures via `doorRecord`/`areaRecord`
+
+- `type` values: `DOOR`, `AREA`
+- Supports different sensor data structures via `doorRecord`/`areaRecord`
 
 ## 2. API response `/devices/sensor-data`
+
 ```json
 {
   "statusCode": 200,
@@ -54,6 +58,7 @@
 ```
 
 ## 3. Business/Location hierarchy
+
 ```json
 {
   "business": {
@@ -80,6 +85,7 @@
 ```
 
 ## 4. User roles and permissions
+
 ```json
 {
   "user": {
@@ -92,17 +98,19 @@
   }
 }
 ```
-* Roles: `LYNQ_TEAM`, `ADMIN`, `STANDARD`
-* `LYNQ_TEAM`: Access to all businesses and system management
-* `ADMIN`: Full access within their business
-* `STANDARD`: Access only to assigned locations
+
+- Roles: `LYNQ_TEAM`, `ADMIN`, `STANDARD`
+- `LYNQ_TEAM`: Access to all businesses and system management
+- `ADMIN`: Full access within their business
+- `STANDARD`: Access only to assigned locations
 
 ## 5. MQTT message formats per sensor brand
 
 ### FootfallCam
+
 ```json
 {
-  "device_id": "fc001", 
+  "device_id": "fc001",
   "timestamp": "2025-08-04T10:21:05Z",
   "in": 3,
   "out": 1
@@ -110,6 +118,7 @@
 ```
 
 ### Xovis
+
 ```json
 {
   "id": "xv001",
@@ -124,6 +133,7 @@
 ```
 
 ### Hella
+
 ```json
 {
   "sensor_id": "hl001",
@@ -134,6 +144,7 @@
 ```
 
 ## 6. Standard error definition
+
 ```json
 {
   "statusCode": 400,
@@ -143,6 +154,7 @@
 ```
 
 ## 7. API versioning
-* No explicit versioning in URLs currently
-* Backward compatibility maintained through Prisma migrations
-* Breaking changes would require new API versions
+
+- No explicit versioning in URLs currently
+- Backward compatibility maintained through Prisma migrations
+- Breaking changes would require new API versions

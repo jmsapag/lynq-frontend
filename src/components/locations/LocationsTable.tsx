@@ -158,9 +158,7 @@ const LocationsTable: React.FC<LocationsTableProps> = ({
             </p>
             <div className="bg-danger-50 border border-danger-200 text-danger-700 p-3 rounded-md mt-2">
               <p className="font-semibold mb-1">{t("common.warning")}</p>
-              <p className="text-sm">
-                {t("locations.deleteWarning")}
-              </p>
+              <p className="text-sm">{t("locations.deleteWarning")}</p>
             </div>
           </ModalBody>
           <ModalFooter>

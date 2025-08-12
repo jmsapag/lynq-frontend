@@ -3,16 +3,23 @@ import { ArrowPathIcon, FunnelIcon } from "@heroicons/react/24/outline";
 import { format } from "date-fns";
 import { useTranslation } from "react-i18next";
 import {
-  DatePicker,
-  Button,
   Select,
   SelectItem,
   // TimeInput
 } from "@heroui/react";
+import { DatePicker, Button } from "@heroui/react";
 import { DateValue, Time } from "@internationalized/date";
 import { fromDate, getLocalTimeZone } from "@internationalized/date";
 import SensorSelectionModal from "./sensors/SensorSelectionModal";
 import { SensorLocation } from "../../types/sensorLocation.ts";
+
+export type PredefinedPeriod =
+  | "today"
+  | "yesterday"
+  | "last7Days"
+  | "last14Days"
+  | "last30Days"
+  | "custom";
 
 type DashboardFiltersProps = {
   onDateRangeChange: (startDate: Date, endDate: Date) => void;
@@ -26,6 +33,11 @@ type DashboardFiltersProps = {
   locations: SensorLocation[];
   currentSensors: number[];
   lastUpdated: Date | null;
+  hideGroupBy?: boolean;
+  hideAggregation?: boolean;
+  showPredefinedPeriods?: boolean;
+  currentPredefinedPeriod?: PredefinedPeriod;
+  onPredefinedPeriodChange?: (period: PredefinedPeriod) => void;
 };
 
 export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
@@ -39,8 +51,12 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
   onRefreshData,
   locations,
   currentSensors,
-
   lastUpdated,
+  hideGroupBy = false,
+  hideAggregation = false,
+  showPredefinedPeriods = false,
+  currentPredefinedPeriod = "custom",
+  onPredefinedPeriodChange,
 }) => {
   const { t } = useTranslation();
   const [startDate, setStartDate] = useState<DateValue>(() => {
@@ -55,6 +71,9 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
       : fromDate(new Date(), getLocalTimeZone());
   });
 
+  const [selectedPeriod, setSelectedPeriod] = useState<PredefinedPeriod>(
+    currentPredefinedPeriod,
+  );
   const [groupBy, setGroupBy] = useState<string>("day");
   // Aggregation state - hidden from UI but kept for potential future use
   // const [aggregation, setAggregation] = useState<string>(
@@ -62,11 +81,66 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
   // );
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
+  const getDateRangeForPeriod = (
+    period: PredefinedPeriod,
+  ): { start: Date; end: Date } => {
+    const end = new Date();
+    end.setHours(23, 59, 59, 999);
+
+    const start = new Date();
+    start.setHours(0, 0, 0, 0);
+
+    switch (period) {
+      case "today":
+        return { start, end };
+      case "yesterday":
+        start.setDate(start.getDate() - 1);
+        end.setDate(end.getDate() - 1);
+        return { start, end };
+      case "last7Days":
+        start.setDate(start.getDate() - 6);
+        return { start, end };
+      case "last14Days":
+        start.setDate(start.getDate() - 13);
+        return { start, end };
+      case "last30Days":
+        start.setDate(start.getDate() - 29);
+        return { start, end };
+      case "custom":
+      default:
+        return currentDateRange;
+    }
+  };
+
+  const handlePredefinedPeriodChange = (
+    e: React.ChangeEvent<HTMLSelectElement>,
+  ) => {
+    const period = e.target.value as PredefinedPeriod;
+    setSelectedPeriod(period);
+
+    if (period !== "custom") {
+      const dateRange = getDateRangeForPeriod(period);
+
+      setStartDate(fromDate(dateRange.start, getLocalTimeZone()));
+      setEndDate(fromDate(dateRange.end, getLocalTimeZone()));
+
+      onDateRangeChange(dateRange.start, dateRange.end);
+
+      if (onPredefinedPeriodChange) {
+        onPredefinedPeriodChange(period);
+      }
+    }
+  };
+
   const handleStartDateChange = (value: DateValue | null) => {
     if (value) {
+      setSelectedPeriod("custom");
+      if (onPredefinedPeriodChange) {
+        onPredefinedPeriodChange("custom");
+      }
+
       setStartDate(value);
       if (endDate) {
-        // Convert DateValue to Date for the callback
         const startDateObj = value.toDate(getLocalTimeZone());
         startDateObj.setHours(0, 0, 0, 0);
         const endDateObj = endDate.toDate(getLocalTimeZone());
@@ -77,13 +151,17 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
 
   const handleEndDateChange = (value: DateValue | null) => {
     if (value) {
+      setSelectedPeriod("custom");
+      if (onPredefinedPeriodChange) {
+        onPredefinedPeriodChange("custom");
+      }
+
       const now = new Date().setHours(23, 59, 59, 999);
       if (value.toDate(getLocalTimeZone()).getTime() > now) {
         return;
       }
       setEndDate(value);
       if (startDate) {
-        // Convert DateValue to Date for the callback
         const endDateObj = value.toDate(getLocalTimeZone());
         endDateObj.setHours(23, 59, 59, 999);
         const startDateObj = startDate.toDate(getLocalTimeZone());
@@ -145,6 +223,39 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
     <div className="bg-white p-4 rounded-lg shadow-sm mb-6">
       <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0 md:space-x-4">
         <div className="flex flex-col space-y-4 md:flex-row md:items-end md:space-y-0 md:space-x-4">
+          {/* Add predefined periods dropdown */}
+          {showPredefinedPeriods && (
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                {t("filters.predefinedPeriods")}
+              </label>
+              <select
+                className="inline-flex w-full md:w-60 items-center justify-between rounded-xl border-2 border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-900 shadow-sm hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-1 transition-colors duration-150"
+                value={selectedPeriod}
+                onChange={handlePredefinedPeriodChange}
+              >
+                <option value="today">
+                  {t("filters.periodOptions.today")}
+                </option>
+                <option value="yesterday">
+                  {t("filters.periodOptions.yesterday")}
+                </option>
+                <option value="last7Days">
+                  {t("filters.periodOptions.last7Days")}
+                </option>
+                <option value="last14Days">
+                  {t("filters.periodOptions.last14Days")}
+                </option>
+                <option value="last30Days">
+                  {t("filters.periodOptions.last30Days")}
+                </option>
+                <option value="custom">
+                  {t("filters.periodOptions.custom")}
+                </option>
+              </select>
+            </div>
+          )}
+
           <div className="space-y-2">
             <label className="block text-sm font-medium text-gray-700">
               {t("filters.dateRange")}

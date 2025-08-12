@@ -22,6 +22,7 @@ import UserManagement from "./pages/user-management.tsx";
 import Locations from "./pages/locations.tsx";
 import RoleRedirect from "./components/auth/roleRedirect.tsx";
 import { RoleRoute } from "./components/auth/roleRoute.tsx";
+import Overview from "./pages/overview.tsx";
 
 function AppLayoutWithState() {
   const { isOpen, handleToggle, handleClose } = useSidebar();
@@ -58,6 +59,7 @@ function App() {
           <Route element={<PrivateRoute />}>
             <Route path="/home" element={<RoleRedirect />} />
             <Route element={<AppLayoutWithState />}>
+              <Route path="/overview" element={<Overview />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/comparison" element={<Comparison />} />
               <Route path="/profile" element={<UsersPage />} />
