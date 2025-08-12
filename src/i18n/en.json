@@ -164,7 +164,16 @@
     },
     "refresh": "Refresh",
     "lastUpdated": "Updated",
-    "neverUpdated": "Never updated"
+    "neverUpdated": "Never updated",
+    "predefinedPeriods": "Time Period",
+    "periodOptions": {
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "last7Days": "Last 7 days",
+      "last14Days": "Last 14 days",
+      "last30Days": "Last 30 days",
+      "custom": "Custom"
+    }
   },
   "chart": {
     "in": "Entries",

@@ -1,5 +1,8 @@
 import { Spinner } from "@heroui/react";
-import { DashboardFilters } from "../components/dashboard/filter.tsx";
+import {
+  DashboardFilters,
+  PredefinedPeriod,
+} from "../components/dashboard/filter.tsx";
 import { useEffect, useState, useMemo } from "react";
 import { useSensorData } from "../hooks/useSensorData.ts";
 import { useSensorRecords } from "../hooks/useSensorRecords.ts";
@@ -12,19 +15,16 @@ import { useTranslation } from "react-i18next";
 import { format } from "date-fns";
 
 function getFirstFetchedDateRange() {
-  const today = new Date();
-  const dayOfWeek = today.getDay();
+  const end = new Date();
+  end.setHours(23, 59, 59, 999);
 
-  const startOfWeek = new Date(today);
-  startOfWeek.setDate(today.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1));
-  startOfWeek.setHours(0, 0, 0, 0);
-
-  const endOfWeek = new Date();
-  endOfWeek.setHours(23, 59, 59, 999);
+  const start = new Date();
+  start.setDate(start.getDate() - 6);
+  start.setHours(0, 0, 0, 0);
 
   return {
-    start: startOfWeek,
-    end: endOfWeek,
+    start,
+    end,
   };
 }
 
@@ -32,6 +32,8 @@ export const Overview: React.FC = () => {
   const { t } = useTranslation();
   const GROUP_BY = "day";
   const AGGREGATION_TYPE = "sum";
+  const [selectedPeriod, setSelectedPeriod] =
+    useState<PredefinedPeriod>("last7Days");
 
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
   const [sensorMap, setSensorMap] = useState<Map<number, string>>(new Map());
@@ -165,6 +167,10 @@ export const Overview: React.FC = () => {
     }));
   };
 
+  const handlePredefinedPeriodChange = (period: PredefinedPeriod) => {
+    setSelectedPeriod(period);
+  };
+
   const handleSensorsChange = (sensors: number[]) => {
     setSensorRecordsFormData((prev: SensorRecordsFormData) => {
       return {
@@ -256,6 +262,9 @@ export const Overview: React.FC = () => {
         lastUpdated={lastUpdated}
         hideGroupBy={true}
         hideAggregation={true}
+        showPredefinedPeriods={true}
+        currentPredefinedPeriod={selectedPeriod}
+        onPredefinedPeriodChange={handlePredefinedPeriodChange}
       />
       {isLoading ? (
         <div className="flex items-center justify-center h-64">
