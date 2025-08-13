@@ -23,7 +23,7 @@ function getFirstFetchedDateRange() {
 const LayoutDashboardPage: React.FC = () => {
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
   const [sensorMap, setSensorMap] = useState<Map<number, string>>(new Map());
-  
+
   const {
     locations,
     loading: sensorsLoading,
@@ -58,8 +58,14 @@ const LayoutDashboardPage: React.FC = () => {
       };
     }
 
-    const totalIn = sensorData.in.reduce((sum: number, value: number) => sum + value, 0);
-    const totalOut = sensorData.out.reduce((sum: number, value: number) => sum + value, 0);
+    const totalIn = sensorData.in.reduce(
+      (sum: number, value: number) => sum + value,
+      0,
+    );
+    const totalOut = sensorData.out.reduce(
+      (sum: number, value: number) => sum + value,
+      0,
+    );
 
     const totalMovements = totalIn + totalOut;
 

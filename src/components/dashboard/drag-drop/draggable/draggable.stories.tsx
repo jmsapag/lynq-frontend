@@ -1,19 +1,19 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import { DndContext, DragEndEvent } from '@dnd-kit/core';
-import Draggable from './draggable';
-import Droppable from '../droppable/droppable';
+import type { Meta, StoryObj } from "@storybook/react";
+import { DndContext, DragEndEvent } from "@dnd-kit/core";
+import Draggable from "./draggable";
+import Droppable from "../droppable/droppable";
 
 const meta: Meta<typeof Draggable> = {
-  title: 'Dashboard/DragDrop/Draggable',
+  title: "Dashboard/DragDrop/Draggable",
   component: Draggable,
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
     type: {
-      control: { type: 'select' },
-      options: ['small-card', 'card', 'chart-card'],
+      control: { type: "select" },
+      options: ["small-card", "card", "chart-card"],
     },
   },
   decorators: [
@@ -39,7 +39,7 @@ const meta: Meta<typeof Draggable> = {
 };
 
 function handleDragEnd(event: DragEndEvent) {
-  console.log('Drag ended:', event);
+  console.log("Drag ended:", event);
 }
 
 export default meta;
@@ -47,8 +47,8 @@ type Story = StoryObj<typeof meta>;
 
 export const SmallCard: Story = {
   args: {
-    id: 'small-card-1',
-    type: 'small-card',
+    id: "small-card-1",
+    type: "small-card",
     children: (
       <div>
         <div className="text-lg font-bold">📊</div>
@@ -60,8 +60,8 @@ export const SmallCard: Story = {
 
 export const Card: Story = {
   args: {
-    id: 'card-1',
-    type: 'card',
+    id: "card-1",
+    type: "card",
     children: (
       <div>
         <div className="text-2xl font-bold">📈</div>
@@ -73,8 +73,8 @@ export const Card: Story = {
 
 export const ChartCard: Story = {
   args: {
-    id: 'chart-card-1',
-    type: 'chart-card',
+    id: "chart-card-1",
+    type: "chart-card",
     children: (
       <div>
         <div className="text-3xl font-bold">📉</div>
