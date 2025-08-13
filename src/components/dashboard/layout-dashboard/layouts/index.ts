@@ -78,9 +78,9 @@ export const AVAILABLE_LAYOUTS: DashboardLayout[] = [
       },
     ],
     widgetPlacements: {
-      "metric-1": null,
-      "metric-2": null,
-      "metric-3": null,
+      "metric-1": "total-in",
+      "metric-2": "total-out",
+      "metric-3": "entry-rate",
       "metric-4": null,
       "metric-5": null,
       "metric-6": null,
