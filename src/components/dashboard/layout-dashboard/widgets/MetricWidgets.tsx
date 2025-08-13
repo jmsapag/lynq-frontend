@@ -18,6 +18,8 @@ export const MetricWidgets = {
         descriptionTranslationKey="dashboard.metrics.totalInDescription"
         unit="people"
         dateRange={params.dateRange}
+        comparison={params.comparisons?.totalIn}
+        comparisonPeriod={params.comparisonPeriod}
         data={{
           total_in: params.metrics.totalIn,
           date_range_start: params.dateRange
@@ -49,6 +51,8 @@ export const MetricWidgets = {
         descriptionTranslationKey="dashboard.metrics.totalOutDescription"
         unit="people"
         dateRange={params.dateRange}
+        comparison={params.comparisons?.totalOut}
+        comparisonPeriod={params.comparisonPeriod}
         data={{
           total_out: params.metrics.totalOut,
           date_range_start: params.dateRange
@@ -80,6 +84,8 @@ export const MetricWidgets = {
         descriptionTranslationKey="dashboard.metrics.entryRateDescription"
         unit="%"
         dateRange={params.dateRange}
+        comparison={params.comparisons?.entryRate}
+        comparisonPeriod={params.comparisonPeriod}
         data={{
           entry_rate: params.metrics.entryRate,
           date_range_start: params.dateRange
@@ -112,6 +118,8 @@ export const MetricWidgets = {
         descriptionTranslationKey="dashboard.metrics.dailyAverageInDescription"
         unit="people/day"
         dateRange={params.dateRange}
+        comparison={params.comparisons?.dailyAverageIn}
+        comparisonPeriod={params.comparisonPeriod}
         data={{
           daily_average_in: params.metrics.dailyAverageIn,
           date_range_start: params.dateRange
@@ -143,6 +151,8 @@ export const MetricWidgets = {
         descriptionTranslationKey="dashboard.metrics.dailyAverageOutDescription"
         unit="people/day"
         dateRange={params.dateRange}
+        comparison={params.comparisons?.dailyAverageOut}
+        comparisonPeriod={params.comparisonPeriod}
         data={{
           daily_average_out: params.metrics.dailyAverageOut,
           date_range_start: params.dateRange

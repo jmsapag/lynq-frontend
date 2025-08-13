@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import {
   Select,
   SelectItem,
+  Switch,
   // TimeInput
 } from "@heroui/react";
 import { DatePicker, Button } from "@heroui/react";
@@ -38,6 +39,10 @@ type DashboardFiltersProps = {
   showPredefinedPeriods?: boolean;
   currentPredefinedPeriod?: PredefinedPeriod;
   onPredefinedPeriodChange?: (period: PredefinedPeriod) => void;
+  // Comparison props
+  showComparison?: boolean;
+  isComparisonEnabled?: boolean;
+  onComparisonToggle?: (enabled: boolean) => void;
 };
 
 export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
@@ -56,6 +61,10 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
   currentPredefinedPeriod = "custom",
   onPredefinedPeriodChange,
   hideGroupBy = false,
+  // Comparison props
+  showComparison = false,
+  isComparisonEnabled = false,
+  onComparisonToggle,
 }) => {
   const { t } = useTranslation();
   const [startDate, setStartDate] = useState<DateValue>(() => {
@@ -239,6 +248,7 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
                 variant="bordered"
                 radius="lg"
                 selectionMode="single"
+                aria-label={t("filters.predefinedPeriods")}
                 classNames={{
                   trigger:
                     "border-gray-100 hover:border-gray-300 focus:border-gray-300 data-[focus=true]:border-gray-300 data-[hover=true]:border-gray-300",
@@ -292,6 +302,27 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
               />
             </div>
           </div>
+
+          {showComparison && (
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                {t("filters.comparison.label")}
+              </label>
+              <div className="flex items-center">
+                <Switch
+                  isSelected={isComparisonEnabled}
+                  onValueChange={onComparisonToggle}
+                  size="md"
+                  color="primary"
+                  aria-label={t("filters.comparison.toggle")}
+                >
+                  <span className="text-sm text-gray-700">
+                    {t("filters.comparison.toggle")}
+                  </span>
+                </Switch>
+              </div>
+            </div>
+          )}
 
           <div className="space-y-2">
             <label className="block text-sm font-medium text-gray-700">
@@ -361,6 +392,7 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
                 variant="bordered"
                 radius="lg"
                 selectionMode="single"
+                aria-label={t("filters.groupBy")}
                 classNames={{
                   trigger:
                     "border-gray-100 hover:border-gray-300 focus:border-gray-300 data-[focus=true]:border-gray-300 data-[hover=true]:border-gray-300",

@@ -15,6 +15,7 @@ import {
 import { SensorRecordsFormData } from "../types/sensorRecordsFormData";
 import { Time } from "@internationalized/date";
 import { useOverviewMetrics } from "../hooks/dashboard/useOverviewMetrics";
+import { useComparison } from "../hooks/dashboard/useComparison";
 
 // Layout Dashboard imports
 import { DndContext } from "@dnd-kit/core";
@@ -93,6 +94,11 @@ const Dashboard = () => {
     error: dataError,
   } = useSensorRecords(sensorRecordsFormData, setSensorRecordsFormData);
 
+  // Comparison hook
+  const { isComparisonEnabled, comparisonPeriods, toggleComparison } = useComparison(
+    sensorRecordsFormData.dateRange
+  );
+
   // Use the same overview metrics hook as in the overview page
   const { metrics, getSensorDetails, sensorIdsList } = useOverviewMetrics(
     sensorData,
@@ -100,6 +106,7 @@ const Dashboard = () => {
     sensorMap,
     locations || [],
     sensorRecordsFormData.sensorIds,
+    comparisonPeriods,
   );
 
   const handleDateRangeChange = (startDate: Date, endDate: Date) => {
@@ -246,13 +253,15 @@ const Dashboard = () => {
   // Create widget configurations using the factory - combining charts with overview metrics (avoiding duplicates)
   const availableWidgets: WidgetConfig[] = useMemo(() => {
     const params: WidgetFactoryParams = {
-      metrics,
+      metrics: metrics.current,
       chartData,
       sensorData,
       sensorRecordsFormData,
       dateRange: sensorRecordsFormData.dateRange,
       sensorIdsList,
       getSensorDetails,
+      comparisons: metrics.comparisons,
+      comparisonPeriod: comparisonPeriods?.previous,
     };
 
     // Get chart widgets (excluding the basic metrics that are in overview)
@@ -272,6 +281,7 @@ const Dashboard = () => {
     sensorRecordsFormData,
     sensorIdsList,
     getSensorDetails,
+    comparisonPeriods,
   ]);
 
   // Dashboard layout state and actions
@@ -366,6 +376,9 @@ const Dashboard = () => {
                 showPredefinedPeriods={true}
                 currentPredefinedPeriod={selectedPeriod}
                 onPredefinedPeriodChange={handlePredefinedPeriodChange}
+                showComparison={true}
+                isComparisonEnabled={isComparisonEnabled}
+                onComparisonToggle={toggleComparison}
               />
             </div>
 
@@ -376,7 +389,6 @@ const Dashboard = () => {
                 currentLayout={currentLayout}
                 onLayoutChange={handleLayoutChange}
                 availableLayouts={AVAILABLE_LAYOUTS}
-                isEditing={isEditing}
               />
 
               <Button

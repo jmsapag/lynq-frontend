@@ -13,14 +13,12 @@ interface LayoutSelectorProps {
   currentLayout: DashboardLayout;
   availableLayouts: DashboardLayout[];
   onLayoutChange: (layout: DashboardLayout) => void;
-  isEditing?: boolean;
 }
 
 export const LayoutSelector: React.FC<LayoutSelectorProps> = ({
   currentLayout,
   availableLayouts,
   onLayoutChange,
-  isEditing = false,
 }) => {
   return (
     <div className="flex items-center gap-2">

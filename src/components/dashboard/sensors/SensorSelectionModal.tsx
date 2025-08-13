@@ -40,10 +40,8 @@ const SensorSelectionModal: React.FC<SensorSelectionModalProps> = ({
   useEffect(() => {
     // This ensures we always set the selected sensors when the modal opens
     if (isOpen) {
-      console.log("Modal opened with selected sensors:", selectedSensors);
       // Create a fresh Set from the selectedSensors array
       const newSelectedSet = new Set([...selectedSensors]);
-      console.log("New Set created with size:", newSelectedSet.size);
       setLocalSelectedSensors(newSelectedSet);
     }
   }, [isOpen, selectedSensors]);

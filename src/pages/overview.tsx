@@ -13,6 +13,7 @@ import { getFirstFetchedDateRange } from "../utils/dateUtils";
 import { useOverviewMetrics } from "../hooks/dashboard/useOverviewMetrics";
 import { LoadingState } from "../components/loading/loading-state";
 import { useTranslation } from "react-i18next";
+import { useComparison } from "../hooks/dashboard/useComparison";
 import { DndContext } from "@dnd-kit/core";
 import { Button } from "@heroui/react";
 import { PencilIcon, EyeIcon } from "@heroicons/react/24/outline";
@@ -32,6 +33,7 @@ import {
   type DashboardLayout,
 } from "../components/dashboard/layout-dashboard/layouts";
 import { createOverviewWidgetConfig } from "../components/dashboard/layout-overview/widgets/widget-config.tsx";
+import { type OverviewWidgetFactoryParams } from "../components/dashboard/layout-overview/widgets/types";
 import { type DashboardWidgetType } from "../components/dashboard/layout-dashboard/widgets/types";
 
 export const Overview: React.FC = () => {
@@ -67,12 +69,18 @@ export const Overview: React.FC = () => {
     error: dataError,
   } = useSensorRecords(sensorRecordsFormData, setSensorRecordsFormData);
 
+  // Comparison hook
+  const { isComparisonEnabled, comparisonPeriods, toggleComparison } = useComparison(
+    sensorRecordsFormData.dateRange
+  );
+
   const { metrics, getSensorDetails, sensorIdsList } = useOverviewMetrics(
     sensorData,
     sensorRecordsFormData.dateRange,
     sensorMap,
     locations || [],
     sensorRecordsFormData.sensorIds,
+    comparisonPeriods,
   );
 
   // Layout Dashboard state
@@ -83,29 +91,32 @@ export const Overview: React.FC = () => {
   const [widgetPlacements, setWidgetPlacements] = useState<
     Record<string, DashboardWidgetType | null>
   >({});
-  const [currentLayout, setCurrentLayout] = useState<DashboardLayout>(
+  const [currentLayout] = useState<DashboardLayout>(
     getDefaultOverviewLayout(),
   );
 
   const availableWidgets: WidgetConfig[] = useMemo(() => {
     if (!metrics || !sensorRecordsFormData.dateRange.start) return [];
-    return createOverviewWidgetConfig(
-      {
-        metrics,
-        dateRange: {
-          start: sensorRecordsFormData.dateRange.start,
-          end: sensorRecordsFormData.dateRange.end || new Date(),
-        },
-        sensorIdsList,
-        getSensorDetails,
+    
+    const params: OverviewWidgetFactoryParams = {
+      metrics: metrics.current,
+      dateRange: {
+        start: sensorRecordsFormData.dateRange.start,
+        end: sensorRecordsFormData.dateRange.end || new Date(),
       },
-      t,
-    );
+      sensorIdsList,
+      getSensorDetails,
+      comparisons: metrics.comparisons,
+      comparisonPeriod: comparisonPeriods?.previous,
+    };
+    
+    return createOverviewWidgetConfig(params, t);
   }, [
     metrics,
     sensorRecordsFormData.dateRange,
     sensorIdsList,
     getSensorDetails,
+    comparisonPeriods,
     t,
   ]);
 
@@ -232,6 +243,9 @@ export const Overview: React.FC = () => {
                 currentPredefinedPeriod={selectedPeriod}
                 onPredefinedPeriodChange={handlePredefinedPeriodChange}
                 showPredefinedPeriods={true}
+                showComparison={true}
+                isComparisonEnabled={isComparisonEnabled}
+                onComparisonToggle={toggleComparison}
               />
             </div>
             <div className="flex items-center gap-3 ml-4">

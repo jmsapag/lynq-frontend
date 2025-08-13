@@ -7,6 +7,9 @@ import {
   DocumentIcon,
   PhotoIcon,
   TableCellsIcon,
+  ArrowUpIcon,
+  ArrowDownIcon,
+  MinusIcon,
 } from "@heroicons/react/24/outline";
 import { useRef, useState, useEffect } from "react";
 import {
@@ -15,6 +18,7 @@ import {
   exportAsCsv,
   formatDateRangeForFilename,
 } from "../../../utils/exportUtils";
+import { type MetricComparison, formatDeltaDisplay, getComparisonPeriodLabel } from "../../../utils/comparisonUtils";
 
 interface SensorDataCardProps {
   title: string;
@@ -28,7 +32,9 @@ interface SensorDataCardProps {
   descriptionTranslationKey?: string;
   dateRange?: { start: Date; end: Date };
   data?: Record<string, any>;
-  hideExport?: boolean; // New prop to control export button visibility
+  hideExport?: boolean;
+  comparison?: MetricComparison; // New prop for comparison data
+  comparisonPeriod?: { start: Date; end: Date }; // Period that's being compared to
 }
 
 export const SensorDataCard: React.FC<SensorDataCardProps> = ({
@@ -43,7 +49,9 @@ export const SensorDataCard: React.FC<SensorDataCardProps> = ({
   descriptionTranslationKey,
   dateRange,
   data,
-  hideExport = false, // Default to showing export button
+  hideExport = false,
+  comparison,
+  comparisonPeriod,
 }) => {
   const { t } = useTranslation();
   const cardRef = useRef<HTMLDivElement>(null);
@@ -232,6 +240,36 @@ export const SensorDataCard: React.FC<SensorDataCardProps> = ({
             {value}{" "}
             {unit && <span className="text-sm text-gray-500">{unit}</span>}
           </p>
+          
+          {/* Comparison display */}
+          {comparison && comparisonPeriod && (
+            <div className="mt-2 flex items-center gap-2">
+              <div className={`flex items-center gap-1 text-xs px-2 py-1 rounded-full ${
+                comparison.trend === "up" 
+                  ? "bg-green-50 text-green-700" 
+                  : comparison.trend === "down" 
+                    ? "bg-red-50 text-red-700" 
+                    : "bg-gray-50 text-gray-700"
+              }`}>
+                {comparison.trend === "up" && <ArrowUpIcon className="w-3 h-3" aria-hidden="true" />}
+                {comparison.trend === "down" && <ArrowDownIcon className="w-3 h-3" aria-hidden="true" />}
+                {comparison.trend === "stable" && <MinusIcon className="w-3 h-3" aria-hidden="true" />}
+                <span>
+                  {formatDeltaDisplay(comparison).percentageText}
+                </span>
+                <span className="sr-only">
+                  {comparison.trend === "up" 
+                    ? t("comparison.increaseFromPrevious")
+                    : comparison.trend === "down" 
+                      ? t("comparison.decreaseFromPrevious")
+                      : t("comparison.noChangeFromPrevious")}
+                </span>
+              </div>
+              <div className="text-xs text-gray-500">
+                vs. {getComparisonPeriodLabel(comparisonPeriod)}
+              </div>
+            </div>
+          )}
         </div>
         {icon && <div className="text-gray-400">{icon}</div>}
       </div>
