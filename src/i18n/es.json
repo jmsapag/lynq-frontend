@@ -96,7 +96,11 @@
       "mostCrowdedDay": "Día más concurrido",
       "mostCrowdedDayDescription": "Día del período seleccionado con mayor cantidad de entradas registradas.",
       "leastCrowdedDay": "Día menos concurrido",
-      "leastCrowdedDayDescription": "Día del período seleccionado con menor cantidad de entradas registradas."
+      "leastCrowdedDayDescription": "Día del período seleccionado con menor cantidad de entradas registradas.",
+      "resetLayout": "Restablecer Diseño",
+      "saveLayout": "Guardar Diseño",
+      "editLayout": "Editar Diseño",
+      "hiddenCards": "Tarjetas Ocultas"
     }
   },
   "users": {

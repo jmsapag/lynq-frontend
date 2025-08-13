@@ -2,7 +2,9 @@ import { WidgetConfig, WidgetFactoryParams } from "./types";
 import { MetricWidgets } from "./MetricWidgets";
 import { ChartWidgets } from "./ChartWidgets";
 
-export const createWidgetConfig = (params: WidgetFactoryParams): WidgetConfig[] => {
+export const createWidgetConfig = (
+  params: WidgetFactoryParams,
+): WidgetConfig[] => {
   return [
     MetricWidgets.createTotalInWidget(params),
     MetricWidgets.createTotalOutWidget(params),

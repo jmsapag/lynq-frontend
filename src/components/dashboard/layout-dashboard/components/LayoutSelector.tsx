@@ -1,5 +1,11 @@
 import React from "react";
-import { Button, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@heroui/react";
+import {
+  Button,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+} from "@heroui/react";
 import { ChevronDownIcon, Squares2X2Icon } from "@heroicons/react/24/outline";
 import { DashboardLayout } from "../layouts";
 
@@ -38,7 +44,9 @@ export const LayoutSelector: React.FC<LayoutSelectorProps> = ({
           selectedKeys={[currentLayout.id]}
           onSelectionChange={(keys) => {
             const selectedKey = Array.from(keys)[0] as string;
-            const selectedLayout = availableLayouts.find(layout => layout.id === selectedKey);
+            const selectedLayout = availableLayouts.find(
+              (layout) => layout.id === selectedKey,
+            );
             if (selectedLayout) {
               onLayoutChange(selectedLayout);
             }
@@ -54,7 +62,9 @@ export const LayoutSelector: React.FC<LayoutSelectorProps> = ({
                 <div>
                   <div className="font-medium">{layout.name}</div>
                   {layout.isDefault && (
-                    <span className="text-xs text-blue-600 font-medium">Default</span>
+                    <span className="text-xs text-blue-600 font-medium">
+                      Default
+                    </span>
                   )}
                 </div>
                 {currentLayout.id === layout.id && (
@@ -65,7 +75,6 @@ export const LayoutSelector: React.FC<LayoutSelectorProps> = ({
           ))}
         </DropdownMenu>
       </Dropdown>
-      
     </div>
   );
 };

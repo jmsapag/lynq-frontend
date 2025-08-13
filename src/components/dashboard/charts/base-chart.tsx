@@ -24,12 +24,12 @@ export const BaseChart: React.FC<BaseChartProps> = ({
   useEffect(() => {
     if (chartRef.current) {
       chartInstance.current = echarts.init(chartRef.current);
-      
+
       // Set up ResizeObserver for more reliable resize detection
       resizeObserver.current = new ResizeObserver(() => {
         handleResize();
       });
-      
+
       resizeObserver.current.observe(chartRef.current);
     }
 
