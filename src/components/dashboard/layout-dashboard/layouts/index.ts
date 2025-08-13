@@ -1,4 +1,3 @@
-// src/components/dashboard/layout-dashboard/layouts/index.ts
 import { DashboardWidgetType } from "../widgets/types";
 
 export interface DropZone {
