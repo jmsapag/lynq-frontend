@@ -8,6 +8,7 @@ export const createWidgetConfig = (params: WidgetFactoryParams): WidgetConfig[] 
     MetricWidgets.createTotalOutWidget(params),
     MetricWidgets.createEntryRateWidget(params),
     ChartWidgets.createPeopleFlowChartWidget(params),
+    ChartWidgets.createCumulativePeopleChartWidget(params),
     ChartWidgets.createTrafficHeatmapWidget(params),
     ChartWidgets.createEntryRateChartWidget(params),
   ];

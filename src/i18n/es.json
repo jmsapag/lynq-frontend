@@ -71,6 +71,7 @@
       "peopleFlow": "Flujo de Personas (Entradas/Salidas)",
       "trafficHeatmap": "Mapa de Calor (Por Día y Hora)",
       "entryRateOverTime": "Tasa de Entrada a lo Largo del Tiempo",
+      "peopleInStore": "Personas en Tienda (Acumulativo)",
       "entries": "Entradas",
       "exits": "Salidas",
       "showEntries": "Mostrar Entradas",
@@ -78,7 +79,10 @@
       "entriesByDayAndHour": "Entradas por Día y Hora",
       "exitsByDayAndHour": "Salidas por Día y Hora",
       "hourOfDay": "Hora del Día",
-      "dayOfWeek": "Día de la Semana"
+      "dayOfWeek": "Día de la Semana",
+      "peopleInStoreTitle": "Personas en Tienda",
+      "netFlow": "Flujo Neto",
+      "numberOfPeople": "Número de Personas"
     },
     "metrics": {
       "totalIn": "Total Entradas",

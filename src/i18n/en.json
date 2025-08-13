@@ -71,6 +71,7 @@
       "peopleFlow": "People Flow (In/Out)",
       "trafficHeatmap": "Traffic Heatmap (By Day & Hour)",
       "entryRateOverTime": "Entry Rate Over Time",
+      "peopleInStore": "People in Store (Cumulative)",
       "entries": "Entries",
       "exits": "Exits",
       "showEntries": "Show Entries",
@@ -78,7 +79,10 @@
       "entriesByDayAndHour": "Entries by Day and Hour",
       "exitsByDayAndHour": "Exits by Day and Hour",
       "hourOfDay": "Hour of Day",
-      "dayOfWeek": "Day of Week"
+      "dayOfWeek": "Day of Week",
+      "peopleInStoreTitle": "People in Store",
+      "netFlow": "Net Flow",
+      "numberOfPeople": "Number of People"
     },
     "metrics": {
       "totalIn": "Total In",

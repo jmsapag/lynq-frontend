@@ -6,7 +6,8 @@ export type DashboardWidgetType =
   | "entry-rate" 
   | "people-flow-chart" 
   | "traffic-heatmap" 
-  | "entry-rate-chart";
+  | "entry-rate-chart"
+  | "cumulative-people-chart";
 
 export interface WidgetConfig {
   id: string;
