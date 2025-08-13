@@ -1,7 +1,5 @@
 // src/components/dashboard/overview/card-grid.tsx
-import React, { useState, useEffect } from "react";
-import { format } from "date-fns";
-import { SensorDataCard } from "../charts/card";
+import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import {
   DndContext,
@@ -20,6 +18,9 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import { Button } from "@heroui/react";
 import { EyeSlashIcon, EyeIcon, PencilIcon } from "@heroicons/react/24/outline";
+import { SensorDataCard } from "../charts/card";
+import { createOverviewWidgetFactory } from "../layout-overview/widgets/widget-factory";
+import { OverviewWidgetConfig } from "../layout-overview/widgets/types";
 
 interface MetricsCardGridProps {
   metrics: {
@@ -37,14 +38,7 @@ interface MetricsCardGridProps {
   getSensorDetails: () => any[];
 }
 
-interface CardConfig {
-  id: string;
-  title: string;
-  translationKey: string;
-  descriptionTranslationKey: string;
-  value: string | number;
-  unit: string;
-  data: Record<string, any>;
+interface DisplayableWidgetConfig extends OverviewWidgetConfig {
   visible: boolean;
 }
 
@@ -88,154 +82,17 @@ export const MetricsCardGrid: React.FC<MetricsCardGridProps> = ({
   const { t } = useTranslation();
   const [isEditing, setIsEditing] = useState(false);
 
-  // Define initial card configurations
-  const initialCardConfigs: CardConfig[] = [
-    {
-      id: "totalIn",
-      title: "Total In",
-      translationKey: "dashboard.metrics.totalIn",
-      descriptionTranslationKey: "dashboard.metrics.totalInDescription",
-      value: metrics.totalIn.toLocaleString(),
-      unit: "people",
-      data: {
-        total_in: metrics.totalIn,
-        date_range_start: format(dateRange.start, "yyyy-MM-dd"),
-        date_range_end: format(dateRange.end, "yyyy-MM-dd"),
-        sensors: sensorIdsList,
-        sensorDetails: getSensorDetails(),
-      },
+  // Generate initial card configurations from the factory
+  const initialCardConfigs = useMemo(() => {
+    const widgetFactory = createOverviewWidgetFactory(
+      { metrics, dateRange, sensorIdsList, getSensorDetails },
+      t,
+    );
+    return Object.values(widgetFactory).map((widget) => ({
+      ...widget,
       visible: true,
-    },
-    {
-      id: "totalOut",
-      title: "Total Out",
-      translationKey: "dashboard.metrics.totalOut",
-      descriptionTranslationKey: "dashboard.metrics.totalOutDescription",
-      value: metrics.totalOut.toLocaleString(),
-      unit: "people",
-      data: {
-        total_out: metrics.totalOut,
-        date_range_start: format(dateRange.start, "yyyy-MM-dd"),
-        date_range_end: format(dateRange.end, "yyyy-MM-dd"),
-        sensors: sensorIdsList,
-        sensorDetails: getSensorDetails(),
-      },
-      visible: true,
-    },
-    {
-      id: "dailyAverageIn",
-      title: "Daily Average In",
-      translationKey: "dashboard.metrics.dailyAverageIn",
-      descriptionTranslationKey: "dashboard.metrics.dailyAverageInDescription",
-      value: metrics.dailyAverageIn.toLocaleString(),
-      unit: "people/day",
-      data: {
-        daily_average_in: metrics.dailyAverageIn,
-        date_range_start: format(dateRange.start, "yyyy-MM-dd"),
-        date_range_end: format(dateRange.end, "yyyy-MM-dd"),
-        sensors: sensorIdsList,
-        sensorDetails: getSensorDetails(),
-      },
-      visible: true,
-    },
-    {
-      id: "dailyAverageOut",
-      title: "Daily Average Out",
-      translationKey: "dashboard.metrics.dailyAverageOut",
-      descriptionTranslationKey: "dashboard.metrics.dailyAverageOutDescription",
-      value: metrics.dailyAverageOut.toLocaleString(),
-      unit: "people/day",
-      data: {
-        daily_average_out: metrics.dailyAverageOut,
-        date_range_start: format(dateRange.start, "yyyy-MM-dd"),
-        date_range_end: format(dateRange.end, "yyyy-MM-dd"),
-        sensors: sensorIdsList,
-        sensorDetails: getSensorDetails(),
-      },
-      visible: true,
-    },
-    {
-      id: "mostCrowdedDay",
-      title: "Most Crowded Day",
-      translationKey: "dashboard.metrics.mostCrowdedDay",
-      descriptionTranslationKey: "dashboard.metrics.mostCrowdedDayDescription",
-      value: metrics.mostCrowdedDay
-        ? format(metrics.mostCrowdedDay.date, "d MMM")
-        : "-",
-      unit: metrics.mostCrowdedDay
-        ? `(${metrics.mostCrowdedDay.value.toLocaleString()} people)`
-        : "",
-      data: {
-        most_crowded_day: metrics.mostCrowdedDay
-          ? format(metrics.mostCrowdedDay.date, "yyyy-MM-dd")
-          : "-",
-        most_crowded_value: metrics.mostCrowdedDay?.value || 0,
-        date_range_start: format(dateRange.start, "yyyy-MM-dd"),
-        date_range_end: format(dateRange.end, "yyyy-MM-dd"),
-        sensors: sensorIdsList,
-        sensorDetails: getSensorDetails(),
-      },
-      visible: true,
-    },
-    {
-      id: "leastCrowdedDay",
-      title: "Least Crowded Day",
-      translationKey: "dashboard.metrics.leastCrowdedDay",
-      descriptionTranslationKey: "dashboard.metrics.leastCrowdedDayDescription",
-      value: metrics.leastCrowdedDay
-        ? format(metrics.leastCrowdedDay.date, "d MMM")
-        : "-",
-      unit: metrics.leastCrowdedDay
-        ? `(${metrics.leastCrowdedDay.value.toLocaleString()} people)`
-        : "",
-      data: {
-        least_crowded_day: metrics.leastCrowdedDay
-          ? format(metrics.leastCrowdedDay.date, "yyyy-MM-dd")
-          : "-",
-        least_crowded_value: metrics.leastCrowdedDay?.value || 0,
-        date_range_start: format(dateRange.start, "yyyy-MM-dd"),
-        date_range_end: format(dateRange.end, "yyyy-MM-dd"),
-        sensors: sensorIdsList,
-        sensorDetails: getSensorDetails(),
-      },
-      visible: true,
-    },
-    {
-      id: "entryRate",
-      title: "Entry Rate",
-      translationKey: "dashboard.metrics.entryRate",
-      descriptionTranslationKey: "dashboard.metrics.entryRateDescription",
-      value: metrics.entryRate,
-      unit: "%",
-      data: {
-        entry_rate: metrics.entryRate,
-        date_range_start: format(dateRange.start, "yyyy-MM-dd"),
-        date_range_end: format(dateRange.end, "yyyy-MM-dd"),
-        sensors: sensorIdsList,
-        sensorDetails: getSensorDetails(),
-      },
-      visible: true,
-    },
-    {
-      id: "percentageChange",
-      title: "Percentage Increase/Decrease",
-      translationKey: "dashboard.metrics.percentageChange",
-      descriptionTranslationKey:
-        "dashboard.metrics.percentageChangeDescription",
-      value:
-        (metrics.percentageChange > 0 ? "+" : "") +
-        metrics.percentageChange.toLocaleString(),
-      unit: "%",
-      data: {
-        percentage_change: metrics.percentageChange,
-        date_range_start: format(dateRange.start, "yyyy-MM-dd"),
-        date_range_end: format(dateRange.end, "yyyy-MM-dd"),
-        sensors: sensorIdsList,
-        sensorDetails: getSensorDetails(),
-      },
-      visible: true,
-    },
-  ];
+    }));
+  }, [metrics, dateRange, sensorIdsList, getSensorDetails, t]);
 
   // Set up sensors for drag detection
   const sensors = useSensors(
@@ -247,24 +104,38 @@ export const MetricsCardGrid: React.FC<MetricsCardGridProps> = ({
   );
 
   // Initialize cards order from localStorage or use default
-  const [cards, setCards] = useState<CardConfig[]>(() => {
+  const [cards, setCards] = useState<DisplayableWidgetConfig[]>(() => {
     const savedOrder = localStorage.getItem("overviewCardsOrder");
     if (savedOrder) {
       try {
-        const savedCards = JSON.parse(savedOrder);
-        // Update with fresh metrics data
-        return initialCardConfigs.map((initialCard) => {
-          const savedCard = savedCards.find(
-            (s: CardConfig) => s.id === initialCard.id,
-          );
-          return savedCard
-            ? {
-                ...initialCard,
-                visible:
-                  savedCard.visible !== undefined ? savedCard.visible : true,
-              }
-            : initialCard;
+        const savedCards: { id: string; visible: boolean }[] =
+          JSON.parse(savedOrder);
+        const savedCardMap = new Map(
+          savedCards.map((c) => [c.id, { visible: c.visible }]),
+        );
+
+        // Create a new list based on the saved order
+        const orderedCards = savedCards
+          .map((savedCard) => {
+            const fullCardData = initialCardConfigs.find(
+              (c) => c.id === savedCard.id,
+            );
+            if (!fullCardData) return null; // Card might not exist anymore
+            return {
+              ...fullCardData,
+              visible: savedCard.visible,
+            };
+          })
+          .filter((c): c is DisplayableWidgetConfig => c !== null);
+
+        // Add any new cards that weren't in the saved layout
+        initialCardConfigs.forEach((initialCard) => {
+          if (!savedCardMap.has(initialCard.id)) {
+            orderedCards.push(initialCard);
+          }
         });
+
+        return orderedCards;
       } catch (e) {
         console.error("Error parsing saved card order", e);
         return initialCardConfigs;
@@ -276,7 +147,8 @@ export const MetricsCardGrid: React.FC<MetricsCardGridProps> = ({
   // Save card order to localStorage when exiting edit mode
   useEffect(() => {
     if (!isEditing) {
-      localStorage.setItem("overviewCardsOrder", JSON.stringify(cards));
+      const cardsToSave = cards.map(({ id, visible }) => ({ id, visible }));
+      localStorage.setItem("overviewCardsOrder", JSON.stringify(cardsToSave));
     }
   }, [isEditing, cards]);
 

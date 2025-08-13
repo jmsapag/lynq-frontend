@@ -336,13 +336,15 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
 
           {!hideGroupBy && (
             <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                {t("filters.groupBy")}
+              </label>
               <Select
                 className="w-full md:w-60"
                 selectedKeys={new Set([groupBy])}
                 onSelectionChange={handleGroupByChange}
                 placeholder="Select time grouping"
-                label={t("filters.groupBy")}
-                size="sm"
+                size="md"
                 variant="bordered"
                 radius="lg"
                 selectionMode="single"

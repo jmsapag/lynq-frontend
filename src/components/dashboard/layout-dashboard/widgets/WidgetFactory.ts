@@ -14,3 +14,18 @@ export const createWidgetConfig = (
     ChartWidgets.createEntryRateChartWidget(params),
   ];
 };
+
+export const createWidgetConfigOverview = (
+  params: WidgetFactoryParams,
+): WidgetConfig[] => {
+  return [
+    MetricWidgets.createTotalInWidget(params),
+    MetricWidgets.createTotalOutWidget(params),
+    MetricWidgets.createEntryRateWidget(params),
+    MetricWidgets.createDailyAverageInWidget(params),
+    MetricWidgets.createDailyAverageOutWidget(params),
+    MetricWidgets.createMostCrowdedDayWidget(params),
+    MetricWidgets.createLeastCrowdedDayWidget(params),
+    MetricWidgets.createPercentageChangeWidget(params),
+  ];
+};
