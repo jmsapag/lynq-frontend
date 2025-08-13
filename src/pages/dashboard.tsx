@@ -1,5 +1,8 @@
 import { Spinner, Button } from "@heroui/react";
-import { DashboardFilters } from "../components/dashboard/filter.tsx";
+import {
+  DashboardFilters,
+  PredefinedPeriod,
+} from "../components/dashboard/filter.tsx";
 import { useEffect, useState, useMemo } from "react";
 import { useSensorData } from "../hooks/useSensorData.ts";
 import { useSensorRecords } from "../hooks/useSensorRecords.ts";
@@ -11,6 +14,7 @@ import {
 } from "../types/sensorDataResponse";
 import { SensorRecordsFormData } from "../types/sensorRecordsFormData";
 import { Time } from "@internationalized/date";
+import { useOverviewMetrics } from "../hooks/dashboard/useOverviewMetrics";
 
 // Layout Dashboard imports
 import { DndContext } from "@dnd-kit/core";
@@ -22,6 +26,7 @@ import {
 } from "../components/dashboard/layout-dashboard/components";
 import {
   createWidgetConfig,
+  createWidgetConfigOverview,
   type WidgetConfig,
   type DashboardWidgetType,
   type WidgetFactoryParams,
@@ -50,6 +55,8 @@ function getFirstFetchedDateRange() {
 const Dashboard = () => {
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
   const [sensorMap, setSensorMap] = useState<Map<number, string>>(new Map());
+  const [selectedPeriod, setSelectedPeriod] =
+    useState<PredefinedPeriod>("last7Days");
 
   // Layout Dashboard state
   const [isEditing, setIsEditing] = useState(false);
@@ -86,31 +93,25 @@ const Dashboard = () => {
     error: dataError,
   } = useSensorRecords(sensorRecordsFormData, setSensorRecordsFormData);
 
-  const metrics = useMemo(() => {
-    if (!sensorData || !sensorData.in || !sensorData.out) {
-      return {
-        totalIn: 0,
-        totalOut: 0,
-        entryRate: 0,
-      };
-    }
-
-    const totalIn = sensorData.in.reduce((sum, value) => sum + value, 0);
-    const totalOut = sensorData.out.reduce((sum, value) => sum + value, 0);
-
-    const totalMovements = totalIn + totalOut;
-
-    const entryRate =
-      totalMovements > 0 ? Math.round((totalIn / totalMovements) * 100) : 0;
-
-    return { totalIn, totalOut, entryRate };
-  }, [sensorData]);
+  // Use the same overview metrics hook as in the overview page
+  const { metrics, getSensorDetails, sensorIdsList } = useOverviewMetrics(
+    sensorData,
+    sensorRecordsFormData.dateRange,
+    sensorMap,
+    locations || [],
+    sensorRecordsFormData.sensorIds,
+  );
 
   const handleDateRangeChange = (startDate: Date, endDate: Date) => {
     setSensorRecordsFormData((prev) => ({
       ...prev,
       dateRange: { start: startDate, end: endDate },
+      needToFetch: true,
     }));
+  };
+
+  const handlePredefinedPeriodChange = (period: PredefinedPeriod) => {
+    setSelectedPeriod(period);
   };
 
   const handleSensorsChange = (sensors: number[]) => {
@@ -138,6 +139,20 @@ const Dashboard = () => {
       });
     });
     setSensorMap(newSensorMap);
+  }, [locations]);
+
+  // Auto-select all sensors when locations are loaded (same as overview)
+  useEffect(() => {
+    if (locations && locations.length > 0) {
+      const allSensorIds = locations.flatMap((location) =>
+        location.sensors.map((sensor) => sensor.id),
+      );
+      setSensorRecordsFormData((prev) => ({
+        ...prev,
+        sensorIds: allSensorIds,
+        needToFetch: true,
+      }));
+    }
   }, [locations]);
 
   // Aggregation handler - commented out since aggregation filter is hidden
@@ -228,16 +243,36 @@ const Dashboard = () => {
     };
   }, [sensorData]);
 
-  // Create widget configurations using the factory
+  // Create widget configurations using the factory - combining charts with overview metrics (avoiding duplicates)
   const availableWidgets: WidgetConfig[] = useMemo(() => {
     const params: WidgetFactoryParams = {
       metrics,
       chartData,
       sensorData,
       sensorRecordsFormData,
+      dateRange: sensorRecordsFormData.dateRange,
+      sensorIdsList,
+      getSensorDetails,
     };
-    return createWidgetConfig(params);
-  }, [metrics, chartData, sensorData, sensorRecordsFormData]);
+
+    // Get chart widgets (excluding the basic metrics that are in overview)
+    const chartWidgets = createWidgetConfig(params).filter(
+      (widget) =>
+        !["total-in", "total-out", "entry-rate"].includes(widget.type),
+    );
+
+    // Get all overview metric widgets (includes the basic metrics plus new ones)
+    const overviewWidgets = createWidgetConfigOverview(params);
+
+    return [...chartWidgets, ...overviewWidgets];
+  }, [
+    metrics,
+    chartData,
+    sensorData,
+    sensorRecordsFormData,
+    sensorIdsList,
+    getSensorDetails,
+  ]);
 
   // Dashboard layout state and actions
   const layoutState: DashboardLayoutState = {
@@ -328,6 +363,9 @@ const Dashboard = () => {
                 onRefreshData={handleRefreshData}
                 locations={locations}
                 lastUpdated={lastUpdated}
+                showPredefinedPeriods={true}
+                currentPredefinedPeriod={selectedPeriod}
+                onPredefinedPeriodChange={handlePredefinedPeriodChange}
               />
             </div>
 
@@ -352,7 +390,7 @@ const Dashboard = () => {
                   )
                 }
                 onPress={() => setIsEditing(!isEditing)}
-                size="sm"
+                size="md"
               >
                 {isEditing ? "View Mode" : "Edit Layout"}
               </Button>

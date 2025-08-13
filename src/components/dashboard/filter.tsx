@@ -111,22 +111,24 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
     }
   };
 
-  const handlePredefinedPeriodChange = (
-    e: React.ChangeEvent<HTMLSelectElement>,
-  ) => {
-    const period = e.target.value as PredefinedPeriod;
-    setSelectedPeriod(period);
+  const handlePredefinedPeriodChange = (keys: any) => {
+    // Hero UI Select returns a Set of selected keys, we want the first (and only) value
+    const selectedKey = Array.from(keys)[0];
+    if (selectedKey) {
+      const period = selectedKey as PredefinedPeriod;
+      setSelectedPeriod(period);
 
-    if (period !== "custom") {
-      const dateRange = getDateRangeForPeriod(period);
+      if (period !== "custom") {
+        const dateRange = getDateRangeForPeriod(period);
 
-      setStartDate(fromDate(dateRange.start, getLocalTimeZone()));
-      setEndDate(fromDate(dateRange.end, getLocalTimeZone()));
+        setStartDate(fromDate(dateRange.start, getLocalTimeZone()));
+        setEndDate(fromDate(dateRange.end, getLocalTimeZone()));
 
-      onDateRangeChange(dateRange.start, dateRange.end);
+        onDateRangeChange(dateRange.start, dateRange.end);
 
-      if (onPredefinedPeriodChange) {
-        onPredefinedPeriodChange(period);
+        if (onPredefinedPeriodChange) {
+          onPredefinedPeriodChange(period);
+        }
       }
     }
   };
@@ -219,7 +221,7 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
   };
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-sm mb-6">
+    <div className="bg-white p-4 rounded-lg mb-6">
       <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0 md:space-x-4">
         <div className="flex flex-col space-y-4 md:flex-row md:items-end md:space-y-0 md:space-x-4">
           {/* Add predefined periods dropdown */}
@@ -228,30 +230,41 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
               <label className="block text-sm font-medium text-gray-700">
                 {t("filters.predefinedPeriods")}
               </label>
-              <select
-                className="inline-flex w-full md:w-60 items-center justify-between rounded-xl border-2 border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-900 shadow-sm hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-1 transition-colors duration-150"
-                value={selectedPeriod}
-                onChange={handlePredefinedPeriodChange}
+              <Select
+                className="w-full md:w-60"
+                selectedKeys={new Set([selectedPeriod])}
+                onSelectionChange={handlePredefinedPeriodChange}
+                placeholder="Select time period"
+                size="md"
+                variant="bordered"
+                radius="lg"
+                selectionMode="single"
+                classNames={{
+                  trigger:
+                    "border-gray-100 hover:border-gray-300 focus:border-gray-300 data-[focus=true]:border-gray-300 data-[hover=true]:border-gray-300",
+                  value: "text-gray-900",
+                  label: "text-gray-700",
+                }}
               >
-                <option value="today">
+                <SelectItem key="today">
                   {t("filters.periodOptions.today")}
-                </option>
-                <option value="yesterday">
+                </SelectItem>
+                <SelectItem key="yesterday">
                   {t("filters.periodOptions.yesterday")}
-                </option>
-                <option value="last7Days">
+                </SelectItem>
+                <SelectItem key="last7Days">
                   {t("filters.periodOptions.last7Days")}
-                </option>
-                <option value="last14Days">
+                </SelectItem>
+                <SelectItem key="last14Days">
                   {t("filters.periodOptions.last14Days")}
-                </option>
-                <option value="last30Days">
+                </SelectItem>
+                <SelectItem key="last30Days">
                   {t("filters.periodOptions.last30Days")}
-                </option>
-                <option value="custom">
+                </SelectItem>
+                <SelectItem key="custom">
                   {t("filters.periodOptions.custom")}
-                </option>
-              </select>
+                </SelectItem>
+              </Select>
             </div>
           )}
 

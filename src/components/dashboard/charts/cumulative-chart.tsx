@@ -72,14 +72,14 @@ export const CumulativeChart: React.FC<CumulativeChartProps> = ({
         const currentOut = data.values[dataIndex].out;
         const netFlow = currentIn - currentOut;
         const totalPeople = cumulativeData[dataIndex];
-        
+
         return `
           <div class="text-sm">
             <div class="font-semibold">${category}</div>
             <div class="mt-1">
               <div>${t("dashboard.charts.entries")}: <span class="text-green-500">${currentIn}</span></div>
               <div>${t("dashboard.charts.exits")}: <span class="text-red-500">${currentOut}</span></div>
-              <div>${t("dashboard.charts.netFlow")}: <span class="${netFlow >= 0 ? 'text-green-500' : 'text-red-500'}">${netFlow > 0 ? '+' : ''}${netFlow}</span></div>
+              <div>${t("dashboard.charts.netFlow")}: <span class="${netFlow >= 0 ? "text-green-500" : "text-red-500"}">${netFlow > 0 ? "+" : ""}${netFlow}</span></div>
               <div class="font-semibold border-t pt-1 mt-1">${t("dashboard.charts.peopleInStoreTitle")}: <span class="text-blue-500">${totalPeople}</span></div>
             </div>
           </div>
@@ -129,7 +129,10 @@ export const CumulativeChart: React.FC<CumulativeChartProps> = ({
   };
 
   return (
-    <div className="w-full h-full" style={{ minWidth: '100px', height: '100%', minHeight: '300px' }}>
+    <div
+      className="w-full h-full"
+      style={{ minWidth: "100px", height: "100%", minHeight: "300px" }}
+    >
       <BaseChart option={option} className={className} />
     </div>
   );

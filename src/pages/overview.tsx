@@ -72,6 +72,7 @@ export const Overview: React.FC = () => {
     sensorRecordsFormData.dateRange,
     sensorMap,
     locations || [],
+    sensorRecordsFormData.sensorIds,
   );
 
   // Layout Dashboard state
@@ -230,6 +231,7 @@ export const Overview: React.FC = () => {
                 lastUpdated={lastUpdated}
                 currentPredefinedPeriod={selectedPeriod}
                 onPredefinedPeriodChange={handlePredefinedPeriodChange}
+                showPredefinedPeriods={true}
               />
             </div>
             <div className="flex items-center gap-3 ml-4">

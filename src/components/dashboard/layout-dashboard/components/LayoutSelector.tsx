@@ -29,7 +29,7 @@ export const LayoutSelector: React.FC<LayoutSelectorProps> = ({
           <Button
             variant="flat"
             color="default"
-            size="sm"
+            size="md"
             startContent={<Squares2X2Icon className="w-4 h-4" />}
             endContent={<ChevronDownIcon className="w-3 h-3" />}
             className="min-w-0"

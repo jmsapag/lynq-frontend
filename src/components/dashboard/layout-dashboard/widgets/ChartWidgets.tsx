@@ -78,7 +78,9 @@ export const ChartWidgets = {
     ),
   }),
 
-  createCumulativePeopleChartWidget: (params: WidgetFactoryParams): WidgetConfig => ({
+  createCumulativePeopleChartWidget: (
+    params: WidgetFactoryParams,
+  ): WidgetConfig => ({
     id: "cumulative-people-chart",
     type: "cumulative-people-chart",
     title: "People in Store",
