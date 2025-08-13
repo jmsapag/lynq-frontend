@@ -1,3 +1,4 @@
+// src/components/dashboard/charts/card.tsx
 import { useTranslation } from "react-i18next";
 import { Tooltip, Button } from "@heroui/react";
 import {
@@ -27,6 +28,7 @@ interface SensorDataCardProps {
   descriptionTranslationKey?: string;
   dateRange?: { start: Date; end: Date };
   data?: Record<string, any>;
+  hideExport?: boolean; // New prop to control export button visibility
 }
 
 export const SensorDataCard: React.FC<SensorDataCardProps> = ({
@@ -41,6 +43,7 @@ export const SensorDataCard: React.FC<SensorDataCardProps> = ({
   descriptionTranslationKey,
   dateRange,
   data,
+  hideExport = false, // Default to showing export button
 }) => {
   const { t } = useTranslation();
   const cardRef = useRef<HTMLDivElement>(null);
@@ -157,54 +160,56 @@ export const SensorDataCard: React.FC<SensorDataCardProps> = ({
       ref={cardRef}
       className={`bg-white rounded-lg border border-gray-200 relative ${className}`}
     >
-      {/* Export dropdown - hidden during capture */}
-      <div
-        ref={exportButtonRef}
-        className={`absolute top-2 right-2 ${isCapturing ? "invisible" : ""}`}
-      >
-        <div ref={dropdownRef}>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="w-4 h-5 rounded-md p-2 m-2 flex items-center justify-center border-1"
-            isDisabled={isExporting}
-            onPress={() => setShowDropdown(!showDropdown)}
-            aria-label="Export options"
-          >
-            <ArrowDownTrayIcon className="w-3.5 h-3.5 text-gray-500" />
-          </Button>
+      {/* Export dropdown - only shown when hideExport is false */}
+      {!hideExport && (
+        <div
+          ref={exportButtonRef}
+          className={`absolute top-2 right-2 ${isCapturing ? "invisible" : ""}`}
+        >
+          <div ref={dropdownRef}>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-4 h-5 rounded-md p-2 m-2 flex items-center justify-center border-1"
+              isDisabled={isExporting}
+              onPress={() => setShowDropdown(!showDropdown)}
+              aria-label="Export options"
+            >
+              <ArrowDownTrayIcon className="w-3.5 h-3.5 text-gray-500" />
+            </Button>
 
-          {showDropdown && (
-            <div className="absolute right-0 mt-1 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-20">
-              <div className="py-1">
-                <button
-                  onClick={handleExportPng}
-                  className="flex items-center w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100 transition-colors"
-                >
-                  <PhotoIcon className="h-5 w-5 mr-3 text-gray-500" />
-                  {t("common.exportAsPng")}
-                </button>
+            {showDropdown && (
+              <div className="absolute right-0 mt-1 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-20">
+                <div className="py-1">
+                  <button
+                    onClick={handleExportPng}
+                    className="flex items-center w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100 transition-colors"
+                  >
+                    <PhotoIcon className="h-5 w-5 mr-3 text-gray-500" />
+                    {t("common.exportAsPng")}
+                  </button>
 
-                <button
-                  onClick={handleExportPdf}
-                  className="flex items-center w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100 transition-colors"
-                >
-                  <DocumentIcon className="h-5 w-5 mr-3 text-gray-500" />
-                  {t("common.exportAsPdf")}
-                </button>
+                  <button
+                    onClick={handleExportPdf}
+                    className="flex items-center w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100 transition-colors"
+                  >
+                    <DocumentIcon className="h-5 w-5 mr-3 text-gray-500" />
+                    {t("common.exportAsPdf")}
+                  </button>
 
-                <button
-                  onClick={handleExportCsv}
-                  className="flex items-center w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100 transition-colors"
-                >
-                  <TableCellsIcon className="h-5 w-5 mr-3 text-gray-500" />
-                  {t("common.exportAsCSV")}
-                </button>
+                  <button
+                    onClick={handleExportCsv}
+                    className="flex items-center w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100 transition-colors"
+                  >
+                    <TableCellsIcon className="h-5 w-5 mr-3 text-gray-500" />
+                    {t("common.exportAsCSV")}
+                  </button>
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="flex items-center justify-between p-4">
         <div>

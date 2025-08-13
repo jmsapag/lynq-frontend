@@ -52,11 +52,10 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
   locations,
   currentSensors,
   lastUpdated,
-  hideGroupBy = false,
-  hideAggregation = false,
   showPredefinedPeriods = false,
   currentPredefinedPeriod = "custom",
   onPredefinedPeriodChange,
+  hideGroupBy = false,
 }) => {
   const { t } = useTranslation();
   const [startDate, setStartDate] = useState<DateValue>(() => {
@@ -335,48 +334,54 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
           {/*  </div>*/}
           {/*</div>*/}
 
-          <div className="space-y-2">
-            <Select
-              className="w-full md:w-60"
-              selectedKeys={new Set([groupBy])}
-              onSelectionChange={handleGroupByChange}
-              placeholder="Select time grouping"
-              label={t("filters.groupBy")}
-              size="sm"
-              variant="bordered"
-              radius="lg"
-              selectionMode="single"
-              classNames={{
-                trigger:
-                  "border-gray-100 hover:border-gray-300 focus:border-gray-300 data-[focus=true]:border-gray-300 data-[hover=true]:border-gray-300",
-                value: "text-gray-900",
-                label: "text-gray-700",
-              }}
-            >
-              <SelectItem key="5min">
-                {t("filters.groupOptions.5min")}
-              </SelectItem>
-              <SelectItem key="10min">
-                {t("filters.groupOptions.10min")}
-              </SelectItem>
-              <SelectItem key="15min">
-                {t("filters.groupOptions.15min")}
-              </SelectItem>
-              <SelectItem key="30min">
-                {t("filters.groupOptions.30min")}
-              </SelectItem>
-              <SelectItem key="hour">
-                {t("filters.groupOptions.hour")}
-              </SelectItem>
-              <SelectItem key="day">{t("filters.groupOptions.day")}</SelectItem>
-              <SelectItem key="week">
-                {t("filters.groupOptions.week")}
-              </SelectItem>
-              <SelectItem key="month">
-                {t("filters.groupOptions.month")}
-              </SelectItem>
-            </Select>
-          </div>
+          {!hideGroupBy && (
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                {t("filters.groupBy")}
+              </label>
+              <Select
+                className="w-full md:w-60"
+                selectedKeys={new Set([groupBy])}
+                onSelectionChange={handleGroupByChange}
+                placeholder="Select time grouping"
+                size="md"
+                variant="bordered"
+                radius="lg"
+                selectionMode="single"
+                classNames={{
+                  trigger:
+                    "border-gray-100 hover:border-gray-300 focus:border-gray-300 data-[focus=true]:border-gray-300 data-[hover=true]:border-gray-300",
+                  value: "text-gray-900",
+                  label: "text-gray-700",
+                }}
+              >
+                <SelectItem key="5min">
+                  {t("filters.groupOptions.5min")}
+                </SelectItem>
+                <SelectItem key="10min">
+                  {t("filters.groupOptions.10min")}
+                </SelectItem>
+                <SelectItem key="15min">
+                  {t("filters.groupOptions.15min")}
+                </SelectItem>
+                <SelectItem key="30min">
+                  {t("filters.groupOptions.30min")}
+                </SelectItem>
+                <SelectItem key="hour">
+                  {t("filters.groupOptions.hour")}
+                </SelectItem>
+                <SelectItem key="day">
+                  {t("filters.groupOptions.day")}
+                </SelectItem>
+                <SelectItem key="week">
+                  {t("filters.groupOptions.week")}
+                </SelectItem>
+                <SelectItem key="month">
+                  {t("filters.groupOptions.month")}
+                </SelectItem>
+              </Select>
+            </div>
+          )}
 
           {/* Aggregation filter - hidden as requested */}
           {/* <div className="space-y-2">
