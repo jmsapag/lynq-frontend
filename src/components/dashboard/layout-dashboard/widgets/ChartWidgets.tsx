@@ -1,5 +1,6 @@
 import { ChartCard } from "../../charts/chart-card";
 import { LineChart } from "../../charts/line-chart";
+import { CumulativeChart } from "../../charts/cumulative-chart";
 import { EntryRateChart } from "../../charts/entry-rate/entry-rate-chart";
 import { ChartHeatMap } from "../../charts/heat-map/chart-heat-map";
 import { WidgetConfig, WidgetFactoryParams } from "./types";
@@ -69,6 +70,29 @@ export const ChartWidgets = {
           <NoDataMessage />
         ) : (
           <EntryRateChart
+            data={params.chartData}
+            groupBy={params.sensorRecordsFormData.groupBy}
+          />
+        )}
+      </ChartCard>
+    ),
+  }),
+
+  createCumulativePeopleChartWidget: (params: WidgetFactoryParams): WidgetConfig => ({
+    id: "cumulative-people-chart",
+    type: "cumulative-people-chart",
+    title: "People in Store",
+    translationKey: "dashboard.charts.peopleInStore",
+    category: "chart",
+    component: (
+      <ChartCard
+        title="People in Store (Cumulative)"
+        translationKey="dashboard.charts.peopleInStore"
+      >
+        {params.chartData.categories.length === 0 ? (
+          <NoDataMessage />
+        ) : (
+          <CumulativeChart
             data={params.chartData}
             groupBy={params.sensorRecordsFormData.groupBy}
           />

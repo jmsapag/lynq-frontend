@@ -43,13 +43,14 @@ interface LayoutDashboardProps {
   hasError?: boolean;
 }
 
-export type DashboardWidgetType =
-  | "total-in"
-  | "total-out"
-  | "entry-rate"
-  | "people-flow-chart"
-  | "traffic-heatmap"
-  | "entry-rate-chart";
+export type DashboardWidgetType = 
+  | "total-in" 
+  | "total-out" 
+  | "entry-rate" 
+  | "people-flow-chart" 
+  | "traffic-heatmap" 
+  | "entry-rate-chart"
+  | "cumulative-people-chart";
 
 interface WidgetConfig {
   id: string;

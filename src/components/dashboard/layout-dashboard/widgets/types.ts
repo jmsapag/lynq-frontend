@@ -1,5 +1,6 @@
 import React from "react";
 
+
 export type DashboardWidgetType =
   | "total-in"
   | "total-out"
@@ -7,6 +8,7 @@ export type DashboardWidgetType =
   | "people-flow-chart"
   | "traffic-heatmap"
   | "entry-rate-chart"
+  | "cumulative-people-chart"
   | "daily-average-in"
   | "daily-average-out"
   | "most-crowded-day"
