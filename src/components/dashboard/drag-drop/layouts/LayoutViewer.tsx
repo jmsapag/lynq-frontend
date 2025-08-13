@@ -1,7 +1,7 @@
-import React from 'react';
-import { LayoutType, DroppedItems, WidgetItem } from './types';
-import { LAYOUT_SCHEMAS } from './schemas';
-import { LayoutRenderer } from './LayoutRenderer';
+import React from "react";
+import { LayoutType, DroppedItems, WidgetItem } from "./types";
+import { LAYOUT_SCHEMAS } from "./schemas";
+import { LayoutRenderer } from "./LayoutRenderer";
 
 interface LayoutViewerProps {
   layout: LayoutType;
@@ -12,74 +12,74 @@ interface LayoutViewerProps {
 // Datos de ejemplo para mostrar contenido real
 const SAMPLE_WIDGETS: WidgetItem[] = [
   {
-    id: 'analytics-1',
-    type: 'small-card',
+    id: "analytics-1",
+    type: "small-card",
     content: {
-      icon: '📊',
-      title: 'Analytics Overview',
-      description: 'Métricas principales del sistema',
-      data: { value: 1234, trend: '+12%' }
-    }
+      icon: "📊",
+      title: "Analytics Overview",
+      description: "Métricas principales del sistema",
+      data: { value: 1234, trend: "+12%" },
+    },
   },
   {
-    id: 'users-1',
-    type: 'small-card',
+    id: "users-1",
+    type: "small-card",
     content: {
-      icon: '👥',
-      title: 'Usuarios Activos',
-      description: 'Cantidad de usuarios en línea',
-      data: { value: 89, trend: '+5%' }
-    }
+      icon: "👥",
+      title: "Usuarios Activos",
+      description: "Cantidad de usuarios en línea",
+      data: { value: 89, trend: "+5%" },
+    },
   },
   {
-    id: 'revenue-chart',
-    type: 'chart-card',
+    id: "revenue-chart",
+    type: "chart-card",
     content: {
-      icon: '📈',
-      title: 'Gráfico de Ingresos',
-      description: 'Evolución mensual de ingresos',
-      data: { chartType: 'line', period: 'monthly' }
-    }
+      icon: "📈",
+      title: "Gráfico de Ingresos",
+      description: "Evolución mensual de ingresos",
+      data: { chartType: "line", period: "monthly" },
+    },
   },
   {
-    id: 'tasks-card',
-    type: 'card',
+    id: "tasks-card",
+    type: "card",
     content: {
-      icon: '📋',
-      title: 'Lista de Tareas',
-      description: 'Tareas pendientes y completadas',
-      data: { pending: 5, completed: 23 }
-    }
+      icon: "📋",
+      title: "Lista de Tareas",
+      description: "Tareas pendientes y completadas",
+      data: { pending: 5, completed: 23 },
+    },
   },
   {
-    id: 'notifications',
-    type: 'card',
+    id: "notifications",
+    type: "card",
     content: {
-      icon: '🔔',
-      title: 'Notificaciones',
-      description: 'Alertas y mensajes recientes',
-      data: { unread: 3 }
-    }
+      icon: "🔔",
+      title: "Notificaciones",
+      description: "Alertas y mensajes recientes",
+      data: { unread: 3 },
+    },
   },
   {
-    id: 'performance',
-    type: 'chart-card',
+    id: "performance",
+    type: "chart-card",
     content: {
-      icon: '⚡',
-      title: 'Rendimiento Sistema',
-      description: 'Métricas de performance en tiempo real',
-      data: { cpu: 45, memory: 67, network: 23 }
-    }
-  }
+      icon: "⚡",
+      title: "Rendimiento Sistema",
+      description: "Métricas de performance en tiempo real",
+      data: { cpu: 45, memory: 67, network: 23 },
+    },
+  },
 ];
 
 export const LayoutViewer: React.FC<LayoutViewerProps> = ({
   layout,
   items,
-  className = ''
+  className = "",
 }) => {
   const schema = LAYOUT_SCHEMAS[layout];
-  
+
   if (!schema) {
     return (
       <div className="p-8 text-center text-gray-500">
@@ -100,10 +100,8 @@ export const LayoutViewer: React.FC<LayoutViewerProps> = ({
             </h1>
             <p className="text-sm text-gray-600">{schema.description}</p>
           </div>
-          
-          <div className="text-sm text-gray-500">
-            Modo: Solo Lectura
-          </div>
+
+          <div className="text-sm text-gray-500">Modo: Solo Lectura</div>
         </div>
       </div>
 

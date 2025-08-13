@@ -1,11 +1,11 @@
 import React from "react";
 
-export type DashboardWidgetType = 
-  | "total-in" 
-  | "total-out" 
-  | "entry-rate" 
-  | "people-flow-chart" 
-  | "traffic-heatmap" 
+export type DashboardWidgetType =
+  | "total-in"
+  | "total-out"
+  | "entry-rate"
+  | "people-flow-chart"
+  | "traffic-heatmap"
   | "entry-rate-chart";
 
 export interface WidgetConfig {
@@ -13,7 +13,7 @@ export interface WidgetConfig {
   type: DashboardWidgetType;
   title: string;
   translationKey?: string;
-  category: 'metric' | 'chart';
+  category: "metric" | "chart";
   component: React.ReactNode;
 }
 

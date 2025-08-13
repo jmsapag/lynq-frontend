@@ -20,7 +20,7 @@ export const LayoutRenderer: React.FC<LayoutRendererProps> = ({
   draggedWidget,
 }) => {
   const renderWidget = (widgetType: DashboardWidgetType) => {
-    const widget = availableWidgets.find(w => w.type === widgetType);
+    const widget = availableWidgets.find((w) => w.type === widgetType);
     if (!widget) return null;
 
     if (isEditing) {
@@ -43,13 +43,15 @@ export const LayoutRenderer: React.FC<LayoutRendererProps> = ({
 
   const renderDropZone = (zone: DropZone) => {
     const placedWidget = widgetPlacements[zone.id];
-    const widget = placedWidget ? availableWidgets.find(w => w.type === placedWidget) : null;
-    
+    const widget = placedWidget
+      ? availableWidgets.find((w) => w.type === placedWidget)
+      : null;
+
     return (
       <WidgetDropZone
         key={zone.id}
         id={zone.id}
-        acceptedTypes={zone.type === 'any' ? ['metric', 'chart'] : [zone.type]}
+        acceptedTypes={zone.type === "any" ? ["metric", "chart"] : [zone.type]}
         isEmpty={!placedWidget}
         className={zone.className}
       >
@@ -62,18 +64,18 @@ export const LayoutRenderer: React.FC<LayoutRendererProps> = ({
     // View mode - render sections with actual widgets (no drop zones)
     return (
       <div className="space-y-6">
-        {currentLayout.sections.map(section => {
-          const hasWidgets = section.zones.some(zone => widgetPlacements[zone.id]);
+        {currentLayout.sections.map((section) => {
+          const hasWidgets = section.zones.some(
+            (zone) => widgetPlacements[zone.id],
+          );
           if (!hasWidgets) return null;
-          
+
           return (
             <div key={section.id} className={section.className}>
-              {section.zones.map(zone => {
+              {section.zones.map((zone) => {
                 const placedWidget = widgetPlacements[zone.id];
                 return placedWidget ? (
-                  <div key={zone.id}>
-                    {renderWidget(placedWidget)}
-                  </div>
+                  <div key={zone.id}>{renderWidget(placedWidget)}</div>
                 ) : null;
               })}
             </div>
@@ -86,9 +88,9 @@ export const LayoutRenderer: React.FC<LayoutRendererProps> = ({
   // Edit mode - render sections with drop zones
   return (
     <div className="space-y-6">
-      {currentLayout.sections.map(section => (
+      {currentLayout.sections.map((section) => (
         <div key={section.id} className={section.className}>
-          {section.zones.map(zone => renderDropZone(zone))}
+          {section.zones.map((zone) => renderDropZone(zone))}
         </div>
       ))}
     </div>

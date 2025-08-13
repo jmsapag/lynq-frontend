@@ -1,11 +1,11 @@
-import { ILayoutRepository, ILayoutService } from './interfaces';
-import { LocalStorageLayoutRepository } from './LocalStorageLayoutRepository';
+import { ILayoutRepository, ILayoutService } from "./interfaces";
+import { LocalStorageLayoutRepository } from "./LocalStorageLayoutRepository";
 
 /**
  * Configuration for the layout service
  */
 export interface LayoutServiceConfig {
-  storage: 'localStorage' | 'http';
+  storage: "localStorage" | "http";
   baseUrl?: string; // For HTTP implementation
 }
 
@@ -23,11 +23,16 @@ export class LayoutService implements ILayoutService {
     return this.repository.getAvailableLayouts();
   }
 
-  async saveLayoutConfiguration(layoutId: string, placements: Record<string, any>): Promise<void> {
+  async saveLayoutConfiguration(
+    layoutId: string,
+    placements: Record<string, any>,
+  ): Promise<void> {
     await this.repository.saveLayout(layoutId, placements);
   }
 
-  async loadLayoutConfiguration(layoutId: string): Promise<Record<string, any> | null> {
+  async loadLayoutConfiguration(
+    layoutId: string,
+  ): Promise<Record<string, any> | null> {
     return this.repository.loadLayout(layoutId);
   }
 
@@ -35,7 +40,7 @@ export class LayoutService implements ILayoutService {
     const preferredId = await this.repository.getPreferredLayout();
     if (preferredId) {
       const layouts = await this.repository.getAvailableLayouts();
-      return layouts.find(l => l.id === preferredId) || layouts[0];
+      return layouts.find((l) => l.id === preferredId) || layouts[0];
     }
     const layouts = await this.repository.getAvailableLayouts();
     return layouts[0]; // Default to first layout
@@ -49,7 +54,7 @@ export class LayoutService implements ILayoutService {
     const newLayout = {
       ...layout,
       id: `custom_${Date.now()}`,
-      isCustom: true
+      isCustom: true,
     };
     // Save the layout structure
     await this.repository.saveLayout(newLayout.id, newLayout);
@@ -74,7 +79,7 @@ export class LayoutService implements ILayoutService {
  */
 export class LayoutServiceFactory {
   private static instance: LayoutService | null = null;
-  private static config: LayoutServiceConfig = { storage: 'localStorage' };
+  private static config: LayoutServiceConfig = { storage: "localStorage" };
 
   /**
    * Configure the layout service
@@ -100,13 +105,15 @@ export class LayoutServiceFactory {
    */
   private static createRepository(): ILayoutRepository {
     switch (this.config.storage) {
-      case 'localStorage':
+      case "localStorage":
         return new LocalStorageLayoutRepository();
-      
-      case 'http':
+
+      case "http":
         // TODO: Implement HttpLayoutRepository next week
-        throw new Error('HTTP layout repository not yet implemented. Will be available next week.');
-        
+        throw new Error(
+          "HTTP layout repository not yet implemented. Will be available next week.",
+        );
+
       default:
         throw new Error(`Unknown storage type: ${this.config.storage}`);
     }

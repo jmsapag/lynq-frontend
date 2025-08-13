@@ -347,9 +347,10 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
               radius="lg"
               selectionMode="single"
               classNames={{
-                trigger: "border-gray-100 hover:border-gray-300 focus:border-gray-300 data-[focus=true]:border-gray-300 data-[hover=true]:border-gray-300",
+                trigger:
+                  "border-gray-100 hover:border-gray-300 focus:border-gray-300 data-[focus=true]:border-gray-300 data-[hover=true]:border-gray-300",
                 value: "text-gray-900",
-                label: "text-gray-700"
+                label: "text-gray-700",
               }}
             >
               <SelectItem key="5min">
@@ -367,9 +368,7 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
               <SelectItem key="hour">
                 {t("filters.groupOptions.hour")}
               </SelectItem>
-              <SelectItem key="day">
-                {t("filters.groupOptions.day")}
-              </SelectItem>
+              <SelectItem key="day">{t("filters.groupOptions.day")}</SelectItem>
               <SelectItem key="week">
                 {t("filters.groupOptions.week")}
               </SelectItem>
