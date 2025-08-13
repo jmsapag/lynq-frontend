@@ -11,7 +11,7 @@ export const createOverviewWidgetFactory = (
   params: OverviewWidgetFactoryParams,
   t: TFunction,
 ): Record<OverviewWidgetType, OverviewWidgetConfig> => {
-  const { metrics, dateRange, sensorIdsList, getSensorDetails } = params;
+  const { metrics, dateRange, sensorIdsList, getSensorDetails, comparisons, comparisonPeriod } = params;
 
   const commonData = {
     date_range_start: format(dateRange.start, "yyyy-MM-dd"),
@@ -31,6 +31,8 @@ export const createOverviewWidgetFactory = (
       value: metrics.totalIn.toLocaleString(),
       unit: t("common.people", "people"),
       data: { ...commonData, total_in: metrics.totalIn },
+      comparison: comparisons?.totalIn,
+      comparisonPeriod,
     },
     "total-out": {
       id: "total-out",
@@ -42,6 +44,8 @@ export const createOverviewWidgetFactory = (
       value: metrics.totalOut.toLocaleString(),
       unit: t("common.people", "people"),
       data: { ...commonData, total_out: metrics.totalOut },
+      comparison: comparisons?.totalOut,
+      comparisonPeriod,
     },
     "entry-rate": {
       id: "entry-rate",
@@ -53,6 +57,8 @@ export const createOverviewWidgetFactory = (
       value: metrics.entryRate,
       unit: "%",
       data: { ...commonData, entry_rate: metrics.entryRate },
+      comparison: comparisons?.entryRate,
+      comparisonPeriod,
     },
     "daily-average-in": {
       id: "daily-average-in",
@@ -64,6 +70,8 @@ export const createOverviewWidgetFactory = (
       value: metrics.dailyAverageIn.toLocaleString(),
       unit: t("common.peoplePerDay", "people/day"),
       data: { ...commonData, daily_average_in: metrics.dailyAverageIn },
+      comparison: comparisons?.dailyAverageIn,
+      comparisonPeriod,
     },
     "daily-average-out": {
       id: "daily-average-out",
@@ -75,6 +83,8 @@ export const createOverviewWidgetFactory = (
       value: metrics.dailyAverageOut.toLocaleString(),
       unit: t("common.peoplePerDay", "people/day"),
       data: { ...commonData, daily_average_out: metrics.dailyAverageOut },
+      comparison: comparisons?.dailyAverageOut,
+      comparisonPeriod,
     },
     "most-crowded-day": {
       id: "most-crowded-day",

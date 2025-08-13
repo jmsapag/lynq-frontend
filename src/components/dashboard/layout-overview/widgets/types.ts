@@ -1,4 +1,6 @@
 // src/components/dashboard/layout-overview/widgets/types.ts
+import { type MetricComparison } from "../../../../utils/comparisonUtils";
+
 export type OverviewWidgetType =
   | "total-in"
   | "total-out"
@@ -20,6 +22,8 @@ export interface OverviewWidgetConfig {
   value: string | number;
   unit: string;
   data: Record<string, any>;
+  comparison?: MetricComparison;
+  comparisonPeriod?: { start: Date; end: Date };
 }
 
 export interface OverviewWidgetFactoryParams {
@@ -36,4 +40,12 @@ export interface OverviewWidgetFactoryParams {
   dateRange: { start: Date; end: Date };
   sensorIdsList: string;
   getSensorDetails: () => any[];
+  comparisons?: {
+    totalIn?: MetricComparison;
+    totalOut?: MetricComparison;
+    entryRate?: MetricComparison;
+    dailyAverageIn?: MetricComparison;
+    dailyAverageOut?: MetricComparison;
+  };
+  comparisonPeriod?: { start: Date; end: Date };
 }

@@ -29,6 +29,8 @@ export const createOverviewWidgetConfig = (
             end: params.dateRange.end,
           }}
           data={widget.data}
+          comparison={widget.comparison}
+          comparisonPeriod={widget.comparisonPeriod}
         />
       ),
     }),

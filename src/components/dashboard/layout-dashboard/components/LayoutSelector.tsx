@@ -13,14 +13,12 @@ interface LayoutSelectorProps {
   currentLayout: DashboardLayout;
   availableLayouts: DashboardLayout[];
   onLayoutChange: (layout: DashboardLayout) => void;
-  isEditing?: boolean;
 }
 
 export const LayoutSelector: React.FC<LayoutSelectorProps> = ({
   currentLayout,
   availableLayouts,
   onLayoutChange,
-  isEditing = false,
 }) => {
   return (
     <div className="flex items-center gap-2">
@@ -29,7 +27,7 @@ export const LayoutSelector: React.FC<LayoutSelectorProps> = ({
           <Button
             variant="flat"
             color="default"
-            size="sm"
+            size="md"
             startContent={<Squares2X2Icon className="w-4 h-4" />}
             endContent={<ChevronDownIcon className="w-3 h-3" />}
             className="min-w-0"

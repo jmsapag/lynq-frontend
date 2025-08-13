@@ -1,6 +1,5 @@
 import React from "react";
 
-
 export type DashboardWidgetType =
   | "total-in"
   | "total-out"
@@ -44,4 +43,12 @@ export interface WidgetFactoryParams {
   dateRange?: { start: Date; end: Date }; // Adding dateRange
   sensorIdsList?: string;
   getSensorDetails?: () => any[];
+  comparisons?: {
+    totalIn?: import("../../../../utils/comparisonUtils").MetricComparison;
+    totalOut?: import("../../../../utils/comparisonUtils").MetricComparison;
+    entryRate?: import("../../../../utils/comparisonUtils").MetricComparison;
+    dailyAverageIn?: import("../../../../utils/comparisonUtils").MetricComparison;
+    dailyAverageOut?: import("../../../../utils/comparisonUtils").MetricComparison;
+  };
+  comparisonPeriod?: { start: Date; end: Date };
 }

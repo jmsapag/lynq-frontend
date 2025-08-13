@@ -43,7 +43,6 @@ export function useSensorRecords(
   const [prevSensorIds, setPrevSensorIds] = useState<number[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  console.log(sensorRecordsFormData);
 
   // Custom hooks
   const fetchData = useFetchData();

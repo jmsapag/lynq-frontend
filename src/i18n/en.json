@@ -184,6 +184,10 @@
       "last14Days": "Last 14 days",
       "last30Days": "Last 30 days",
       "custom": "Custom"
+    },
+    "comparison": {
+      "label": "Comparison",
+      "toggle": "Compare periods"
     }
   },
   "chart": {
@@ -194,7 +198,10 @@
     "charts": {
       "deviceComparisonIn": "Entries",
       "deviceComparisonOut": "Exits"
-    }
+    },
+    "increaseFromPrevious": "Increased from previous period",
+    "decreaseFromPrevious": "Decreased from previous period",
+    "noChangeFromPrevious": "No change from previous period"
   },
   "landing": {
     "title": "People Counter",
