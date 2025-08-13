@@ -1,19 +1,20 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import { useState } from 'react';
-import { LayoutEditor, LayoutViewer, LayoutSelector } from './index';
-import { LayoutType, DroppedItems } from './types';
+import type { Meta, StoryObj } from "@storybook/react";
+import { useState } from "react";
+import { LayoutEditor, LayoutViewer, LayoutSelector } from "./index";
+import { LayoutType, DroppedItems } from "./types";
 
 // Demo con datos de ejemplo
 const SAMPLE_LAYOUT_DATA: DroppedItems = {
-  'grid-top-left': ['analytics-1', 'users-1'],
-  'grid-top-right': ['notifications'],
-  'grid-bottom-left': ['revenue-chart'],
-  'grid-bottom-right': ['tasks-card']
+  "grid-top-left": ["analytics-1", "users-1"],
+  "grid-top-right": ["notifications"],
+  "grid-bottom-left": ["revenue-chart"],
+  "grid-bottom-right": ["tasks-card"],
 };
 
 const LayoutDemo = () => {
-  const [currentLayout, setCurrentLayout] = useState<LayoutType>('grid');
-  const [layoutData, setLayoutData] = useState<DroppedItems>(SAMPLE_LAYOUT_DATA);
+  const [currentLayout, setCurrentLayout] = useState<LayoutType>("grid");
+  const [layoutData, setLayoutData] =
+    useState<DroppedItems>(SAMPLE_LAYOUT_DATA);
   const [isEditMode, setIsEditMode] = useState(false);
 
   const handleSave = (layout: LayoutType, items: DroppedItems) => {
@@ -47,21 +48,18 @@ const LayoutDemo = () => {
         </div>
       </div>
 
-      <LayoutViewer
-        layout={currentLayout}
-        items={layoutData}
-      />
+      <LayoutViewer layout={currentLayout} items={layoutData} />
     </div>
   );
 };
 
 const meta: Meta = {
-  title: 'Dashboard/Layouts/Complete System',
+  title: "Dashboard/Layouts/Complete System",
   component: LayoutDemo,
   parameters: {
-    layout: 'fullscreen',
+    layout: "fullscreen",
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
 };
 
 export default meta;
@@ -78,7 +76,7 @@ export const EditorOnly: Story = {
     <LayoutEditor
       initialLayout="grid"
       initialItems={SAMPLE_LAYOUT_DATA}
-      onSave={(layout, items) => console.log('Saved:', layout, items)}
+      onSave={(layout, items) => console.log("Saved:", layout, items)}
     />
   ),
 };
@@ -89,10 +87,10 @@ export const ViewerOnly: Story = {
     <LayoutViewer
       layout="dashboard"
       items={{
-        'dash-header': ['analytics-1'],
-        'dash-sidebar': ['users-1', 'notifications'],
-        'dash-main': ['revenue-chart', 'performance'],
-        'dash-footer': ['tasks-card']
+        "dash-header": ["analytics-1"],
+        "dash-sidebar": ["users-1", "notifications"],
+        "dash-main": ["revenue-chart", "performance"],
+        "dash-footer": ["tasks-card"],
       }}
     />
   ),
@@ -101,15 +99,14 @@ export const ViewerOnly: Story = {
 // Selector individual
 export const SelectorOnly: Story = {
   render: () => {
-    const [layout, setLayout] = useState<LayoutType>('grid');
+    const [layout, setLayout] = useState<LayoutType>("grid");
     return (
       <div className="p-8">
-        <LayoutSelector
-          currentLayout={layout}
-          onLayoutChange={setLayout}
-        />
+        <LayoutSelector currentLayout={layout} onLayoutChange={setLayout} />
         <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-          <p className="text-sm">Layout seleccionado: <strong>{layout}</strong></p>
+          <p className="text-sm">
+            Layout seleccionado: <strong>{layout}</strong>
+          </p>
         </div>
       </div>
     );
@@ -119,41 +116,46 @@ export const SelectorOnly: Story = {
 // Comparación de todos los layouts
 export const AllLayouts: Story = {
   render: () => {
-    const layouts: LayoutType[] = ['grid', 'columns', 'rows', 'sidebar', 'dashboard'];
+    const layouts: LayoutType[] = [
+      "grid",
+      "columns",
+      "rows",
+      "sidebar",
+      "dashboard",
+    ];
     const sampleData: DroppedItems = {
       // Grid
-      'grid-top-left': ['analytics-1'],
-      'grid-top-right': ['users-1'],
-      'grid-bottom-left': ['revenue-chart'],
-      'grid-bottom-right': ['tasks-card'],
+      "grid-top-left": ["analytics-1"],
+      "grid-top-right": ["users-1"],
+      "grid-bottom-left": ["revenue-chart"],
+      "grid-bottom-right": ["tasks-card"],
       // Columns
-      'col-left': ['analytics-1', 'users-1'],
-      'col-center': ['revenue-chart'],
-      'col-right': ['tasks-card'],
+      "col-left": ["analytics-1", "users-1"],
+      "col-center": ["revenue-chart"],
+      "col-right": ["tasks-card"],
       // Rows
-      'row-top': ['analytics-1', 'users-1'],
-      'row-middle': ['revenue-chart'],
-      'row-bottom': ['tasks-card'],
+      "row-top": ["analytics-1", "users-1"],
+      "row-middle": ["revenue-chart"],
+      "row-bottom": ["tasks-card"],
       // Sidebar
-      'sidebar-left': ['analytics-1', 'users-1'],
-      'main-content': ['revenue-chart'],
+      "sidebar-left": ["analytics-1", "users-1"],
+      "main-content": ["revenue-chart"],
       // Dashboard
-      'dash-header': ['analytics-1'],
-      'dash-sidebar': ['users-1'],
-      'dash-main': ['revenue-chart'],
-      'dash-footer': ['tasks-card']
+      "dash-header": ["analytics-1"],
+      "dash-sidebar": ["users-1"],
+      "dash-main": ["revenue-chart"],
+      "dash-footer": ["tasks-card"],
     };
 
     return (
       <div className="space-y-8 p-6 bg-gray-100">
-        <h1 className="text-2xl font-bold text-center">Todos los Layouts Disponibles</h1>
-        {layouts.map(layout => (
+        <h1 className="text-2xl font-bold text-center">
+          Todos los Layouts Disponibles
+        </h1>
+        {layouts.map((layout) => (
           <div key={layout} className="bg-white rounded-lg shadow-sm border">
             <div className="h-96 overflow-hidden">
-              <LayoutViewer
-                layout={layout}
-                items={sampleData}
-              />
+              <LayoutViewer layout={layout} items={sampleData} />
             </div>
           </div>
         ))}

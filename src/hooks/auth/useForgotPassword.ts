@@ -20,4 +20,4 @@ export function useForgotPassword() {
   };
 
   return { forgotPassword, loading, error };
-} 
+}

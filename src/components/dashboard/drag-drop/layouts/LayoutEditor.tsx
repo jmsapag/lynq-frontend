@@ -1,11 +1,17 @@
-import React, { useState } from 'react';
-import { DndContext, DragEndEvent, useSensor, useSensors, PointerSensor } from '@dnd-kit/core';
-import { LayoutType, DroppedItems, WidgetItem } from './types';
-import { LAYOUT_SCHEMAS } from './schemas';
-import { LayoutRenderer } from './LayoutRenderer';
-import { LayoutSelector } from './LayoutSelector';
-import Droppable from '../droppable/droppable';
-import Draggable from '../draggable/draggable';
+import React, { useState } from "react";
+import {
+  DndContext,
+  DragEndEvent,
+  useSensor,
+  useSensors,
+  PointerSensor,
+} from "@dnd-kit/core";
+import { LayoutType, DroppedItems, WidgetItem } from "./types";
+import { LAYOUT_SCHEMAS } from "./schemas";
+import { LayoutRenderer } from "./LayoutRenderer";
+import { LayoutSelector } from "./LayoutSelector";
+import Droppable from "../droppable/droppable";
+import Draggable from "../draggable/draggable";
 
 interface LayoutEditorProps {
   initialLayout?: LayoutType;
@@ -14,9 +20,9 @@ interface LayoutEditorProps {
 }
 
 export const LayoutEditor: React.FC<LayoutEditorProps> = ({
-  initialLayout = 'grid',
+  initialLayout = "grid",
   initialItems = {},
-  onSave
+  onSave,
 }) => {
   const [currentLayout, setCurrentLayout] = useState<LayoutType>(initialLayout);
   const [droppedItems, setDroppedItems] = useState<DroppedItems>(initialItems);
@@ -27,108 +33,118 @@ export const LayoutEditor: React.FC<LayoutEditorProps> = ({
       activationConstraint: {
         distance: 8,
       },
-    })
+    }),
   );
 
   // Widgets disponibles para el ejemplo
   const availableItems: WidgetItem[] = [
     {
-      id: 'analytics-1',
-      type: 'small-card',
+      id: "analytics-1",
+      type: "small-card",
       content: {
-        icon: '📊',
-        title: 'Analytics Overview',
-        description: 'Métricas principales del sistema',
-        data: { value: 1234, trend: '+12%' }
-      }
+        icon: "📊",
+        title: "Analytics Overview",
+        description: "Métricas principales del sistema",
+        data: { value: 1234, trend: "+12%" },
+      },
     },
     {
-      id: 'users-1',
-      type: 'small-card',
+      id: "users-1",
+      type: "small-card",
       content: {
-        icon: '👥',
-        title: 'Usuarios Activos',
-        description: 'Cantidad de usuarios en línea',
-        data: { value: 89, trend: '+5%' }
-      }
+        icon: "👥",
+        title: "Usuarios Activos",
+        description: "Cantidad de usuarios en línea",
+        data: { value: 89, trend: "+5%" },
+      },
     },
     {
-      id: 'revenue-chart',
-      type: 'chart-card',
+      id: "revenue-chart",
+      type: "chart-card",
       content: {
-        icon: '📈',
-        title: 'Gráfico de Ingresos',
-        description: 'Evolución mensual de ingresos',
-        data: { chartType: 'line', period: 'monthly' }
-      }
+        icon: "📈",
+        title: "Gráfico de Ingresos",
+        description: "Evolución mensual de ingresos",
+        data: { chartType: "line", period: "monthly" },
+      },
     },
     {
-      id: 'tasks-card',
-      type: 'card',
+      id: "tasks-card",
+      type: "card",
       content: {
-        icon: '📋',
-        title: 'Lista de Tareas',
-        description: 'Tareas pendientes y completadas',
-        data: { pending: 5, completed: 23 }
-      }
+        icon: "📋",
+        title: "Lista de Tareas",
+        description: "Tareas pendientes y completadas",
+        data: { pending: 5, completed: 23 },
+      },
     },
     {
-      id: 'notifications',
-      type: 'card',
+      id: "notifications",
+      type: "card",
       content: {
-        icon: '🔔',
-        title: 'Notificaciones',
-        description: 'Alertas y mensajes recientes',
-        data: { unread: 3 }
-      }
+        icon: "🔔",
+        title: "Notificaciones",
+        description: "Alertas y mensajes recientes",
+        data: { unread: 3 },
+      },
     },
     {
-      id: 'performance',
-      type: 'chart-card',
+      id: "performance",
+      type: "chart-card",
       content: {
-        icon: '⚡',
-        title: 'Rendimiento Sistema',
-        description: 'Métricas de performance en tiempo real',
-        data: { cpu: 45, memory: 67, network: 23 }
-      }
-    }
+        icon: "⚡",
+        title: "Rendimiento Sistema",
+        description: "Métricas de performance en tiempo real",
+        data: { cpu: 45, memory: 67, network: 23 },
+      },
+    },
   ];
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-    
+
     if (over && active.id !== over.id) {
-      const draggedItem = availableItems.find(item => item.id === active.id);
+      const draggedItem = availableItems.find((item) => item.id === active.id);
       const currentSchema = LAYOUT_SCHEMAS[currentLayout];
-      const targetZone = currentSchema.zones.find(zone => zone.id === over.id);
-      
+      const targetZone = currentSchema.zones.find(
+        (zone) => zone.id === over.id,
+      );
+
       // Verificar si la zona acepta este tipo de item
-      if (targetZone && draggedItem && 
-          (targetZone.acceptedTypes?.includes(draggedItem.type) || !targetZone.acceptedTypes)) {
-        
-        setDroppedItems(prev => {
+      if (
+        targetZone &&
+        draggedItem &&
+        (targetZone.acceptedTypes?.includes(draggedItem.type) ||
+          !targetZone.acceptedTypes)
+      ) {
+        setDroppedItems((prev) => {
           const newItems = { ...prev };
-          
+
           // Remover de todas las zonas primero
-          Object.keys(newItems).forEach(zoneId => {
-            newItems[zoneId] = newItems[zoneId]?.filter(id => id !== active.id) || [];
+          Object.keys(newItems).forEach((zoneId) => {
+            newItems[zoneId] =
+              newItems[zoneId]?.filter((id) => id !== active.id) || [];
           });
-          
+
           // Agregar a la zona destino
           if (!newItems[over.id as string]) {
             newItems[over.id as string] = [];
           }
-          newItems[over.id as string] = [...newItems[over.id as string], active.id as string];
-          
+          newItems[over.id as string] = [
+            ...newItems[over.id as string],
+            active.id as string,
+          ];
+
           return newItems;
         });
       }
     } else if (!over) {
       // Si se suelta fuera de cualquier zona, remover de todas las zonas
-      setDroppedItems(prev => {
+      setDroppedItems((prev) => {
         const newItems = { ...prev };
-        Object.keys(newItems).forEach(zoneId => {
-          newItems[zoneId] = newItems[zoneId]?.filter(id => id !== active.id) || [];
+        Object.keys(newItems).forEach((zoneId) => {
+          newItems[zoneId] =
+            newItems[zoneId]?.filter((id) => id !== active.id) || [];
         });
         return newItems;
       });
@@ -138,14 +154,14 @@ export const LayoutEditor: React.FC<LayoutEditorProps> = ({
   const handleLayoutChange = (newLayout: LayoutType) => {
     setCurrentLayout(newLayout);
     setShowLayoutSelector(false);
-    
+
     // Filtrar items que no son compatibles con el nuevo layout
     const newSchema = LAYOUT_SCHEMAS[newLayout];
-    const validZoneIds = newSchema.zones.map(zone => zone.id);
-    
-    setDroppedItems(prev => {
+    const validZoneIds = newSchema.zones.map((zone) => zone.id);
+
+    setDroppedItems((prev) => {
       const filtered: DroppedItems = {};
-      Object.keys(prev).forEach(zoneId => {
+      Object.keys(prev).forEach((zoneId) => {
         if (validZoneIds.includes(zoneId)) {
           filtered[zoneId] = prev[zoneId];
         }
@@ -155,12 +171,12 @@ export const LayoutEditor: React.FC<LayoutEditorProps> = ({
   };
 
   const isItemDropped = (itemId: string) => {
-    return Object.values(droppedItems).some(items => items?.includes(itemId));
+    return Object.values(droppedItems).some((items) => items?.includes(itemId));
   };
 
   const handleSave = () => {
     onSave?.(currentLayout, droppedItems);
-    alert('Layout guardado correctamente!');
+    alert("Layout guardado correctamente!");
   };
 
   const currentSchema = LAYOUT_SCHEMAS[currentLayout];
@@ -174,10 +190,11 @@ export const LayoutEditor: React.FC<LayoutEditorProps> = ({
             <div>
               <h1 className="text-xl font-semibold">Editor de Layout</h1>
               <p className="text-sm text-gray-600">
-                Layout actual: <span className="font-medium">{currentSchema.name}</span>
+                Layout actual:{" "}
+                <span className="font-medium">{currentSchema.name}</span>
               </p>
             </div>
-            
+
             <div className="flex items-center space-x-3">
               <button
                 onClick={() => setShowLayoutSelector(!showLayoutSelector)}
@@ -199,25 +216,39 @@ export const LayoutEditor: React.FC<LayoutEditorProps> = ({
           {/* Panel Lateral - Widgets Disponibles */}
           <div className="w-80 bg-white border-r shadow-sm">
             <div className="p-6">
-              <h3 className="text-lg font-semibold mb-4">Widgets Disponibles</h3>
-              
-              <Droppable id="available-widgets" acceptedTypes={['small-card', 'card', 'chart-card']}>
+              <h3 className="text-lg font-semibold mb-4">
+                Widgets Disponibles
+              </h3>
+
+              <Droppable
+                id="available-widgets"
+                acceptedTypes={["small-card", "card", "chart-card"]}
+              >
                 <div className="space-y-3 min-h-[300px] p-2">
-                  {availableItems.filter(item => !isItemDropped(item.id)).length === 0 ? (
+                  {availableItems.filter((item) => !isItemDropped(item.id))
+                    .length === 0 ? (
                     <div className="text-center text-gray-500 py-8">
                       <p className="text-sm">Todos los widgets están en uso</p>
-                      <p className="text-xs mt-1">Arrastra elementos aquí para removerlos</p>
+                      <p className="text-xs mt-1">
+                        Arrastra elementos aquí para removerlos
+                      </p>
                     </div>
                   ) : (
-                    availableItems.filter(item => !isItemDropped(item.id)).map(item => (
-                      <Draggable key={item.id} id={item.id} type={item.type}>
-                        <div>
-                          <div className="text-lg">{item.content.icon}</div>
-                          <div className="text-xs font-medium">{item.content.title}</div>
-                          <div className="text-xs text-gray-500">{item.content.description}</div>
-                        </div>
-                      </Draggable>
-                    ))
+                    availableItems
+                      .filter((item) => !isItemDropped(item.id))
+                      .map((item) => (
+                        <Draggable key={item.id} id={item.id} type={item.type}>
+                          <div>
+                            <div className="text-lg">{item.content.icon}</div>
+                            <div className="text-xs font-medium">
+                              {item.content.title}
+                            </div>
+                            <div className="text-xs text-gray-500">
+                              {item.content.description}
+                            </div>
+                          </div>
+                        </Draggable>
+                      ))
                   )}
                 </div>
               </Droppable>

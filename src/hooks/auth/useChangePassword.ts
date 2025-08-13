@@ -20,4 +20,4 @@ export function useChangePassword() {
   };
 
   return { changePassword, loading, error };
-} 
+}

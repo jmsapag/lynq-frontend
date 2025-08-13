@@ -1,9 +1,9 @@
-export type LayoutType = 'grid' | 'columns' | 'rows' | 'sidebar' | 'dashboard';
+export type LayoutType = "grid" | "columns" | "rows" | "sidebar" | "dashboard";
 
 export interface LayoutZone {
   id: string;
   name: string;
-  acceptedTypes?: ('small-card' | 'card' | 'chart-card')[];
+  acceptedTypes?: ("small-card" | "card" | "chart-card")[];
   className?: string;
 }
 
@@ -22,7 +22,7 @@ export interface DroppedItems {
 
 export interface WidgetItem {
   id: string;
-  type: 'small-card' | 'card' | 'chart-card';
+  type: "small-card" | "card" | "chart-card";
   content: {
     icon: string;
     title: string;

@@ -1,5 +1,8 @@
 import { Spinner, Button } from "@heroui/react";
-import { DashboardFilters } from "../components/dashboard/filter.tsx";
+import {
+  DashboardFilters,
+  PredefinedPeriod,
+} from "../components/dashboard/filter.tsx";
 import { useEffect, useState, useMemo } from "react";
 import { useSensorData } from "../hooks/useSensorData.ts";
 import { useSensorRecords } from "../hooks/useSensorRecords.ts";
@@ -11,22 +14,37 @@ import {
 } from "../types/sensorDataResponse";
 import { SensorRecordsFormData } from "../types/sensorRecordsFormData";
 import { Time } from "@internationalized/date";
+import { useOverviewMetrics } from "../hooks/dashboard/useOverviewMetrics";
+import { useComparison } from "../hooks/dashboard/useComparison";
 
 // Layout Dashboard imports
 import { DndContext } from "@dnd-kit/core";
 import { PencilIcon, EyeIcon } from "@heroicons/react/24/outline";
 import { LayoutSidebar } from "../components/dashboard/layout-dashboard/LayoutSidebar";
-import { LayoutRenderer, LayoutSelector } from "../components/dashboard/layout-dashboard/components";
-import { createWidgetConfig, type WidgetConfig, type DashboardWidgetType, type WidgetFactoryParams } from "../components/dashboard/layout-dashboard/widgets";
-import { 
-  createDragHandlers, 
-  getPlacedWidgets, 
+import {
+  LayoutRenderer,
+  LayoutSelector,
+} from "../components/dashboard/layout-dashboard/components";
+import {
+  createWidgetConfig,
+  createWidgetConfigOverview,
+  type WidgetConfig,
+  type DashboardWidgetType,
+  type WidgetFactoryParams,
+} from "../components/dashboard/layout-dashboard/widgets";
+import {
+  createDragHandlers,
+  getPlacedWidgets,
   saveLayoutToLocalStorage,
   loadLayoutFromLocalStorage,
   type DashboardLayoutState,
-  type DashboardLayoutActions 
+  type DashboardLayoutActions,
 } from "../components/dashboard/layout-dashboard/utils";
-import { AVAILABLE_LAYOUTS, getDefaultLayout, type DashboardLayout } from "../components/dashboard/layout-dashboard/layouts";
+import {
+  AVAILABLE_LAYOUTS,
+  getDefaultLayout,
+  type DashboardLayout,
+} from "../components/dashboard/layout-dashboard/layouts";
 
 function getFirstFetchedDateRange() {
   return {
@@ -38,14 +56,20 @@ function getFirstFetchedDateRange() {
 const Dashboard = () => {
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
   const [sensorMap, setSensorMap] = useState<Map<number, string>>(new Map());
-  
+  const [selectedPeriod, setSelectedPeriod] =
+    useState<PredefinedPeriod>("last7Days");
+
   // Layout Dashboard state
   const [isEditing, setIsEditing] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [draggedWidget, setDraggedWidget] = useState<DashboardWidgetType | null>(null);
-  const [widgetPlacements, setWidgetPlacements] = useState<Record<string, DashboardWidgetType | null>>({});
-  const [currentLayout, setCurrentLayout] = useState<DashboardLayout>(getDefaultLayout());
-  
+  const [draggedWidget, setDraggedWidget] =
+    useState<DashboardWidgetType | null>(null);
+  const [widgetPlacements, setWidgetPlacements] = useState<
+    Record<string, DashboardWidgetType | null>
+  >({});
+  const [currentLayout, setCurrentLayout] =
+    useState<DashboardLayout>(getDefaultLayout());
+
   const {
     locations,
     loading: sensorsLoading,
@@ -70,31 +94,31 @@ const Dashboard = () => {
     error: dataError,
   } = useSensorRecords(sensorRecordsFormData, setSensorRecordsFormData);
 
-  const metrics = useMemo(() => {
-    if (!sensorData || !sensorData.in || !sensorData.out) {
-      return {
-        totalIn: 0,
-        totalOut: 0,
-        entryRate: 0,
-      };
-    }
+  // Comparison hook
+  const { isComparisonEnabled, comparisonPeriods, toggleComparison } = useComparison(
+    sensorRecordsFormData.dateRange
+  );
 
-    const totalIn = sensorData.in.reduce((sum, value) => sum + value, 0);
-    const totalOut = sensorData.out.reduce((sum, value) => sum + value, 0);
-
-    const totalMovements = totalIn + totalOut;
-
-    const entryRate =
-      totalMovements > 0 ? Math.round((totalIn / totalMovements) * 100) : 0;
-
-    return { totalIn, totalOut, entryRate };
-  }, [sensorData]);
+  // Use the same overview metrics hook as in the overview page
+  const { metrics, getSensorDetails, sensorIdsList } = useOverviewMetrics(
+    sensorData,
+    sensorRecordsFormData.dateRange,
+    sensorMap,
+    locations || [],
+    sensorRecordsFormData.sensorIds,
+    comparisonPeriods,
+  );
 
   const handleDateRangeChange = (startDate: Date, endDate: Date) => {
     setSensorRecordsFormData((prev) => ({
       ...prev,
       dateRange: { start: startDate, end: endDate },
+      needToFetch: true,
     }));
+  };
+
+  const handlePredefinedPeriodChange = (period: PredefinedPeriod) => {
+    setSelectedPeriod(period);
   };
 
   const handleSensorsChange = (sensors: number[]) => {
@@ -122,6 +146,20 @@ const Dashboard = () => {
       });
     });
     setSensorMap(newSensorMap);
+  }, [locations]);
+
+  // Auto-select all sensors when locations are loaded (same as overview)
+  useEffect(() => {
+    if (locations && locations.length > 0) {
+      const allSensorIds = locations.flatMap((location) =>
+        location.sensors.map((sensor) => sensor.id),
+      );
+      setSensorRecordsFormData((prev) => ({
+        ...prev,
+        sensorIds: allSensorIds,
+        needToFetch: true,
+      }));
+    }
   }, [locations]);
 
   // Aggregation handler - commented out since aggregation filter is hidden
@@ -212,16 +250,39 @@ const Dashboard = () => {
     };
   }, [sensorData]);
 
-  // Create widget configurations using the factory
+  // Create widget configurations using the factory - combining charts with overview metrics (avoiding duplicates)
   const availableWidgets: WidgetConfig[] = useMemo(() => {
     const params: WidgetFactoryParams = {
-      metrics,
+      metrics: metrics.current,
       chartData,
       sensorData,
       sensorRecordsFormData,
+      dateRange: sensorRecordsFormData.dateRange,
+      sensorIdsList,
+      getSensorDetails,
+      comparisons: metrics.comparisons,
+      comparisonPeriod: comparisonPeriods?.previous,
     };
-    return createWidgetConfig(params);
-  }, [metrics, chartData, sensorData, sensorRecordsFormData]);
+
+    // Get chart widgets (excluding the basic metrics that are in overview)
+    const chartWidgets = createWidgetConfig(params).filter(
+      (widget) =>
+        !["total-in", "total-out", "entry-rate"].includes(widget.type),
+    );
+
+    // Get all overview metric widgets (includes the basic metrics plus new ones)
+    const overviewWidgets = createWidgetConfigOverview(params);
+
+    return [...chartWidgets, ...overviewWidgets];
+  }, [
+    metrics,
+    chartData,
+    sensorData,
+    sensorRecordsFormData,
+    sensorIdsList,
+    getSensorDetails,
+    comparisonPeriods,
+  ]);
 
   // Dashboard layout state and actions
   const layoutState: DashboardLayoutState = {
@@ -239,7 +300,10 @@ const Dashboard = () => {
   };
 
   // Create drag handlers using the utility function
-  const { handleDragStart, handleDragEnd } = createDragHandlers(layoutState, layoutActions);
+  const { handleDragStart, handleDragEnd } = createDragHandlers(
+    layoutState,
+    layoutActions,
+  );
 
   // Handle layout changes
   const handleLayoutChange = (newLayout: DashboardLayout) => {
@@ -247,16 +311,16 @@ const Dashboard = () => {
     if (Object.keys(widgetPlacements).length > 0) {
       saveLayoutToLocalStorage(currentLayout.id, widgetPlacements);
     }
-    
+
     // Load the new layout
     let newPlacements = newLayout.widgetPlacements;
-    
+
     // Try to load saved placements for this layout
     const savedPlacements = loadLayoutFromLocalStorage(newLayout.id);
     if (savedPlacements) {
       newPlacements = savedPlacements;
     }
-    
+
     setCurrentLayout(newLayout);
     setWidgetPlacements(newPlacements);
   };
@@ -265,13 +329,13 @@ const Dashboard = () => {
   useEffect(() => {
     if (Object.keys(widgetPlacements).length === 0) {
       let initialPlacements = currentLayout.widgetPlacements;
-      
+
       // Try to load saved placements for this layout
       const savedPlacements = loadLayoutFromLocalStorage(currentLayout.id);
       if (savedPlacements) {
         initialPlacements = savedPlacements;
       }
-      
+
       setWidgetPlacements(initialPlacements);
     }
   }, [currentLayout, widgetPlacements]);
@@ -279,7 +343,7 @@ const Dashboard = () => {
   // Toggle sidebar when entering/exiting edit mode and save changes
   useEffect(() => {
     setIsSidebarOpen(isEditing);
-    
+
     // Save changes when exiting edit mode
     if (!isEditing && Object.keys(widgetPlacements).length > 0) {
       saveLayoutToLocalStorage(currentLayout.id, widgetPlacements);
@@ -288,9 +352,11 @@ const Dashboard = () => {
 
   return (
     <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-      <div className={`min-h-screen  transition-all duration-300 ${
-        isSidebarOpen ? 'pr-80' : ''
-      }`}>
+      <div
+        className={`min-h-screen  transition-all duration-300 ${
+          isSidebarOpen ? "pr-80" : ""
+        }`}
+      >
         {/* Main Content Area */}
         <div className="p-6 space-y-6">
           <div className="flex items-center justify-between">
@@ -307,9 +373,15 @@ const Dashboard = () => {
                 onRefreshData={handleRefreshData}
                 locations={locations}
                 lastUpdated={lastUpdated}
+                showPredefinedPeriods={true}
+                currentPredefinedPeriod={selectedPeriod}
+                onPredefinedPeriodChange={handlePredefinedPeriodChange}
+                showComparison={true}
+                isComparisonEnabled={isComparisonEnabled}
+                onComparisonToggle={toggleComparison}
               />
             </div>
-            
+
             {/* Edit Mode Toggle */}
             <div className="flex items-center gap-3 ml-4">
               {/* Layout Selector */}
@@ -317,15 +389,20 @@ const Dashboard = () => {
                 currentLayout={currentLayout}
                 onLayoutChange={handleLayoutChange}
                 availableLayouts={AVAILABLE_LAYOUTS}
-                isEditing={isEditing}
               />
-              
+
               <Button
                 variant={isEditing ? "flat" : "solid"}
                 color="primary"
-                startContent={isEditing ? <EyeIcon className="w-4 h-4" /> : <PencilIcon className="w-4 h-4" />}
+                startContent={
+                  isEditing ? (
+                    <EyeIcon className="w-4 h-4" />
+                  ) : (
+                    <PencilIcon className="w-4 h-4" />
+                  )
+                }
                 onPress={() => setIsEditing(!isEditing)}
-                size="sm"
+                size="md"
               >
                 {isEditing ? "View Mode" : "Edit Layout"}
               </Button>
@@ -356,11 +433,11 @@ const Dashboard = () => {
           isOpen={isSidebarOpen}
           onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
           isEditMode={isEditing}
-          allWidgets={availableWidgets.map(widget => ({
+          allWidgets={availableWidgets.map((widget) => ({
             id: widget.id,
             type: widget.type,
             title: widget.title,
-            category: widget.category
+            category: widget.category,
           }))}
           placedWidgets={getPlacedWidgets(widgetPlacements)}
           draggedWidget={draggedWidget}

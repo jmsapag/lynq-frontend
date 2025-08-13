@@ -71,6 +71,7 @@
       "peopleFlow": "Flujo de Personas (Entradas/Salidas)",
       "trafficHeatmap": "Mapa de Calor (Por Día y Hora)",
       "entryRateOverTime": "Tasa de Entrada a lo Largo del Tiempo",
+      "peopleInStore": "Personas en Tienda (Acumulativo)",
       "entries": "Entradas",
       "exits": "Salidas",
       "showEntries": "Mostrar Entradas",
@@ -78,7 +79,10 @@
       "entriesByDayAndHour": "Entradas por Día y Hora",
       "exitsByDayAndHour": "Salidas por Día y Hora",
       "hourOfDay": "Hora del Día",
-      "dayOfWeek": "Día de la Semana"
+      "dayOfWeek": "Día de la Semana",
+      "peopleInStoreTitle": "Personas en Tienda",
+      "netFlow": "Flujo Neto",
+      "numberOfPeople": "Número de Personas"
     },
     "metrics": {
       "totalIn": "Total Entradas",
@@ -96,7 +100,11 @@
       "mostCrowdedDay": "Día más concurrido",
       "mostCrowdedDayDescription": "Día del período seleccionado con mayor cantidad de entradas registradas.",
       "leastCrowdedDay": "Día menos concurrido",
-      "leastCrowdedDayDescription": "Día del período seleccionado con menor cantidad de entradas registradas."
+      "leastCrowdedDayDescription": "Día del período seleccionado con menor cantidad de entradas registradas.",
+      "resetLayout": "Restablecer Diseño",
+      "saveLayout": "Guardar Diseño",
+      "editLayout": "Editar Diseño",
+      "hiddenCards": "Tarjetas Ocultas"
     }
   },
   "users": {
@@ -176,6 +184,10 @@
       "last14Days": "Últimos 14 días",
       "last30Days": "Últimos 30 días",
       "custom": "Personalizado"
+    },
+    "comparison": {
+      "label": "Comparación",
+      "toggle": "Comparar períodos"
     }
   },
   "chart": {
@@ -186,7 +198,10 @@
     "charts": {
       "deviceComparisonIn": "Entradas",
       "deviceComparisonOut": "Salidas"
-    }
+    },
+    "increaseFromPrevious": "Aumento respecto al período anterior",
+    "decreaseFromPrevious": "Disminución respecto al período anterior",
+    "noChangeFromPrevious": "Sin cambios respecto al período anterior"
   },
   "landing": {
     "title": "Contador de Personas",

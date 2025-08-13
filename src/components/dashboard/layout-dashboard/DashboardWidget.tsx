@@ -8,7 +8,7 @@ interface DashboardWidgetProps {
   id: string;
   type: DashboardWidgetType;
   title: string;
-  category?: 'metric' | 'chart';
+  category?: "metric" | "chart";
   children: React.ReactNode;
   isDragging?: boolean;
   enableDrag?: boolean; // New prop to control drag behavior
@@ -39,9 +39,16 @@ export const DashboardWidget: React.FC<DashboardWidgetProps> = ({
 
   const style = {
     // Completely disable transform for non-draggable widgets
-    transform: enableDrag && isCurrentlyDragging ? CSS.Translate.toString(transform) : 'none',
+    transform:
+      enableDrag && isCurrentlyDragging
+        ? CSS.Translate.toString(transform)
+        : "none",
     opacity: 1,
-    cursor: enableDrag ? (isCurrentlyDragging ? "grabbing" : "grab") : "default",
+    cursor: enableDrag
+      ? isCurrentlyDragging
+        ? "grabbing"
+        : "grab"
+      : "default",
   };
 
   return (
@@ -51,9 +58,11 @@ export const DashboardWidget: React.FC<DashboardWidgetProps> = ({
       {...(enableDrag ? listeners : {})}
       {...(enableDrag ? attributes : {})}
       className={`${
-        enableDrag && (isDragging || isCurrentlyDragging) 
-          ? "scale-105 shadow-lg border-2 border-blue-500" 
-          : enableDrag ? "hover:shadow-md " : ""
+        enableDrag && (isDragging || isCurrentlyDragging)
+          ? "scale-105 shadow-lg border-2 border-blue-500"
+          : enableDrag
+            ? "hover:shadow-md "
+            : ""
       }`}
     >
       {children}

@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 
 const BACKEND_URL = "/api";
 
-console.log("BACKEND_URL:", BACKEND_URL, "DEV mode:", import.meta.env.DEV);
+// console.log("BACKEND_URL:", BACKEND_URL, "DEV mode:", import.meta.env.DEV);
 
 export const axiosClient = axios.create({
   baseURL: BACKEND_URL,
@@ -39,7 +39,11 @@ axiosPrivate.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      console.log("Unauthorized, redirecting to login");
+      // console.log("Unauthorized, redirecting to login");
+      // Clear the token cookie since it's invalid
+      Cookies.remove("token");
+      // Redirect to login page
+      window.location.href = "/login";
     }
     return Promise.reject(error);
   },

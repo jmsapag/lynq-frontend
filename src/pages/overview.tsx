@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import {
   DashboardFilters,
   PredefinedPeriod,
@@ -11,10 +11,33 @@ import { sensorMetadata } from "../types/sensorMetadata";
 import { SensorRecordsFormData } from "../types/sensorRecordsFormData";
 import { getFirstFetchedDateRange } from "../utils/dateUtils";
 import { useOverviewMetrics } from "../hooks/dashboard/useOverviewMetrics";
-import { MetricsCardGrid } from "../components/dashboard/overview/card-grid.tsx";
-import { LoadingState } from "../components/loading/loading-state.tsx";
+import { LoadingState } from "../components/loading/loading-state";
+import { useTranslation } from "react-i18next";
+import { useComparison } from "../hooks/dashboard/useComparison";
+import { DndContext } from "@dnd-kit/core";
+import { Button } from "@heroui/react";
+import { PencilIcon, EyeIcon } from "@heroicons/react/24/outline";
+import { LayoutSidebar } from "../components/dashboard/layout-dashboard/LayoutSidebar";
+import { LayoutRenderer } from "../components/dashboard/layout-dashboard/components";
+import { type WidgetConfig } from "../components/dashboard/layout-dashboard/widgets";
+import {
+  createDragHandlers,
+  getPlacedWidgets,
+  saveLayoutToLocalStorage,
+  loadLayoutFromLocalStorage,
+  type DashboardLayoutState,
+  type DashboardLayoutActions,
+} from "../components/dashboard/layout-dashboard/utils";
+import {
+  getDefaultOverviewLayout,
+  type DashboardLayout,
+} from "../components/dashboard/layout-dashboard/layouts";
+import { createOverviewWidgetConfig } from "../components/dashboard/layout-overview/widgets/widget-config.tsx";
+import { type OverviewWidgetFactoryParams } from "../components/dashboard/layout-overview/widgets/types";
+import { type DashboardWidgetType } from "../components/dashboard/layout-dashboard/widgets/types";
 
 export const Overview: React.FC = () => {
+  const { t } = useTranslation();
   const GROUP_BY = "day";
   const AGGREGATION_TYPE = "sum";
   const [selectedPeriod, setSelectedPeriod] =
@@ -46,13 +69,86 @@ export const Overview: React.FC = () => {
     error: dataError,
   } = useSensorRecords(sensorRecordsFormData, setSensorRecordsFormData);
 
-  // Get calculated metrics using the custom hook
+  // Comparison hook
+  const { isComparisonEnabled, comparisonPeriods, toggleComparison } = useComparison(
+    sensorRecordsFormData.dateRange
+  );
+
   const { metrics, getSensorDetails, sensorIdsList } = useOverviewMetrics(
     sensorData,
     sensorRecordsFormData.dateRange,
     sensorMap,
     locations || [],
+    sensorRecordsFormData.sensorIds,
+    comparisonPeriods,
   );
+
+  // Layout Dashboard state
+  const [isEditing, setIsEditing] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [draggedWidget, setDraggedWidget] =
+    useState<DashboardWidgetType | null>(null);
+  const [widgetPlacements, setWidgetPlacements] = useState<
+    Record<string, DashboardWidgetType | null>
+  >({});
+  const [currentLayout] = useState<DashboardLayout>(
+    getDefaultOverviewLayout(),
+  );
+
+  const availableWidgets: WidgetConfig[] = useMemo(() => {
+    if (!metrics || !sensorRecordsFormData.dateRange.start) return [];
+    
+    const params: OverviewWidgetFactoryParams = {
+      metrics: metrics.current,
+      dateRange: {
+        start: sensorRecordsFormData.dateRange.start,
+        end: sensorRecordsFormData.dateRange.end || new Date(),
+      },
+      sensorIdsList,
+      getSensorDetails,
+      comparisons: metrics.comparisons,
+      comparisonPeriod: comparisonPeriods?.previous,
+    };
+    
+    return createOverviewWidgetConfig(params, t);
+  }, [
+    metrics,
+    sensorRecordsFormData.dateRange,
+    sensorIdsList,
+    getSensorDetails,
+    comparisonPeriods,
+    t,
+  ]);
+
+  const layoutState: DashboardLayoutState = {
+    isEditing,
+    isSidebarOpen,
+    draggedWidget,
+    widgetPlacements,
+  };
+
+  const layoutActions: DashboardLayoutActions = {
+    setIsEditing,
+    setIsSidebarOpen,
+    setDraggedWidget,
+    setWidgetPlacements,
+  };
+
+  const { handleDragStart, handleDragEnd } = createDragHandlers(
+    layoutState,
+    layoutActions,
+  );
+  useEffect(() => {
+    const savedPlacements = loadLayoutFromLocalStorage(currentLayout.id);
+    setWidgetPlacements(savedPlacements || currentLayout.widgetPlacements);
+  }, [currentLayout]);
+
+  useEffect(() => {
+    setIsSidebarOpen(isEditing);
+    if (!isEditing && Object.keys(widgetPlacements).length > 0) {
+      saveLayoutToLocalStorage(currentLayout.id, widgetPlacements);
+    }
+  }, [isEditing, currentLayout.id, widgetPlacements]);
 
   const handleDateRangeChange = (startDate: Date, endDate: Date) => {
     setSensorRecordsFormData((prev) => ({
@@ -67,37 +163,18 @@ export const Overview: React.FC = () => {
   };
 
   const handleSensorsChange = (sensors: number[]) => {
-    setSensorRecordsFormData((prev: SensorRecordsFormData) => {
-      return {
-        ...prev,
-        sensorIds: sensors
-          .map((sensor) => {
-            const sensorEntry = Array.from(sensorMap.entries()).find(
-              ([id]) => id === sensor,
-            );
-            return sensorEntry ? sensorEntry[0] : null;
-          })
-          .filter((id): id is number => id !== null),
-        needToFetch: true,
-      };
-    });
+    setSensorRecordsFormData((prev: SensorRecordsFormData) => ({
+      ...prev,
+      sensorIds: sensors,
+      needToFetch: true,
+    }));
   };
-
-  const handleAggregationChange = () => {};
 
   const handleRefreshData = () => {
     const now = new Date();
     localStorage.setItem("lastUpdated", now.toISOString());
     setLastUpdated(now);
-
-    setSensorRecordsFormData((prev) => ({
-      ...prev,
-      dateRange: {
-        start: prev.dateRange.start,
-        end: new Date(),
-      },
-      needToFetch: true,
-    }));
+    setSensorRecordsFormData((prev) => ({ ...prev, needToFetch: true }));
   };
 
   const handleHourRangeChange = (start: Time, end: Time) => {
@@ -108,13 +185,11 @@ export const Overview: React.FC = () => {
     }));
   };
 
-  // Effect to handle initial sensor IDs
   useEffect(() => {
     if (locations && locations.length > 0) {
       const allSensorIds = locations.flatMap((location) =>
         location.sensors.map((sensor) => sensor.id),
       );
-
       setSensorRecordsFormData((prev) => ({
         ...prev,
         sensorIds: allSensorIds,
@@ -123,7 +198,6 @@ export const Overview: React.FC = () => {
     }
   }, [locations]);
 
-  // Effect to build sensor map
   useEffect(() => {
     const newSensorMap = new Map<number, string>();
     locations?.forEach((location: sensorResponse) => {
@@ -134,7 +208,6 @@ export const Overview: React.FC = () => {
     setSensorMap(newSensorMap);
   }, [locations]);
 
-  // Effect to load last updated time from localStorage
   useEffect(() => {
     const storedLastUpdated = localStorage.getItem("lastUpdated");
     if (storedLastUpdated) {
@@ -146,38 +219,84 @@ export const Overview: React.FC = () => {
   const hasError = sensorsError || dataError;
 
   return (
-    <div className="space-y-6">
-      <DashboardFilters
-        onDateRangeChange={handleDateRangeChange}
-        currentDateRange={sensorRecordsFormData.dateRange}
-        onSensorsChange={handleSensorsChange}
-        currentSensors={sensorRecordsFormData.sensorIds?.map((id) => id) || []}
-        hourRange={sensorRecordsFormData.hourRange}
-        onHourRangeChange={handleHourRangeChange}
-        onAggregationChange={handleAggregationChange}
-        onRefreshData={handleRefreshData}
-        locations={locations}
-        lastUpdated={lastUpdated}
-        hideGroupBy={true}
-        hideAggregation={true}
-        showPredefinedPeriods={true}
-        currentPredefinedPeriod={selectedPeriod}
-        onPredefinedPeriodChange={handlePredefinedPeriodChange}
-      />
+    <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+      <div
+        className={`min-h-screen transition-all duration-300 ${
+          isSidebarOpen ? "pr-80" : ""
+        }`}
+      >
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <div className="flex-1">
+              <DashboardFilters
+                onDateRangeChange={handleDateRangeChange}
+                currentDateRange={sensorRecordsFormData.dateRange}
+                onSensorsChange={handleSensorsChange}
+                currentSensors={
+                  sensorRecordsFormData.sensorIds?.map((id) => id) || []
+                }
+                hourRange={sensorRecordsFormData.hourRange}
+                onHourRangeChange={handleHourRangeChange}
+                onRefreshData={handleRefreshData}
+                locations={locations}
+                lastUpdated={lastUpdated}
+                currentPredefinedPeriod={selectedPeriod}
+                onPredefinedPeriodChange={handlePredefinedPeriodChange}
+                showPredefinedPeriods={true}
+                showComparison={true}
+                isComparisonEnabled={isComparisonEnabled}
+                onComparisonToggle={toggleComparison}
+              />
+            </div>
+            <div className="flex items-center gap-3 ml-4">
+              <Button
+                variant={isEditing ? "flat" : "solid"}
+                color="primary"
+                startContent={
+                  isEditing ? (
+                    <EyeIcon className="w-4 h-4" />
+                  ) : (
+                    <PencilIcon className="w-4 h-4" />
+                  )
+                }
+                onPress={() => setIsEditing(!isEditing)}
+                size="md"
+              >
+                {isEditing
+                  ? t("dashboard.metrics.saveLayout")
+                  : t("dashboard.metrics.editLayout")}
+              </Button>
+            </div>
+          </div>
 
-      <LoadingState isLoading={isLoading} hasError={hasError} />
+          <LoadingState isLoading={isLoading} hasError={hasError} />
 
-      {!isLoading && !hasError && (
-        <div className="mt-4">
-          <MetricsCardGrid
-            metrics={metrics}
-            dateRange={sensorRecordsFormData.dateRange}
-            sensorIdsList={sensorIdsList}
-            getSensorDetails={getSensorDetails}
-          />
+          {!isLoading && !hasError && (
+            <LayoutRenderer
+              isEditing={isEditing}
+              currentLayout={currentLayout}
+              widgetPlacements={widgetPlacements}
+              availableWidgets={availableWidgets}
+              draggedWidget={draggedWidget}
+            />
+          )}
         </div>
-      )}
-    </div>
+
+        <LayoutSidebar
+          isOpen={isSidebarOpen}
+          onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
+          isEditMode={isEditing}
+          allWidgets={availableWidgets.map((widget) => ({
+            id: widget.id,
+            type: widget.type,
+            title: widget.title,
+            category: widget.category,
+          }))}
+          placedWidgets={getPlacedWidgets(widgetPlacements)}
+          draggedWidget={draggedWidget}
+        />
+      </div>
+    </DndContext>
   );
 };
 

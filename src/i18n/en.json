@@ -71,6 +71,7 @@
       "peopleFlow": "People Flow (In/Out)",
       "trafficHeatmap": "Traffic Heatmap (By Day & Hour)",
       "entryRateOverTime": "Entry Rate Over Time",
+      "peopleInStore": "People in Store (Cumulative)",
       "entries": "Entries",
       "exits": "Exits",
       "showEntries": "Show Entries",
@@ -78,7 +79,10 @@
       "entriesByDayAndHour": "Entries by Day and Hour",
       "exitsByDayAndHour": "Exits by Day and Hour",
       "hourOfDay": "Hour of Day",
-      "dayOfWeek": "Day of Week"
+      "dayOfWeek": "Day of Week",
+      "peopleInStoreTitle": "People in Store",
+      "netFlow": "Net Flow",
+      "numberOfPeople": "Number of People"
     },
     "metrics": {
       "totalIn": "Total In",
@@ -96,7 +100,11 @@
       "mostCrowdedDay": "Most Crowded Day",
       "mostCrowdedDayDescription": "Day with the highest number of entries within the selected period.",
       "leastCrowdedDay": "Least Crowded Day",
-      "leastCrowdedDayDescription": "Day with the lowest number of entries within the selected period."
+      "leastCrowdedDayDescription": "Day with the lowest number of entries within the selected period.",
+      "resetLayout": "Reset Layout",
+      "saveLayout": "Save Layout",
+      "editLayout": "Edit Layout",
+      "hiddenCards": "Hidden Cards"
     }
   },
   "users": {
@@ -176,6 +184,10 @@
       "last14Days": "Last 14 days",
       "last30Days": "Last 30 days",
       "custom": "Custom"
+    },
+    "comparison": {
+      "label": "Comparison",
+      "toggle": "Compare periods"
     }
   },
   "chart": {
@@ -186,7 +198,10 @@
     "charts": {
       "deviceComparisonIn": "Entries",
       "deviceComparisonOut": "Exits"
-    }
+    },
+    "increaseFromPrevious": "Increased from previous period",
+    "decreaseFromPrevious": "Decreased from previous period",
+    "noChangeFromPrevious": "No change from previous period"
   },
   "landing": {
     "title": "People Counter",

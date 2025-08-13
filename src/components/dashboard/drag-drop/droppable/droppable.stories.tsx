@@ -1,14 +1,14 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import { DndContext } from '@dnd-kit/core';
-import Droppable from './droppable';
+import type { Meta, StoryObj } from "@storybook/react";
+import { DndContext } from "@dnd-kit/core";
+import Droppable from "./droppable";
 
 const meta: Meta<typeof Droppable> = {
-  title: 'Dashboard/DragDrop/Droppable',
+  title: "Dashboard/DragDrop/Droppable",
   component: Droppable,
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   decorators: [
     (Story) => (
       <DndContext>
@@ -25,7 +25,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    id: 'droppable-1',
+    id: "droppable-1",
     children: (
       <div className="text-center text-gray-500">
         <p>Drop items here</p>
@@ -37,7 +37,7 @@ export const Default: Story = {
 
 export const WithContent: Story = {
   args: {
-    id: 'droppable-2',
+    id: "droppable-2",
     children: (
       <div className="space-y-4">
         <h3 className="text-lg font-semibold">Dashboard Widget</h3>
@@ -51,7 +51,7 @@ export const WithContent: Story = {
 
 export const Empty: Story = {
   args: {
-    id: 'droppable-3',
+    id: "droppable-3",
     children: null,
   },
 };

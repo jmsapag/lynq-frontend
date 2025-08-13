@@ -13,8 +13,8 @@ export function calculateFetchRange(
     const needFetchStart = isBefore(dateRange.start, fetchedDateRange.start);
     const needFetchEnd = isAfter(dateRange.end, fetchedDateRange.end);
 
-    console.log("Need fetch start:", needFetchStart);
-    console.log("Need fetch end:", needFetchEnd);
+    // console.log("Need fetch start:", needFetchStart);
+    // console.log("Need fetch end:", needFetchEnd);
 
     if (!needFetchStart && !needFetchEnd) {
       // The new range is completely within the already fetched range

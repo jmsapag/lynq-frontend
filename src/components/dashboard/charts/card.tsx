@@ -1,3 +1,4 @@
+// src/components/dashboard/charts/card.tsx
 import { useTranslation } from "react-i18next";
 import { Tooltip, Button } from "@heroui/react";
 import {
@@ -6,6 +7,9 @@ import {
   DocumentIcon,
   PhotoIcon,
   TableCellsIcon,
+  ArrowUpIcon,
+  ArrowDownIcon,
+  MinusIcon,
 } from "@heroicons/react/24/outline";
 import { useRef, useState, useEffect } from "react";
 import {
@@ -14,6 +18,7 @@ import {
   exportAsCsv,
   formatDateRangeForFilename,
 } from "../../../utils/exportUtils";
+import { type MetricComparison, formatDeltaDisplay, getComparisonPeriodLabel } from "../../../utils/comparisonUtils";
 
 interface SensorDataCardProps {
   title: string;
@@ -27,6 +32,9 @@ interface SensorDataCardProps {
   descriptionTranslationKey?: string;
   dateRange?: { start: Date; end: Date };
   data?: Record<string, any>;
+  hideExport?: boolean;
+  comparison?: MetricComparison; // New prop for comparison data
+  comparisonPeriod?: { start: Date; end: Date }; // Period that's being compared to
 }
 
 export const SensorDataCard: React.FC<SensorDataCardProps> = ({
@@ -41,6 +49,9 @@ export const SensorDataCard: React.FC<SensorDataCardProps> = ({
   descriptionTranslationKey,
   dateRange,
   data,
+  hideExport = false,
+  comparison,
+  comparisonPeriod,
 }) => {
   const { t } = useTranslation();
   const cardRef = useRef<HTMLDivElement>(null);
@@ -157,54 +168,56 @@ export const SensorDataCard: React.FC<SensorDataCardProps> = ({
       ref={cardRef}
       className={`bg-white rounded-lg border border-gray-200 relative ${className}`}
     >
-      {/* Export dropdown - hidden during capture */}
-      <div
-        ref={exportButtonRef}
-        className={`absolute top-2 right-2 ${isCapturing ? "invisible" : ""}`}
-      >
-        <div ref={dropdownRef}>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="w-4 h-5 rounded-md p-2 m-2 flex items-center justify-center border-1"
-            isDisabled={isExporting}
-            onPress={() => setShowDropdown(!showDropdown)}
-            aria-label="Export options"
-          >
-            <ArrowDownTrayIcon className="w-3.5 h-3.5 text-gray-500" />
-          </Button>
+      {/* Export dropdown - only shown when hideExport is false */}
+      {!hideExport && (
+        <div
+          ref={exportButtonRef}
+          className={`absolute top-2 right-2 ${isCapturing ? "invisible" : ""}`}
+        >
+          <div ref={dropdownRef}>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-4 h-5 rounded-md p-2 m-2 flex items-center justify-center border-1"
+              isDisabled={isExporting}
+              onPress={() => setShowDropdown(!showDropdown)}
+              aria-label="Export options"
+            >
+              <ArrowDownTrayIcon className="w-3.5 h-3.5 text-gray-500" />
+            </Button>
 
-          {showDropdown && (
-            <div className="absolute right-0 mt-1 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-20">
-              <div className="py-1">
-                <button
-                  onClick={handleExportPng}
-                  className="flex items-center w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100 transition-colors"
-                >
-                  <PhotoIcon className="h-5 w-5 mr-3 text-gray-500" />
-                  {t("common.exportAsPng")}
-                </button>
+            {showDropdown && (
+              <div className="absolute right-0 mt-1 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-20">
+                <div className="py-1">
+                  <button
+                    onClick={handleExportPng}
+                    className="flex items-center w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100 transition-colors"
+                  >
+                    <PhotoIcon className="h-5 w-5 mr-3 text-gray-500" />
+                    {t("common.exportAsPng")}
+                  </button>
 
-                <button
-                  onClick={handleExportPdf}
-                  className="flex items-center w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100 transition-colors"
-                >
-                  <DocumentIcon className="h-5 w-5 mr-3 text-gray-500" />
-                  {t("common.exportAsPdf")}
-                </button>
+                  <button
+                    onClick={handleExportPdf}
+                    className="flex items-center w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100 transition-colors"
+                  >
+                    <DocumentIcon className="h-5 w-5 mr-3 text-gray-500" />
+                    {t("common.exportAsPdf")}
+                  </button>
 
-                <button
-                  onClick={handleExportCsv}
-                  className="flex items-center w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100 transition-colors"
-                >
-                  <TableCellsIcon className="h-5 w-5 mr-3 text-gray-500" />
-                  {t("common.exportAsCSV")}
-                </button>
+                  <button
+                    onClick={handleExportCsv}
+                    className="flex items-center w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100 transition-colors"
+                  >
+                    <TableCellsIcon className="h-5 w-5 mr-3 text-gray-500" />
+                    {t("common.exportAsCSV")}
+                  </button>
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="flex items-center justify-between p-4">
         <div>
@@ -227,6 +240,36 @@ export const SensorDataCard: React.FC<SensorDataCardProps> = ({
             {value}{" "}
             {unit && <span className="text-sm text-gray-500">{unit}</span>}
           </p>
+          
+          {/* Comparison display */}
+          {comparison && comparisonPeriod && (
+            <div className="mt-2 flex items-center gap-2">
+              <div className={`flex items-center gap-1 text-xs px-2 py-1 rounded-full ${
+                comparison.trend === "up" 
+                  ? "bg-green-50 text-green-700" 
+                  : comparison.trend === "down" 
+                    ? "bg-red-50 text-red-700" 
+                    : "bg-gray-50 text-gray-700"
+              }`}>
+                {comparison.trend === "up" && <ArrowUpIcon className="w-3 h-3" aria-hidden="true" />}
+                {comparison.trend === "down" && <ArrowDownIcon className="w-3 h-3" aria-hidden="true" />}
+                {comparison.trend === "stable" && <MinusIcon className="w-3 h-3" aria-hidden="true" />}
+                <span>
+                  {formatDeltaDisplay(comparison).percentageText}
+                </span>
+                <span className="sr-only">
+                  {comparison.trend === "up" 
+                    ? t("comparison.increaseFromPrevious")
+                    : comparison.trend === "down" 
+                      ? t("comparison.decreaseFromPrevious")
+                      : t("comparison.noChangeFromPrevious")}
+                </span>
+              </div>
+              <div className="text-xs text-gray-500">
+                vs. {getComparisonPeriodLabel(comparisonPeriod)}
+              </div>
+            </div>
+          )}
         </div>
         {icon && <div className="text-gray-400">{icon}</div>}
       </div>

@@ -55,7 +55,7 @@ export default function ChangePasswordPage() {
     e.preventDefault();
 
     const newErrors: typeof errors = {};
-    
+
     if (!formData.password) {
       newErrors.password = t("changePassword.passwordRequired");
     } else if (!validatePassword(formData.password)) {
@@ -152,7 +152,9 @@ export default function ChangePasswordPage() {
                 className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
                 onClick={() => setShowPassword((prev) => !prev)}
                 aria-label={
-                  showPassword ? t("login.hidePassword") : t("login.showPassword")
+                  showPassword
+                    ? t("login.hidePassword")
+                    : t("login.showPassword")
                 }
               >
                 {showPassword ? (
@@ -217,7 +219,9 @@ export default function ChangePasswordPage() {
                 className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
                 onClick={() => setShowConfirmPassword((prev) => !prev)}
                 aria-label={
-                  showConfirmPassword ? t("login.hidePassword") : t("login.showPassword")
+                  showConfirmPassword
+                    ? t("login.hidePassword")
+                    : t("login.showPassword")
                 }
               >
                 {showConfirmPassword ? (
@@ -259,7 +263,9 @@ export default function ChangePasswordPage() {
                 )}
               </button>
               {errors.confirmPassword && (
-                <p className="mt-1 text-xs text-red-500">{errors.confirmPassword}</p>
+                <p className="mt-1 text-xs text-red-500">
+                  {errors.confirmPassword}
+                </p>
               )}
             </div>
 
@@ -321,4 +327,4 @@ export default function ChangePasswordPage() {
       </div>
     </div>
   );
-} 
+}

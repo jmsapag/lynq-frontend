@@ -2,7 +2,7 @@ import { DashboardWidgetType } from "../widgets/types";
 
 export interface DropZone {
   id: string;
-  type: 'metric' | 'chart' | 'any';
+  type: "metric" | "chart" | "any";
   className?: string;
   title?: string;
 }
@@ -36,7 +36,7 @@ export const AVAILABLE_LAYOUTS: DashboardLayout[] = [
           { id: "metric-1", type: "metric", title: "Metric 1" },
           { id: "metric-2", type: "metric", title: "Metric 2" },
           { id: "metric-3", type: "metric", title: "Metric 3" },
-        ]
+        ],
       },
       {
         id: "charts-grid",
@@ -45,16 +45,47 @@ export const AVAILABLE_LAYOUTS: DashboardLayout[] = [
           { id: "chart-1", type: "chart", title: "Chart 1" },
           { id: "chart-2", type: "chart", title: "Chart 2" },
           { id: "chart-3", type: "chart", title: "Chart 3" },
-        ]
-      }
+        ],
+      },
     ],
     widgetPlacements: {
       "metric-1": "total-in",
-      "metric-2": "total-out", 
+      "metric-2": "total-out",
       "metric-3": "entry-rate",
       "chart-1": "people-flow-chart",
       "chart-2": "traffic-heatmap",
       "chart-3": "entry-rate-chart",
+    },
+  },
+  {
+    id: "metrics-grid",
+    name: "Metrics Grid",
+    description: "A 4x2 grid layout dedicated to metrics.",
+    sections: [
+      {
+        id: "metrics-grid-section",
+        className: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4",
+        zones: [
+          { id: "metric-1", type: "metric", title: "Metric 1" },
+          { id: "metric-2", type: "metric", title: "Metric 2" },
+          { id: "metric-3", type: "metric", title: "Metric 3" },
+          { id: "metric-4", type: "metric", title: "Metric 4" },
+          { id: "metric-5", type: "metric", title: "Metric 5" },
+          { id: "metric-6", type: "metric", title: "Metric 6" },
+          { id: "metric-7", type: "metric", title: "Metric 7" },
+          { id: "metric-8", type: "metric", title: "Metric 8" },
+        ],
+      },
+    ],
+    widgetPlacements: {
+      "metric-1": "total-in",
+      "metric-2": "total-out",
+      "metric-3": "entry-rate",
+      "metric-4": null,
+      "metric-5": null,
+      "metric-6": null,
+      "metric-7": null,
+      "metric-8": null,
     },
   },
   {
@@ -68,14 +99,19 @@ export const AVAILABLE_LAYOUTS: DashboardLayout[] = [
         zones: [
           { id: "metric-1", type: "metric", title: "Key Metric" },
           { id: "metric-2", type: "metric", title: "Secondary Metric" },
-        ]
+        ],
       },
       {
         id: "main-chart",
         className: "grid grid-cols-1 mb-6",
         zones: [
-          { id: "chart-main", type: "chart", title: "Main Analytics Chart", className: "col-span-full" },
-        ]
+          {
+            id: "chart-main",
+            type: "chart",
+            title: "Main Analytics Chart",
+            className: "col-span-full",
+          },
+        ],
       },
       {
         id: "secondary-charts",
@@ -83,8 +119,8 @@ export const AVAILABLE_LAYOUTS: DashboardLayout[] = [
         zones: [
           { id: "chart-1", type: "chart", title: "Secondary Chart 1" },
           { id: "chart-2", type: "chart", title: "Secondary Chart 2" },
-        ]
-      }
+        ],
+      },
     ],
     widgetPlacements: {
       "metric-1": "total-in",
@@ -107,19 +143,17 @@ export const AVAILABLE_LAYOUTS: DashboardLayout[] = [
           { id: "metric-2", type: "metric", title: "Secondary" },
           { id: "metric-3", type: "metric", title: "Tertiary" },
           { id: "metric-4", type: "metric", title: "Additional" },
-        ]
+        ],
       },
       {
         id: "single-chart",
         className: "grid grid-cols-1",
-        zones: [
-          { id: "chart-main", type: "chart", title: "Overview Chart" },
-        ]
-      }
+        zones: [{ id: "chart-main", type: "chart", title: "Overview Chart" }],
+      },
     ],
     widgetPlacements: {
       "metric-1": "total-in",
-      "metric-2": "total-out", 
+      "metric-2": "total-out",
       "metric-3": "entry-rate",
       "metric-4": null,
       "chart-main": "people-flow-chart",
@@ -136,15 +170,13 @@ export const AVAILABLE_LAYOUTS: DashboardLayout[] = [
         zones: [
           { id: "metric-1", type: "metric", title: "Key 1" },
           { id: "metric-2", type: "metric", title: "Key 2" },
-        ]
+        ],
       },
       {
         id: "compact-chart",
         className: "grid grid-cols-1",
-        zones: [
-          { id: "chart-1", type: "chart", title: "Main Chart" },
-        ]
-      }
+        zones: [{ id: "chart-1", type: "chart", title: "Main Chart" }],
+      },
     ],
     widgetPlacements: {
       "metric-1": "total-in",
@@ -164,7 +196,7 @@ export const AVAILABLE_LAYOUTS: DashboardLayout[] = [
           { id: "metric-1", type: "metric", title: "Metric 1" },
           { id: "metric-2", type: "metric", title: "Metric 2" },
           { id: "metric-3", type: "metric", title: "Metric 3" },
-        ]
+        ],
       },
       {
         id: "custom-charts",
@@ -173,8 +205,8 @@ export const AVAILABLE_LAYOUTS: DashboardLayout[] = [
           { id: "chart-1", type: "chart", title: "Chart 1" },
           { id: "chart-2", type: "chart", title: "Chart 2" },
           { id: "chart-3", type: "chart", title: "Chart 3" },
-        ]
-      }
+        ],
+      },
     ],
     widgetPlacements: {
       "metric-1": null,
@@ -188,9 +220,15 @@ export const AVAILABLE_LAYOUTS: DashboardLayout[] = [
 ];
 
 export const getDefaultLayout = (): DashboardLayout => {
-  return AVAILABLE_LAYOUTS.find(layout => layout.isDefault) || AVAILABLE_LAYOUTS[0];
+  return (
+    AVAILABLE_LAYOUTS.find((layout) => layout.isDefault) || AVAILABLE_LAYOUTS[0]
+  );
+};
+
+export const getDefaultOverviewLayout = (): DashboardLayout => {
+  return <DashboardLayout>getLayoutById("metrics-grid");
 };
 
 export const getLayoutById = (id: string): DashboardLayout | null => {
-  return AVAILABLE_LAYOUTS.find(layout => layout.id === id) || null;
+  return AVAILABLE_LAYOUTS.find((layout) => layout.id === id) || null;
 };
