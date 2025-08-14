@@ -7,6 +7,9 @@ export const HeaderBreadcrumbs: React.FC = () => {
   const { t } = useTranslation();
 
   const getPageTitle = (path: string) => {
+    if (path.includes("/connections")) {
+      return t("nav.connections", "Connections");
+    }
     const cleanPath = path.replace(/^\//, "");
     return cleanPath ? t(`nav.${cleanPath}`) : t("nav.dashboard");
   };
