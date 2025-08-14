@@ -21,14 +21,16 @@ import {
   Spinner,
   addToast,
 } from "@heroui/react";
-import { TrashIcon, PencilIcon } from "@heroicons/react/24/outline";
+import { TrashIcon, PencilIcon, BoltIcon } from "@heroicons/react/24/outline";
 import SearchBar from "../components/search/SearchBar.tsx";
+import { useNavigate } from "react-router";
 
 const BusinessesPage: React.FC = () => {
   const { t } = useTranslation();
   const [page, setPage] = useState(1);
   const limit = 15;
   const { businesses, loading } = useBusinesses(page, limit);
+  const navigate = useNavigate();
 
   const [showModal, setShowModal] = useState(false);
   const [name, setName] = useState("");
@@ -205,7 +207,7 @@ const BusinessesPage: React.FC = () => {
                         className="text-primary"
                         title={t("businesses.edit")}
                       >
-                        <PencilIcon className="h-4 w-4" />
+                        <PencilIcon className="h-6 w-6" />
                       </Button>
                       <Button
                         isIconOnly
@@ -216,7 +218,17 @@ const BusinessesPage: React.FC = () => {
                         isDisabled={deleting}
                         title={t("businesses.delete")}
                       >
-                        <TrashIcon className="h-4 w-4" />
+                        <TrashIcon className="h-6 w-6" />
+                      </Button>
+                      <Button
+                        isIconOnly
+                        size="sm"
+                        variant="light"
+                        className="text-green-500 "
+                        title={t("businesses.connect")}
+                        onPress={() => navigate(`/business/${b.id}/connections`)}
+                      >
+                        <BoltIcon className="h-6 w-6" />
                       </Button>
                     </div>
                   </TableCell>
