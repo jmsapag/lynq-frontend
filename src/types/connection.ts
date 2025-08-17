@@ -1,31 +1,23 @@
 // Provider types
 export type ProviderType = 
-  | "PostgreSQL"
-  | "MySQL" 
-  | "SQLite"
-  | "MongoDB"
-  | "Redis"
-  | "REST API"
-  | "GraphQL API"
-  | "MQTT"
-  | "FTP"
-  | "SFTP"
+  // | "PostgreSQL"
+  // | "MySQL" 
+  // | "SQLite"
+  // | "MongoDB"
+  // | "Redis"
+  // | "REST API"
+  // | "GraphQL API"
+  // | "MQTT"
+  // | "FTP"
+  // | "SFTP"
   | "FootfallCam V9 API"
   | "Other";
 
 // Provider-specific authentication parameters
-export interface BaseAuthParams {
+export interface AuthParams {
   user: string;
   password: string;
 }
-
-export interface FootfallCamV9AuthParams {
-  apiKey: string;
-  baseUrl: string;
-  version?: string;
-}
-
-export type AuthParams = BaseAuthParams | FootfallCamV9AuthParams;
 
 export interface Connection {
   id: number;
@@ -76,31 +68,19 @@ export const isBasicAuthProvider = (provider: ProviderType): boolean => {
 };
 
 export const createAuthParams = (
-  provider: ProviderType,
+  _provider: ProviderType,
   data: Record<string, string>
 ): AuthParams => {
-  if (isFootfallCamV9Provider(provider)) {
-    return {
-      apiKey: data.apiKey || "",
-      baseUrl: data.baseUrl || "",
-      version: data.version || "v9",
-    } as FootfallCamV9AuthParams;
-  }
-  
   return {
     user: data.user || "",
     password: data.password || "",
-  } as BaseAuthParams;
+  } as AuthParams;
 };
 
 export const getProviderDisplayName = (provider: ProviderType): string => {
   switch (provider) {
     case "FootfallCam V9 API":
       return "FootfallCam V9 API";
-    case "REST API":
-      return "REST API";
-    case "GraphQL API":
-      return "GraphQL API";
     default:
       return provider;
   }
@@ -113,45 +93,24 @@ export const getProviderAuthFields = (provider: ProviderType): Array<{
   placeholder: string;
   required: boolean;
 }> => {
-  if (isFootfallCamV9Provider(provider)) {
-    return [
-      {
-        key: "apiKey",
-        label: "API Key",
-        type: "password",
-        placeholder: "Enter FootfallCam API key",
-        required: true,
-      },
-      {
-        key: "baseUrl",
-        label: "Base URL",
-        type: "url",
-        placeholder: "https://api.footfallcam.com",
-        required: true,
-      },
-      {
-        key: "version",
-        label: "API Version",
-        type: "text",
-        placeholder: "v9",
-        required: false,
-      },
-    ];
-  }
-  
+  // All providers currently use the same user/password authentication
   return [
     {
       key: "user",
       label: "Username",
       type: "text",
-      placeholder: "Enter username",
+      placeholder: provider === "FootfallCam V9 API" 
+        ? "Enter FootfallCam username" 
+        : "Enter username",
       required: true,
     },
     {
       key: "password",
       label: "Password",
       type: "password",
-      placeholder: "Enter password",
+      placeholder: provider === "FootfallCam V9 API" 
+        ? "Enter FootfallCam password" 
+        : "Enter password",
       required: true,
     },
   ];

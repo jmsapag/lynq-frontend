@@ -17,9 +17,6 @@ import {
   CreateConnectionInput, 
   UpdateConnectionInput, 
   ProviderType,
-  BaseAuthParams,
-  FootfallCamV9AuthParams,
-  isFootfallCamV9Provider,
   getProviderAuthFields,
   createAuthParams
 } from "../../types/connection";
@@ -65,16 +62,16 @@ const ConnectionModal: React.FC<ConnectionModalProps> = ({
 
   // Available providers for the select dropdown
   const providers: ProviderType[] = [
-    "PostgreSQL",
-    "MySQL",
-    "SQLite",
-    "MongoDB",
-    "Redis",
-    "REST API",
-    "GraphQL API",
-    "MQTT",
-    "FTP",
-    "SFTP",
+    // "PostgreSQL",
+    // "MySQL",
+    // "SQLite",
+    // "MongoDB",
+    // "Redis",
+    // "REST API",
+    // "GraphQL API",
+    // "MQTT",
+    // "FTP",
+    // "SFTP",
     "FootfallCam V9 API",
     "Other",
   ];
@@ -83,18 +80,10 @@ const ConnectionModal: React.FC<ConnectionModalProps> = ({
     if (isOpen) {
       if (connection) {
         // Pre-populate form with existing connection data
-        const authFields: Record<string, string> = {};
-        
-        if (isFootfallCamV9Provider(connection.provider)) {
-          const authParams = connection.authParams as FootfallCamV9AuthParams;
-          authFields.apiKey = ""; // Don't pre-fill sensitive data
-          authFields.baseUrl = authParams.baseUrl || "";
-          authFields.version = authParams.version || "v9";
-        } else {
-          const authParams = connection.authParams as BaseAuthParams;
-          authFields.user = authParams.user || "";
-          authFields.password = ""; // Don't pre-fill password for security
-        }
+        const authFields: Record<string, string> = {
+          user: connection.authParams.user || "",
+          password: "", // Don't pre-fill password for security
+        };
 
         setFormData({
           name: connection.name,
@@ -212,7 +201,7 @@ const ConnectionModal: React.FC<ConnectionModalProps> = ({
     if (formData.provider) {
       const requiredFields = getProviderAuthFields(formData.provider as ProviderType).filter(field => field.required);
       for (const field of requiredFields) {
-        if (!isEdit || field.key !== "password" && field.key !== "apiKey") {
+        if (!isEdit || field.key !== "password") {
           if (!formData.authFields[field.key]?.trim()) {
             newErrors[field.key] = t(`connections.${field.key}Required`, `${field.label} is required`);
           }
@@ -296,7 +285,7 @@ const ConnectionModal: React.FC<ConnectionModalProps> = ({
                 label={t(`connections.${field.key}`, field.label)}
                 type={field.type}
                 placeholder={
-                  isEdit && (field.type === "password" || field.key === "apiKey")
+                  isEdit && field.type === "password"
                     ? t("connections.sensitiveFieldEditPlaceholder", "Leave empty to keep current value")
                     : t(`connections.${field.key}Placeholder`, field.placeholder)
                 }
@@ -306,7 +295,7 @@ const ConnectionModal: React.FC<ConnectionModalProps> = ({
                 errorMessage={errors[field.key]}
                 isRequired={field.required && !isEdit}
                 description={
-                  isEdit && (field.type === "password" || field.key === "apiKey")
+                  isEdit && field.type === "password"
                     ? t("connections.sensitiveFieldHint", "This field is hidden for security. Enter a new value only if you want to change it.")
                     : undefined
                 }
