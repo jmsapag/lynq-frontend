@@ -22,6 +22,7 @@ import UserManagement from "./pages/user-management.tsx";
 import Locations from "./pages/locations.tsx";
 import RoleRedirect from "./components/auth/roleRedirect.tsx";
 import { RoleRoute } from "./components/auth/roleRoute.tsx";
+import ConnectionsPageWrapper from "./pages/connections-wrapper.tsx";
 import Overview from "./pages/overview.tsx";
 
 function AppLayoutWithState() {
@@ -75,6 +76,7 @@ function App() {
               <Route element={<RoleRoute allowedRoles="LYNQ_TEAM" />}>
                 <Route path="devices" element={<DevicesPage />} />
                 <Route path="businesses" element={<BusinessesPage />} />
+                <Route path="business/:businessId/connections" element={<ConnectionsPageWrapper />} />
                 <Route path="manage/users" element={<ManageUsersPage />} />
               </Route>
 
