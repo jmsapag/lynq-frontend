@@ -1,5 +1,9 @@
 import { useState, useMemo } from "react";
-import { calculateComparisonPeriods, type DateRange, type ComparisonPeriods } from "../../utils/comparisonUtils";
+import {
+  calculateComparisonPeriods,
+  type DateRange,
+  type ComparisonPeriods,
+} from "../../utils/comparisonUtils";
 
 export interface UseComparisonReturn {
   isComparisonEnabled: boolean;
@@ -11,16 +15,22 @@ export interface UseComparisonReturn {
 /**
  * Hook to manage comparison state and calculate comparison periods
  */
-export const useComparison = (currentDateRange: DateRange): UseComparisonReturn => {
+export const useComparison = (
+  currentDateRange: DateRange,
+): UseComparisonReturn => {
   const [isComparisonEnabled, setIsComparisonEnabled] = useState(false);
 
   const comparisonPeriods = useMemo(() => {
     if (!isComparisonEnabled) {
       return null;
     }
-    
+
     return calculateComparisonPeriods(currentDateRange);
-  }, [isComparisonEnabled, currentDateRange.start.getTime(), currentDateRange.end.getTime()]);
+  }, [
+    isComparisonEnabled,
+    currentDateRange.start.getTime(),
+    currentDateRange.end.getTime(),
+  ]);
 
   const toggleComparison = () => {
     setIsComparisonEnabled(!isComparisonEnabled);
@@ -30,6 +40,6 @@ export const useComparison = (currentDateRange: DateRange): UseComparisonReturn 
     isComparisonEnabled,
     setIsComparisonEnabled,
     comparisonPeriods,
-    toggleComparison
+    toggleComparison,
   };
 };

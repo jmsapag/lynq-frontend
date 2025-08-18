@@ -226,7 +226,9 @@ const BusinessesPage: React.FC = () => {
                         variant="light"
                         className="text-green-500 "
                         title={t("businesses.connect")}
-                        onPress={() => navigate(`/business/${b.id}/connections`)}
+                        onPress={() =>
+                          navigate(`/business/${b.id}/connections`)
+                        }
                       >
                         <BoltIcon className="h-6 w-6" />
                       </Button>

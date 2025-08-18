@@ -1,7 +1,7 @@
 // Provider types
-export type ProviderType = 
+export type ProviderType =
   // | "PostgreSQL"
-  // | "MySQL" 
+  // | "MySQL"
   // | "SQLite"
   // | "MongoDB"
   // | "Redis"
@@ -10,8 +10,7 @@ export type ProviderType =
   // | "MQTT"
   // | "FTP"
   // | "SFTP"
-  | "FootfallCam V9 API"
-  | "Other";
+  "FootfallCam V9 API" | "Other";
 
 // Provider-specific authentication parameters
 export interface AuthParams {
@@ -52,9 +51,16 @@ export interface UpdateConnectionInput {
 
 export interface ConnectionsService {
   list(businessId: string): Promise<Connection[]>;
-  testConnection(businessId: string, input: CreateConnectionInput): Promise<boolean>;
+  testConnection(
+    businessId: string,
+    input: CreateConnectionInput,
+  ): Promise<boolean>;
   create(businessId: string, input: CreateConnectionInput): Promise<Connection>;
-  update(businessId: string, id: number, input: UpdateConnectionInput): Promise<Connection>;
+  update(
+    businessId: string,
+    id: number,
+    input: UpdateConnectionInput,
+  ): Promise<Connection>;
   delete(businessId: string, id: number): Promise<void>;
 }
 
@@ -69,7 +75,7 @@ export const isBasicAuthProvider = (provider: ProviderType): boolean => {
 
 export const createAuthParams = (
   _provider: ProviderType,
-  data: Record<string, string>
+  data: Record<string, string>,
 ): AuthParams => {
   return {
     user: data.user || "",
@@ -86,7 +92,9 @@ export const getProviderDisplayName = (provider: ProviderType): string => {
   }
 };
 
-export const getProviderAuthFields = (provider: ProviderType): Array<{
+export const getProviderAuthFields = (
+  provider: ProviderType,
+): Array<{
   key: string;
   label: string;
   type: string;
@@ -99,18 +107,20 @@ export const getProviderAuthFields = (provider: ProviderType): Array<{
       key: "user",
       label: "Username",
       type: "text",
-      placeholder: provider === "FootfallCam V9 API" 
-        ? "Enter FootfallCam username" 
-        : "Enter username",
+      placeholder:
+        provider === "FootfallCam V9 API"
+          ? "Enter FootfallCam username"
+          : "Enter username",
       required: true,
     },
     {
       key: "password",
       label: "Password",
       type: "password",
-      placeholder: provider === "FootfallCam V9 API" 
-        ? "Enter FootfallCam password" 
-        : "Enter password",
+      placeholder:
+        provider === "FootfallCam V9 API"
+          ? "Enter FootfallCam password"
+          : "Enter password",
       required: true,
     },
   ];

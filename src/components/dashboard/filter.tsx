@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { ArrowPathIcon, FunnelIcon } from "@heroicons/react/24/outline";
-import { format } from "date-fns";
+import { FunnelIcon } from "@heroicons/react/24/outline";
 import { useTranslation } from "react-i18next";
 import {
   Select,
@@ -30,10 +29,8 @@ type DashboardFiltersProps = {
   hourRange: { start: Time; end: Time };
   onHourRangeChange: (start: Time, end: Time) => void;
   currentAggregation?: string;
-  onRefreshData?: () => void;
   locations: SensorLocation[];
   currentSensors: number[];
-  lastUpdated: Date | null;
   hideGroupBy?: boolean;
   hideAggregation?: boolean;
   showPredefinedPeriods?: boolean;
@@ -53,10 +50,8 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
   // currentAggregation,   // Hidden aggregation functionality
   // hourRange,
   // onHourRangeChange,
-  onRefreshData,
   locations,
   currentSensors,
-  lastUpdated,
   showPredefinedPeriods = false,
   currentPredefinedPeriod = "custom",
   onPredefinedPeriodChange,
@@ -215,249 +210,163 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
   //   }
   // };
 
-  const handleRefresh = () => {
-    if (onRefreshData) {
-      onRefreshData();
-    }
-  };
-
-  const formatLastUpdated = () => {
-    if (!lastUpdated) return t("filters.neverUpdated");
-
-    const date = format(lastUpdated, "dd/MM/yyyy");
-    const time = format(lastUpdated, "HH:mm:ss");
-    return `${date} ${time}`;
-  };
-
   return (
-    <div className="bg-white p-4 rounded-lg mb-6">
-      <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0 md:space-x-4">
-        <div className="flex flex-col space-y-4 md:flex-row md:items-end md:space-y-0 md:space-x-4">
-          {/* Add predefined periods dropdown */}
-          {showPredefinedPeriods && (
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
-                {t("filters.predefinedPeriods")}
-              </label>
-              <Select
-                className="w-full md:w-60"
-                selectedKeys={new Set([selectedPeriod])}
-                onSelectionChange={handlePredefinedPeriodChange}
-                placeholder="Select time period"
-                size="md"
-                variant="bordered"
-                radius="lg"
-                selectionMode="single"
-                aria-label={t("filters.predefinedPeriods")}
-                classNames={{
-                  trigger:
-                    "border-gray-100 hover:border-gray-300 focus:border-gray-300 data-[focus=true]:border-gray-300 data-[hover=true]:border-gray-300",
-                  value: "text-gray-900",
-                  label: "text-gray-700",
-                }}
-              >
-                <SelectItem key="today">
-                  {t("filters.periodOptions.today")}
-                </SelectItem>
-                <SelectItem key="yesterday">
-                  {t("filters.periodOptions.yesterday")}
-                </SelectItem>
-                <SelectItem key="last7Days">
-                  {t("filters.periodOptions.last7Days")}
-                </SelectItem>
-                <SelectItem key="last14Days">
-                  {t("filters.periodOptions.last14Days")}
-                </SelectItem>
-                <SelectItem key="last30Days">
-                  {t("filters.periodOptions.last30Days")}
-                </SelectItem>
-                <SelectItem key="custom">
-                  {t("filters.periodOptions.custom")}
-                </SelectItem>
-              </Select>
-            </div>
-          )}
-
+    <div className="bg-white rounded-lg mb-6">
+      <div className="flex flex-col space-y-4 md:flex-row md:items-end md:justify-start md:space-y-0 md:space-x-4">
+        {/* Add predefined periods dropdown */}
+        {showPredefinedPeriods && (
           <div className="space-y-2">
             <label className="block text-sm font-medium text-gray-700">
-              {t("filters.dateRange")}
+              {t("filters.predefinedPeriods")}
             </label>
-            <div className="flex items-center space-x-2">
-              <DatePicker
-                value={startDate}
-                variant="bordered"
-                granularity="day"
-                onChange={handleStartDateChange}
-                className="w-full"
-                aria-label="Start Date"
-              />
-              <span className="text-gray-500">{t("filters.to")}</span>
-              <DatePicker
-                value={endDate}
-                variant="bordered"
-                granularity="day"
-                onChange={handleEndDateChange}
-                className="w-full"
-                aria-label="End Date"
-              />
-            </div>
-          </div>
-
-          {showComparison && (
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
-                {t("filters.comparison.label")}
-              </label>
-              <div className="flex items-center">
-                <Switch
-                  isSelected={isComparisonEnabled}
-                  onValueChange={onComparisonToggle}
-                  size="md"
-                  color="primary"
-                  aria-label={t("filters.comparison.toggle")}
-                >
-                  <span className="text-sm text-gray-700">
-                    {t("filters.comparison.toggle")}
-                  </span>
-                </Switch>
-              </div>
-            </div>
-          )}
-
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
-              {t("filters.sensors")}
-            </label>
-            <Button
+            <Select
+              className="w-full md:w-60"
+              selectedKeys={new Set([selectedPeriod])}
+              onSelectionChange={handlePredefinedPeriodChange}
+              placeholder="Select time period"
+              size="sm"
               variant="bordered"
-              className="w-full md:w-60 justify-between"
-              endContent={<FunnelIcon className="h-4 w-4 text-gray-500" />}
-              onClick={() => setIsModalOpen(true)}
+              selectionMode="single"
+              aria-label={t("filters.predefinedPeriods")}
             >
-              <span className="truncate">
-                {currentSensors.length === 0
-                  ? t("filters.noSensorsSelected")
-                  : currentSensors.length ===
-                      locations.flatMap((sensor) => sensor.sensors).length
-                    ? t("filters.allSensors")
-                    : t("filters.sensorsSelected", {
-                        count: currentSensors.length,
-                      })}
-              </span>
-            </Button>
+              <SelectItem key="today">
+                {t("filters.periodOptions.today")}
+              </SelectItem>
+              <SelectItem key="yesterday">
+                {t("filters.periodOptions.yesterday")}
+              </SelectItem>
+              <SelectItem key="last7Days">
+                {t("filters.periodOptions.last7Days")}
+              </SelectItem>
+              <SelectItem key="last14Days">
+                {t("filters.periodOptions.last14Days")}
+              </SelectItem>
+              <SelectItem key="last30Days">
+                {t("filters.periodOptions.last30Days")}
+              </SelectItem>
+              <SelectItem key="custom">
+                {t("filters.periodOptions.custom")}
+              </SelectItem>
+            </Select>
+          </div>
+        )}
 
-            <SensorSelectionModal
-              isOpen={isModalOpen}
-              onClose={() => setIsModalOpen(false)}
-              locations={locations}
-              selectedSensors={currentSensors}
-              onSensorsChange={onSensorsChange}
+        <div className="space-y-2">
+          <label className="block text-sm font-medium text-gray-700">
+            {t("filters.dateRange")}
+          </label>
+          <div className="flex items-center space-x-2">
+            <DatePicker
+              value={startDate}
+              variant="bordered"
+              granularity="day"
+              size="sm"
+              onChange={handleStartDateChange}
+              className="w-full"
+              aria-label="Start Date"
+            />
+            <span className="text-gray-500">{t("filters.to")}</span>
+            <DatePicker
+              value={endDate}
+              variant="bordered"
+              granularity="day"
+              size="sm"
+              onChange={handleEndDateChange}
+              className="w-full"
+              aria-label="End Date"
             />
           </div>
         </div>
 
-        <div className="flex flex-col space-y-4 md:flex-row md:items-end md:space-y-0 md:space-x-4">
-          {/*<div className="space-y-2">*/}
-          {/*  <label className="block text-sm font-medium text-gray-700">*/}
-          {/*    {t("filters.timeRange")}*/}
-          {/*  </label>*/}
-          {/*  <div className="flex items-center space-x-2">*/}
-          {/*    <TimeInput*/}
-          {/*      value={hourRange.start}*/}
-          {/*      variant="bordered"*/}
-          {/*      onChange={handleStartTimeChange}*/}
-          {/*      className="w-full"*/}
-          {/*    />*/}
-          {/*    <span className="text-gray-500">{t("filters.to")}</span>*/}
-          {/*    <TimeInput*/}
-          {/*      value={hourRange.end}*/}
-          {/*      variant="bordered"*/}
-          {/*      onChange={handleEndTimeChange}*/}
-          {/*      className="w-full"*/}
-          {/*    />*/}
-          {/*  </div>*/}
-          {/*</div>*/}
+        <div className="space-y-2">
+          <label className="block text-sm font-medium text-gray-700">
+            {t("filters.sensors")}
+          </label>
+          <Button
+            variant="bordered"
+            className="w-full md:w-60 justify-between"
+            size="sm"
+            endContent={<FunnelIcon className="h-4 w-4 text-gray-500" />}
+            onClick={() => setIsModalOpen(true)}
+          >
+            <span className="truncate">
+              {currentSensors.length === 0
+                ? t("filters.noSensorsSelected")
+                : currentSensors.length ===
+                    locations.flatMap((sensor) => sensor.sensors).length
+                  ? t("filters.allSensors")
+                  : t("filters.sensorsSelected", {
+                      count: currentSensors.length,
+                    })}
+            </span>
+          </Button>
 
-          {!hideGroupBy && (
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
-                {t("filters.groupBy")}
-              </label>
-              <Select
-                className="w-full md:w-60"
-                selectedKeys={new Set([groupBy])}
-                onSelectionChange={handleGroupByChange}
-                placeholder="Select time grouping"
-                size="md"
-                variant="bordered"
-                radius="lg"
-                selectionMode="single"
-                aria-label={t("filters.groupBy")}
-                classNames={{
-                  trigger:
-                    "border-gray-100 hover:border-gray-300 focus:border-gray-300 data-[focus=true]:border-gray-300 data-[hover=true]:border-gray-300",
-                  value: "text-gray-900",
-                  label: "text-gray-700",
-                }}
-              >
-                <SelectItem key="5min">
-                  {t("filters.groupOptions.5min")}
-                </SelectItem>
-                <SelectItem key="10min">
-                  {t("filters.groupOptions.10min")}
-                </SelectItem>
-                <SelectItem key="15min">
-                  {t("filters.groupOptions.15min")}
-                </SelectItem>
-                <SelectItem key="30min">
-                  {t("filters.groupOptions.30min")}
-                </SelectItem>
-                <SelectItem key="hour">
-                  {t("filters.groupOptions.hour")}
-                </SelectItem>
-                <SelectItem key="day">
-                  {t("filters.groupOptions.day")}
-                </SelectItem>
-                <SelectItem key="week">
-                  {t("filters.groupOptions.week")}
-                </SelectItem>
-                <SelectItem key="month">
-                  {t("filters.groupOptions.month")}
-                </SelectItem>
-              </Select>
-            </div>
-          )}
-
-          {/* Aggregation filter - hidden as requested */}
-          {/* <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
-              {t("filters.aggregation")}
-            </label>
-            <select
-              className="inline-flex w-full md:w-60 items-center justify-between rounded-xl border-2 border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-900 shadow-sm hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-1 transition-colors duration-150"
-              value={aggregation}
-              onChange={handleAggregationChange}
-            >
-              <option value="sum">{t("filters.aggregationOptions.sum")}</option>
-              <option value="avg">{t("filters.aggregationOptions.avg")}</option>
-              <option value="min">{t("filters.aggregationOptions.min")}</option>
-              <option value="max">{t("filters.aggregationOptions.max")}</option>
-            </select>
-          </div> */}
-
-          <div className="space-y-2">
-            <div className="text-xs text-gray-500 text-center">
-              {t("filters.lastUpdated")}: {formatLastUpdated()}
-            </div>
-            <button
-              onClick={handleRefresh}
-              className="inline-flex w-full items-center justify-center rounded-xl border-2 border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 shadow-sm hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-1 transition-colors duration-150"
-            >
-              <ArrowPathIcon className="h-5 w-5 mr-2" />
-              {t("filters.refresh")}
-            </button>
-          </div>
+          <SensorSelectionModal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            locations={locations}
+            selectedSensors={currentSensors}
+            onSensorsChange={onSensorsChange}
+          />
         </div>
+
+        {!hideGroupBy && (
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-700">
+              {t("filters.groupBy")}
+            </label>
+            <Select
+              className="w-full md:w-60"
+              selectedKeys={new Set([groupBy])}
+              onSelectionChange={handleGroupByChange}
+              placeholder="Select time grouping"
+              size="sm"
+              variant="bordered"
+              selectionMode="single"
+              aria-label={t("filters.groupBy")}
+            >
+              <SelectItem key="5min">
+                {t("filters.groupOptions.5min")}
+              </SelectItem>
+              <SelectItem key="10min">
+                {t("filters.groupOptions.10min")}
+              </SelectItem>
+              <SelectItem key="15min">
+                {t("filters.groupOptions.15min")}
+              </SelectItem>
+              <SelectItem key="30min">
+                {t("filters.groupOptions.30min")}
+              </SelectItem>
+              <SelectItem key="hour">
+                {t("filters.groupOptions.hour")}
+              </SelectItem>
+              <SelectItem key="day">{t("filters.groupOptions.day")}</SelectItem>
+              <SelectItem key="week">
+                {t("filters.groupOptions.week")}
+              </SelectItem>
+              <SelectItem key="month">
+                {t("filters.groupOptions.month")}
+              </SelectItem>
+            </Select>
+          </div>
+        )}
+
+        {showComparison && (
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-700">
+              {t("filters.comparison.toggle")}
+            </label>
+            <div className="flex items-center h-full">
+              <Switch
+                isSelected={isComparisonEnabled}
+                onValueChange={onComparisonToggle}
+                size="sm"
+                color="primary"
+                aria-label={t("filters.comparison.toggle")}
+              ></Switch>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
