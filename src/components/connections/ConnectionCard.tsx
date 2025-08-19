@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  Card,
-  CardBody,
-  CardHeader,
-  Button,
-} from "@heroui/react";
+import { Card, CardBody, CardHeader, Button } from "@heroui/react";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import { Connection } from "../../types/connection";
 
@@ -19,10 +14,9 @@ const ConnectionCard: React.FC<ConnectionCardProps> = ({
   onEdit,
   onDelete,
 }) => {
-
   const handleCardClick = (e: React.MouseEvent) => {
     // Don't trigger edit if clicking the delete button
-    if ((e.target as HTMLElement).closest('[data-delete-button]')) {
+    if ((e.target as HTMLElement).closest("[data-delete-button]")) {
       return;
     }
     onEdit(connection);
@@ -33,7 +27,7 @@ const ConnectionCard: React.FC<ConnectionCardProps> = ({
   };
 
   return (
-    <Card 
+    <Card
       className="relative cursor-pointer hover:shadow-lg transition-shadow duration-200 h-64"
       onClick={handleCardClick}
       isPressable
@@ -48,10 +42,9 @@ const ConnectionCard: React.FC<ConnectionCardProps> = ({
           </h5>
         </div>
       </CardHeader>
-      
+
       <CardBody className="pt-0">
         <div className="flex justify-between items-end h-full">
-          
           <Button
             isIconOnly
             color="danger"

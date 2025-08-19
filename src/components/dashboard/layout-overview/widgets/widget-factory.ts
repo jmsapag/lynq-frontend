@@ -11,7 +11,14 @@ export const createOverviewWidgetFactory = (
   params: OverviewWidgetFactoryParams,
   t: TFunction,
 ): Record<OverviewWidgetType, OverviewWidgetConfig> => {
-  const { metrics, dateRange, sensorIdsList, getSensorDetails, comparisons, comparisonPeriod } = params;
+  const {
+    metrics,
+    dateRange,
+    sensorIdsList,
+    getSensorDetails,
+    comparisons,
+    comparisonPeriod,
+  } = params;
 
   const commonData = {
     date_range_start: format(dateRange.start, "yyyy-MM-dd"),

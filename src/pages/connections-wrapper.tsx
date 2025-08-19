@@ -27,7 +27,7 @@ export default function ConnectionsPageWrapper() {
     );
   }
 
-  const business = businesses?.find(b => b.id === parseInt(businessId));
+  const business = businesses?.find((b) => b.id === parseInt(businessId));
 
   if (!business) {
     return (
@@ -40,9 +40,6 @@ export default function ConnectionsPageWrapper() {
   }
 
   return (
-    <ConnectionsPage
-      businessId={businessId}
-      businessName={business.name}
-    />
+    <ConnectionsPage businessId={businessId} businessName={business.name} />
   );
 }

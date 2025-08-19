@@ -95,9 +95,8 @@ const Dashboard = () => {
   } = useSensorRecords(sensorRecordsFormData, setSensorRecordsFormData);
 
   // Comparison hook
-  const { isComparisonEnabled, comparisonPeriods, toggleComparison } = useComparison(
-    sensorRecordsFormData.dateRange
-  );
+  const { isComparisonEnabled, comparisonPeriods, toggleComparison } =
+    useComparison(sensorRecordsFormData.dateRange);
 
   // Use the same overview metrics hook as in the overview page
   const { metrics, getSensorDetails, sensorIdsList } = useOverviewMetrics(
@@ -402,9 +401,9 @@ const Dashboard = () => {
                   )
                 }
                 onPress={() => setIsEditing(!isEditing)}
-                size="md"
+                size="sm"
               >
-                {isEditing ? "View Mode" : "Edit Layout"}
+                {isEditing ? "" : ""}
               </Button>
             </div>
           </div>
