@@ -35,7 +35,7 @@
       "descriptionPlaceholder": "Por favor proporciona información detallada sobre tu problema",
       "submit": "Enviar Ticket",
       "cancel": "Cancelar",
-      "success": "¡Ticket enviado exitosamente!",
+      "success": "¡Ticket enviado exitosamente! Tu ID de ticket es: {{ticketId}}",
       "error": "Error al enviar el ticket. Por favor intenta de nuevo."
     },
     "tickets": {

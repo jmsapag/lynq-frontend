@@ -16,6 +16,12 @@ export interface CreateTicketInput {
   description: string;
 }
 
+export interface CreateTicketResponse {
+  ticketId: string;
+  subject: string;
+  status: string;
+}
+
 export interface UpdateTicketInput {
   subject?: string;
   description?: string;
@@ -24,7 +30,7 @@ export interface UpdateTicketInput {
 
 export interface TicketsService {
   list(businessId: string): Promise<Ticket[]>;
-  create(businessId: string, input: CreateTicketInput): Promise<Ticket>;
+  create(input: CreateTicketInput): Promise<CreateTicketResponse>;
   update(businessId: string, id: number, input: UpdateTicketInput): Promise<Ticket>;
   delete(businessId: string, id: number): Promise<void>;
   getById(businessId: string, id: number): Promise<Ticket>;

@@ -2,12 +2,13 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { TicketForm } from "../components/help/TicketForm";
 import { useTickets } from "../hooks/useTickets";
-import { CreateTicketInput } from "../types/ticket";
+import { CreateTicketInput, CreateTicketResponse } from "../types/ticket";
 
 const HelpPage = () => {
   const { t } = useTranslation();
   const [showTicketForm, setShowTicketForm] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   
   // Mock business ID - in a real app this would come from context or props
   const businessId = "1";
@@ -15,13 +16,14 @@ const HelpPage = () => {
 
   const handleSubmitTicket = async (input: CreateTicketInput) => {
     setIsSubmitting(true);
+    setSuccessMessage(null);
     try {
-      await createTicket(input);
+      const result: CreateTicketResponse = await createTicket(input);
+      setSuccessMessage(t("help.ticketForm.success", { ticketId: result.ticketId }));
       setShowTicketForm(false);
-      // You could add a success toast here
     } catch (error) {
       console.error("Failed to create ticket:", error);
-      // You could add an error toast here
+      // Error is handled by the hook and displayed below
     } finally {
       setIsSubmitting(false);
     }
@@ -29,6 +31,7 @@ const HelpPage = () => {
 
   const handleCancelTicket = () => {
     setShowTicketForm(false);
+    setSuccessMessage(null);
   };
 
   return (
@@ -68,6 +71,12 @@ const HelpPage = () => {
             </div>
           )}
         </section>
+
+        {successMessage && (
+          <div className="bg-green-50 border border-green-200 rounded-md p-4">
+            <p className="text-sm text-green-800">{successMessage}</p>
+          </div>
+        )}
 
         {error && (
           <div className="bg-red-50 border border-red-200 rounded-md p-4">

@@ -10,7 +10,8 @@
     "profile": "Profile",
     "user-management": "User Management",
     "locations": "Locations",
-    "overview": "Overview"
+    "overview": "Overview",
+    "support": "Support"
   },
   "days": {
     "sunday": "Sunday",
@@ -35,7 +36,7 @@
       "descriptionPlaceholder": "Please provide detailed information about your issue",
       "submit": "Submit Ticket",
       "cancel": "Cancel",
-      "success": "Ticket submitted successfully!",
+      "success": "Ticket submitted successfully! Your ticket ID is: {{ticketId}}",
       "error": "Failed to submit ticket. Please try again."
     },
     "tickets": {

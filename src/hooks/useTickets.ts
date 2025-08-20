@@ -2,12 +2,24 @@ import { useState, useEffect } from "react";
 import {
   Ticket,
   CreateTicketInput,
+  CreateTicketResponse,
   UpdateTicketInput,
   TicketsService,
 } from "../types/ticket";
+import { axiosPrivate } from "../services/axiosClient";
 
-// Mock implementation of the tickets service
 class TicketsServiceImpl implements TicketsService {
+  async create(input: CreateTicketInput): Promise<CreateTicketResponse> {
+    try {
+      const response = await axiosPrivate.post("/api/tickets", input);
+      return response.data;
+    } catch (error) {
+      console.error("Error creating ticket:", error);
+      throw new Error("Failed to create ticket");
+    }
+  }
+
+  // Mock implementation for other operations (to be replaced with real API calls later)
   private mockTickets: Ticket[] = [
     {
       id: 1,
@@ -35,25 +47,6 @@ class TicketsServiceImpl implements TicketsService {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 500));
     return this.mockTickets.filter(ticket => ticket.businessId === parseInt(businessId));
-  }
-
-  async create(businessId: string, input: CreateTicketInput): Promise<Ticket> {
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 800));
-    
-    const newTicket: Ticket = {
-      id: this.mockTickets.length + 1,
-      subject: input.subject,
-      description: input.description,
-      status: "open",
-      businessId: parseInt(businessId),
-      userId: 1, // Mock user ID
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-    
-    this.mockTickets.push(newTicket);
-    return newTicket;
   }
 
   async update(businessId: string, id: number, input: UpdateTicketInput): Promise<Ticket> {
@@ -132,11 +125,10 @@ export function useTickets(businessId: string) {
   };
 
   // Create ticket
-  const createTicket = async (input: CreateTicketInput): Promise<Ticket> => {
+  const createTicket = async (input: CreateTicketInput): Promise<CreateTicketResponse> => {
     try {
       setError(null);
-      const result = await ticketsService.create(businessId, input);
-      setTickets(prev => [...prev, result]);
+      const result = await ticketsService.create(input);
       return result;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Failed to create ticket";
