@@ -25,7 +25,26 @@
     "userGuide": "Guía de Uso",
     "userGuideText": "Aquí encontrarás información sobre cómo usar la aplicación People Counter.",
     "faq": "Preguntas Frecuentes",
-    "faqText": "Consulta las respuestas a las preguntas más comunes."
+    "faqText": "Consulta las respuestas a las preguntas más comunes.",
+    "openTicket": "Abrir Ticket de Soporte",
+    "openTicketText": "¿Necesitas ayuda? Crea un ticket de soporte y te responderemos lo antes posible.",
+    "ticketForm": {
+      "subject": "Asunto",
+      "subjectPlaceholder": "Breve descripción de tu problema",
+      "description": "Descripción",
+      "descriptionPlaceholder": "Por favor proporciona información detallada sobre tu problema",
+      "submit": "Enviar Ticket",
+      "cancel": "Cancelar",
+      "success": "¡Ticket enviado exitosamente!",
+      "error": "Error al enviar el ticket. Por favor intenta de nuevo."
+    },
+    "tickets": {
+      "title": "Tickets de Soporte",
+      "noTickets": "No se encontraron tickets",
+      "status": "Estado",
+      "created": "Creado",
+      "updated": "Actualizado"
+    }
   },
   "footer": {
     "rights": "© {{year}} LYNQ, People Counter. Todos los derechos reservados."
