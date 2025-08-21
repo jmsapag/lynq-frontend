@@ -88,7 +88,6 @@ const ConnectionModal: React.FC<ConnectionModalProps> = ({
         const authFields: Record<string, string> = {
           user: connection.authParams?.user || "",
           password: "", // Don't pre-fill password for security
-          exportUrl: connection.authParams.exportUrl || "",
         };
 
         setFormData({
