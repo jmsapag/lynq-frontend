@@ -1,11 +1,14 @@
-
 import { useState } from "react";
 import { Button } from "@heroui/react";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { useTranslation } from "react-i18next";
 import { addToast } from "@heroui/react";
 import { useConnections } from "../hooks/useConnections";
-import { Connection, CreateConnectionInput, UpdateConnectionInput } from "../types/connection";
+import {
+  Connection,
+  CreateConnectionInput,
+  UpdateConnectionInput,
+} from "../types/connection";
 import ConnectionsGrid from "../components/connections/ConnectionsGrid";
 import ConnectionModal from "../components/connections/ConnectionModal";
 import DeleteConnectionModal from "../components/connections/DeleteConnectionModal";
@@ -17,20 +20,30 @@ export type ConnectionsPageProps = {
 
 export default function ConnectionsPage(props: ConnectionsPageProps) {
   const { t } = useTranslation();
-  const { connections, loading, createConnection, updateConnection, deleteConnection, testConnection } = useConnections(props.businessId);
+  const {
+    connections,
+    loading,
+    createConnection,
+    updateConnection,
+    deleteConnection,
+    testConnection,
+  } = useConnections(props.businessId);
 
   // Modal states
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [selectedConnection, setSelectedConnection] = useState<Connection | null>(null);
+  const [selectedConnection, setSelectedConnection] =
+    useState<Connection | null>(null);
 
   // Loading states
   const [isCreating, setIsCreating] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const handleCreate = async (input: CreateConnectionInput | UpdateConnectionInput): Promise<boolean> => {
+  const handleCreate = async (
+    input: CreateConnectionInput | UpdateConnectionInput,
+  ): Promise<boolean> => {
     const createInput = input as CreateConnectionInput;
     setIsCreating(true);
     try {
@@ -38,7 +51,10 @@ export default function ConnectionsPage(props: ConnectionsPageProps) {
       if (result) {
         addToast({
           title: t("connections.createSuccess", "Connection Created"),
-          description: t("connections.createSuccessDesc", "Connection has been created successfully"),
+          description: t(
+            "connections.createSuccessDesc",
+            "Connection has been created successfully",
+          ),
           severity: "success",
           color: "success",
         });
@@ -46,9 +62,13 @@ export default function ConnectionsPage(props: ConnectionsPageProps) {
       }
       return false;
     } catch (error) {
+      let description = t("connections.createError", "Failed to create connection");
+      if (error instanceof Error && error.message.includes("already exists")) {
+        description = t("connections.createConflictError", "A connection with these credentials already exists.");
+      }
       addToast({
         title: t("common.error", "Error"),
-        description: t("connections.createError", "Failed to create connection"),
+        description,
         severity: "danger",
         color: "danger",
       });
@@ -58,17 +78,20 @@ export default function ConnectionsPage(props: ConnectionsPageProps) {
     }
   };
 
-  const handleUpdate = async (input: CreateConnectionInput | UpdateConnectionInput): Promise<boolean> => {
+  const handleUpdate = async (id: string, input: CreateConnectionInput | UpdateConnectionInput): Promise<boolean> => {
     if (!selectedConnection) return false;
-    
+
     const updateInput = input as UpdateConnectionInput;
     setIsUpdating(true);
     try {
-      const result = await updateConnection(selectedConnection.id, updateInput);
+      const result = await updateConnection(id, updateInput);
       if (result) {
         addToast({
           title: t("connections.updateSuccess", "Connection Updated"),
-          description: t("connections.updateSuccessDesc", "Connection has been updated successfully"),
+          description: t(
+            "connections.updateSuccessDesc",
+            "Connection has been updated successfully",
+          ),
           severity: "success",
           color: "success",
         });
@@ -78,7 +101,10 @@ export default function ConnectionsPage(props: ConnectionsPageProps) {
     } catch (error) {
       addToast({
         title: t("common.error", "Error"),
-        description: t("connections.updateError", "Failed to update connection"),
+        description: t(
+          "connections.updateError",
+          "Failed to update connection",
+        ),
         severity: "danger",
         color: "danger",
       });
@@ -90,14 +116,17 @@ export default function ConnectionsPage(props: ConnectionsPageProps) {
 
   const handleDelete = async (): Promise<boolean> => {
     if (!selectedConnection) return false;
-    
+
     setIsDeleting(true);
     try {
       const result = await deleteConnection(selectedConnection.id);
       if (result) {
         addToast({
           title: t("connections.deleteSuccess", "Connection Deleted"),
-          description: t("connections.deleteSuccessDesc", "Connection has been deleted successfully"),
+          description: t(
+            "connections.deleteSuccessDesc",
+            "Connection has been deleted successfully",
+          ),
           severity: "success",
           color: "success",
         });
@@ -107,7 +136,10 @@ export default function ConnectionsPage(props: ConnectionsPageProps) {
     } catch (error) {
       addToast({
         title: t("common.error", "Error"),
-        description: t("connections.deleteError", "Failed to delete connection"),
+        description: t(
+          "connections.deleteError",
+          "Failed to delete connection",
+        ),
         severity: "danger",
         color: "danger",
       });
@@ -140,7 +172,8 @@ export default function ConnectionsPage(props: ConnectionsPageProps) {
       <div className="flex items-center justify-between">
         <div>
           <p className="text-gray-800 mt-1 text-lg">
-            {t("connections.subtitle", "Manage external connections for")} {props.businessName}
+            {t("connections.subtitle", "Manage external connections for")}{" "}
+            {props.businessName}
           </p>
         </div>
         <Button
@@ -153,12 +186,12 @@ export default function ConnectionsPage(props: ConnectionsPageProps) {
       </div>
 
       {/* Connections Grid */}
-          <ConnectionsGrid
-            connections={connections}
-            loading={loading}
-            onEdit={handleEditClick}
-            onDelete={handleDeleteClick}
-          />
+      <ConnectionsGrid
+        connections={connections}
+        loading={loading}
+        onEdit={handleEditClick}
+        onDelete={handleDeleteClick}
+      />
 
       {/* Create Modal */}
       <ConnectionModal
@@ -167,17 +200,21 @@ export default function ConnectionsPage(props: ConnectionsPageProps) {
         onSubmit={handleCreate}
         onTestConnection={testConnection}
         loading={isCreating}
+        businessId={props.businessId}
       />
 
       {/* Edit Modal */}
-      <ConnectionModal
-        isOpen={isEditModalOpen}
-        onClose={handleCloseModals}
-        onSubmit={handleUpdate}
-        onTestConnection={testConnection}
-        connection={selectedConnection || undefined}
-        loading={isUpdating}
-      />
+      {selectedConnection && (
+        <ConnectionModal
+          isOpen={isEditModalOpen}
+          onClose={handleCloseModals}
+          onSubmit={(input) => handleUpdate(selectedConnection.id, input)}
+          onTestConnection={testConnection}
+          connection={selectedConnection}
+          loading={isUpdating}
+          businessId={props.businessId}
+        />
+      )}
 
       {/* Delete Modal */}
       <DeleteConnectionModal

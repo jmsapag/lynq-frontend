@@ -44,7 +44,7 @@ const DeleteConnectionModal: React.FC<DeleteConnectionModalProps> = ({
           <p className="text-gray-600">
             {t(
               "connections.deleteConfirmation",
-              "Are you sure you want to delete this connection?"
+              "Are you sure you want to delete this connection?",
             )}
           </p>
           {connection && (
@@ -55,25 +55,14 @@ const DeleteConnectionModal: React.FC<DeleteConnectionModalProps> = ({
             </div>
           )}
           <p className="text-sm text-red-600 mt-2">
-            {t(
-              "connections.deleteWarning",
-              "This action cannot be undone."
-            )}
+            {t("connections.deleteWarning", "This action cannot be undone.")}
           </p>
         </ModalBody>
         <ModalFooter>
-          <Button
-            variant="bordered"
-            onPress={onClose}
-            isDisabled={loading}
-          >
+          <Button variant="bordered" onPress={onClose} isDisabled={loading}>
             {t("common.cancel", "Cancel")}
           </Button>
-          <Button
-            color="danger"
-            onPress={handleConfirm}
-            isLoading={loading}
-          >
+          <Button color="danger" onPress={handleConfirm} isLoading={loading}>
             {t("common.delete", "Delete")}
           </Button>
         </ModalFooter>

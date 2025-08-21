@@ -3,7 +3,11 @@ import { sensorMetadata } from "../../types/sensorMetadata";
 import { useSensorRecords } from "../useSensorRecords";
 import { Time } from "@internationalized/date";
 import { SensorRecordsFormData } from "../../types/sensorRecordsFormData";
-import { type ComparisonPeriods, calculateMetricComparison, type MetricComparison } from "../../utils/comparisonUtils";
+import {
+  type ComparisonPeriods,
+  calculateMetricComparison,
+  type MetricComparison,
+} from "../../utils/comparisonUtils";
 
 interface OverviewMetrics {
   totalIn: number;
@@ -63,16 +67,18 @@ export const useOverviewMetrics = (
   // Fetch comparison data if comparison periods are provided
   const [comparisonFormData, setComparisonFormData] =
     useState<SensorRecordsFormData | null>(() =>
-      comparisonPeriods ? {
-        sensorIds: sensorIds || Array.from(sensorMap.keys()),
-        fetchedDateRange: null,
-        dateRange: comparisonPeriods.previous,
-        hourRange: { start: new Time(0, 0), end: new Time(23, 59) },
-        rawData: [],
-        groupBy: "day" as const,
-        aggregationType: "sum" as const,
-        needToFetch: true,
-      } : null
+      comparisonPeriods
+        ? {
+            sensorIds: sensorIds || Array.from(sensorMap.keys()),
+            fetchedDateRange: null,
+            dateRange: comparisonPeriods.previous,
+            hourRange: { start: new Time(0, 0), end: new Time(23, 59) },
+            rawData: [],
+            groupBy: "day" as const,
+            aggregationType: "sum" as const,
+            needToFetch: true,
+          }
+        : null,
     );
 
   // Update comparison form data when dependencies change
@@ -92,19 +98,27 @@ export const useOverviewMetrics = (
     } else {
       setComparisonFormData(null);
     }
-  }, [comparisonPeriods?.previous.start.getTime(), comparisonPeriods?.previous.end.getTime(), JSON.stringify(sensorIds), sensorMap.size]);
+  }, [
+    comparisonPeriods?.previous.start.getTime(),
+    comparisonPeriods?.previous.end.getTime(),
+    JSON.stringify(sensorIds),
+    sensorMap.size,
+  ]);
 
   // Create a stable fallback for the sensor records hook
-  const fallbackFormData = useMemo(() => ({
-    sensorIds: [],
-    fetchedDateRange: null,
-    dateRange: { start: new Date(), end: new Date() },
-    hourRange: { start: new Time(0, 0), end: new Time(23, 59) },
-    rawData: [],
-    groupBy: "day" as const,
-    aggregationType: "sum" as const,
-    needToFetch: false,
-  }), []);
+  const fallbackFormData = useMemo(
+    () => ({
+      sensorIds: [],
+      fetchedDateRange: null,
+      dateRange: { start: new Date(), end: new Date() },
+      hourRange: { start: new Time(0, 0), end: new Time(23, 59) },
+      rawData: [],
+      groupBy: "day" as const,
+      aggregationType: "sum" as const,
+      needToFetch: false,
+    }),
+    [],
+  );
 
   const fallbackSetter = useMemo(() => () => {}, []);
 
@@ -230,26 +244,56 @@ export const useOverviewMetrics = (
 
     // Calculate comparison metrics if comparison data is available
     let comparisons: OverviewMetricsComparisons = {};
-    if (comparisonPeriods && comparisonSensorData && comparisonSensorData.in && comparisonSensorData.out) {
-      const comparisonTotalIn = comparisonSensorData.in.reduce((sum: number, value: number) => sum + value, 0);
-      const comparisonTotalOut = comparisonSensorData.out.reduce((sum: number, value: number) => sum + value, 0);
+    if (
+      comparisonPeriods &&
+      comparisonSensorData &&
+      comparisonSensorData.in &&
+      comparisonSensorData.out
+    ) {
+      const comparisonTotalIn = comparisonSensorData.in.reduce(
+        (sum: number, value: number) => sum + value,
+        0,
+      );
+      const comparisonTotalOut = comparisonSensorData.out.reduce(
+        (sum: number, value: number) => sum + value,
+        0,
+      );
       const comparisonTotalMovements = comparisonTotalIn + comparisonTotalOut;
-      const comparisonEntryRate = comparisonTotalMovements > 0 ? Math.round((comparisonTotalIn / comparisonTotalMovements) * 100) : 0;
-      
+      const comparisonEntryRate =
+        comparisonTotalMovements > 0
+          ? Math.round((comparisonTotalIn / comparisonTotalMovements) * 100)
+          : 0;
+
       // Calculate comparison period duration
       const comparisonStart = comparisonPeriods.previous.start;
       const comparisonEnd = comparisonPeriods.previous.end;
-      const comparisonDaysDiff = Math.max(1, Math.ceil((comparisonEnd.getTime() - comparisonStart.getTime()) / (1000 * 60 * 60 * 24)));
-      
-      const comparisonDailyAverageIn = Math.round(comparisonTotalIn / comparisonDaysDiff);
-      const comparisonDailyAverageOut = Math.round(comparisonTotalOut / comparisonDaysDiff);
+      const comparisonDaysDiff = Math.max(
+        1,
+        Math.ceil(
+          (comparisonEnd.getTime() - comparisonStart.getTime()) /
+            (1000 * 60 * 60 * 24),
+        ),
+      );
+
+      const comparisonDailyAverageIn = Math.round(
+        comparisonTotalIn / comparisonDaysDiff,
+      );
+      const comparisonDailyAverageOut = Math.round(
+        comparisonTotalOut / comparisonDaysDiff,
+      );
 
       comparisons = {
         totalIn: calculateMetricComparison(totalIn, comparisonTotalIn),
         totalOut: calculateMetricComparison(totalOut, comparisonTotalOut),
         entryRate: calculateMetricComparison(entryRate, comparisonEntryRate),
-        dailyAverageIn: calculateMetricComparison(dailyAverageIn, comparisonDailyAverageIn),
-        dailyAverageOut: calculateMetricComparison(dailyAverageOut, comparisonDailyAverageOut),
+        dailyAverageIn: calculateMetricComparison(
+          dailyAverageIn,
+          comparisonDailyAverageIn,
+        ),
+        dailyAverageOut: calculateMetricComparison(
+          dailyAverageOut,
+          comparisonDailyAverageOut,
+        ),
       };
     }
 
@@ -257,7 +301,13 @@ export const useOverviewMetrics = (
       current: currentMetrics,
       comparisons,
     };
-  }, [sensorData, dateRange, dailySensorData, comparisonPeriods, comparisonSensorData]);
+  }, [
+    sensorData,
+    dateRange,
+    dailySensorData,
+    comparisonPeriods,
+    comparisonSensorData,
+  ]);
 
   const getSensorDetails = () => {
     return Array.from(sensorMap.entries()).map(([id, position]) => ({

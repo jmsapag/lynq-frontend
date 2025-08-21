@@ -70,9 +70,8 @@ export const Overview: React.FC = () => {
   } = useSensorRecords(sensorRecordsFormData, setSensorRecordsFormData);
 
   // Comparison hook
-  const { isComparisonEnabled, comparisonPeriods, toggleComparison } = useComparison(
-    sensorRecordsFormData.dateRange
-  );
+  const { isComparisonEnabled, comparisonPeriods, toggleComparison } =
+    useComparison(sensorRecordsFormData.dateRange);
 
   const { metrics, getSensorDetails, sensorIdsList } = useOverviewMetrics(
     sensorData,
@@ -91,13 +90,11 @@ export const Overview: React.FC = () => {
   const [widgetPlacements, setWidgetPlacements] = useState<
     Record<string, DashboardWidgetType | null>
   >({});
-  const [currentLayout] = useState<DashboardLayout>(
-    getDefaultOverviewLayout(),
-  );
+  const [currentLayout] = useState<DashboardLayout>(getDefaultOverviewLayout());
 
   const availableWidgets: WidgetConfig[] = useMemo(() => {
     if (!metrics || !sensorRecordsFormData.dateRange.start) return [];
-    
+
     const params: OverviewWidgetFactoryParams = {
       metrics: metrics.current,
       dateRange: {
@@ -109,7 +106,7 @@ export const Overview: React.FC = () => {
       comparisons: metrics.comparisons,
       comparisonPeriod: comparisonPeriods?.previous,
     };
-    
+
     return createOverviewWidgetConfig(params, t);
   }, [
     metrics,

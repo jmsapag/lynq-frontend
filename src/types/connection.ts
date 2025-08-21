@@ -1,7 +1,7 @@
 // Provider types
-export type ProviderType = 
+export type ProviderType =
   // | "PostgreSQL"
-  // | "MySQL" 
+  // | "MySQL"
   // | "SQLite"
   // | "MongoDB"
   // | "Redis"
@@ -10,108 +10,109 @@ export type ProviderType =
   // | "MQTT"
   // | "FTP"
   // | "SFTP"
-  | "FootfallCam V9 API"
+  | "FootfallCamV9API"
   | "Other";
 
 // Provider-specific authentication parameters
 export interface AuthParams {
-  user: string;
-  password: string;
+  user?: string;
+  password?: string;
 }
 
-export interface Connection {
+export interface Connection extends BaseConnection {
   id: number;
   name: string;
   provider: ProviderType;
-  authParams: AuthParams;
-  businessId: number;
-  createdAt?: string;
-  updatedAt?: string;
-  // Legacy fields for backward compatibility
-  user?: string;
-  password?: string;
+  authParams: AuthParams; // user, password
+  exportUrl?: string; // for FootfallCam
 }
 
 export interface CreateConnectionInput {
   name: string;
   provider: ProviderType;
+  businessId: number;
   authParams: AuthParams;
-  // Legacy fields for backward compatibility
-  user?: string;
-  password?: string;
+  exportUrl?: string;
 }
 
 export interface UpdateConnectionInput {
   name?: string;
-  provider?: ProviderType;
   authParams?: Partial<AuthParams>;
-  // Legacy fields for backward compatibility
-  user?: string;
-  password?: string;
+  exportUrl?: string;
 }
 
 export interface ConnectionsService {
   list(businessId: string): Promise<Connection[]>;
-  testConnection(businessId: string, input: CreateConnectionInput): Promise<boolean>;
+  testConnection(
+    businessId: string,
+    input: CreateConnectionInput,
+  ): Promise<boolean>;
   create(businessId: string, input: CreateConnectionInput): Promise<Connection>;
-  update(businessId: string, id: number, input: UpdateConnectionInput): Promise<Connection>;
+  update(
+    businessId: string,
+    id: number,
+    input: UpdateConnectionInput,
+  ): Promise<Connection>;
   delete(businessId: string, id: number): Promise<void>;
 }
 
 // Utility functions for provider-specific logic
 export const isFootfallCamV9Provider = (provider: ProviderType): boolean => {
-  return provider === "FootfallCam V9 API";
+  return provider === "FootfallCamV9API";
 };
 
 export const isBasicAuthProvider = (provider: ProviderType): boolean => {
   return !isFootfallCamV9Provider(provider);
 };
 
-export const createAuthParams = (
-  _provider: ProviderType,
-  data: Record<string, string>
-): AuthParams => {
-  return {
-    user: data.user || "",
-    password: data.password || "",
-  } as AuthParams;
-};
-
-export const getProviderDisplayName = (provider: ProviderType): string => {
-  switch (provider) {
-    case "FootfallCam V9 API":
-      return "FootfallCam V9 API";
-    default:
-      return provider;
-  }
-};
-
-export const getProviderAuthFields = (provider: ProviderType): Array<{
+export function getProviderAuthFields(provider: ProviderType): Array<{
   key: string;
   label: string;
   type: string;
   placeholder: string;
   required: boolean;
-}> => {
-  // All providers currently use the same user/password authentication
-  return [
-    {
-      key: "user",
-      label: "Username",
-      type: "text",
-      placeholder: provider === "FootfallCam V9 API" 
-        ? "Enter FootfallCam username" 
-        : "Enter username",
-      required: true,
-    },
-    {
-      key: "password",
-      label: "Password",
-      type: "password",
-      placeholder: provider === "FootfallCam V9 API" 
-        ? "Enter FootfallCam password" 
-        : "Enter password",
-      required: true,
-    },
-  ];
+}> {
+  switch (provider) {
+    case "FootfallCamV9API":
+      return [
+        {
+          key: "user",
+          label: "User",
+          type: "text",
+          placeholder: "Enter FootfallCam username",
+          required: true,
+        },
+        {
+          key: "password",
+          label: "Password",
+          type: "password",
+          placeholder: "Enter FootfallCam password",
+          required: true,
+        },
+      ];
+    default:
+      return [];
+  }
+}
+
+export function createAuthParams(provider: ProviderType, fields: Record<string, string>): AuthParams {
+  const authParams: AuthParams = {};
+  const authFields = getProviderAuthFields(provider);
+  
+  for (const field of authFields) {
+    if (fields[field.key]) {
+      authParams[field.key as keyof AuthParams] = fields[field.key];
+    }
+  }
+
+  return authParams;
+}
+
+export const getProviderDisplayName = (provider: ProviderType): string => {
+  switch (provider) {
+    case "FootfallCamV9API":
+      return "FootfallCam V9 API";
+    default:
+      return provider;
+  }
 };

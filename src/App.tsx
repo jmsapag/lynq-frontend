@@ -76,7 +76,10 @@ function App() {
               <Route element={<RoleRoute allowedRoles="LYNQ_TEAM" />}>
                 <Route path="devices" element={<DevicesPage />} />
                 <Route path="businesses" element={<BusinessesPage />} />
-                <Route path="business/:businessId/connections" element={<ConnectionsPageWrapper />} />
+                <Route
+                  path="business/:businessId/connections"
+                  element={<ConnectionsPageWrapper />}
+                />
                 <Route path="manage/users" element={<ManageUsersPage />} />
               </Route>
 

@@ -25,7 +25,26 @@
     "userGuide": "Guía de Uso",
     "userGuideText": "Aquí encontrarás información sobre cómo usar la aplicación People Counter.",
     "faq": "Preguntas Frecuentes",
-    "faqText": "Consulta las respuestas a las preguntas más comunes."
+    "faqText": "Consulta las respuestas a las preguntas más comunes.",
+    "openTicket": "Abrir Ticket de Soporte",
+    "openTicketText": "¿Necesitas ayuda? Crea un ticket de soporte y te responderemos lo antes posible.",
+    "ticketForm": {
+      "subject": "Asunto",
+      "subjectPlaceholder": "Breve descripción de tu problema",
+      "description": "Descripción",
+      "descriptionPlaceholder": "Por favor proporciona información detallada sobre tu problema",
+      "submit": "Enviar Ticket",
+      "cancel": "Cancelar",
+      "success": "¡Ticket enviado exitosamente! Tu ID de ticket es: {{ticketId}}",
+      "error": "Error al enviar el ticket. Por favor intenta de nuevo."
+    },
+    "tickets": {
+      "title": "Tickets de Soporte",
+      "noTickets": "No se encontraron tickets",
+      "status": "Estado",
+      "created": "Creado",
+      "updated": "Actualizado"
+    }
   },
   "footer": {
     "rights": "© {{year}} LYNQ, People Counter. Todos los derechos reservados."
@@ -444,6 +463,7 @@
     "createSuccess": "Conexión Creada",
     "createSuccessDesc": "La conexión ha sido creada correctamente",
     "createError": "No se pudo crear la conexión",
+    "createConflictError": "Ya existe una conexión con estas credenciales.",
     "updateSuccess": "Conexión Actualizada",
     "updateSuccessDesc": "La conexión ha sido actualizada correctamente",
     "updateError": "No se pudo actualizar la conexión",
@@ -451,6 +471,14 @@
     "deleteSuccessDesc": "La conexión ha sido borrada correctamente",
     "deleteError": "No se pudo borrar la conexión",
     "invalidBusinessId": "ID de empresa inválido",
-    "businessNotFound": "Empresa no encontrada"
+    "businessNotFound": "Empresa no encontrada",
+    "auth": {
+      "user": "Usuario",
+      "password": "Password",
+      "exportUrl": "Export URL",
+      "userPlaceholder": "Enter username",
+      "passwordPlaceholder": "Enter password",
+      "exportUrlPlaceholder": "Enter export URL"
+    }
   }
 }
