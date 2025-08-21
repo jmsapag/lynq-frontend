@@ -24,6 +24,7 @@ import RoleRedirect from "./components/auth/roleRedirect.tsx";
 import { RoleRoute } from "./components/auth/roleRoute.tsx";
 import ConnectionsPageWrapper from "./pages/connections-wrapper.tsx";
 import Overview from "./pages/overview.tsx";
+import ReportsPage from "./pages/reports.tsx";
 
 function AppLayoutWithState() {
   const { isOpen, handleToggle, handleClose } = useSidebar();
@@ -69,6 +70,7 @@ function App() {
               <Route path="/overview" element={<Overview />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/comparison" element={<Comparison />} />
+              <Route path="reports" element={<ReportsPage />} />
               <Route path="/profile" element={<UsersPage />} />
               <Route path="help" element={<HelpPage />} />
 

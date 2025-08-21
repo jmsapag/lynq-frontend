@@ -8,7 +8,11 @@ interface TicketFormProps {
   isLoading?: boolean;
 }
 
-export function TicketForm({ onSubmit, onCancel, isLoading = false }: TicketFormProps) {
+export function TicketForm({
+  onSubmit,
+  onCancel,
+  isLoading = false,
+}: TicketFormProps) {
   const { t } = useTranslation();
   const [formData, setFormData] = useState<CreateTicketInput>({
     subject: "",
@@ -16,16 +20,18 @@ export function TicketForm({ onSubmit, onCancel, isLoading = false }: TicketForm
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
-    
+
     // Clear error when user starts typing
     if (errors[name]) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
         [name]: "",
       }));
@@ -49,7 +55,7 @@ export function TicketForm({ onSubmit, onCancel, isLoading = false }: TicketForm
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
@@ -72,10 +78,13 @@ export function TicketForm({ onSubmit, onCancel, isLoading = false }: TicketForm
       <h3 className="text-lg font-medium text-gray-900 mb-4">
         {t("help.openTicket")}
       </h3>
-      
+
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="subject"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             {t("help.ticketForm.subject")} *
           </label>
           <input
@@ -96,7 +105,10 @@ export function TicketForm({ onSubmit, onCancel, isLoading = false }: TicketForm
         </div>
 
         <div>
-          <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="description"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             {t("help.ticketForm.description")} *
           </label>
           <textarea
@@ -136,4 +148,4 @@ export function TicketForm({ onSubmit, onCancel, isLoading = false }: TicketForm
       </form>
     </div>
   );
-} 
+}
