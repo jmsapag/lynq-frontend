@@ -46,9 +46,13 @@ export default function ConnectionsPage(props: ConnectionsPageProps) {
       }
       return false;
     } catch (error) {
+      let description = t("connections.createError", "Failed to create connection");
+      if (error instanceof Error && error.message.includes("already exists")) {
+        description = t("connections.createConflictError", "A connection with these credentials already exists.");
+      }
       addToast({
         title: t("common.error", "Error"),
-        description: t("connections.createError", "Failed to create connection"),
+        description,
         severity: "danger",
         color: "danger",
       });

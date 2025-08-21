@@ -86,7 +86,7 @@ const ConnectionModal: React.FC<ConnectionModalProps> = ({
       if (connection) {
         // Pre-populate form with existing connection data
         const authFields: Record<string, string> = {
-          user: connection.authParams.user || "",
+          user: connection.authParams?.user || "",
           password: "", // Don't pre-fill password for security
           exportUrl: connection.authParams.exportUrl || "",
         };
@@ -161,7 +161,6 @@ const ConnectionModal: React.FC<ConnectionModalProps> = ({
         authParams,
         exportUrl: formData.exportUrl,
       };
-      console.log(testInput);
       
       const success = await onTestConnection(testInput);
       
@@ -229,8 +228,7 @@ const ConnectionModal: React.FC<ConnectionModalProps> = ({
       authParams,
       exportUrl: formData.exportUrl,
     };
-    console.log("Data to submit: ", submitData);
-
+ 
     const success = await onSubmit(submitData);
     if (success) {
       onClose();

@@ -444,6 +444,7 @@
     "createSuccess": "Conexión Creada",
     "createSuccessDesc": "La conexión ha sido creada correctamente",
     "createError": "No se pudo crear la conexión",
+    "createConflictError": "Ya existe una conexión con estas credenciales.",
     "updateSuccess": "Conexión Actualizada",
     "updateSuccessDesc": "La conexión ha sido actualizada correctamente",
     "updateError": "No se pudo actualizar la conexión",
