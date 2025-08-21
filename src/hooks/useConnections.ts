@@ -6,6 +6,7 @@ import {
   ConnectionsService,
 } from "../types/connection";
 import { axiosPrivate } from "../services/axiosClient";
+import axios from "axios";
 
 // Real implementation of the connections service using the API
 class ConnectionsServiceImpl implements ConnectionsService {
@@ -48,6 +49,9 @@ class ConnectionsServiceImpl implements ConnectionsService {
       });
       return response.data;
     } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 409) {
+        throw new Error("A connection with these credentials already exists.");
+      }
       console.error("Error creating connection:", error);
       throw new Error("Failed to create connection");
     }
@@ -110,10 +114,9 @@ export function useConnections(businessId: string) {
       setConnections((prev) => [...prev, newConnection]);
       return newConnection;
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "Failed to create connection",
-      );
-      return null;
+      const errorMessage = err instanceof Error ? err.message : "Failed to create connection";
+      setError(errorMessage);
+      throw err;
     }
   };
 
