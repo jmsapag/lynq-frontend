@@ -40,7 +40,7 @@ const ReportConfigModal = ({
   isLoading,
 }: ReportConfigModalProps) => {
   const { t } = useTranslation();
-  const { allLocations } = useLocations();
+  const { locations } = useLocations();
   const [config, setConfig] = useState<ReportConfig>({
     type: "weekly",
     enabled: true,
@@ -163,7 +163,7 @@ const ReportConfigModal = ({
                     {t("reports.form.locations")}
                   </label>
                   <div className="flex flex-wrap gap-4">
-                    {allLocations.map((location) => (
+                    {locations?.map((location) => (
                       <Checkbox
                         key={location.id}
                         size="sm"
@@ -244,9 +244,7 @@ const ReportConfigModal = ({
                     }}
                   >
                     {timezones.map((tz) => (
-                      <SelectItem key={tz} value={tz}>
-                        {tz}
-                      </SelectItem>
+                      <SelectItem key={tz}>{tz}</SelectItem>
                     ))}
                   </Select>
                 </div>
