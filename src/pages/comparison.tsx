@@ -294,6 +294,9 @@ const Comparison = () => {
   const isLoading = sensorsLoading || dataLoading;
   const hasError = sensorsError || dataError;
 
+  // src/pages/comparison.tsx
+  // ... (imports and component logic up to the return statement)
+
   return isLoading ? (
     <div className="flex items-center justify-center h-screen">
       <Spinner size="lg" />
@@ -322,6 +325,8 @@ const Comparison = () => {
         <ChartCard
           title="Device Comparison (Entries)"
           translationKey="comparison.charts.deviceComparisonIn"
+          data={inChartData}
+          dateRange={formDataArr[0].dateRange}
         >
           {inChartData.categories.length === 0 ||
           inChartData.devices.length === 0 ? (
@@ -335,6 +340,8 @@ const Comparison = () => {
         <ChartCard
           title="Device Comparison (Exits)"
           translationKey="comparison.charts.deviceComparisonOut"
+          data={outChartData}
+          dateRange={formDataArr[0].dateRange}
         >
           {outChartData.categories.length === 0 ||
           outChartData.devices.length === 0 ? (

@@ -18,7 +18,11 @@ import {
   exportAsCsv,
   formatDateRangeForFilename,
 } from "../../../utils/exportUtils";
-import { type MetricComparison, formatDeltaDisplay, getComparisonPeriodLabel } from "../../../utils/comparisonUtils";
+import {
+  type MetricComparison,
+  formatDeltaDisplay,
+  getComparisonPeriodLabel,
+} from "../../../utils/comparisonUtils";
 
 interface SensorDataCardProps {
   title: string;
@@ -240,27 +244,33 @@ export const SensorDataCard: React.FC<SensorDataCardProps> = ({
             {value}{" "}
             {unit && <span className="text-sm text-gray-500">{unit}</span>}
           </p>
-          
+
           {/* Comparison display */}
           {comparison && comparisonPeriod && (
             <div className="mt-2 flex items-center gap-2">
-              <div className={`flex items-center gap-1 text-xs px-2 py-1 rounded-full ${
-                comparison.trend === "up" 
-                  ? "bg-green-50 text-green-700" 
-                  : comparison.trend === "down" 
-                    ? "bg-red-50 text-red-700" 
-                    : "bg-gray-50 text-gray-700"
-              }`}>
-                {comparison.trend === "up" && <ArrowUpIcon className="w-3 h-3" aria-hidden="true" />}
-                {comparison.trend === "down" && <ArrowDownIcon className="w-3 h-3" aria-hidden="true" />}
-                {comparison.trend === "stable" && <MinusIcon className="w-3 h-3" aria-hidden="true" />}
-                <span>
-                  {formatDeltaDisplay(comparison).percentageText}
-                </span>
+              <div
+                className={`flex items-center gap-1 text-xs px-2 py-1 rounded-full ${
+                  comparison.trend === "up"
+                    ? "bg-green-50 text-green-700"
+                    : comparison.trend === "down"
+                      ? "bg-red-50 text-red-700"
+                      : "bg-gray-50 text-gray-700"
+                }`}
+              >
+                {comparison.trend === "up" && (
+                  <ArrowUpIcon className="w-3 h-3" aria-hidden="true" />
+                )}
+                {comparison.trend === "down" && (
+                  <ArrowDownIcon className="w-3 h-3" aria-hidden="true" />
+                )}
+                {comparison.trend === "stable" && (
+                  <MinusIcon className="w-3 h-3" aria-hidden="true" />
+                )}
+                <span>{formatDeltaDisplay(comparison).percentageText}</span>
                 <span className="sr-only">
-                  {comparison.trend === "up" 
+                  {comparison.trend === "up"
                     ? t("comparison.increaseFromPrevious")
-                    : comparison.trend === "down" 
+                    : comparison.trend === "down"
                       ? t("comparison.decreaseFromPrevious")
                       : t("comparison.noChangeFromPrevious")}
                 </span>

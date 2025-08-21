@@ -1,7 +1,7 @@
 // Provider types
-export type ProviderType = 
+export type ProviderType =
   // | "PostgreSQL"
-  // | "MySQL" 
+  // | "MySQL"
   // | "SQLite"
   // | "MongoDB"
   // | "Redis"
@@ -43,9 +43,16 @@ export interface UpdateConnectionInput {
 
 export interface ConnectionsService {
   list(businessId: string): Promise<Connection[]>;
-  testConnection(businessId: string, input: CreateConnectionInput): Promise<boolean>;
+  testConnection(
+    businessId: string,
+    input: CreateConnectionInput,
+  ): Promise<boolean>;
   create(businessId: string, input: CreateConnectionInput): Promise<Connection>;
-  update(businessId: string, id: number, input: UpdateConnectionInput): Promise<Connection>;
+  update(
+    businessId: string,
+    id: number,
+    input: UpdateConnectionInput,
+  ): Promise<Connection>;
   delete(businessId: string, id: number): Promise<void>;
 }
 

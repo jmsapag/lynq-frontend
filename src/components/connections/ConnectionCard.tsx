@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  Card,
-  CardBody,
-  CardHeader,
-  Button,
-} from "@heroui/react";
+import { Card, CardBody, CardHeader, Button } from "@heroui/react";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import { Connection } from "../../types/connection";
 
@@ -19,10 +14,9 @@ const ConnectionCard: React.FC<ConnectionCardProps> = ({
   onEdit,
   onDelete,
 }) => {
-
   const handleCardClick = (e: React.MouseEvent) => {
     // Don't trigger edit if clicking the delete button
-    if ((e.target as HTMLElement).closest('[data-delete-button]')) {
+    if ((e.target as HTMLElement).closest("[data-delete-button]")) {
       return;
     }
     onEdit(connection);

@@ -52,12 +52,16 @@ export const exportAsPdf = async (
 };
 
 // Export as CSV
+// src/utils/exportUtils.ts
+// ... (keep existing code the same until exportAsCsv)
+
+// Export as CSV
 export const exportAsCsv = (
   data: Record<string, any>,
   fileName: string,
 ): void => {
   const escapeCSV = (value: any): string => {
-    const stringValue = String(value);
+    const stringValue = String(value ?? ""); // Handle null/undefined
     if (
       stringValue.includes(",") ||
       stringValue.includes('"') ||
@@ -96,28 +100,45 @@ export const exportAsCsv = (
     }
   }
 
-  rows.push([]);
+  // Handle chart data (categories and devices)
+  if (data.categories && data.devices) {
+    const header = ["Timestamp", ...data.devices.map((d: any) => d.name)];
+    rows.push([]);
+    rows.push(header);
 
-  const metricsToExclude = [
-    "metric",
-    "date_range",
-    "date_range_start",
-    "date_range_end",
-    "sensors",
-    "sensorDetails",
-  ];
-  Object.entries(data).forEach(([key, value]) => {
-    if (!metricsToExclude.includes(key)) {
-      const formattedKey = key
-        .replace(/_/g, " ")
-        .split(" ")
-        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(" ");
+    data.categories.forEach((category: string, index: number) => {
+      const row = [
+        category,
+        ...data.devices.map((d: any) => d.values[index] ?? ""),
+      ];
+      rows.push(row);
+    });
+  } else {
+    // Handle simple key-value data
+    rows.push([]);
+    const metricsToExclude = [
+      "metric",
+      "date_range",
+      "date_range_start",
+      "date_range_end",
+      "sensors",
+      "sensorDetails",
+      "categories",
+      "devices",
+    ];
+    Object.entries(data).forEach(([key, value]) => {
+      if (!metricsToExclude.includes(key)) {
+        const formattedKey = key
+          .replace(/_/g, " ")
+          .split(" ")
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(" ");
 
-      const unit = key === "value" ? data.unit || "" : "";
-      rows.push([formattedKey, String(value), unit]);
-    }
-  });
+        const unit = key === "value" ? data.unit || "" : "";
+        rows.push([formattedKey, String(value), unit]);
+      }
+    });
+  }
 
   // Generate CSV content
   let csvContent = "data:text/csv;charset=utf-8,";

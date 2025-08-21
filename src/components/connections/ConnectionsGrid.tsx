@@ -49,7 +49,10 @@ const ConnectionsGrid: React.FC<ConnectionsGridProps> = ({
           {t("connections.noConnections", "No connections found")}
         </h3>
         <p className="mt-1 text-sm text-gray-500">
-          {t("connections.getStarted", "Get started by creating a new connection.")}
+          {t(
+            "connections.getStarted",
+            "Get started by creating a new connection.",
+          )}
         </p>
       </div>
     );

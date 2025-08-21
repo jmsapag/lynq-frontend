@@ -19,13 +19,15 @@ import {
   UpdateConnectionInput, 
   ProviderType,
   getProviderAuthFields,
-  createAuthParams
+  createAuthParams,
 } from "../../types/connection";
 
 interface ConnectionModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (input: CreateConnectionInput | UpdateConnectionInput) => Promise<boolean>;
+  onSubmit: (
+    input: CreateConnectionInput | UpdateConnectionInput,
+  ) => Promise<boolean>;
   onTestConnection: (input: CreateConnectionInput) => Promise<boolean>;
   connection?: Connection; // If provided, this is an edit modal
   loading?: boolean;
@@ -61,7 +63,7 @@ const ConnectionModal: React.FC<ConnectionModalProps> = ({
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [testingConnection, setTestingConnection] = useState(false);
   const [testResult, setTestResult] = useState<{
-    status: 'success' | 'error' | null;
+    status: "success" | "error" | null;
     message: string;
   }>({ status: null, message: "" });
 
@@ -131,19 +133,29 @@ const ConnectionModal: React.FC<ConnectionModalProps> = ({
     const provider = formData.provider as ProviderType;
     if (!provider) {
       setTestResult({
-        status: 'error',
-        message: t("connections.testIncompleteForm", "Please select a provider before testing.")
+        status: "error",
+        message: t(
+          "connections.testIncompleteForm",
+          "Please select a provider before testing.",
+        ),
       });
       return;
     }
 
-    const requiredFields = getProviderAuthFields(provider).filter(field => field.required);
-    const missingFields = requiredFields.filter(field => !formData.authFields[field.key]?.trim());
-    
+    const requiredFields = getProviderAuthFields(provider).filter(
+      (field) => field.required,
+    );
+    const missingFields = requiredFields.filter(
+      (field) => !formData.authFields[field.key]?.trim(),
+    );
+
     if (missingFields.length > 0) {
       setTestResult({
-        status: 'error',
-        message: t("connections.testIncompleteForm", "Please fill in all required fields before testing.")
+        status: "error",
+        message: t(
+          "connections.testIncompleteForm",
+          "Please fill in all required fields before testing.",
+        ),
       });
       return;
     }
@@ -160,24 +172,33 @@ const ConnectionModal: React.FC<ConnectionModalProps> = ({
         authParams,
         exportUrl: formData.exportUrl,
       };
-      
+
       const success = await onTestConnection(testInput);
-      
+
       if (success) {
         setTestResult({
-          status: 'success',
-          message: t("connections.testSuccess", "Connection test successful! Credentials are valid.")
+          status: "success",
+          message: t(
+            "connections.testSuccess",
+            "Connection test successful! Credentials are valid.",
+          ),
         });
       } else {
         setTestResult({
-          status: 'error',
-          message: t("connections.testFailed", "Connection test failed. Please check your credentials.")
+          status: "error",
+          message: t(
+            "connections.testFailed",
+            "Connection test failed. Please check your credentials.",
+          ),
         });
       }
     } catch (error) {
       setTestResult({
-        status: 'error',
-        message: t("connections.testError", "Connection test failed due to network error.")
+        status: "error",
+        message: t(
+          "connections.testError",
+          "Connection test failed due to network error.",
+        ),
       });
     } finally {
       setTestingConnection(false);
@@ -188,19 +209,30 @@ const ConnectionModal: React.FC<ConnectionModalProps> = ({
     const newErrors: Record<string, string> = {};
 
     if (!formData.name.trim()) {
-      newErrors.name = t("connections.nameRequired", "Connection name is required");
+      newErrors.name = t(
+        "connections.nameRequired",
+        "Connection name is required",
+      );
     }
 
     if (!formData.provider) {
-      newErrors.provider = t("connections.providerRequired", "Provider is required");
+      newErrors.provider = t(
+        "connections.providerRequired",
+        "Provider is required",
+      );
     }
 
     if (formData.provider) {
-      const requiredFields = getProviderAuthFields(formData.provider as ProviderType).filter(field => field.required);
+      const requiredFields = getProviderAuthFields(
+        formData.provider as ProviderType,
+      ).filter((field) => field.required);
       for (const field of requiredFields) {
         if (!isEdit || field.key !== "password") {
           if (!formData.authFields[field.key]?.trim()) {
-            newErrors[field.key] = t(`connections.${field.key}Required`, `${field.label} is required`);
+            newErrors[field.key] = t(
+              `connections.${field.key}Required`,
+              `${field.label} is required`,
+            );
           }
         }
       }
@@ -235,7 +267,9 @@ const ConnectionModal: React.FC<ConnectionModalProps> = ({
   };
 
   // Get auth fields for current provider
-  const authFields = formData.provider ? getProviderAuthFields(formData.provider as ProviderType) : [];
+  const authFields = formData.provider
+    ? getProviderAuthFields(formData.provider as ProviderType)
+    : [];
 
   return (
     <Modal isOpen={isOpen} onOpenChange={onClose} size="md">
@@ -244,13 +278,15 @@ const ConnectionModal: React.FC<ConnectionModalProps> = ({
           <ModalHeader>
             {isEdit
               ? t("connections.editConnection", "Edit Connection")
-              : t("connections.createConnection", "Create Connection")
-            }
+              : t("connections.createConnection", "Create Connection")}
           </ModalHeader>
           <ModalBody className="space-y-4">
             <Input
               label={t("connections.name", "Connection Name")}
-              placeholder={t("connections.namePlaceholder", "Enter connection name")}
+              placeholder={t(
+                "connections.namePlaceholder",
+                "Enter connection name",
+              )}
               value={formData.name}
               onChange={(e) => handleInputChange("name", e.target.value)}
               isInvalid={!!errors.name}
@@ -260,7 +296,10 @@ const ConnectionModal: React.FC<ConnectionModalProps> = ({
 
             <Select
               label={t("connections.provider", "Provider")}
-              placeholder={t("connections.providerPlaceholder", "Select a provider")}
+              placeholder={t(
+                "connections.providerPlaceholder",
+                "Select a provider",
+              )}
               selectedKeys={formData.provider ? [formData.provider] : []}
               onSelectionChange={(keys) => {
                 const value = Array.from(keys)[0] as string;
@@ -295,7 +334,10 @@ const ConnectionModal: React.FC<ConnectionModalProps> = ({
                 isRequired={field.required && !isEdit}
                 description={
                   isEdit && field.type === "password"
-                    ? t("connections.sensitiveFieldHint", "This field is hidden for security. Enter a new value only if you want to change it.")
+                    ? t(
+                        "connections.sensitiveFieldHint",
+                        "This field is hidden for security. Enter a new value only if you want to change it.",
+                      )
                     : undefined
                 }
               />
@@ -321,24 +363,29 @@ const ConnectionModal: React.FC<ConnectionModalProps> = ({
                 onPress={testConnection}
                 isLoading={testingConnection}
                 isDisabled={loading}
-                startContent={!testingConnection && testResult.status === 'success' ? <CheckIcon className="h-4 w-4" /> : undefined}
+                startContent={
+                  !testingConnection && testResult.status === "success" ? (
+                    <CheckIcon className="h-4 w-4" />
+                  ) : undefined
+                }
                 className="w-full"
               >
-                {testingConnection 
-                  ? t("connections.testing", "Testing Connection...") 
-                  : t("connections.testConnection", "Test Connection")
-                }
+                {testingConnection
+                  ? t("connections.testing", "Testing Connection...")
+                  : t("connections.testConnection", "Test Connection")}
               </Button>
 
               {/* Test Result Display */}
               {testResult.status && (
-                <div className={`p-3 rounded-lg text-sm ${
-                  testResult.status === 'success' 
-                    ? 'bg-green-50 text-green-700 border border-green-200' 
-                    : 'bg-red-50 text-red-700 border border-red-200'
-                }`}>
+                <div
+                  className={`p-3 rounded-lg text-sm ${
+                    testResult.status === "success"
+                      ? "bg-green-50 text-green-700 border border-green-200"
+                      : "bg-red-50 text-red-700 border border-red-200"
+                  }`}
+                >
                   <div className="flex items-center gap-2">
-                    {testResult.status === 'success' ? (
+                    {testResult.status === "success" ? (
                       <CheckIcon className="h-4 w-4 text-green-600" />
                     ) : (
                       <XMarkIcon className="h-4 w-4 text-red-600" />
@@ -350,33 +397,33 @@ const ConnectionModal: React.FC<ConnectionModalProps> = ({
             </div>
 
             {/* Requirement Notice */}
-            {testResult.status !== 'success' && (
+            {testResult.status !== "success" && (
               <div className="p-3 rounded-lg bg-blue-50 text-blue-700 border border-blue-200 text-sm">
                 <div className="flex items-center gap-2">
                   <span className="font-medium">ℹ️</span>
-                  <span>{t("connections.testRequired", "A successful connection test is required before saving.")}</span>
+                  <span>
+                    {t(
+                      "connections.testRequired",
+                      "A successful connection test is required before saving.",
+                    )}
+                  </span>
                 </div>
               </div>
             )}
           </ModalBody>
           <ModalFooter>
-            <Button
-              variant="bordered"
-              onPress={onClose}
-              isDisabled={loading}
-            >
+            <Button variant="bordered" onPress={onClose} isDisabled={loading}>
               {t("common.cancel", "Cancel")}
             </Button>
             <Button
               color="primary"
               type="submit"
               isLoading={loading}
-              isDisabled={loading || testResult.status !== 'success'}
+              isDisabled={loading || testResult.status !== "success"}
             >
               {isEdit
                 ? t("common.update", "Update")
-                : t("common.create", "Create")
-              }
+                : t("common.create", "Create")}
             </Button>
           </ModalFooter>
         </form>

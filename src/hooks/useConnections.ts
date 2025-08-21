@@ -1,20 +1,23 @@
 import { useState, useEffect } from "react";
-import { 
-  Connection, 
-  CreateConnectionInput, 
-  UpdateConnectionInput, 
-  ConnectionsService
+import {
+  Connection,
+  CreateConnectionInput,
+  UpdateConnectionInput,
+  ConnectionsService,
 } from "../types/connection";
 import { axiosPrivate } from "../services/axiosClient";
 import axios from "axios";
 
 // Real implementation of the connections service using the API
 class ConnectionsServiceImpl implements ConnectionsService {
-  async testConnection(businessId: string, input: CreateConnectionInput): Promise<boolean> {
+  async testConnection(
+    businessId: string,
+    input: CreateConnectionInput,
+  ): Promise<boolean> {
     try {
       const response = await axiosPrivate.post(`/connections/test`, {
         ...input,
-        businessId: parseInt(businessId)
+        businessId: parseInt(businessId),
       });
       return response.data.success === true;
     } catch (error) {
@@ -25,7 +28,9 @@ class ConnectionsServiceImpl implements ConnectionsService {
 
   async list(businessId: string): Promise<Connection[]> {
     try {
-      const response = await axiosPrivate.get(`/connections/business/${businessId}`);
+      const response = await axiosPrivate.get(
+        `/connections/business/${businessId}`,
+      );
       return response.data;
     } catch (error) {
       console.error("Error fetching connections:", error);
@@ -33,11 +38,14 @@ class ConnectionsServiceImpl implements ConnectionsService {
     }
   }
 
-  async create(businessId: string, input: CreateConnectionInput): Promise<Connection> {
+  async create(
+    businessId: string,
+    input: CreateConnectionInput,
+  ): Promise<Connection> {
     try {
       const response = await axiosPrivate.post(`/connections`, {
         ...input,
-        businessId: parseInt(businessId)
+        businessId: parseInt(businessId),
       });
       return response.data;
     } catch (error) {
@@ -49,7 +57,11 @@ class ConnectionsServiceImpl implements ConnectionsService {
     }
   }
 
-  async update(_businessId: string, id: number, input: UpdateConnectionInput): Promise<Connection> {
+  async update(
+    _businessId: string,
+    id: number,
+    input: UpdateConnectionInput,
+  ): Promise<Connection> {
     try {
       const response = await axiosPrivate.put(`/connections/${id}`, input);
       return response.data;
@@ -84,18 +96,22 @@ export function useConnections(businessId: string) {
       const result = await connectionsService.list(businessId);
       setConnections(result);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load connections");
+      setError(
+        err instanceof Error ? err.message : "Failed to load connections",
+      );
     } finally {
       setLoading(false);
     }
   };
 
   // Create connection
-  const createConnection = async (input: CreateConnectionInput): Promise<Connection | null> => {
+  const createConnection = async (
+    input: CreateConnectionInput,
+  ): Promise<Connection | null> => {
     try {
       setError(null);
       const newConnection = await connectionsService.create(businessId, input);
-      setConnections(prev => [...prev, newConnection]);
+      setConnections((prev) => [...prev, newConnection]);
       return newConnection;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Failed to create connection";
@@ -105,14 +121,25 @@ export function useConnections(businessId: string) {
   };
 
   // Update connection
-  const updateConnection = async (id: number, input: UpdateConnectionInput): Promise<Connection | null> => {
+  const updateConnection = async (
+    id: number,
+    input: UpdateConnectionInput,
+  ): Promise<Connection | null> => {
     try {
       setError(null);
-      const updatedConnection = await connectionsService.update(businessId, id, input);
-      setConnections(prev => prev.map(c => c.id === id ? updatedConnection : c));
+      const updatedConnection = await connectionsService.update(
+        businessId,
+        id,
+        input,
+      );
+      setConnections((prev) =>
+        prev.map((c) => (c.id === id ? updatedConnection : c)),
+      );
       return updatedConnection;
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to update connection");
+      setError(
+        err instanceof Error ? err.message : "Failed to update connection",
+      );
       return null;
     }
   };
@@ -122,22 +149,28 @@ export function useConnections(businessId: string) {
     try {
       setError(null);
       await connectionsService.delete(businessId, id);
-      setConnections(prev => prev.filter(c => c.id !== id));
+      setConnections((prev) => prev.filter((c) => c.id !== id));
       return true;
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to delete connection");
+      setError(
+        err instanceof Error ? err.message : "Failed to delete connection",
+      );
       return false;
     }
   };
 
   // Test connection
-  const testConnection = async (input: CreateConnectionInput): Promise<boolean> => {
+  const testConnection = async (
+    input: CreateConnectionInput,
+  ): Promise<boolean> => {
     try {
       setError(null);
       const result = await connectionsService.testConnection(businessId, input);
       return result;
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to test connection");
+      setError(
+        err instanceof Error ? err.message : "Failed to test connection",
+      );
       return false;
     }
   };
