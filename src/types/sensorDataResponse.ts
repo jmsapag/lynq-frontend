@@ -8,6 +8,9 @@ export type SensorDataPoint = {
   timestamp: string;
   total_count_in: number;
   total_count_out: number;
+  outsideTraffic?: number;
+  avgVisitDuration?: number;
+  returningCustomer?: number;
 };
 
 export type TransformedSensorData = {

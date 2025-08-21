@@ -464,6 +464,7 @@
     "createSuccess": "Conexión Creada",
     "createSuccessDesc": "La conexión ha sido creada correctamente",
     "createError": "No se pudo crear la conexión",
+    "createConflictError": "Ya existe una conexión con estas credenciales.",
     "updateSuccess": "Conexión Actualizada",
     "updateSuccessDesc": "La conexión ha sido actualizada correctamente",
     "updateError": "No se pudo actualizar la conexión",
@@ -494,6 +495,15 @@
       "saveSuccessDesc": "La configuración del reporte se ha guardado correctamente.",
       "saveErrorTitle": "Error al Guardar",
       "saveErrorDesc": "Hubo un error al guardar la configuración del reporte."
+    },
+    "businessNotFound": "Empresa no encontrada",
+    "auth": {
+      "user": "Usuario",
+      "password": "Password",
+      "exportUrl": "Export URL",
+      "userPlaceholder": "Enter username",
+      "passwordPlaceholder": "Enter password",
+      "exportUrlPlaceholder": "Enter export URL"
     }
   }
 }
