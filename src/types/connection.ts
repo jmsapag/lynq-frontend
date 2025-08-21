@@ -94,7 +94,7 @@ export function createAuthParams(provider: ProviderType, fields: Record<string, 
   
   for (const field of authFields) {
     if (fields[field.key]) {
-      (authParams as any)[field.key] = fields[field.key];
+      authParams[field.key as keyof AuthParams] = fields[field.key];
     }
   }
 

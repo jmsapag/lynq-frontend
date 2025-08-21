@@ -175,15 +175,17 @@ export default function ConnectionsPage(props: ConnectionsPageProps) {
       />
 
       {/* Edit Modal */}
-      <ConnectionModal
-        isOpen={isEditModalOpen}
-        onClose={handleCloseModals}
-        onSubmit={(input) => handleUpdate(selectedConnection?.id || '', input)}
-        onTestConnection={testConnection}
-        connection={selectedConnection || undefined}
-        loading={isUpdating}
-        businessId={props.businessId}
-      />
+      {selectedConnection && (
+        <ConnectionModal
+          isOpen={isEditModalOpen}
+          onClose={handleCloseModals}
+          onSubmit={(input) => handleUpdate(selectedConnection.id, input)}
+          onTestConnection={testConnection}
+          connection={selectedConnection}
+          loading={isUpdating}
+          businessId={props.businessId}
+        />
+      )}
 
       {/* Delete Modal */}
       <DeleteConnectionModal
