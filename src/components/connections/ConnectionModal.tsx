@@ -13,6 +13,7 @@ import {
 import { CheckIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useTranslation } from "react-i18next";
 import { 
+  getProviderDisplayName,
   Connection, 
   CreateConnectionInput, 
   UpdateConnectionInput, 
@@ -28,12 +29,14 @@ interface ConnectionModalProps {
   onTestConnection: (input: CreateConnectionInput) => Promise<boolean>;
   connection?: Connection; // If provided, this is an edit modal
   loading?: boolean;
+  businessId: string;
 }
 
 interface FormData {
   name: string;
   provider: ProviderType | "";
   authFields: Record<string, string>;
+  exportUrl: string;
 }
 
 const ConnectionModal: React.FC<ConnectionModalProps> = ({
@@ -43,6 +46,7 @@ const ConnectionModal: React.FC<ConnectionModalProps> = ({
   onTestConnection,
   connection,
   loading = false,
+  businessId,
 }) => {
   const { t } = useTranslation();
   const isEdit = !!connection;
@@ -51,6 +55,7 @@ const ConnectionModal: React.FC<ConnectionModalProps> = ({
     name: "",
     provider: "",
     authFields: {},
+    exportUrl: "",
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -72,7 +77,7 @@ const ConnectionModal: React.FC<ConnectionModalProps> = ({
     // "MQTT",
     // "FTP",
     // "SFTP",
-    "FootfallCam V9 API",
+    "FootfallCamV9API",
     "Other",
   ];
 
@@ -83,18 +88,21 @@ const ConnectionModal: React.FC<ConnectionModalProps> = ({
         const authFields: Record<string, string> = {
           user: connection.authParams.user || "",
           password: "", // Don't pre-fill password for security
+          exportUrl: connection.authParams.exportUrl || "",
         };
 
         setFormData({
           name: connection.name,
           provider: connection.provider,
           authFields,
+          exportUrl: connection.exportUrl || "",
         });
       } else {
         setFormData({
           name: "",
           provider: "",
           authFields: {},
+          exportUrl: "",
         });
       }
       setErrors({});
@@ -103,32 +111,20 @@ const ConnectionModal: React.FC<ConnectionModalProps> = ({
   }, [isOpen, connection]);
 
   const handleInputChange = (field: string, value: string) => {
-    if (field === "name") {
-      setFormData(prev => ({ ...prev, name: value }));
-    } else if (field === "provider") {
-      // Reset auth fields when provider changes
-      setFormData(prev => ({ 
-        ...prev, 
-        provider: value as ProviderType,
-        authFields: {}
-      }));
-    } else {
-      // Handle auth field changes
-      setFormData(prev => ({
-        ...prev,
-        authFields: { ...prev.authFields, [field]: value }
-      }));
-    }
-    
-    if (errors[field]) {
-      const newErrors = { ...errors };
-      delete newErrors[field];
-      setErrors(newErrors);
-    }
-    // Clear test results when form changes
-    if (testResult.status !== null) {
-      setTestResult({ status: null, message: "" });
-    }
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
+  const handleAuthChange = (field: string, value: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      authFields: {
+        ...prev.authFields,
+        [field]: value,
+      },
+    }));
   };
 
   const testConnection = async () => {
@@ -161,8 +157,11 @@ const ConnectionModal: React.FC<ConnectionModalProps> = ({
       const testInput: CreateConnectionInput = {
         name: formData.name,
         provider,
+        businessId: parseInt(businessId, 10),
         authParams,
+        exportUrl: formData.exportUrl,
       };
+      console.log(testInput);
       
       const success = await onTestConnection(testInput);
       
@@ -226,8 +225,11 @@ const ConnectionModal: React.FC<ConnectionModalProps> = ({
     const submitData: CreateConnectionInput | UpdateConnectionInput = {
       name: formData.name,
       provider,
+      businessId: parseInt(businessId, 10),
       authParams,
+      exportUrl: formData.exportUrl,
     };
+    console.log("Data to submit: ", submitData);
 
     const success = await onSubmit(submitData);
     if (success) {
@@ -273,7 +275,7 @@ const ConnectionModal: React.FC<ConnectionModalProps> = ({
             >
               {providers.map((provider) => (
                 <SelectItem key={provider}>
-                  {provider}
+                  {getProviderDisplayName(provider)}
                 </SelectItem>
               ))}
             </Select>
@@ -282,15 +284,15 @@ const ConnectionModal: React.FC<ConnectionModalProps> = ({
             {authFields.map((field) => (
               <Input
                 key={field.key}
-                label={t(`connections.${field.key}`, field.label)}
+                label={t(`connections.auth.${field.key}`, field.label)}
                 type={field.type}
                 placeholder={
                   isEdit && field.type === "password"
                     ? t("connections.sensitiveFieldEditPlaceholder", "Leave empty to keep current value")
-                    : t(`connections.${field.key}Placeholder`, field.placeholder)
+                    : t(`connections.auth.${field.key}Placeholder`, field.placeholder)
                 }
                 value={formData.authFields[field.key] || ""}
-                onChange={(e) => handleInputChange(field.key, e.target.value)}
+                onChange={(e) => handleAuthChange(field.key, e.target.value)}
                 isInvalid={!!errors[field.key]}
                 errorMessage={errors[field.key]}
                 isRequired={field.required && !isEdit}
@@ -301,6 +303,18 @@ const ConnectionModal: React.FC<ConnectionModalProps> = ({
                 }
               />
             ))}
+
+            {formData.provider === 'FootfallCamV9API' && (
+              <Input
+                label={t("connections.auth.exportUrl", "Export URL")}
+                placeholder={t("connections.auth.exportUrlPlaceholder", "Enter export URL")}
+                value={formData.exportUrl}
+                onChange={(e) => handleInputChange("exportUrl", e.target.value)}
+                isInvalid={!!errors.exportUrl}
+                errorMessage={errors.exportUrl}
+                isRequired
+              />
+            )}
 
             {/* Test Connection Section */}
             <div className="space-y-2">

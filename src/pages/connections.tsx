@@ -58,13 +58,13 @@ export default function ConnectionsPage(props: ConnectionsPageProps) {
     }
   };
 
-  const handleUpdate = async (input: CreateConnectionInput | UpdateConnectionInput): Promise<boolean> => {
+  const handleUpdate = async (id: string, input: CreateConnectionInput | UpdateConnectionInput): Promise<boolean> => {
     if (!selectedConnection) return false;
     
     const updateInput = input as UpdateConnectionInput;
     setIsUpdating(true);
     try {
-      const result = await updateConnection(selectedConnection.id, updateInput);
+      const result = await updateConnection(id, updateInput);
       if (result) {
         addToast({
           title: t("connections.updateSuccess", "Connection Updated"),
@@ -167,16 +167,18 @@ export default function ConnectionsPage(props: ConnectionsPageProps) {
         onSubmit={handleCreate}
         onTestConnection={testConnection}
         loading={isCreating}
+        businessId={props.businessId}
       />
 
       {/* Edit Modal */}
       <ConnectionModal
         isOpen={isEditModalOpen}
         onClose={handleCloseModals}
-        onSubmit={handleUpdate}
+        onSubmit={(input) => handleUpdate(selectedConnection?.id || '', input)}
         onTestConnection={testConnection}
         connection={selectedConnection || undefined}
         loading={isUpdating}
+        businessId={props.businessId}
       />
 
       {/* Delete Modal */}

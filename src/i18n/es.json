@@ -451,6 +451,14 @@
     "deleteSuccessDesc": "La conexión ha sido borrada correctamente",
     "deleteError": "No se pudo borrar la conexión",
     "invalidBusinessId": "ID de empresa inválido",
-    "businessNotFound": "Empresa no encontrada"
+    "businessNotFound": "Empresa no encontrada",
+    "auth": {
+      "user": "Usuario",
+      "password": "Password",
+      "exportUrl": "Export URL",
+      "userPlaceholder": "Enter username",
+      "passwordPlaceholder": "Enter password",
+      "exportUrlPlaceholder": "Enter export URL"
+    }
   }
 }

@@ -50,6 +50,14 @@ export function useFetchData() {
                 total_count_in: existing.total_count_in + point.total_count_in,
                 total_count_out:
                   existing.total_count_out + point.total_count_out,
+                outsideTraffic:
+                  (existing.outsideTraffic || 0) + (point.outsideTraffic || 0),
+                avgVisitDuration:
+                  (existing.avgVisitDuration || 0) +
+                  (point.avgVisitDuration || 0),
+                returningCustomer:
+                  (existing.returningCustomer || 0) +
+                  (point.returningCustomer || 0),
               });
             } else {
               mergedMap.set(point.timestamp, { ...point });
