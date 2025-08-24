@@ -14,7 +14,7 @@ export function useFetchNecessity() {
 
       // First fetch case
       if (!fetchedDateRange) {
-        // console.log("First fetch - no previously fetched data");
+        console.log("First fetch - no previously fetched data");
         return true;
       }
 
@@ -24,7 +24,7 @@ export function useFetchNecessity() {
         (isAfter(dateRange.end, fetchedDateRange.end) &&
           !isAfter(dateRange.end, new Date()))
       ) {
-        // console.log("New range extends beyond fetched range");
+        console.log("New range extends beyond fetched range");
         return true;
       }
 
