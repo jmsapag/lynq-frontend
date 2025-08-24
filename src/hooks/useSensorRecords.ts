@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import {
   SensorDataPoint,
   TransformedSensorData,
@@ -33,7 +33,6 @@ export function useSensorRecords(
     rawData,
     groupBy,
     aggregationType,
-    needToFetch,
   } = sensorRecordsFormData;
   const [data, setData] = useState<TransformedSensorData>({
     timestamps: [],
@@ -43,6 +42,7 @@ export function useSensorRecords(
   const [prevSensorIds, setPrevSensorIds] = useState<number[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const isProcessingRef = useRef<boolean>(false);
 
   // Custom hooks
   const fetchData = useFetchData();
@@ -52,118 +52,147 @@ export function useSensorRecords(
   const transformData = useTransformData();
   const processData = useDataProcessing(timeSeriesAggregator, transformData);
 
-  // Process data when groupBy or aggregationType changes
-  useEffect(() => {
-    if (!dateRange || !rawData) return;
-
-    const filteredData = filterData(rawData, dateRange);
-    const processedData = processData(filteredData, groupBy);
-    setData(processedData);
-  }, [groupBy, aggregationType, dateRange, rawData, filterData, processData]);
-
-  // Main effect to fetch data when needed
-  useEffect(() => {
-    const fetchAndProcessData = async () => {
-      if (!dateRange || sensorIds.length === 0) return;
-
-      // Filter data in the requested range
-      const dataInRange = filterData(rawData, dateRange);
-
-      // Check if we need to fetch new data
-      const shouldFetch = checkFetchNecessity(
-        dateRange,
-        fetchedDateRange,
-        dataInRange,
-      );
-
-      setSensorRecordsFormData((prev: SensorRecordsFormData) => {
-        return {
-          ...prev,
-          needToFetch: shouldFetch,
-        };
-      });
-
-      if (prevSensorIds !== sensorIds) {
-        setSensorRecordsFormData((prev: SensorRecordsFormData) => ({
-          ...prev,
-          fetchedDateRange: null,
-          rawData: [],
-        }));
-        setPrevSensorIds(sensorIds);
+  // Stable process function to avoid dependency issues
+  const processDataCallback = useCallback(
+    async (
+      currentDateRange: { start: Date; end: Date },
+      currentSensorIds: number[],
+      currentRawData: SensorDataPoint[],
+      currentFetchedDateRange: { start: Date; end: Date } | null,
+    ) => {
+      // Early return if already processing
+      if (isProcessingRef.current) {
+        console.log("Already processing, skipping...");
+        return;
       }
 
-      if (shouldFetch) {
-        // Calculate optimal fetch range
-        const {
-          fetchStart,
-          fetchEnd,
-          shouldFetch: confirmFetch,
-        } = calculateFetchRange(dateRange, fetchedDateRange);
+      isProcessingRef.current = true;
+      console.log("Checking if data fetch is needed...");
 
-        if (!confirmFetch) {
+      try {
+        // Handle sensor IDs change
+        if (prevSensorIds.length > 0 && prevSensorIds.join(',') !== currentSensorIds.join(',')) {
           setSensorRecordsFormData((prev: SensorRecordsFormData) => ({
             ...prev,
-            needToFetch: false,
+            fetchedDateRange: null,
+            rawData: [],
           }));
-          return;
+          setPrevSensorIds(currentSensorIds);
+          return; // Exit early, will re-trigger with new data
         }
 
-        // Fetch and process data
-        setLoading(true);
-        const newData = await fetchData(
-          fetchStart,
-          fetchEnd,
-          sensorIds,
-          setError,
+        // Set prevSensorIds on first run
+        if (prevSensorIds.length === 0) {
+          setPrevSensorIds(currentSensorIds);
+        }
+
+        // Filter data in the requested range
+        const dataInRange = filterData(currentRawData, currentDateRange);
+
+        // Check if we need to fetch new data
+        const shouldFetch = checkFetchNecessity(
+          currentDateRange,
+          currentFetchedDateRange,
+          dataInRange,
         );
 
-        let dataToProcess: SensorDataPoint[] = [];
+        if (shouldFetch) {
+          console.log("New range extends beyond fetched range");
+          // Calculate optimal fetch range
+          const {
+            fetchStart,
+            fetchEnd,
+            shouldFetch: confirmFetch,
+          } = calculateFetchRange(currentDateRange, currentFetchedDateRange);
 
-        if (fetchedDateRange) {
-          // Merge with existing data
-          dataToProcess = [...rawData, ...newData];
+          if (!confirmFetch) {
+            // Process existing data
+            const processedData = processData(dataInRange, groupBy);
+            setData(processedData);
+            return;
+          }
 
-          // Update the fetched date range
-          const newStart = isBefore(dateRange.start, fetchedDateRange.start)
-            ? dateRange.start
-            : fetchedDateRange.start;
+          // Fetch and process data
+          setLoading(true);
+          const newData = await fetchData(
+            fetchStart,
+            fetchEnd,
+            currentSensorIds,
+            setError,
+          );
 
-          const newEnd = isAfter(dateRange.end, fetchedDateRange.end)
-            ? dateRange.end
-            : fetchedDateRange.end;
+          let dataToProcess: SensorDataPoint[] = [];
 
-          setSensorRecordsFormData((prev: SensorRecordsFormData) => ({
-            ...prev,
-            fetchedDateRange: { start: newStart, end: newEnd },
-          }));
+          if (currentFetchedDateRange) {
+            // Merge with existing data
+            dataToProcess = [...currentRawData, ...newData];
+
+            // Update the fetched date range
+            const newStart = isBefore(currentDateRange.start, currentFetchedDateRange.start)
+              ? currentDateRange.start
+              : currentFetchedDateRange.start;
+
+            const newEnd = isAfter(currentDateRange.end, currentFetchedDateRange.end)
+              ? currentDateRange.end
+              : currentFetchedDateRange.end;
+
+            setSensorRecordsFormData((prev: SensorRecordsFormData) => ({
+              ...prev,
+              fetchedDateRange: { start: newStart, end: newEnd },
+              rawData: dataToProcess,
+            }));
+          } else {
+            // First fetch
+            dataToProcess = newData;
+            setSensorRecordsFormData((prev: SensorRecordsFormData) => ({
+              ...prev,
+              fetchedDateRange: { start: currentDateRange.start, end: currentDateRange.end },
+              rawData: dataToProcess,
+            }));
+          }
+
+          setLoading(false);
+
+          // Process the data
+          const filteredData = filterData(dataToProcess, currentDateRange);
+          const processedData = processData(filteredData, groupBy);
+          setData(processedData);
         } else {
-          // First fetch
-          dataToProcess = newData;
-          setSensorRecordsFormData((prev: SensorRecordsFormData) => ({
-            ...prev,
-            fetchedDateRange: { start: dateRange.start, end: dateRange.end },
-          }));
+          // Use existing data - reprocess when groupBy or aggregationType changes
+          console.log("groupBy or aggregationType changed, reprocessing data");
+          const processedData = processData(dataInRange, groupBy);
+          setData(processedData);
         }
-
-        setSensorRecordsFormData((prev: SensorRecordsFormData) => ({
-          ...prev,
-          rawData: dataToProcess,
-        }));
-        setLoading(false);
-
-        // Process the data
-        const filteredData = filterData(dataToProcess, dateRange);
-        const processedData = processData(filteredData, groupBy);
-        setData(processedData);
-      } else {
-        // Use existing data
-        const processedData = processData(dataInRange, groupBy);
-        setData(processedData);
+      } finally {
+        isProcessingRef.current = false;
       }
-    };
+    },
+    [
+      fetchData,
+      checkFetchNecessity,
+      filterData,
+      processData,
+      setSensorRecordsFormData,
+      prevSensorIds,
+      groupBy,
+    ]
+  );
 
-    fetchAndProcessData();
-  }, [sensorIds, dateRange, groupBy, aggregationType, needToFetch, hourRange]);
+  // Effect to handle data changes
+  useEffect(() => {
+    if (!dateRange || sensorIds.length === 0) return;
+
+    processDataCallback(dateRange, sensorIds, rawData, fetchedDateRange);
+  }, [
+    dateRange?.start.getTime(),
+    dateRange?.end.getTime(),
+    sensorIds.join(','),
+    groupBy,
+    aggregationType,
+    hourRange?.start,
+    hourRange?.end,
+    processDataCallback,
+  ]);
 
   return { data, loading, error };
 }

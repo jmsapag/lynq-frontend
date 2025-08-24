@@ -45,58 +45,67 @@ class TicketsServiceImpl implements TicketsService {
 
   async list(businessId: string): Promise<Ticket[]> {
     // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 500));
-    return this.mockTickets.filter(ticket => ticket.businessId === parseInt(businessId));
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    return this.mockTickets.filter(
+      (ticket) => ticket.businessId === parseInt(businessId),
+    );
   }
 
-  async update(businessId: string, id: number, input: UpdateTicketInput): Promise<Ticket> {
+  async update(
+    businessId: string,
+    id: number,
+    input: UpdateTicketInput,
+  ): Promise<Ticket> {
     // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 600));
-    
+    await new Promise((resolve) => setTimeout(resolve, 600));
+
     const ticketIndex = this.mockTickets.findIndex(
-      ticket => ticket.id === id && ticket.businessId === parseInt(businessId)
+      (ticket) =>
+        ticket.id === id && ticket.businessId === parseInt(businessId),
     );
-    
+
     if (ticketIndex === -1) {
       throw new Error("Ticket not found");
     }
-    
+
     this.mockTickets[ticketIndex] = {
       ...this.mockTickets[ticketIndex],
       ...input,
       updatedAt: new Date().toISOString(),
     };
-    
+
     return this.mockTickets[ticketIndex];
   }
 
   async delete(businessId: string, id: number): Promise<void> {
     // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 400));
-    
+    await new Promise((resolve) => setTimeout(resolve, 400));
+
     const ticketIndex = this.mockTickets.findIndex(
-      ticket => ticket.id === id && ticket.businessId === parseInt(businessId)
+      (ticket) =>
+        ticket.id === id && ticket.businessId === parseInt(businessId),
     );
-    
+
     if (ticketIndex === -1) {
       throw new Error("Ticket not found");
     }
-    
+
     this.mockTickets.splice(ticketIndex, 1);
   }
 
   async getById(businessId: string, id: number): Promise<Ticket> {
     // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 300));
-    
+    await new Promise((resolve) => setTimeout(resolve, 300));
+
     const ticket = this.mockTickets.find(
-      ticket => ticket.id === id && ticket.businessId === parseInt(businessId)
+      (ticket) =>
+        ticket.id === id && ticket.businessId === parseInt(businessId),
     );
-    
+
     if (!ticket) {
       throw new Error("Ticket not found");
     }
-    
+
     return ticket;
   }
 }
@@ -116,36 +125,43 @@ export function useTickets(businessId: string) {
       const result = await ticketsService.list(businessId);
       setTickets(result);
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "Failed to load tickets"
-      );
+      setError(err instanceof Error ? err.message : "Failed to load tickets");
     } finally {
       setLoading(false);
     }
   };
 
   // Create ticket
-  const createTicket = async (input: CreateTicketInput): Promise<CreateTicketResponse> => {
+  const createTicket = async (
+    input: CreateTicketInput,
+  ): Promise<CreateTicketResponse> => {
     try {
       setError(null);
       const result = await ticketsService.create(input);
       return result;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Failed to create ticket";
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to create ticket";
       setError(errorMessage);
       throw new Error(errorMessage);
     }
   };
 
   // Update ticket
-  const updateTicket = async (id: number, input: UpdateTicketInput): Promise<Ticket> => {
+  const updateTicket = async (
+    id: number,
+    input: UpdateTicketInput,
+  ): Promise<Ticket> => {
     try {
       setError(null);
       const result = await ticketsService.update(businessId, id, input);
-      setTickets(prev => prev.map(ticket => ticket.id === id ? result : ticket));
+      setTickets((prev) =>
+        prev.map((ticket) => (ticket.id === id ? result : ticket)),
+      );
       return result;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Failed to update ticket";
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to update ticket";
       setError(errorMessage);
       throw new Error(errorMessage);
     }
@@ -156,9 +172,10 @@ export function useTickets(businessId: string) {
     try {
       setError(null);
       await ticketsService.delete(businessId, id);
-      setTickets(prev => prev.filter(ticket => ticket.id !== id));
+      setTickets((prev) => prev.filter((ticket) => ticket.id !== id));
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Failed to delete ticket";
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to delete ticket";
       setError(errorMessage);
       throw new Error(errorMessage);
     }
@@ -170,7 +187,8 @@ export function useTickets(businessId: string) {
       setError(null);
       return await ticketsService.getById(businessId, id);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Failed to get ticket";
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to get ticket";
       setError(errorMessage);
       throw new Error(errorMessage);
     }
@@ -191,4 +209,4 @@ export function useTickets(businessId: string) {
     deleteTicket,
     getTicketById,
   };
-} 
+}

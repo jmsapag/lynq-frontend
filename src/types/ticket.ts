@@ -31,7 +31,11 @@ export interface UpdateTicketInput {
 export interface TicketsService {
   list(businessId: string): Promise<Ticket[]>;
   create(input: CreateTicketInput): Promise<CreateTicketResponse>;
-  update(businessId: string, id: number, input: UpdateTicketInput): Promise<Ticket>;
+  update(
+    businessId: string,
+    id: number,
+    input: UpdateTicketInput,
+  ): Promise<Ticket>;
   delete(businessId: string, id: number): Promise<void>;
   getById(businessId: string, id: number): Promise<Ticket>;
 }

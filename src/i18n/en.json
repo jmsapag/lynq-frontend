@@ -11,7 +11,8 @@
     "user-management": "User Management",
     "locations": "Locations",
     "overview": "Overview",
-    "support": "Support"
+    "support": "Support",
+    "reports": "Reports"
   },
   "days": {
     "sunday": "Sunday",
@@ -106,7 +107,10 @@
       "dayOfWeek": "Day of Week",
       "peopleInStoreTitle": "People in Store",
       "netFlow": "Net Flow",
-      "numberOfPeople": "Number of People"
+      "numberOfPeople": "Number of People",
+      "cumulativeEntries": "Cumulative Entries",
+      "dailyReset": "Daily Reset",
+      "cumulativeNote": "Cumulative count resets daily at midnight"
     },
     "metrics": {
       "totalIn": "Total In",
@@ -474,5 +478,28 @@
     "deleteError": "Failed to delete connection",
     "invalidBusinessId": "Invalid business ID",
     "businessNotFound": "Business not found"
+  },
+  "reports": {
+    "configure": "Configure",
+    "modalTitle": "Configure Report",
+    "form": {
+      "type": "Report Type",
+      "locations": "Locations",
+      "dataDays": "Data Filter Days",
+      "timeRange": "Data Time Range",
+      "scheduleDays": "Schedule Days",
+      "executionTime": "Execution Time",
+      "timezone": "Timezone",
+      "enabled": "Enabled",
+      "save": "Save Configuration",
+      "start": "Start",
+      "end": "End"
+    },
+    "toasts": {
+      "saveSuccessTitle": "Configuration Saved",
+      "saveSuccessDesc": "The report configuration has been saved successfully.",
+      "saveErrorTitle": "Error Saving",
+      "saveErrorDesc": "There was an error saving the report configuration."
+    }
   }
 }

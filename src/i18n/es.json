@@ -10,7 +10,8 @@
     "profile": "Perfil",
     "user-management": "Gestión de Usuarios",
     "locations": "Ubicaciones",
-    "overview": "Resumen General"
+    "overview": "Resumen General",
+    "reports": "Reportes"
   },
   "days": {
     "sunday": "Domingo",
@@ -105,7 +106,10 @@
       "dayOfWeek": "Día de la Semana",
       "peopleInStoreTitle": "Personas en Tienda",
       "netFlow": "Flujo Neto",
-      "numberOfPeople": "Número de Personas"
+      "numberOfPeople": "Número de Personas",
+      "cumulativeEntries": "Entradas Acumuladas",
+      "dailyReset": "Reinicio Diario",
+      "cumulativeNote": "El conteo acumulado se reinicia diariamente a medianoche"
     },
     "metrics": {
       "totalIn": "Total Entradas",
@@ -471,6 +475,30 @@
     "deleteSuccessDesc": "La conexión ha sido borrada correctamente",
     "deleteError": "No se pudo borrar la conexión",
     "invalidBusinessId": "ID de empresa inválido",
+    "businessNotFound": "Empresa no encontrada"
+  },
+  "reports": {
+    "configure": "Configurar",
+    "modalTitle": "Configurar Reporte",
+    "form": {
+      "type": "Tipo de Reporte",
+      "locations": "Ubicaciones",
+      "dataDays": "Días para Filtro de Datos",
+      "timeRange": "Rango de Tiempo de Datos",
+      "scheduleDays": "Días de Programación",
+      "executionTime": "Hora de Ejecución",
+      "timezone": "Zona Horaria",
+      "enabled": "Habilitado",
+      "save": "Guardar Configuración",
+      "start": "Inicio",
+      "end": "Fin"
+    },
+    "toasts": {
+      "saveSuccessTitle": "Configuración Guardada",
+      "saveSuccessDesc": "La configuración del reporte se ha guardado correctamente.",
+      "saveErrorTitle": "Error al Guardar",
+      "saveErrorDesc": "Hubo un error al guardar la configuración del reporte."
+    },
     "businessNotFound": "Empresa no encontrada",
     "auth": {
       "user": "Usuario",

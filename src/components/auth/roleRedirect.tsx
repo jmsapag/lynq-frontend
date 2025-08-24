@@ -10,7 +10,7 @@ const RoleRedirect = () => {
     if (role === "LYNQ_TEAM") {
       navigate("/businesses", { replace: true });
     } else {
-      navigate("/overview", { replace: true });
+      navigate("/dashboard", { replace: true });
     }
   }, [navigate]);
 

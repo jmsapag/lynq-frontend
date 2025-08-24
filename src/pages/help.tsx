@@ -9,7 +9,7 @@ const HelpPage = () => {
   const [showTicketForm, setShowTicketForm] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  
+
   // Mock business ID - in a real app this would come from context or props
   const businessId = "1";
   const { error, createTicket } = useTickets(businessId);
@@ -19,7 +19,9 @@ const HelpPage = () => {
     setSuccessMessage(null);
     try {
       const result: CreateTicketResponse = await createTicket(input);
-      setSuccessMessage(t("help.ticketForm.success", { ticketId: result.ticketId }));
+      setSuccessMessage(
+        t("help.ticketForm.success", { ticketId: result.ticketId }),
+      );
       setShowTicketForm(false);
     } catch (error) {
       console.error("Failed to create ticket:", error);
@@ -41,7 +43,7 @@ const HelpPage = () => {
           <h5 className="text-l font-medium mb-2">{t("help.userGuide")}</h5>
           <p className="text-gray-600">{t("help.userGuideText")}</p>
         </section>
-        
+
         <section>
           <h5 className="text-l font-medium mb-2">{t("help.faq")}</h5>
           <p className="text-gray-600">{t("help.faqText")}</p>
@@ -50,17 +52,23 @@ const HelpPage = () => {
         <section>
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h5 className="text-l font-medium mb-1">{t("help.openTicket")}</h5>
-              <p className="text-gray-600 text-sm">{t("help.openTicketText")}</p>
+              <h5 className="text-l font-medium mb-1">
+                {t("help.openTicket")}
+              </h5>
+              <p className="text-gray-600 text-sm">
+                {t("help.openTicketText")}
+              </p>
             </div>
             <button
               onClick={() => setShowTicketForm(!showTicketForm)}
               className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
-              {showTicketForm ? t("help.ticketForm.cancel") : t("help.openTicket")}
+              {showTicketForm
+                ? t("help.ticketForm.cancel")
+                : t("help.openTicket")}
             </button>
           </div>
-          
+
           {showTicketForm && (
             <div className="mb-6">
               <TicketForm
