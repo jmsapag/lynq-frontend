@@ -213,6 +213,11 @@
       "last30Days": "Last 30 days",
       "custom": "Custom"
     },
+    "errors": {
+      "startDateAfterEndDate": "Start date cannot be after end date",
+      "endDateAfterToday": "End date cannot be in the future",
+      "endDateBeforeStartDate": "End date cannot be before start date"
+    },
     "comparison": {
       "label": "Comparison",
       "toggle": "Compare periods"

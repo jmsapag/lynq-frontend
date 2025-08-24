@@ -8,8 +8,13 @@ import {
   // TimeInput
 } from "@heroui/react";
 import { DatePicker, Button } from "@heroui/react";
-import { DateValue, Time } from "@internationalized/date";
-import { fromDate, getLocalTimeZone } from "@internationalized/date";
+import {
+  DateValue,
+  Time,
+  fromDate,
+  getLocalTimeZone,
+  today,
+} from "@internationalized/date";
 import SensorSelectionModal from "./sensors/SensorSelectionModal";
 import { SensorLocation } from "../../types/sensorLocation.ts";
 
@@ -73,6 +78,9 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
       ? fromDate(currentDateRange.end, getLocalTimeZone())
       : fromDate(new Date(), getLocalTimeZone());
   });
+
+  const [startDateError, setStartDateError] = useState<string | null>(null);
+  const [endDateError, setEndDateError] = useState<string | null>(null);
 
   const [selectedPeriod, setSelectedPeriod] = useState<PredefinedPeriod>(
     currentPredefinedPeriod,
@@ -139,6 +147,13 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
 
   const handleStartDateChange = (value: DateValue | null) => {
     if (value) {
+      if (endDate && value.compare(endDate) > 0) {
+        setStartDateError(t("filters.errors.startDateAfterEndDate"));
+        return;
+      }
+
+      setStartDateError(null);
+      setEndDateError(null);
       setSelectedPeriod("custom");
       if (onPredefinedPeriodChange) {
         onPredefinedPeriodChange("custom");
@@ -156,15 +171,26 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
 
   const handleEndDateChange = (value: DateValue | null) => {
     if (value) {
+      const todayDate = today(getLocalTimeZone());
+
+      if (value.compare(todayDate) > 0) {
+        setEndDateError(t("filters.errors.endDateAfterToday"));
+        return;
+      }
+
+      if (startDate && value.compare(startDate) < 0) {
+        setEndDateError(t("filters.errors.endDateBeforeStartDate"));
+        return;
+      }
+
+      setEndDateError(null);
+      setStartDateError(null);
+
       setSelectedPeriod("custom");
       if (onPredefinedPeriodChange) {
         onPredefinedPeriodChange("custom");
       }
 
-      const now = new Date().setHours(23, 59, 59, 999);
-      if (value.toDate(getLocalTimeZone()).getTime() > now) {
-        return;
-      }
       setEndDate(value);
       if (startDate) {
         const endDateObj = value.toDate(getLocalTimeZone());
@@ -264,6 +290,9 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
               onChange={handleStartDateChange}
               className="w-full"
               aria-label="Start Date"
+              maxValue={endDate}
+              isInvalid={!!startDateError}
+              errorMessage={startDateError}
             />
             <span className="text-gray-500">{t("filters.to")}</span>
             <DatePicker
@@ -274,6 +303,9 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
               onChange={handleEndDateChange}
               className="w-full"
               aria-label="End Date"
+              maxValue={today(getLocalTimeZone())}
+              isInvalid={!!endDateError}
+              errorMessage={endDateError}
             />
           </div>
         </div>
