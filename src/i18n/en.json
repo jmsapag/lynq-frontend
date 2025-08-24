@@ -107,7 +107,10 @@
       "dayOfWeek": "Day of Week",
       "peopleInStoreTitle": "People in Store",
       "netFlow": "Net Flow",
-      "numberOfPeople": "Number of People"
+      "numberOfPeople": "Number of People",
+      "cumulativeEntries": "Cumulative Entries",
+      "dailyReset": "Daily Reset",
+      "cumulativeNote": "Cumulative count resets daily at midnight"
     },
     "metrics": {
       "totalIn": "Total In",
