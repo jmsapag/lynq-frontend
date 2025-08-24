@@ -83,13 +83,13 @@ export const ChartWidgets = {
   ): WidgetConfig => ({
     id: "cumulative-people-chart",
     type: "cumulative-people-chart",
-    title: "People in Store",
-    translationKey: "dashboard.charts.peopleInStore",
+    title: "Cumulative Entries",
+    translationKey: "dashboard.charts.cumulativeEntries",
     category: "chart",
     component: (
       <ChartCard
-        title="People in Store (Cumulative)"
-        translationKey="dashboard.charts.peopleInStore"
+        title="Cumulative Entries (Daily Reset)"
+        translationKey="dashboard.charts.cumulativeEntries"
       >
         {params.chartData.categories.length === 0 ? (
           <NoDataMessage />

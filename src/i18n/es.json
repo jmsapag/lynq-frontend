@@ -106,7 +106,10 @@
       "dayOfWeek": "Día de la Semana",
       "peopleInStoreTitle": "Personas en Tienda",
       "netFlow": "Flujo Neto",
-      "numberOfPeople": "Número de Personas"
+      "numberOfPeople": "Número de Personas",
+      "cumulativeEntries": "Entradas Acumuladas",
+      "dailyReset": "Reinicio Diario",
+      "cumulativeNote": "El conteo acumulado se reinicia diariamente a medianoche"
     },
     "metrics": {
       "totalIn": "Total Entradas",
