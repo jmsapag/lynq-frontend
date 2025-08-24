@@ -24,7 +24,6 @@ export interface Connection extends BaseConnection {
   name: string;
   provider: ProviderType;
   authParams: AuthParams; // user, password
-  exportUrl?: string; // for FootfallCam
 }
 
 export interface CreateConnectionInput {
@@ -32,13 +31,11 @@ export interface CreateConnectionInput {
   provider: ProviderType;
   businessId: number;
   authParams: AuthParams;
-  exportUrl?: string;
 }
 
 export interface UpdateConnectionInput {
   name?: string;
   authParams?: Partial<AuthParams>;
-  exportUrl?: string;
 }
 
 export interface ConnectionsService {
