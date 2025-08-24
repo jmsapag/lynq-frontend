@@ -38,7 +38,6 @@ interface FormData {
   name: string;
   provider: ProviderType | "";
   authFields: Record<string, string>;
-  exportUrl: string;
 }
 
 const ConnectionModal: React.FC<ConnectionModalProps> = ({
@@ -57,7 +56,6 @@ const ConnectionModal: React.FC<ConnectionModalProps> = ({
     name: "",
     provider: "",
     authFields: {},
-    exportUrl: "",
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -96,14 +94,12 @@ const ConnectionModal: React.FC<ConnectionModalProps> = ({
           name: connection.name,
           provider: connection.provider,
           authFields,
-          exportUrl: connection.exportUrl || "",
         });
       } else {
         setFormData({
           name: "",
           provider: "",
           authFields: {},
-          exportUrl: "",
         });
       }
       setErrors({});
@@ -170,7 +166,6 @@ const ConnectionModal: React.FC<ConnectionModalProps> = ({
         provider,
         businessId: parseInt(businessId, 10),
         authParams,
-        exportUrl: formData.exportUrl,
       };
 
       const success = await onTestConnection(testInput);
@@ -257,7 +252,6 @@ const ConnectionModal: React.FC<ConnectionModalProps> = ({
       provider,
       businessId: parseInt(businessId, 10),
       authParams,
-      exportUrl: formData.exportUrl,
     };
  
     const success = await onSubmit(submitData);
@@ -342,18 +336,6 @@ const ConnectionModal: React.FC<ConnectionModalProps> = ({
                 }
               />
             ))}
-
-            {formData.provider === 'FootfallCamV9API' && (
-              <Input
-                label={t("connections.auth.exportUrl", "Export URL")}
-                placeholder={t("connections.auth.exportUrlPlaceholder", "Enter export URL")}
-                value={formData.exportUrl}
-                onChange={(e) => handleInputChange("exportUrl", e.target.value)}
-                isInvalid={!!errors.exportUrl}
-                errorMessage={errors.exportUrl}
-                isRequired
-              />
-            )}
 
             {/* Test Connection Section */}
             <div className="space-y-2">
