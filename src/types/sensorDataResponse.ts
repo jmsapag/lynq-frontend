@@ -17,6 +17,10 @@ export type TransformedSensorData = {
   timestamps: string[];
   in: number[];
   out: number[];
+  returningCustomers: number[];
+  avgVisitDuration: number[];
+  outsideTraffic: number[];
+  affluence: number[]; // Calculated as in/outsideTraffic
 };
 
 export type GroupByTimeAmount =
