@@ -83,6 +83,9 @@
     "exportAsCSV": "Export as CSV"
   },
   "dashboard": {
+    "percentage": "Percentage (%)",
+    "quantity": "Quantity",
+    "minutes": "Minutes",
     "filters": {
       "selectDates": "Select dates",
       "startDate": "Start date",
@@ -152,6 +155,9 @@
       "affluenceDescription": "Percentage of entries relative to outside traffic (Entries/Outside traffic)",
       "noDataAvailable": "Data not available for this period",
       "footfallcamDataRequired": "Requires FootfallCam analytics data",
+      "percentage": "Percentage (%)",
+      "quantity": "Quantity",
+      "minutes": "Minutes",
       "resetLayout": "Reset Layout",
       "saveLayout": "Save Layout",
       "editLayout": "Edit Layout",

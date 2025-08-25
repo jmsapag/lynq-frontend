@@ -1,6 +1,7 @@
 import React from "react";
 import { BaseChart } from "./base-chart.tsx";
 import type { EChartsOption } from "echarts";
+import { useTranslation } from "react-i18next";
 import { GroupByTimeAmount } from "../../../types/sensorDataResponse.ts";
 
 interface AffluenceChartProps {
@@ -17,6 +18,7 @@ export const AffluenceChart: React.FC<AffluenceChartProps> = ({
   groupBy,
   className,
 }) => {
+  const { t } = useTranslation();
   const start: number = (() => {
     switch (groupBy) {
       case "month":
@@ -55,11 +57,11 @@ export const AffluenceChart: React.FC<AffluenceChartProps> = ({
       formatter: (params: any) => {
         const param = Array.isArray(params) ? params[0] : params;
         const percentage = parseFloat(param.value).toFixed(2);
-        return `${param.axisValue}<br/>Afluencia: ${percentage}%`;
+        return `${param.axisValue}<br/>${t("dashboard.affluence.title")}: ${percentage}%`;
       },
     },
     legend: {
-      data: ["Afluencia (Entradas/Tráfico exterior)"],
+      data: [t("dashboard.charts.affluence.title")],
     },
     xAxis: {
       type: "category",
@@ -67,7 +69,7 @@ export const AffluenceChart: React.FC<AffluenceChartProps> = ({
     },
     yAxis: {
       type: "value",
-      name: "Porcentaje (%)",
+      name: t("dashboard.percentage"),
       nameLocation: "middle",
       nameGap: 40,
       min: 0,
@@ -83,7 +85,7 @@ export const AffluenceChart: React.FC<AffluenceChartProps> = ({
     ],
     series: [
       {
-        name: "Afluencia",
+        name: t("dashboard.charts.affluence.title"),
         type: "line",
         data: data.values,
         smooth: true,
@@ -121,7 +123,7 @@ export const AffluenceChart: React.FC<AffluenceChartProps> = ({
       left: "center",
       top: "middle",
       style: {
-        text: "Datos no disponibles\n(Requiere tráfico exterior)",
+        text: `${t("dashboard.noDataAvailable")}\n(${t("dashboard.footfallcamDataRequired")})`,
         fontSize: 16,
         fill: "#6B7280",
       },

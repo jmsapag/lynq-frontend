@@ -1,6 +1,7 @@
 import React from "react";
 import { BaseChart } from "./base-chart.tsx";
 import type { EChartsOption } from "echarts";
+import { useTranslation } from "react-i18next";
 import { GroupByTimeAmount } from "../../../types/sensorDataResponse.ts";
 
 interface AvgVisitDurationChartProps {
@@ -17,6 +18,7 @@ export const AvgVisitDurationChart: React.FC<AvgVisitDurationChartProps> = ({
   groupBy,
   className,
 }) => {
+  const { t } = useTranslation();
   const start: number = (() => {
     switch (groupBy) {
       case "month":
@@ -55,11 +57,11 @@ export const AvgVisitDurationChart: React.FC<AvgVisitDurationChartProps> = ({
       formatter: (params: any) => {
         const param = Array.isArray(params) ? params[0] : params;
         const duration = parseFloat(param.value).toFixed(2);
-        return `${param.axisValue}<br/>Duración promedio: ${duration} min`;
+        return `${param.axisValue}<br/>${t("dashboard.avgVisitDuration.title")}: ${duration} min`;
       },
     },
     legend: {
-      data: ["Tiempo promedio en local"],
+      data: [t("dashboard.charts.avgVisitDuration.title")],
     },
     xAxis: {
       type: "category",
@@ -67,7 +69,7 @@ export const AvgVisitDurationChart: React.FC<AvgVisitDurationChartProps> = ({
     },
     yAxis: {
       type: "value",
-      name: "Minutos",
+      name: t("dashboard.minutes"),
       nameLocation: "middle",
       nameGap: 40,
     },
@@ -81,7 +83,7 @@ export const AvgVisitDurationChart: React.FC<AvgVisitDurationChartProps> = ({
     ],
     series: [
       {
-        name: "Tiempo promedio en local",
+        name: t("dashboard.charts.avgVisitDuration.title"),
         type: "line",
         data: data.values,
         smooth: true,

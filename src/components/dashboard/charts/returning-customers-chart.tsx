@@ -1,6 +1,7 @@
 import React from "react";
 import { BaseChart } from "./base-chart.tsx";
 import type { EChartsOption } from "echarts";
+import { useTranslation } from "react-i18next";
 import { GroupByTimeAmount } from "../../../types/sensorDataResponse.ts";
 
 interface ReturningCustomersChartProps {
@@ -17,6 +18,7 @@ export const ReturningCustomersChart: React.FC<ReturningCustomersChartProps> = (
   groupBy,
   className,
 }) => {
+  const { t } = useTranslation();
   const start: number = (() => {
     switch (groupBy) {
       case "month":
@@ -54,11 +56,11 @@ export const ReturningCustomersChart: React.FC<ReturningCustomersChartProps> = (
       },
       formatter: (params: any) => {
         const param = Array.isArray(params) ? params[0] : params;
-        return `${param.axisValue}<br/>Clientes que retornan: ${param.value}`;
+        return `${param.axisValue}<br/>${t("dashboard.returningCustomers.title")}: ${param.value}`;
       },
     },
     legend: {
-      data: ["Clientes que retornan"],
+      data: [t("dashboard.charts.returningCustomers.title")],
     },
     xAxis: {
       type: "category",
@@ -66,7 +68,7 @@ export const ReturningCustomersChart: React.FC<ReturningCustomersChartProps> = (
     },
     yAxis: {
       type: "value",
-      name: "Cantidad",
+      name: t("dashboard.quantity"),
       nameLocation: "middle",
       nameGap: 40,
     },
@@ -80,7 +82,7 @@ export const ReturningCustomersChart: React.FC<ReturningCustomersChartProps> = (
     ],
     series: [
       {
-        name: "Clientes que retornan",
+        name: t("dashboard.charts.returningCustomers.title"),
         type: "bar",
         data: data.values,
         itemStyle: {

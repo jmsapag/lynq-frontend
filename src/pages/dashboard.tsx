@@ -174,18 +174,6 @@ const Dashboard = () => {
     }));
   };
 
-  const handleRefreshData = () => {
-    const now = new Date();
-    localStorage.setItem("lastUpdated", now.toISOString());
-
-    setSensorRecordsFormData((prev) => ({
-      ...prev,
-      dateRange: {
-        start: prev.dateRange.start,
-        end: new Date(), // today
-      },
-    }));
-  };
 
   const handleHourRangeChange = (start: Time, end: Time) => {
     setSensorRecordsFormData((prev) => ({
