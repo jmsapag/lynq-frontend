@@ -54,7 +54,6 @@ function getFirstFetchedDateRange() {
 }
 
 const Dashboard = () => {
-  const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
   const [sensorMap, setSensorMap] = useState<Map<number, string>>(new Map());
   const [selectedPeriod, setSelectedPeriod] =
     useState<PredefinedPeriod>("last7Days");
@@ -178,7 +177,6 @@ const Dashboard = () => {
   const handleRefreshData = () => {
     const now = new Date();
     localStorage.setItem("lastUpdated", now.toISOString());
-    setLastUpdated(now);
 
     setSensorRecordsFormData((prev) => ({
       ...prev,
@@ -197,9 +195,11 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
+    // Store lastUpdated for future reference if needed
     const storedLastUpdated = localStorage.getItem("lastUpdated");
-    if (storedLastUpdated) {
-      setLastUpdated(new Date(storedLastUpdated));
+    if (!storedLastUpdated) {
+      // Set initial lastUpdated if it doesn't exist
+      localStorage.setItem("lastUpdated", new Date().toISOString());
     }
   }, []);
 
@@ -369,9 +369,7 @@ const Dashboard = () => {
                 }
                 hourRange={sensorRecordsFormData.hourRange}
                 onHourRangeChange={handleHourRangeChange}
-                onRefreshData={handleRefreshData}
                 locations={locations}
-                lastUpdated={lastUpdated}
                 showPredefinedPeriods={true}
                 currentPredefinedPeriod={selectedPeriod}
                 onPredefinedPeriodChange={handlePredefinedPeriodChange}

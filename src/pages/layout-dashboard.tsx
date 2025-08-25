@@ -21,7 +21,6 @@ function getFirstFetchedDateRange() {
 }
 
 const LayoutDashboardPage: React.FC = () => {
-  const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
   const [sensorMap, setSensorMap] = useState<Map<number, string>>(new Map());
 
   const {
@@ -55,6 +54,9 @@ const LayoutDashboardPage: React.FC = () => {
         totalIn: 0,
         totalOut: 0,
         entryRate: 0,
+        totalReturningCustomers: 0,
+        totalAvgVisitDuration: 0,
+        totalAffluence: 0,
       };
     }
 
@@ -72,7 +74,38 @@ const LayoutDashboardPage: React.FC = () => {
     const entryRate =
       totalMovements > 0 ? Math.round((totalIn / totalMovements) * 100) : 0;
 
-    return { totalIn, totalOut, entryRate };
+    // Calculate FootfallCam metrics with optional data handling
+    const totalReturningCustomers = sensorData.returningCustomers
+      ? sensorData.returningCustomers.reduce(
+          (sum: number, value: number) => sum + value,
+          0,
+        )
+      : 0;
+
+    const totalAvgVisitDuration = sensorData.avgVisitDuration
+      ? Math.round(
+          sensorData.avgVisitDuration.reduce(
+            (sum: number, value: number) => sum + value,
+            0,
+          ) / sensorData.avgVisitDuration.length
+        )
+      : 0;
+
+    const totalAffluence = sensorData.affluence
+      ? sensorData.affluence.reduce(
+          (sum: number, value: number) => sum + value,
+          0,
+        )
+      : 0;
+
+    return { 
+      totalIn, 
+      totalOut, 
+      entryRate,
+      totalReturningCustomers,
+      totalAvgVisitDuration,
+      totalAffluence,
+    };
   }, [sensorData]);
 
   const handleDateRangeChange = (startDate: Date, endDate: Date) => {
@@ -87,14 +120,6 @@ const LayoutDashboardPage: React.FC = () => {
       ...prev,
       hourRange: { start, end },
     }));
-  };
-
-  const handleRefreshData = async () => {
-    setSensorRecordsFormData((prev: SensorRecordsFormData) => ({
-      ...prev,
-      needToFetch: true,
-    }));
-    setLastUpdated(new Date());
   };
 
   // Handle custom events for groupBy changes
@@ -190,9 +215,7 @@ const LayoutDashboardPage: React.FC = () => {
         hourRange={sensorRecordsFormData.hourRange}
         onHourRangeChange={handleHourRangeChange}
         onAggregationChange={handleAggregationChange}
-        onRefreshData={handleRefreshData}
         locations={locations}
-        lastUpdated={lastUpdated}
       />
 
       <LayoutDashboard

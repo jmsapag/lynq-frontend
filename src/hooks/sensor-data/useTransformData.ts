@@ -14,11 +14,26 @@ function useTransformData() {
 
     const inValues = data.map((point) => point.total_count_in);
     const outValues = data.map((point) => point.total_count_out);
+    
+    // Handle optional FootfallCam metrics - these might not be present in all data points
+    const returningCustomers = data.map((point) => point.returningCustomer ?? 0);
+    const avgVisitDuration = data.map((point) => point.avgVisitDuration ?? 0);
+    const outsideTraffic = data.map((point) => point.outsideTraffic ?? 0);
+    
+    // Calculate affluence as in/outsideTraffic - only when outsideTraffic > 0
+    const affluence = data.map((point) => {
+      const traffic = point.outsideTraffic ?? 0;
+      return traffic > 0 ? (point.total_count_in / traffic) * 100 : 0;
+    });
 
     return {
       timestamps,
       in: inValues,
       out: outValues,
+      returningCustomers,
+      avgVisitDuration,
+      outsideTraffic,
+      affluence,
     };
   }, []);
 }

@@ -38,6 +38,10 @@ export function useSensorRecords(
     timestamps: [],
     in: [],
     out: [],
+    returningCustomers: [],
+    avgVisitDuration: [],
+    outsideTraffic: [],
+    affluence: [],
   });
   const [prevSensorIds, setPrevSensorIds] = useState<number[]>([]);
   const [loading, setLoading] = useState<boolean>(false);

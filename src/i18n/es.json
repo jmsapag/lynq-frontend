@@ -96,6 +96,9 @@
       "trafficHeatmap": "Mapa de Calor (Por Día y Hora)",
       "entryRateOverTime": "Tasa de Entrada a lo Largo del Tiempo",
       "peopleInStore": "Personas en Tienda (Acumulativo)",
+      "returningCustomersChart": "Clientes que Retornan a lo Largo del Tiempo",
+      "avgVisitDurationChart": "Tiempo Promedio de Visita a lo Largo del Tiempo",
+      "affluenceChart": "Afluencia a lo Largo del Tiempo",
       "entries": "Entradas",
       "exits": "Salidas",
       "showEntries": "Mostrar Entradas",
@@ -109,7 +112,19 @@
       "numberOfPeople": "Número de Personas",
       "cumulativeEntries": "Entradas Acumuladas",
       "dailyReset": "Reinicio Diario",
-      "cumulativeNote": "El conteo acumulado se reinicia diariamente a medianoche"
+      "cumulativeNote": "El conteo acumulado se reinicia diariamente a medianoche",
+      "returningCustomers": {
+        "title": "Clientes que Retornan",
+        "description": "Evolución de clientes que regresan al establecimiento"
+      },
+      "avgVisitDuration": {
+        "title": "Tiempo Promedio en Local",
+        "description": "Tiempo promedio que los clientes permanecen en el establecimiento"
+      },
+      "affluence": {
+        "title": "Afluencia",
+        "description": "Porcentaje de entradas respecto al tráfico exterior (Entradas/Tráfico exterior)"
+      }
     },
     "metrics": {
       "totalIn": "Total Entradas",
@@ -128,6 +143,14 @@
       "mostCrowdedDayDescription": "Día del período seleccionado con mayor cantidad de entradas registradas.",
       "leastCrowdedDay": "Día menos concurrido",
       "leastCrowdedDayDescription": "Día del período seleccionado con menor cantidad de entradas registradas.",
+      "returningCustomers": "Clientes que Retornan",
+      "returningCustomersDescription": "Total de clientes que han regresado al establecimiento",
+      "avgVisitDuration": "Tiempo Promedio en Local",
+      "avgVisitDurationDescription": "Tiempo promedio que los clientes permanecen en el establecimiento",
+      "affluence": "Afluencia",
+      "affluenceDescription": "Porcentaje de entradas respecto al tráfico exterior (Entradas/Tráfico exterior)",
+      "noDataAvailable": "Datos no disponibles para este período",
+      "footfallcamDataRequired": "Requiere datos de analíticas FootfallCam",
       "resetLayout": "Restablecer Diseño",
       "saveLayout": "Guardar Diseño",
       "editLayout": "Editar Diseño",

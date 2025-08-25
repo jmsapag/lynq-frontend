@@ -12,7 +12,13 @@ export type DashboardWidgetType =
   | "daily-average-out"
   | "most-crowded-day"
   | "least-crowded-day"
-  | "percentage-change";
+  | "percentage-change"
+  | "returning-customers"
+  | "avg-visit-duration"
+  | "affluence"
+  | "returning-customers-chart"
+  | "avg-visit-duration-chart"
+  | "affluence-chart";
 
 export interface WidgetConfig {
   id: string;
@@ -33,6 +39,9 @@ export interface WidgetFactoryParams {
     leastCrowdedDay: { date: Date; value: number } | null;
     entryRate: number;
     percentageChange: number;
+    returningCustomers: number;
+    avgVisitDuration: number;
+    affluence: number;
   };
   chartData: {
     categories: string[];
@@ -49,6 +58,9 @@ export interface WidgetFactoryParams {
     entryRate?: import("../../../../utils/comparisonUtils").MetricComparison;
     dailyAverageIn?: import("../../../../utils/comparisonUtils").MetricComparison;
     dailyAverageOut?: import("../../../../utils/comparisonUtils").MetricComparison;
+    returningCustomers?: import("../../../../utils/comparisonUtils").MetricComparison;
+    avgVisitDuration?: import("../../../../utils/comparisonUtils").MetricComparison;
+    affluence?: import("../../../../utils/comparisonUtils").MetricComparison;
   };
   comparisonPeriod?: { start: Date; end: Date };
 }
