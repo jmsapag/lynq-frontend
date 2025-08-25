@@ -18,6 +18,9 @@ interface OverviewMetrics {
   percentageChange: number;
   mostCrowdedDay: { date: Date; value: number } | null;
   leastCrowdedDay: { date: Date; value: number } | null;
+  returningCustomers: number;
+  avgVisitDuration: number;
+  affluence: number;
 }
 
 interface OverviewMetricsComparisons {
@@ -120,11 +123,24 @@ export const useOverviewMetrics = (
     [],
   );
 
-  const fallbackSetter = useMemo(() => () => {}, []);
+  const fallbackSetter = useMemo(() => (_: (prev: SensorRecordsFormData) => SensorRecordsFormData) => {
+    // No-op function for when comparison data is not needed
+  }, []);
+
+  // Create a wrapper for setComparisonFormData to match the expected signature
+  const comparisonSetter = useMemo(() => (formData: (prev: SensorRecordsFormData) => SensorRecordsFormData) => {
+    setComparisonFormData((prevFormData) => {
+      if (prevFormData === null) {
+        // If previous state is null, we can't call the formData function
+        return null;
+      }
+      return formData(prevFormData);
+    });
+  }, []);
 
   const { data: comparisonSensorData } = useSensorRecords(
     comparisonFormData || fallbackFormData,
-    comparisonFormData ? setComparisonFormData : fallbackSetter,
+    comparisonFormData ? comparisonSetter : fallbackSetter,
   );
   const metrics = useMemo(() => {
     if (!sensorData || !sensorData.in || !sensorData.out) {
@@ -138,6 +154,9 @@ export const useOverviewMetrics = (
           percentageChange: 0,
           mostCrowdedDay: null,
           leastCrowdedDay: null,
+          returningCustomers: 0,
+          avgVisitDuration: 0,
+          affluence: 0,
         } as OverviewMetrics,
         comparisons: {} as OverviewMetricsComparisons,
       };
@@ -231,6 +250,32 @@ export const useOverviewMetrics = (
           : null;
     }
 
+    // Calculate FootfallCam metrics with optional data handling
+    const totalReturningCustomers = sensorData.returningCustomers
+      ? sensorData.returningCustomers.reduce(
+          (sum: number, value: number) => sum + value,
+          0,
+        )
+      : 0;
+
+    const totalAvgVisitDuration = sensorData.avgVisitDuration
+      ? Math.round(
+          sensorData.avgVisitDuration.reduce(
+            (sum: number, value: number) => sum + value,
+            0,
+          ) / sensorData.avgVisitDuration.length
+        )
+      : 0;
+
+    const totalAffluence = sensorData.affluence
+      ? Math.round(
+          sensorData.affluence.reduce(
+            (sum: number, value: number) => sum + value,
+            0,
+          ) / sensorData.affluence.length
+        )
+      : 0;
+
     const currentMetrics = {
       totalIn,
       totalOut,
@@ -240,6 +285,9 @@ export const useOverviewMetrics = (
       percentageChange: Math.round(percentageChange),
       mostCrowdedDay,
       leastCrowdedDay,
+      returningCustomers: totalReturningCustomers,
+      avgVisitDuration: totalAvgVisitDuration,
+      affluence: totalAffluence,
     };
 
     // Calculate comparison metrics if comparison data is available

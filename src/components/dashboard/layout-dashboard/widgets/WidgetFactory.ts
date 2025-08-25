@@ -13,6 +13,10 @@ export const createWidgetConfig = (
     ChartWidgets.createCumulativePeopleChartWidget(params),
     ChartWidgets.createTrafficHeatmapWidget(params),
     ChartWidgets.createEntryRateChartWidget(params),
+    // FootfallCam Chart Widgets
+    ChartWidgets.createReturningCustomersChartWidget(params),
+    ChartWidgets.createAvgVisitDurationChartWidget(params),
+    ChartWidgets.createAffluenceChartWidget(params),
   ];
 };
 
@@ -28,5 +32,9 @@ export const createWidgetConfigOverview = (
     MetricWidgets.createMostCrowdedDayWidget(params),
     MetricWidgets.createLeastCrowdedDayWidget(params),
     MetricWidgets.createPercentageChangeWidget(params),
+    // FootfallCam Metric Widgets
+    MetricWidgets.createReturningCustomersWidget(params),
+    MetricWidgets.createAvgVisitDurationWidget(params),
+    MetricWidgets.createAffluenceWidget(params),
   ];
 };
