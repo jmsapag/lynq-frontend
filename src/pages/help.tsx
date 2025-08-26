@@ -1,97 +1,80 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { TicketForm } from "../components/help/TicketForm";
+import { Button, addToast } from "@heroui/react";
 import { useTickets } from "../hooks/useTickets";
 import { CreateTicketInput, CreateTicketResponse } from "../types/ticket";
+import CreateTicketModal from "../components/help/CreateTicketModal";
 
 const HelpPage = () => {
   const { t } = useTranslation();
-  const [showTicketForm, setShowTicketForm] = useState(false);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   // Mock business ID - in a real app this would come from context or props
   const businessId = "1";
-  const { error, createTicket } = useTickets(businessId);
+  const { createTicket } = useTickets(businessId);
 
   const handleSubmitTicket = async (input: CreateTicketInput) => {
     setIsSubmitting(true);
-    setSuccessMessage(null);
     try {
       const result: CreateTicketResponse = await createTicket(input);
-      setSuccessMessage(
-        t("help.ticketForm.success", { ticketId: result.ticketId }),
-      );
-      setShowTicketForm(false);
-    } catch (error) {
-      console.error("Failed to create ticket:", error);
-      // Error is handled by the hook and displayed below
+      addToast({
+        title: t("help.ticketForm.successTitle", "Ticket Created"),
+        description: t("help.ticketForm.success", {
+          ticketId: result.ticketId,
+        }),
+        severity: "success",
+        color: "success",
+      });
+      setIsCreateModalOpen(false);
+    } catch (error: any) {
+      addToast({
+        title: t("toasts.errorTitle", "Error"),
+        description:
+          error.message ||
+          t("help.ticketForm.genericError", "An unexpected error occurred."),
+        severity: "danger",
+      });
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleCancelTicket = () => {
-    setShowTicketForm(false);
-    setSuccessMessage(null);
+  const handleCloseModal = () => {
+    if (!isSubmitting) {
+      setIsCreateModalOpen(false);
+    }
   };
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="space-y-6">
-        <section>
-          <h5 className="text-l font-medium mb-2">{t("help.userGuide")}</h5>
-          <p className="text-gray-600">{t("help.userGuideText")}</p>
-        </section>
-
-        <section>
-          <h5 className="text-l font-medium mb-2">{t("help.faq")}</h5>
-          <p className="text-gray-600">{t("help.faqText")}</p>
-        </section>
-
-        <section>
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h5 className="text-l font-medium mb-1">
-                {t("help.openTicket")}
-              </h5>
-              <p className="text-gray-600 text-sm">
-                {t("help.openTicketText")}
-              </p>
-            </div>
-            <button
-              onClick={() => setShowTicketForm(!showTicketForm)}
-              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-            >
-              {showTicketForm
-                ? t("help.ticketForm.cancel")
-                : t("help.openTicket")}
-            </button>
-          </div>
-
-          {showTicketForm && (
-            <div className="mb-6">
-              <TicketForm
-                onSubmit={handleSubmitTicket}
-                onCancel={handleCancelTicket}
-                isLoading={isSubmitting}
-              />
-            </div>
-          )}
-        </section>
-
-        {successMessage && (
-          <div className="bg-green-50 border border-green-200 rounded-md p-4">
-            <p className="text-sm text-green-800">{successMessage}</p>
-          </div>
-        )}
-
-        {error && (
-          <div className="bg-red-50 border border-red-200 rounded-md p-4">
-            <p className="text-sm text-red-600">{error}</p>
-          </div>
-        )}
+    <div className="w-full mx-1">
+      <div className="flex justify-end items-center mb-4 gap-4">
+        <Button
+          color="primary"
+          variant="solid"
+          size="sm"
+          onPress={() => setIsCreateModalOpen(true)}
+        >
+          {t("help.openTicket")}
+        </Button>
       </div>
+
+      {/* Placeholder for future ticket list */}
+      <div className="p-4 border-2 border-dashed border-gray-300 rounded-lg text-center mt-4">
+        <p className="text-gray-500">
+          {t(
+            "help.ticketListPlaceholder",
+            "Your support tickets will be displayed here.",
+          )}
+        </p>
+      </div>
+
+      <CreateTicketModal
+        isOpen={isCreateModalOpen}
+        onClose={handleCloseModal}
+        onSubmit={handleSubmitTicket}
+        isLoading={isSubmitting}
+      />
     </div>
   );
 };
