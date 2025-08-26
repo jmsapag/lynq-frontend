@@ -12,7 +12,8 @@
     "locations": "Locations",
     "overview": "Overview",
     "support": "Support",
-    "reports": "Reports"
+    "reports": "Reports",
+    "faq": "FAQs"
   },
   "days": {
     "sunday": "Sunday",
@@ -26,10 +27,21 @@
   "help": {
     "userGuide": "User Guide",
     "userGuideText": "Here you will find information on how to use the People Counter application.",
-    "faq": "Frequently Asked Questions",
     "faqText": "Check the answers to the most common questions.",
     "openTicket": "Open Support Ticket",
     "openTicketText": "Need help? Create a support ticket and we'll get back to you as soon as possible.",
+    "needHelp": "Have questions? Check our",
+    "faqLink": "FAQs",
+    "ticketListPlaceholder": "Your support tickets will be displayed here.",
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "q1Title": "How do I reset my password?",
+      "q1Content": "You can reset your password from the login page by clicking the 'Forgot Password' link.",
+      "q2Title": "How is my data protected?",
+      "q2Content": "We use industry-standard encryption and security practices to protect your data at all times.",
+      "q3Title": "How do I add a new user?",
+      "q3Content": "As an administrator, you can add new users from the 'User Management' section in the settings."
+    },
     "ticketForm": {
       "subject": "Subject",
       "subjectPlaceholder": "Brief description of your issue",

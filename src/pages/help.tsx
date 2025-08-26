@@ -4,6 +4,7 @@ import { Button, addToast } from "@heroui/react";
 import { useTickets } from "../hooks/useTickets";
 import { CreateTicketInput, CreateTicketResponse } from "../types/ticket";
 import CreateTicketModal from "../components/help/CreateTicketModal";
+import { Link } from "react-router-dom";
 
 const HelpPage = () => {
   const { t } = useTranslation();
@@ -19,20 +20,17 @@ const HelpPage = () => {
     try {
       const result: CreateTicketResponse = await createTicket(input);
       addToast({
-        title: t("help.ticketForm.successTitle", "Ticket Created"),
+        title: t("help.ticketForm.successTitle"),
         description: t("help.ticketForm.success", {
           ticketId: result.ticketId,
         }),
         severity: "success",
-        color: "success",
       });
       setIsCreateModalOpen(false);
     } catch (error: any) {
       addToast({
-        title: t("toasts.errorTitle", "Error"),
-        description:
-          error.message ||
-          t("help.ticketForm.genericError", "An unexpected error occurred."),
+        title: t("toasts.errorTitle"),
+        description: error.message || t("help.ticketForm.error"),
         severity: "danger",
       });
     } finally {
@@ -48,7 +46,14 @@ const HelpPage = () => {
 
   return (
     <div className="w-full mx-1">
-      <div className="flex justify-end items-center mb-4 gap-4">
+      <div className="flex justify-between items-center mb-4 gap-4">
+        <div className="text-sm">
+          {t("help.needHelp")}{" "}
+          <Link to="/faq" className="text-primary-600 hover:underline">
+            {t("help.faqLink")}
+          </Link>
+          .
+        </div>
         <Button
           color="primary"
           variant="solid"
@@ -60,13 +65,8 @@ const HelpPage = () => {
       </div>
 
       {/* Placeholder for future ticket list */}
-      <div className="p-4 border-2 border-dashed border-gray-300 rounded-lg text-center mt-4">
-        <p className="text-gray-500">
-          {t(
-            "help.ticketListPlaceholder",
-            "Your support tickets will be displayed here.",
-          )}
-        </p>
+      <div className="p-4 border-2 border-dashed border-gray-300 rounded-lg text-center mt-4 h-96 flex items-center justify-center">
+        <p className="text-gray-500">{t("help.ticketListPlaceholder")}</p>
       </div>
 
       <CreateTicketModal
