@@ -51,7 +51,16 @@ Todas las métricas incluyen:
       control: {
         type: "select",
       },
-      options: ["5min", "10min", "15min", "30min", "hour", "day", "week", "month"],
+      options: [
+        "5min",
+        "10min",
+        "15min",
+        "30min",
+        "hour",
+        "day",
+        "week",
+        "month",
+      ],
     },
     data: {
       control: false,

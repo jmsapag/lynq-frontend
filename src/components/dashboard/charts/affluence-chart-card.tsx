@@ -1,7 +1,10 @@
 import React from "react";
 import { ChartCard } from "../charts/chart-card.tsx";
 import { AffluenceChart } from "../charts/affluence-chart.tsx";
-import { TransformedSensorData, GroupByTimeAmount } from "../../../types/sensorDataResponse.ts";
+import {
+  TransformedSensorData,
+  GroupByTimeAmount,
+} from "../../../types/sensorDataResponse.ts";
 
 interface AffluenceChartCardProps {
   data: TransformedSensorData;

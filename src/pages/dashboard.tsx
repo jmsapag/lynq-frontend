@@ -174,7 +174,6 @@ const Dashboard = () => {
     }));
   };
 
-
   const handleHourRangeChange = (start: Time, end: Time) => {
     setSensorRecordsFormData((prev) => ({
       ...prev,

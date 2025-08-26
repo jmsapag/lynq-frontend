@@ -75,7 +75,10 @@ export function useSensorRecords(
 
       try {
         // Handle sensor IDs change
-        if (prevSensorIds.length > 0 && prevSensorIds.join(',') !== currentSensorIds.join(',')) {
+        if (
+          prevSensorIds.length > 0 &&
+          prevSensorIds.join(",") !== currentSensorIds.join(",")
+        ) {
           setSensorRecordsFormData((prev: SensorRecordsFormData) => ({
             ...prev,
             fetchedDateRange: null,
@@ -132,11 +135,17 @@ export function useSensorRecords(
             dataToProcess = [...currentRawData, ...newData];
 
             // Update the fetched date range
-            const newStart = isBefore(currentDateRange.start, currentFetchedDateRange.start)
+            const newStart = isBefore(
+              currentDateRange.start,
+              currentFetchedDateRange.start,
+            )
               ? currentDateRange.start
               : currentFetchedDateRange.start;
 
-            const newEnd = isAfter(currentDateRange.end, currentFetchedDateRange.end)
+            const newEnd = isAfter(
+              currentDateRange.end,
+              currentFetchedDateRange.end,
+            )
               ? currentDateRange.end
               : currentFetchedDateRange.end;
 
@@ -150,7 +159,10 @@ export function useSensorRecords(
             dataToProcess = newData;
             setSensorRecordsFormData((prev: SensorRecordsFormData) => ({
               ...prev,
-              fetchedDateRange: { start: currentDateRange.start, end: currentDateRange.end },
+              fetchedDateRange: {
+                start: currentDateRange.start,
+                end: currentDateRange.end,
+              },
               rawData: dataToProcess,
             }));
           }
@@ -179,7 +191,7 @@ export function useSensorRecords(
       setSensorRecordsFormData,
       prevSensorIds,
       groupBy,
-    ]
+    ],
   );
 
   // Effect to handle data changes
@@ -190,7 +202,7 @@ export function useSensorRecords(
   }, [
     dateRange?.start.getTime(),
     dateRange?.end.getTime(),
-    sensorIds.join(','),
+    sensorIds.join(","),
     groupBy,
     aggregationType,
     hourRange?.start,

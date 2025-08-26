@@ -291,7 +291,9 @@ export const MetricWidgets = {
   }),
 
   // New FootfallCam metrics
-  createReturningCustomersWidget: (params: WidgetFactoryParams): WidgetConfig => ({
+  createReturningCustomersWidget: (
+    params: WidgetFactoryParams,
+  ): WidgetConfig => ({
     id: "returning-customers",
     type: "returning-customers",
     title: "Returning Customers",
@@ -300,7 +302,11 @@ export const MetricWidgets = {
     component: (
       <SensorDataCard
         title="Returning Customers"
-        value={params.metrics.returningCustomers > 0 ? params.metrics.returningCustomers.toLocaleString() : "N/A"}
+        value={
+          params.metrics.returningCustomers > 0
+            ? params.metrics.returningCustomers.toLocaleString()
+            : "N/A"
+        }
         translationKey="dashboard.metrics.returningCustomers"
         descriptionTranslationKey="dashboard.metrics.returningCustomersDescription"
         unit={params.metrics.returningCustomers > 0 ? "customers" : ""}
@@ -324,7 +330,9 @@ export const MetricWidgets = {
     ),
   }),
 
-  createAvgVisitDurationWidget: (params: WidgetFactoryParams): WidgetConfig => ({
+  createAvgVisitDurationWidget: (
+    params: WidgetFactoryParams,
+  ): WidgetConfig => ({
     id: "avg-visit-duration",
     type: "avg-visit-duration",
     title: "Average Visit Duration",
@@ -333,7 +341,11 @@ export const MetricWidgets = {
     component: (
       <SensorDataCard
         title="Average Visit Duration"
-        value={params.metrics.avgVisitDuration > 0 ? params.metrics.avgVisitDuration.toFixed(2) : "N/A"}
+        value={
+          params.metrics.avgVisitDuration > 0
+            ? params.metrics.avgVisitDuration.toFixed(2)
+            : "N/A"
+        }
         translationKey="dashboard.metrics.avgVisitDuration"
         descriptionTranslationKey="dashboard.metrics.avgVisitDurationDescription"
         unit={params.metrics.avgVisitDuration > 0 ? "min" : ""}
@@ -366,7 +378,11 @@ export const MetricWidgets = {
     component: (
       <SensorDataCard
         title="Affluence"
-        value={params.metrics.affluence > 0 ? params.metrics.affluence.toFixed(2) : "N/A"}
+        value={
+          params.metrics.affluence > 0
+            ? params.metrics.affluence.toFixed(2)
+            : "N/A"
+        }
         translationKey="dashboard.metrics.affluence"
         descriptionTranslationKey="dashboard.metrics.affluenceDescription"
         unit={params.metrics.affluence > 0 ? "%" : ""}

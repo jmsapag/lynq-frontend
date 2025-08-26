@@ -19,9 +19,9 @@ const aggregateTimeSeries = (
 
   const groupedData = new Map<
     string,
-    { 
-      total_in: number; 
-      total_out: number; 
+    {
+      total_in: number;
+      total_out: number;
       outsideTraffic: number;
       avgVisitDuration: number;
       returningCustomer: number;
@@ -38,37 +38,44 @@ const aggregateTimeSeries = (
     const groupKey = strategy.getGroupKey(date);
 
     if (!groupedData.has(groupKey)) {
-      groupedData.set(groupKey, { 
-        total_in: 0, 
-        total_out: 0, 
+      groupedData.set(groupKey, {
+        total_in: 0,
+        total_out: 0,
         outsideTraffic: 0,
         avgVisitDuration: 0,
         returningCustomer: 0,
         count: 0,
         visitDurationSum: 0,
-        visitDurationCount: 0
+        visitDurationCount: 0,
       });
     }
 
     const group = groupedData.get(groupKey)!;
     group.total_in += point.total_count_in;
     group.total_out += point.total_count_out;
-    
+
     // Handle optional FootfallCam metrics - only add if they exist
     if (point.outsideTraffic !== undefined && point.outsideTraffic !== null) {
       group.outsideTraffic += point.outsideTraffic;
     }
-    
-    if (point.returningCustomer !== undefined && point.returningCustomer !== null) {
+
+    if (
+      point.returningCustomer !== undefined &&
+      point.returningCustomer !== null
+    ) {
       group.returningCustomer += point.returningCustomer;
     }
-    
+
     // Handle avgVisitDuration aggregation - only if value exists and is > 0
-    if (point.avgVisitDuration !== undefined && point.avgVisitDuration !== null && point.avgVisitDuration > 0) {
+    if (
+      point.avgVisitDuration !== undefined &&
+      point.avgVisitDuration !== null &&
+      point.avgVisitDuration > 0
+    ) {
       group.visitDurationSum += point.avgVisitDuration;
       group.visitDurationCount += 1;
     }
-    
+
     group.count += 1;
   });
 
@@ -79,7 +86,10 @@ const aggregateTimeSeries = (
       let total_out = values.total_out;
       let outsideTraffic = values.outsideTraffic;
       let returningCustomer = values.returningCustomer;
-      let avgVisitDuration = values.visitDurationCount > 0 ? values.visitDurationSum / values.visitDurationCount : 0;
+      let avgVisitDuration =
+        values.visitDurationCount > 0
+          ? values.visitDurationSum / values.visitDurationCount
+          : 0;
 
       // Apply aggregation
       if (aggregationType === "avg" && values.count > 0) {
