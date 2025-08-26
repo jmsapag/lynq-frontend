@@ -16,9 +16,10 @@ export const AvgVisitDurationCard: React.FC<AvgVisitDurationCardProps> = ({
 }) => {
   // Calculate average visit duration
   const avgVisitDuration = useMemo(() => {
-    const validDurations = data.avgVisitDuration.filter(val => val > 0);
-    return validDurations.length > 0 
-      ? validDurations.reduce((sum, val) => sum + val, 0) / validDurations.length 
+    const validDurations = data.avgVisitDuration.filter((val) => val > 0);
+    return validDurations.length > 0
+      ? validDurations.reduce((sum, val) => sum + val, 0) /
+          validDurations.length
       : 0;
   }, [data.avgVisitDuration]);
 

@@ -114,7 +114,8 @@ export function useConnections(businessId: string) {
       setConnections((prev) => [...prev, newConnection]);
       return newConnection;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Failed to create connection";
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to create connection";
       setError(errorMessage);
       throw err;
     }

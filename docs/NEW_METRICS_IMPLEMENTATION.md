@@ -17,9 +17,9 @@ export type SensorDataPoint = {
   timestamp: string;
   total_count_in: number;
   total_count_out: number;
-  outsideTraffic?: number;      // NUEVO - OPCIONAL (FootfallCam)
-  avgVisitDuration?: number;    // NUEVO - OPCIONAL (FootfallCam)
-  returningCustomer?: number;   // NUEVO - OPCIONAL (FootfallCam)
+  outsideTraffic?: number; // NUEVO - OPCIONAL (FootfallCam)
+  avgVisitDuration?: number; // NUEVO - OPCIONAL (FootfallCam)
+  returningCustomer?: number; // NUEVO - OPCIONAL (FootfallCam)
 };
 ```
 
@@ -32,7 +32,7 @@ export type SensorDataPoint = {
 Cuando las métricas opcionales no están disponibles:
 
 1. **Clientes que Retornan**: Muestra "N/A" si no hay datos de `returningCustomer`
-2. **Tiempo Promedio en Local**: Muestra "N/A" si no hay datos de `avgVisitDuration` 
+2. **Tiempo Promedio en Local**: Muestra "N/A" si no hay datos de `avgVisitDuration`
 3. **Afluencia**: Muestra "N/A" si no hay datos de `outsideTraffic`
 4. **Gráficos**: Muestran mensaje "Datos no disponibles" y usan colores grises
 5. **Estado Visual**: Los componentes cambian automáticamente su apariencia cuando no hay datos
@@ -53,10 +53,10 @@ export type TransformedSensorData = {
   timestamps: string[];
   in: number[];
   out: number[];
-  returningCustomers: number[];   // NUEVO
-  avgVisitDuration: number[];     // NUEVO
-  outsideTraffic: number[];       // NUEVO
-  affluence: number[];            // NUEVO (calculado)
+  returningCustomers: number[]; // NUEVO
+  avgVisitDuration: number[]; // NUEVO
+  outsideTraffic: number[]; // NUEVO
+  affluence: number[]; // NUEVO (calculado)
 };
 ```
 
@@ -111,7 +111,7 @@ import {
   ReturningCustomersChartCard,
   AvgVisitDurationChartCard,
   AffluenceChartCard,
-} from './components/dashboard/new-metrics';
+} from "./components/dashboard/new-metrics";
 ```
 
 ### Usar en el Dashboard
@@ -120,18 +120,15 @@ import {
 // Usar el hook useSensorRecords actualizado
 const { data, loading, error } = useSensorRecords(
   sensorRecordsFormData,
-  setSensorRecordsFormData
+  setSensorRecordsFormData,
 );
 
 // Las nuevas métricas ya están incluidas en el data
 return (
   <div>
     {/* Tarjetas de métricas */}
-    <NewMetricsCards
-      data={data}
-      dateRange={dateRange}
-    />
-    
+    <NewMetricsCards data={data} dateRange={dateRange} />
+
     {/* Gráficos */}
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <ReturningCustomersChartCard
@@ -144,11 +141,7 @@ return (
         groupBy={groupBy}
         dateRange={dateRange}
       />
-      <AffluenceChartCard
-        data={data}
-        groupBy={groupBy}
-        dateRange={dateRange}
-      />
+      <AffluenceChartCard data={data} groupBy={groupBy} dateRange={dateRange} />
     </div>
   </div>
 );
@@ -161,7 +154,7 @@ import {
   DraggableReturningCustomersSmallCard,
   DraggableAvgVisitDurationSmallCard,
   DraggableAffluenceSmallCard,
-} from './components/dashboard/new-metrics';
+} from "./components/dashboard/new-metrics";
 
 // En la lista de componentes disponibles
 const availableItems = [
@@ -194,6 +187,7 @@ El hook `useSensorRecords` ha sido actualizado para procesar automáticamente la
 Se han agregado traducciones en inglés y español para todas las nuevas métricas:
 
 ### Inglés (en.json)
+
 ```json
 {
   "dashboard": {
@@ -213,6 +207,7 @@ Se han agregado traducciones en inglés y español para todas las nuevas métric
 ```
 
 ### Español (es.json)
+
 ```json
 {
   "dashboard": {
@@ -251,13 +246,16 @@ Puedes ver un ejemplo completo en el archivo `new-metrics-demo.stories.tsx` que 
 ## Archivos Modificados
 
 1. **Tipos**:
+
    - `src/types/sensorDataResponse.ts` - Tipos actualizados
 
 2. **Hooks**:
+
    - `src/hooks/sensor-data/useTransformData.ts` - Transformación de datos
    - `src/hooks/sensor-data/group-data/aggregate-time-series-service.ts` - Agregación
 
 3. **Componentes Nuevos**:
+
    - `src/components/dashboard/charts/returning-customers-chart.tsx`
    - `src/components/dashboard/charts/avg-visit-duration-chart.tsx`
    - `src/components/dashboard/charts/affluence-chart.tsx`

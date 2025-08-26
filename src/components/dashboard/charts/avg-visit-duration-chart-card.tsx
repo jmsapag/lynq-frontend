@@ -1,7 +1,10 @@
 import React from "react";
 import { ChartCard } from "../charts/chart-card.tsx";
 import { AvgVisitDurationChart } from "../charts/avg-visit-duration-chart.tsx";
-import { TransformedSensorData, GroupByTimeAmount } from "../../../types/sensorDataResponse.ts";
+import {
+  TransformedSensorData,
+  GroupByTimeAmount,
+} from "../../../types/sensorDataResponse.ts";
 
 interface AvgVisitDurationChartCardProps {
   data: TransformedSensorData;
@@ -10,12 +13,9 @@ interface AvgVisitDurationChartCardProps {
   className?: string;
 }
 
-export const AvgVisitDurationChartCard: React.FC<AvgVisitDurationChartCardProps> = ({
-  data,
-  groupBy,
-  dateRange,
-  className,
-}) => {
+export const AvgVisitDurationChartCard: React.FC<
+  AvgVisitDurationChartCardProps
+> = ({ data, groupBy, dateRange, className }) => {
   const chartData = {
     categories: data.timestamps,
     values: data.avgVisitDuration,

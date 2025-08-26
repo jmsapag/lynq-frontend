@@ -4,7 +4,10 @@ import { ReturningCustomersChartCard } from "../charts/returning-customers-chart
 import { AvgVisitDurationChartCard } from "../charts/avg-visit-duration-chart-card";
 import { AffluenceChartCard } from "../charts/affluence-chart-card";
 import { FootfallCamDataStatus } from "../charts/footfall-cam-data-status";
-import { TransformedSensorData, GroupByTimeAmount } from "../../../types/sensorDataResponse";
+import {
+  TransformedSensorData,
+  GroupByTimeAmount,
+} from "../../../types/sensorDataResponse";
 
 interface NewMetricsDemoProps {
   data: TransformedSensorData;
@@ -23,20 +26,16 @@ export const NewMetricsDemo: React.FC<NewMetricsDemoProps> = ({
         <h2 className="text-2xl font-bold text-gray-900 mb-6">
           Nuevas Métricas del Dashboard
         </h2>
-        
+
         {/* FootfallCam Data Status */}
         <FootfallCamDataStatus data={data} className="mb-6" />
-        
+
         {/* Metric Cards */}
         <div className="mb-8">
           <h3 className="text-lg font-semibold text-gray-700 mb-4">
             Tarjetas de Métricas
           </h3>
-          <NewMetricsCards
-            data={data}
-            dateRange={dateRange}
-            className="mb-6"
-          />
+          <NewMetricsCards data={data} dateRange={dateRange} className="mb-6" />
         </div>
 
         {/* Chart Cards */}
@@ -77,23 +76,31 @@ export const NewMetricsDemo: React.FC<NewMetricsDemoProps> = ({
         </h3>
         <div className="space-y-3 text-blue-800">
           <p>
-            <strong>1. Clientes que Retornan:</strong> Muestra el total de clientes que han regresado al establecimiento.
+            <strong>1. Clientes que Retornan:</strong> Muestra el total de
+            clientes que han regresado al establecimiento.
           </p>
           <p>
-            <strong>2. Tiempo Promedio en Local:</strong> Calcula el tiempo promedio que los clientes permanecen en el establecimiento (en minutos).
+            <strong>2. Tiempo Promedio en Local:</strong> Calcula el tiempo
+            promedio que los clientes permanecen en el establecimiento (en
+            minutos).
           </p>
           <p>
-            <strong>3. Afluencia:</strong> Muestra el porcentaje de entradas respecto al tráfico exterior (Entradas/Tráfico exterior × 100).
+            <strong>3. Afluencia:</strong> Muestra el porcentaje de entradas
+            respecto al tráfico exterior (Entradas/Tráfico exterior × 100).
           </p>
           <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded">
             <p className="text-yellow-800">
-              <strong>⚠️ Métricas Opcionales:</strong> Estas métricas dependen de datos avanzados de FootfallCam. 
-              Si no están disponibles, los componentes mostrarán "N/A" o "Datos no disponibles" automáticamente.
+              <strong>⚠️ Métricas Opcionales:</strong> Estas métricas dependen
+              de datos avanzados de FootfallCam. Si no están disponibles, los
+              componentes mostrarán "N/A" o "Datos no disponibles"
+              automáticamente.
             </p>
           </div>
           <p className="mt-4">
-            <strong>Integración con Drag & Drop:</strong> Todos estos componentes pueden ser utilizados con el sistema de drag & drop existente.
-            Importa los componentes draggables desde <code>/new-metrics/draggable-new-metrics</code>.
+            <strong>Integración con Drag & Drop:</strong> Todos estos
+            componentes pueden ser utilizados con el sistema de drag & drop
+            existente. Importa los componentes draggables desde{" "}
+            <code>/new-metrics/draggable-new-metrics</code>.
           </p>
         </div>
       </div>

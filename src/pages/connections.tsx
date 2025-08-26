@@ -62,9 +62,15 @@ export default function ConnectionsPage(props: ConnectionsPageProps) {
       }
       return false;
     } catch (error) {
-      let description = t("connections.createError", "Failed to create connection");
+      let description = t(
+        "connections.createError",
+        "Failed to create connection",
+      );
       if (error instanceof Error && error.message.includes("already exists")) {
-        description = t("connections.createConflictError", "A connection with these credentials already exists.");
+        description = t(
+          "connections.createConflictError",
+          "A connection with these credentials already exists.",
+        );
       }
       addToast({
         title: t("common.error", "Error"),
@@ -78,7 +84,10 @@ export default function ConnectionsPage(props: ConnectionsPageProps) {
     }
   };
 
-  const handleUpdate = async (id: string, input: CreateConnectionInput | UpdateConnectionInput): Promise<boolean> => {
+  const handleUpdate = async (
+    id: string,
+    input: CreateConnectionInput | UpdateConnectionInput,
+  ): Promise<boolean> => {
     if (!selectedConnection) return false;
 
     const updateInput = input as UpdateConnectionInput;

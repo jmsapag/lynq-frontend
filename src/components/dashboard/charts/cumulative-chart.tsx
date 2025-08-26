@@ -27,7 +27,7 @@ interface CumulativeChartProps {
 const isDifferentDay = (timestamp1: string, timestamp2: string): boolean => {
   const date1 = new Date(timestamp1);
   const date2 = new Date(timestamp2);
-  
+
   return (
     date1.getFullYear() !== date2.getFullYear() ||
     date1.getMonth() !== date2.getMonth() ||
@@ -43,7 +43,7 @@ const isDifferentDay = (timestamp1: string, timestamp2: string): boolean => {
  */
 const calculateCumulativeWithDailyReset = (
   categories: string[],
-  values: CumulativeChartDataItem[]
+  values: CumulativeChartDataItem[],
 ): number[] => {
   if (!categories.length || !values.length) return [];
 
@@ -53,15 +53,15 @@ const calculateCumulativeWithDailyReset = (
   values.forEach((current, index) => {
     // Only count entries (in), ignore exits (out)
     const entries = current.in;
-    
+
     // Check if this is a new day (reset accumulator)
     if (index > 0 && isDifferentDay(categories[index - 1], categories[index])) {
       dailyAccumulator = 0; // Reset accumulator for new day
     }
-    
+
     // Add current entries to daily accumulator
     dailyAccumulator += entries;
-    
+
     // Store the cumulative entries for this time period
     cumulativeData.push(dailyAccumulator);
   });
@@ -99,7 +99,10 @@ export const CumulativeChart: React.FC<CumulativeChartProps> = ({
   })();
 
   // Calculate cumulative data with daily reset functionality
-  const cumulativeData = calculateCumulativeWithDailyReset(data.categories, data.values);
+  const cumulativeData = calculateCumulativeWithDailyReset(
+    data.categories,
+    data.values,
+  );
 
   const option: EChartsOption = {
     tooltip: {
@@ -116,16 +119,18 @@ export const CumulativeChart: React.FC<CumulativeChartProps> = ({
         const currentIn = data.values[dataIndex].in;
         const currentOut = data.values[dataIndex].out;
         const totalEntries = cumulativeData[dataIndex];
-        
+
         // Check if this is the start of a new day (for visual indicator)
-        const isNewDay = dataIndex > 0 && isDifferentDay(
-          data.categories[dataIndex - 1], 
-          data.categories[dataIndex]
-        );
-        
-        const newDayIndicator = isNewDay 
-          ? `<div class="text-xs text-orange-500 mb-1">📅 ${t("dashboard.charts.dailyReset", "Daily Reset")}</div>` 
-          : '';
+        const isNewDay =
+          dataIndex > 0 &&
+          isDifferentDay(
+            data.categories[dataIndex - 1],
+            data.categories[dataIndex],
+          );
+
+        const newDayIndicator = isNewDay
+          ? `<div class="text-xs text-orange-500 mb-1">📅 ${t("dashboard.charts.dailyReset", "Daily Reset")}</div>`
+          : "";
 
         return `
           <div class="text-sm">
@@ -202,7 +207,10 @@ export const CumulativeChart: React.FC<CumulativeChartProps> = ({
           },
           data: data.categories
             .map((category, index) => {
-              if (index > 0 && isDifferentDay(data.categories[index - 1], category)) {
+              if (
+                index > 0 &&
+                isDifferentDay(data.categories[index - 1], category)
+              ) {
                 return {
                   coord: [index, cumulativeData[index]],
                   name: t("dashboard.charts.dailyReset", "Daily Reset"),
@@ -210,7 +218,10 @@ export const CumulativeChart: React.FC<CumulativeChartProps> = ({
               }
               return null;
             })
-            .filter((item): item is { coord: number[]; name: string } => item !== null),
+            .filter(
+              (item): item is { coord: number[]; name: string } =>
+                item !== null,
+            ),
         },
       },
     ],

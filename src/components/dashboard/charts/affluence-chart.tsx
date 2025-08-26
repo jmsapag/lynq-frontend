@@ -43,7 +43,7 @@ export const AffluenceChart: React.FC<AffluenceChartProps> = ({
   })();
 
   // Check if we have any meaningful data
-  const hasData = data.values.some(val => val > 0);
+  const hasData = data.values.some((val) => val > 0);
 
   const option: EChartsOption = {
     tooltip: {
@@ -96,38 +96,42 @@ export const AffluenceChart: React.FC<AffluenceChartProps> = ({
           color: hasData ? "#F59E0B" : "#D1D5DB",
           width: 3,
         },
-        areaStyle: hasData ? {
-          color: {
-            type: "linear",
-            x: 0,
-            y: 0,
-            x2: 0,
-            y2: 1,
-            colorStops: [
-              {
-                offset: 0,
-                color: "rgba(245, 158, 11, 0.3)",
+        areaStyle: hasData
+          ? {
+              color: {
+                type: "linear",
+                x: 0,
+                y: 0,
+                x2: 0,
+                y2: 1,
+                colorStops: [
+                  {
+                    offset: 0,
+                    color: "rgba(245, 158, 11, 0.3)",
+                  },
+                  {
+                    offset: 1,
+                    color: "rgba(245, 158, 11, 0.1)",
+                  },
+                ],
               },
-              {
-                offset: 1,
-                color: "rgba(245, 158, 11, 0.1)",
-              },
-            ],
-          },
-        } : undefined,
+            }
+          : undefined,
       },
     ],
     // Show empty data message if no data
-    graphic: !hasData ? {
-      type: "text",
-      left: "center",
-      top: "middle",
-      style: {
-        text: `${t("dashboard.noDataAvailable")}\n(${t("dashboard.footfallcamDataRequired")})`,
-        fontSize: 16,
-        fill: "#6B7280",
-      },
-    } : undefined,
+    graphic: !hasData
+      ? {
+          type: "text",
+          left: "center",
+          top: "middle",
+          style: {
+            text: `${t("dashboard.noDataAvailable")}\n(${t("dashboard.footfallcamDataRequired")})`,
+            fontSize: 16,
+            fill: "#6B7280",
+          },
+        }
+      : undefined,
   };
 
   return (

@@ -123,20 +123,27 @@ export const useOverviewMetrics = (
     [],
   );
 
-  const fallbackSetter = useMemo(() => (_: (prev: SensorRecordsFormData) => SensorRecordsFormData) => {
-    // No-op function for when comparison data is not needed
-  }, []);
+  const fallbackSetter = useMemo(
+    () => (_: (prev: SensorRecordsFormData) => SensorRecordsFormData) => {
+      // No-op function for when comparison data is not needed
+    },
+    [],
+  );
 
   // Create a wrapper for setComparisonFormData to match the expected signature
-  const comparisonSetter = useMemo(() => (formData: (prev: SensorRecordsFormData) => SensorRecordsFormData) => {
-    setComparisonFormData((prevFormData) => {
-      if (prevFormData === null) {
-        // If previous state is null, we can't call the formData function
-        return null;
-      }
-      return formData(prevFormData);
-    });
-  }, []);
+  const comparisonSetter = useMemo(
+    () =>
+      (formData: (prev: SensorRecordsFormData) => SensorRecordsFormData) => {
+        setComparisonFormData((prevFormData) => {
+          if (prevFormData === null) {
+            // If previous state is null, we can't call the formData function
+            return null;
+          }
+          return formData(prevFormData);
+        });
+      },
+    [],
+  );
 
   const { data: comparisonSensorData } = useSensorRecords(
     comparisonFormData || fallbackFormData,
@@ -263,7 +270,7 @@ export const useOverviewMetrics = (
           sensorData.avgVisitDuration.reduce(
             (sum: number, value: number) => sum + value,
             0,
-          ) / sensorData.avgVisitDuration.length
+          ) / sensorData.avgVisitDuration.length,
         )
       : 0;
 
@@ -272,7 +279,7 @@ export const useOverviewMetrics = (
           sensorData.affluence.reduce(
             (sum: number, value: number) => sum + value,
             0,
-          ) / sensorData.affluence.length
+          ) / sensorData.affluence.length,
         )
       : 0;
 

@@ -270,7 +270,8 @@ export const LayoutDashboard: React.FC<LayoutDashboardProps> = ({
             title="Returning Customers Over Time"
             translationKey="dashboard.charts.returningCustomersChart"
           >
-            {!sensorData?.returningCustomers || sensorData.returningCustomers.length === 0 ? (
+            {!sensorData?.returningCustomers ||
+            sensorData.returningCustomers.length === 0 ? (
               <div className="flex items-center justify-center h-64 text-gray-500">
                 No FootfallCam data available for returning customers.
               </div>
@@ -297,7 +298,8 @@ export const LayoutDashboard: React.FC<LayoutDashboardProps> = ({
             title="Average Visit Duration Over Time"
             translationKey="dashboard.charts.avgVisitDurationChart"
           >
-            {!sensorData?.avgVisitDuration || sensorData.avgVisitDuration.length === 0 ? (
+            {!sensorData?.avgVisitDuration ||
+            sensorData.avgVisitDuration.length === 0 ? (
               <div className="flex items-center justify-center h-64 text-gray-500">
                 No FootfallCam data available for visit duration.
               </div>

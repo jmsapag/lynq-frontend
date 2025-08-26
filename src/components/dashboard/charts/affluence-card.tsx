@@ -16,9 +16,10 @@ export const AffluenceCard: React.FC<AffluenceCardProps> = ({
 }) => {
   // Calculate average affluence
   const avgAffluence = useMemo(() => {
-    const validAffluence = data.affluence.filter(val => val > 0);
-    return validAffluence.length > 0 
-      ? validAffluence.reduce((sum, val) => sum + val, 0) / validAffluence.length 
+    const validAffluence = data.affluence.filter((val) => val > 0);
+    return validAffluence.length > 0
+      ? validAffluence.reduce((sum, val) => sum + val, 0) /
+          validAffluence.length
       : 0;
   }, [data.affluence]);
 

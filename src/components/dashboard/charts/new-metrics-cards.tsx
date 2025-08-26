@@ -1,9 +1,9 @@
 import React, { useMemo } from "react";
 import { SensorDataCard } from "./card.tsx";
-import { 
+import {
   UserGroupIcon,
   ClockIcon,
-  ChartBarIcon
+  ChartBarIcon,
 } from "@heroicons/react/24/outline";
 import { TransformedSensorData } from "../../../types/sensorDataResponse.ts";
 
@@ -20,25 +20,32 @@ export const NewMetricsCards: React.FC<NewMetricsCardsProps> = ({
 }) => {
   // Calculate aggregate values
   const aggregatedMetrics = useMemo(() => {
-    const totalReturningCustomers = data.returningCustomers.reduce((sum, val) => sum + val, 0);
-    
+    const totalReturningCustomers = data.returningCustomers.reduce(
+      (sum, val) => sum + val,
+      0,
+    );
+
     // Only calculate average if we have valid data points
-    const validAvgDurations = data.avgVisitDuration.filter(val => val > 0);
-    const avgVisitDuration = validAvgDurations.length > 0 
-      ? validAvgDurations.reduce((sum, val) => sum + val, 0) / validAvgDurations.length 
-      : 0;
-    
+    const validAvgDurations = data.avgVisitDuration.filter((val) => val > 0);
+    const avgVisitDuration =
+      validAvgDurations.length > 0
+        ? validAvgDurations.reduce((sum, val) => sum + val, 0) /
+          validAvgDurations.length
+        : 0;
+
     // Only calculate average affluence if we have valid data points
-    const validAffluence = data.affluence.filter(val => val > 0);
-    const avgAffluence = validAffluence.length > 0 
-      ? validAffluence.reduce((sum, val) => sum + val, 0) / validAffluence.length 
-      : 0;
+    const validAffluence = data.affluence.filter((val) => val > 0);
+    const avgAffluence =
+      validAffluence.length > 0
+        ? validAffluence.reduce((sum, val) => sum + val, 0) /
+          validAffluence.length
+        : 0;
 
     return {
       totalReturningCustomers,
       avgVisitDuration,
       avgAffluence,
-      hasReturningCustomersData: data.returningCustomers.some(val => val > 0),
+      hasReturningCustomersData: data.returningCustomers.some((val) => val > 0),
       hasAvgVisitDurationData: validAvgDurations.length > 0,
       hasAffluenceData: validAffluence.length > 0,
     };
@@ -49,12 +56,18 @@ export const NewMetricsCards: React.FC<NewMetricsCardsProps> = ({
       {/* Returning Customers Card */}
       <SensorDataCard
         title="Clientes que Retornan"
-        value={aggregatedMetrics.hasReturningCustomersData ? aggregatedMetrics.totalReturningCustomers : "N/A"}
+        value={
+          aggregatedMetrics.hasReturningCustomersData
+            ? aggregatedMetrics.totalReturningCustomers
+            : "N/A"
+        }
         icon={<UserGroupIcon className="w-6 h-6 text-green-600" />}
         translationKey="dashboard.metrics.returningCustomers"
-        description={aggregatedMetrics.hasReturningCustomersData 
-          ? "Total de clientes que han regresado al establecimiento" 
-          : "Datos no disponibles para este período"}
+        description={
+          aggregatedMetrics.hasReturningCustomersData
+            ? "Total de clientes que han regresado al establecimiento"
+            : "Datos no disponibles para este período"
+        }
         descriptionTranslationKey="dashboard.metrics.returningCustomers.description"
         dateRange={dateRange}
         data={{ returningCustomers: data.returningCustomers }}
@@ -64,13 +77,19 @@ export const NewMetricsCards: React.FC<NewMetricsCardsProps> = ({
       {/* Average Visit Duration Card */}
       <SensorDataCard
         title="Tiempo Promedio en Local"
-        value={aggregatedMetrics.hasAvgVisitDurationData ? aggregatedMetrics.avgVisitDuration.toFixed(2) : "N/A"}
+        value={
+          aggregatedMetrics.hasAvgVisitDurationData
+            ? aggregatedMetrics.avgVisitDuration.toFixed(2)
+            : "N/A"
+        }
         unit={aggregatedMetrics.hasAvgVisitDurationData ? "min" : ""}
         icon={<ClockIcon className="w-6 h-6 text-purple-600" />}
         translationKey="dashboard.metrics.avgVisitDuration"
-        description={aggregatedMetrics.hasAvgVisitDurationData 
-          ? "Tiempo promedio que los clientes permanecen en el establecimiento" 
-          : "Datos no disponibles para este período"}
+        description={
+          aggregatedMetrics.hasAvgVisitDurationData
+            ? "Tiempo promedio que los clientes permanecen en el establecimiento"
+            : "Datos no disponibles para este período"
+        }
         descriptionTranslationKey="dashboard.metrics.avgVisitDuration.description"
         dateRange={dateRange}
         data={{ avgVisitDuration: data.avgVisitDuration }}
@@ -80,13 +99,19 @@ export const NewMetricsCards: React.FC<NewMetricsCardsProps> = ({
       {/* Affluence Card */}
       <SensorDataCard
         title="Afluencia"
-        value={aggregatedMetrics.hasAffluenceData ? aggregatedMetrics.avgAffluence.toFixed(2) : "N/A"}
+        value={
+          aggregatedMetrics.hasAffluenceData
+            ? aggregatedMetrics.avgAffluence.toFixed(2)
+            : "N/A"
+        }
         unit={aggregatedMetrics.hasAffluenceData ? "%" : ""}
         icon={<ChartBarIcon className="w-6 h-6 text-amber-600" />}
         translationKey="dashboard.metrics.affluence"
-        description={aggregatedMetrics.hasAffluenceData 
-          ? "Porcentaje de entradas respecto al tráfico exterior (Entradas/Tráfico exterior)" 
-          : "Datos no disponibles para este período"}
+        description={
+          aggregatedMetrics.hasAffluenceData
+            ? "Porcentaje de entradas respecto al tráfico exterior (Entradas/Tráfico exterior)"
+            : "Datos no disponibles para este período"
+        }
         descriptionTranslationKey="dashboard.metrics.affluence.description"
         dateRange={dateRange}
         data={{ affluence: data.affluence }}
