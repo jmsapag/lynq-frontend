@@ -252,6 +252,14 @@
       "toggle": "Compare periods"
     }
   },
+  "sensors": {
+    "provider": {
+      "footfallcam": "Provider: FootfallCam",
+      "xovis": "Provider: Xovis",
+      "hella": "Provider: Hella",
+      "unknown": "Provider: {{provider}}"
+    }
+  },
   "chart": {
     "in": "Entries",
     "out": "Exits"
