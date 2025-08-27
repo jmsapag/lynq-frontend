@@ -14,6 +14,19 @@ const NoDataMessage = () => (
   </div>
 );
 
+const transformChartDataForExport = (chartData: {
+  categories: string[];
+  values: Array<{ in: number; out: number }>;
+}): any[][] => {
+  const headers = ["category", "in", "out"];
+  const dataRows = chartData.categories.map((category, index) => [
+    category,
+    chartData.values[index]?.in ?? 0,
+    chartData.values[index]?.out ?? 0,
+  ]);
+  return [headers, ...dataRows];
+};
+
 export const ChartWidgets = {
   createPeopleFlowChartWidget: (params: WidgetFactoryParams): WidgetConfig => ({
     id: "people-flow-chart",
@@ -25,20 +38,7 @@ export const ChartWidgets = {
       <ChartCard
         title="Flujo de Personas (In/Out)"
         translationKey="dashboard.charts.peopleFlow"
-        data={{
-          categories: params.chartData.categories,
-          devices: [
-            {
-              name: "In",
-              values: params.chartData.values.map((v) => v.in),
-            },
-            {
-              name: "Out",
-              values: params.chartData.values.map((v) => v.out),
-            },
-          ],
-        }}
-        dateRange={params.dateRange}
+        data={transformChartDataForExport(params.chartData)}
       >
         {params.chartData.categories.length === 0 ? (
           <NoDataMessage />
@@ -62,13 +62,12 @@ export const ChartWidgets = {
       <ChartCard
         title="Traffic Heatmap (By Day & Hour)"
         translationKey="dashboard.charts.trafficHeatmap"
-        data={params.sensorData?.rawData || {}}
-        dateRange={params.dateRange}
+        data={transformChartDataForExport(params.chartData)}
       >
-        {params.sensorData?.rawData?.length > 0 ? (
-          <ChartHeatMap data={params.sensorData.rawData} />
-        ) : (
+        {params.chartData.categories.length === 0 ? (
           <NoDataMessage />
+        ) : (
+          <ChartHeatMap data={params.sensorData} />
         )}
       </ChartCard>
     ),
@@ -78,22 +77,21 @@ export const ChartWidgets = {
     id: "entry-rate-chart",
     type: "entry-rate-chart",
     title: "Entry Rate Chart",
-    translationKey: "dashboard.charts.entryRateChart",
+    translationKey: "dashboard.charts.entryRateOverTime",
     category: "chart",
     component: (
       <ChartCard
-        title="Entry Rate Chart"
-        translationKey="dashboard.charts.entryRateChart"
-        data={params.sensorData?.entryRateData || {}}
-        dateRange={params.dateRange}
+        title="Entry Rate Over Time"
+        translationKey="dashboard.charts.entryRateOverTime"
+        data={transformChartDataForExport(params.chartData)}
       >
-        {params.sensorData?.entryRateData?.length > 0 ? (
+        {params.chartData.categories.length === 0 ? (
+          <NoDataMessage />
+        ) : (
           <EntryRateChart
-            data={params.sensorData.entryRateData}
+            data={params.chartData}
             groupBy={params.sensorRecordsFormData.groupBy}
           />
-        ) : (
-          <NoDataMessage />
         )}
       </ChartCard>
     ),
@@ -104,27 +102,14 @@ export const ChartWidgets = {
   ): WidgetConfig => ({
     id: "cumulative-people-chart",
     type: "cumulative-people-chart",
-    title: "Cumulative People Chart",
-    translationKey: "dashboard.charts.cumulativePeople",
+    title: "Cumulative Entries",
+    translationKey: "dashboard.charts.cumulativeEntries",
     category: "chart",
     component: (
       <ChartCard
-        title="Cumulative People Chart"
-        translationKey="dashboard.charts.cumulativePeople"
-        data={{
-          categories: params.chartData.categories,
-          devices: [
-            {
-              name: "In",
-              values: params.chartData.values.map((v) => v.in),
-            },
-            {
-              name: "Out",
-              values: params.chartData.values.map((v) => v.out),
-            },
-          ],
-        }}
-        dateRange={params.dateRange}
+        title="Cumulative Entries (Daily Reset)"
+        translationKey="dashboard.charts.cumulativeEntries"
+        data={transformChartDataForExport(params.chartData)}
       >
         {params.chartData.categories.length === 0 ? (
           <NoDataMessage />
@@ -148,18 +133,23 @@ export const ChartWidgets = {
     category: "chart",
     component: (
       <ChartCard
-        title="Returning Customers Chart"
+        title="Returning Customers Over Time"
         translationKey="dashboard.charts.returningCustomersChart"
-        data={params.sensorData?.returningCustomersData || {}}
-        dateRange={params.dateRange}
+        data={transformChartDataForExport(params.chartData)}
       >
-        {params.sensorData?.returningCustomersData?.length > 0 ? (
+        {!params.sensorData?.returningCustomers ||
+        params.sensorData.returningCustomers.length === 0 ? (
+          <div className="flex items-center justify-center h-64 text-gray-500">
+            No FootfallCam data available for returning customers.
+          </div>
+        ) : (
           <ReturningCustomersChart
-            data={params.sensorData.returningCustomersData}
+            data={{
+              categories: params.sensorData.timestamps || [],
+              values: params.sensorData.returningCustomers || [],
+            }}
             groupBy={params.sensorRecordsFormData.groupBy}
           />
-        ) : (
-          <NoDataMessage />
         )}
       </ChartCard>
     ),
@@ -170,23 +160,28 @@ export const ChartWidgets = {
   ): WidgetConfig => ({
     id: "avg-visit-duration-chart",
     type: "avg-visit-duration-chart",
-    title: "Avg. Visit Duration Chart",
+    title: "Avg Visit Duration Chart",
     translationKey: "dashboard.charts.avgVisitDurationChart",
     category: "chart",
     component: (
       <ChartCard
-        title="Avg. Visit Duration Chart"
+        title="Average Visit Duration Over Time"
         translationKey="dashboard.charts.avgVisitDurationChart"
-        data={params.sensorData?.avgVisitDurationData || {}}
-        dateRange={params.dateRange}
+        data={transformChartDataForExport(params.chartData)}
       >
-        {params.sensorData?.avgVisitDurationData?.length > 0 ? (
+        {!params.sensorData?.avgVisitDuration ||
+        params.sensorData.avgVisitDuration.length === 0 ? (
+          <div className="flex items-center justify-center h-64 text-gray-500">
+            No FootfallCam data available for visit duration.
+          </div>
+        ) : (
           <AvgVisitDurationChart
-            data={params.sensorData.avgVisitDurationData}
+            data={{
+              categories: params.sensorData.timestamps || [],
+              values: params.sensorData.avgVisitDuration || [],
+            }}
             groupBy={params.sensorRecordsFormData.groupBy}
           />
-        ) : (
-          <NoDataMessage />
         )}
       </ChartCard>
     ),
@@ -200,18 +195,23 @@ export const ChartWidgets = {
     category: "chart",
     component: (
       <ChartCard
-        title="Affluence Chart"
+        title="Affluence Over Time"
         translationKey="dashboard.charts.affluenceChart"
-        data={params.sensorData?.affluenceData || {}}
-        dateRange={params.dateRange}
+        data={transformChartDataForExport(params.chartData)}
       >
-        {params.sensorData?.affluenceData?.length > 0 ? (
+        {!params.sensorData?.affluence ||
+        params.sensorData.affluence.length === 0 ? (
+          <div className="flex items-center justify-center h-64 text-gray-500">
+            No FootfallCam data available for affluence.
+          </div>
+        ) : (
           <AffluenceChart
-            data={params.sensorData.affluenceData}
+            data={{
+              categories: params.sensorData.timestamps || [],
+              values: params.sensorData.affluence || [],
+            }}
             groupBy={params.sensorRecordsFormData.groupBy}
           />
-        ) : (
-          <NoDataMessage />
         )}
       </ChartCard>
     ),
