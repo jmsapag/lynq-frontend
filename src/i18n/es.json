@@ -524,6 +524,9 @@
     "businessNotFound": "Empresa no encontrada"
   },
   "reports": {
+    "title": "Reportes",
+    "description": "Configure y genere reportes para su negocio.",
+    "dragDropDescription": "Diseñe el diseño de su reporte arrastrando y soltando widgets.",
     "configure": "Configurar",
     "modalTitle": "Configurar Reporte",
     "form": {
@@ -544,13 +547,12 @@
       "saveSuccessDesc": "La configuración del reporte se ha guardado correctamente.",
       "saveErrorTitle": "Error al Guardar",
       "saveErrorDesc": "Hubo un error al guardar la configuración del reporte."
-    },
-    "businessNotFound": "Empresa no encontrada",
-    "auth": {
-      "user": "Usuario",
-      "password": "Password",
-      "userPlaceholder": "Enter username",
-      "passwordPlaceholder": "Enter password"
     }
+  },
+  "auth": {
+    "user": "Usuario",
+    "password": "Password",
+    "userPlaceholder": "Enter username",
+    "passwordPlaceholder": "Enter password"
   }
 }

@@ -14,6 +14,7 @@ import { useTranslation } from "react-i18next";
 import { ReportConfig } from "../../types/reports";
 import { useState } from "react";
 import { useLocations } from "../../hooks/locations/useLocations";
+import { ReportLayoutService } from "../../services/reportLayoutService";
 
 interface ReportConfigModalProps {
   isOpen: boolean;
@@ -41,10 +42,16 @@ const ReportConfigModal = ({
 }: ReportConfigModalProps) => {
   const { t } = useTranslation();
   const { locations } = useLocations();
+  
+  // Get available layouts from the service
+  const reportLayoutService = ReportLayoutService.getInstance();
+  const availableLayouts = reportLayoutService.getAllLayouts();
+  
   const [config, setConfig] = useState<ReportConfig>({
     type: "weekly",
     enabled: true,
     timezone: "America/New_York",
+    layoutId: "default", // Set default layout
     dataFilter: {
       locationIds: [],
       daysOfWeek: [1, 2, 3, 4, 5],
@@ -137,7 +144,7 @@ const ReportConfigModal = ({
     }
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     onSave(config);
   };
@@ -153,6 +160,43 @@ const ReportConfigModal = ({
         <form onSubmit={handleSubmit}>
           <ModalHeader>{t("reports.modalTitle")}</ModalHeader>
           <ModalBody className="space-y-6">
+            {/* Layout Selection */}
+            <fieldset className="border p-4 rounded-md">
+              <legend className="text-lg font-medium px-1">
+                {t("reports.form.layoutTitle", "Report Layout")}
+              </legend>
+              <div className="mt-2">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  {t("reports.form.layout", "Select Layout")}
+                </label>
+                <Select
+                  size="sm"
+                  selectedKeys={config.layoutId ? [config.layoutId] : []}
+                  onSelectionChange={async (keys) => {
+                    const layoutId = Array.from(keys)[0] as string;
+                    setConfig((prev) => ({
+                      ...prev,
+                      layoutId: layoutId,
+                    }));
+                  }}
+                  placeholder={t("reports.form.selectLayout", "Choose a layout...")}
+                >
+                  {availableLayouts.map((layout) => (
+                    <SelectItem key={layout.id}>
+                      {layout.name}
+                    </SelectItem>
+                  ))}
+                </Select>
+                {config.layoutId && (
+                  <div className="mt-1">
+                    <p className="text-xs text-gray-500">
+                      {availableLayouts.find(l => l.id === config.layoutId)?.description}
+                    </p>
+                  </div>
+                )}
+              </div>
+            </fieldset>
+            
             <fieldset className="border p-4 rounded-md">
               <legend className="text-lg font-medium px-1">
                 {t("reports.form.dataFilterTitle", "Data Filter")}

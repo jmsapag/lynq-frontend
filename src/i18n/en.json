@@ -526,6 +526,9 @@
     "businessNotFound": "Business not found"
   },
   "reports": {
+    "title": "Reports",
+    "description": "Configure and generate reports for your business.",
+    "dragDropDescription": "Design your report layout by dragging and dropping widgets.",
     "configure": "Configure",
     "modalTitle": "Configure Report",
     "form": {
