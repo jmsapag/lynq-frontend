@@ -32,6 +32,7 @@
     "needHelp": "¿Tienes preguntas? Revisa nuestras",
     "faqLink": "FAQs",
     "ticketListPlaceholder": "Tus tickets de soporte se mostrarán aquí.",
+    "lastUpdated": "Última actualización",
     "faq": {
       "title": "Preguntas Frecuentes",
       "q1Title": "¿Cómo restablezco mi contraseña?",
@@ -57,6 +58,12 @@
       "status": "Estado",
       "created": "Creado",
       "updated": "Actualizado"
+    },
+    "status": {
+      "open": "Abierto",
+      "in_progress": "En Progreso",
+      "resolved": "Resuelto",
+      "closed": "Cerrado"
     }
   },
   "footer": {
