@@ -45,7 +45,9 @@ interface ReportWidgetFactoryParams {
   getSensorDetails: () => any[];
 }
 
-export const createReportWidgets = (params: ReportWidgetFactoryParams): ReportWidgetInfo[] => {
+export const createReportWidgets = (
+  params: ReportWidgetFactoryParams,
+): ReportWidgetInfo[] => {
   const commonData = {
     date_range_start: format(params.dateRange.start, "yyyy-MM-dd"),
     date_range_end: format(params.dateRange.end, "yyyy-MM-dd"),
@@ -119,7 +121,10 @@ export const createReportWidgets = (params: ReportWidgetFactoryParams): ReportWi
           descriptionTranslationKey="dashboard.metrics.dailyAverageInDescription"
           unit="people/day"
           dateRange={params.dateRange}
-          data={{ ...commonData, daily_average_in: params.metrics.dailyAverageIn }}
+          data={{
+            ...commonData,
+            daily_average_in: params.metrics.dailyAverageIn,
+          }}
         />
       ),
     },
@@ -136,7 +141,10 @@ export const createReportWidgets = (params: ReportWidgetFactoryParams): ReportWi
           descriptionTranslationKey="dashboard.metrics.dailyAverageOutDescription"
           unit="people/day"
           dateRange={params.dateRange}
-          data={{ ...commonData, daily_average_out: params.metrics.dailyAverageOut }}
+          data={{
+            ...commonData,
+            daily_average_out: params.metrics.dailyAverageOut,
+          }}
         />
       ),
     },
@@ -218,7 +226,10 @@ export const createReportWidgets = (params: ReportWidgetFactoryParams): ReportWi
           descriptionTranslationKey="dashboard.metrics.percentageChangeDescription"
           unit="%"
           dateRange={params.dateRange}
-          data={{ ...commonData, percentage_change: params.metrics.percentageChange }}
+          data={{
+            ...commonData,
+            percentage_change: params.metrics.percentageChange,
+          }}
         />
       ),
     },
@@ -240,7 +251,10 @@ export const createReportWidgets = (params: ReportWidgetFactoryParams): ReportWi
           descriptionTranslationKey="dashboard.metrics.returningCustomersDescription"
           unit={params.metrics.returningCustomers > 0 ? "customers" : ""}
           dateRange={params.dateRange}
-          data={{ ...commonData, returning_customers: params.metrics.returningCustomers }}
+          data={{
+            ...commonData,
+            returning_customers: params.metrics.returningCustomers,
+          }}
         />
       ),
     },
@@ -261,7 +275,10 @@ export const createReportWidgets = (params: ReportWidgetFactoryParams): ReportWi
           descriptionTranslationKey="dashboard.metrics.avgVisitDurationDescription"
           unit={params.metrics.avgVisitDuration > 0 ? "min" : ""}
           dateRange={params.dateRange}
-          data={{ ...commonData, avg_visit_duration: params.metrics.avgVisitDuration }}
+          data={{
+            ...commonData,
+            avg_visit_duration: params.metrics.avgVisitDuration,
+          }}
         />
       ),
     },
@@ -304,9 +321,7 @@ export const createReportWidgets = (params: ReportWidgetFactoryParams): ReportWi
       type: "traffic-heatmap",
       title: "Traffic Heatmap",
       category: "chart",
-      component: (
-        <ChartHeatMap data={params.sensorData} />
-      ),
+      component: <ChartHeatMap data={params.sensorData} />,
     },
     {
       id: "entry-rate-chart",

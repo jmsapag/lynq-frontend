@@ -18,6 +18,7 @@ The Reports section provides a flexible drag-and-drop interface that allows user
 ### Core Components
 
 #### 1. ReportDragDropInterface (`src/components/reports/ReportDragDropInterface.tsx`)
+
 - **Purpose**: Main container component orchestrating the entire drag-and-drop experience
 - **Responsibilities**:
   - Layout selection and management
@@ -27,6 +28,7 @@ The Reports section provides a flexible drag-and-drop interface that allows user
   - Integration with backend services
 
 #### 2. ReportLayoutService (`src/services/reportLayoutService.ts`)
+
 - **Purpose**: Service layer handling layout configurations and widget placements
 - **Responsibilities**:
   - CRUD operations for layout configurations
@@ -35,6 +37,7 @@ The Reports section provides a flexible drag-and-drop interface that allows user
   - Widget placement persistence
 
 #### 3. useReportLayout Hook (`src/hooks/reports/useReportLayout.ts`)
+
 - **Purpose**: React hook managing layout state and drag-and-drop logic
 - **Responsibilities**:
   - Layout state management
@@ -45,13 +48,14 @@ The Reports section provides a flexible drag-and-drop interface that allows user
 ## Data Models
 
 ### Layout Configuration
+
 ```typescript
 interface ReportLayoutConfig {
-  id: string;                    // Unique layout identifier
-  name: string;                  // Display name
-  description: string;           // Layout description
-  isCustom: boolean;            // Whether it's user-created
-  sections: LayoutSection[];     // Layout structure
+  id: string; // Unique layout identifier
+  name: string; // Display name
+  description: string; // Layout description
+  isCustom: boolean; // Whether it's user-created
+  sections: LayoutSection[]; // Layout structure
   widgetPlacements: ReportWidgetPlacements; // Default widget positions
   metadata?: {
     createdAt: Date;
@@ -62,6 +66,7 @@ interface ReportLayoutConfig {
 ```
 
 ### Widget Placements
+
 ```typescript
 interface ReportWidgetPlacements {
   [zoneId: string]: ReportWidgetType | null;
@@ -70,7 +75,7 @@ interface ReportWidgetPlacements {
 // Example:
 {
   "metric-1": "total-in",
-  "metric-2": "total-out", 
+  "metric-2": "total-out",
   "metric-3": "entry-rate",
   "chart-1": "people-flow-chart",
   "chart-2": null  // Empty zone
@@ -78,37 +83,43 @@ interface ReportWidgetPlacements {
 ```
 
 ### Layout Structure
+
 ```typescript
 interface LayoutSection {
-  id: string;                    // Section identifier
-  className: string;             // CSS classes for styling
-  zones: DropZone[];            // Available drop zones
+  id: string; // Section identifier
+  className: string; // CSS classes for styling
+  zones: DropZone[]; // Available drop zones
 }
 
 interface DropZone {
-  id: string;                    // Zone identifier
+  id: string; // Zone identifier
   type: "metric" | "chart" | "any"; // Accepted widget types
-  title?: string;                // Display title
+  title?: string; // Display title
 }
 ```
 
 ## User Workflow
 
 ### 1. Layout Selection
+
 Users can select from available layouts via dropdown:
+
 - **Default Layout**: 3 metrics + 3 charts in grid
 - **Metrics Grid**: 4x2 grid focused on metrics
 - **Compact View**: 2 metrics + 1 chart
 - **Custom Layouts**: User-created configurations
 
 ### 2. Edit Mode
+
 Toggle edit mode to enable:
+
 - Widget sidebar with available components
 - Drag-and-drop functionality
 - Zone highlighting and visual feedback
 - Save button visibility
 
 ### 3. Widget Placement
+
 - Drag widgets from sidebar to drop zones
 - Visual feedback shows compatible zones
 - Incompatible zones are disabled
@@ -116,6 +127,7 @@ Toggle edit mode to enable:
 - Drag to removal zone to delete placement
 
 ### 4. Auto-Save
+
 - Widget placements are automatically saved per layout
 - Switching layouts preserves individual configurations
 - Changes persist across browser sessions
@@ -123,8 +135,9 @@ Toggle edit mode to enable:
 ## Widget Types
 
 ### Metrics Widgets
+
 - `total-in`: Total entry count
-- `total-out`: Total exit count  
+- `total-out`: Total exit count
 - `entry-rate`: Entry rate percentage
 - `daily-average-in`: Daily average entries
 - `daily-average-out`: Daily average exits
@@ -136,6 +149,7 @@ Toggle edit mode to enable:
 - `affluence`: Affluence metric
 
 ### Chart Widgets
+
 - `people-flow-chart`: Traffic flow visualization
 - `traffic-heatmap`: Activity heatmap
 - `entry-rate-chart`: Entry rate trends
@@ -148,6 +162,7 @@ Toggle edit mode to enable:
 ### Layout Placements Management
 
 #### Save Widget Placements
+
 ```http
 POST /api/reports/layouts/placements
 Content-Type: application/json
@@ -166,6 +181,7 @@ Content-Type: application/json
 ```
 
 **Response (201 Created):**
+
 ```json
 {
   "success": true,
@@ -176,11 +192,13 @@ Content-Type: application/json
 ```
 
 #### Load Widget Placements
+
 ```http
 GET /api/reports/layouts/placements/{layoutId}
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "layoutId": "default",
@@ -197,6 +215,7 @@ GET /api/reports/layouts/placements/{layoutId}
 ```
 
 **Response (404 Not Found):**
+
 ```json
 {
   "error": "Layout placements not found",
@@ -205,22 +224,28 @@ GET /api/reports/layouts/placements/{layoutId}
 ```
 
 #### Get All Saved Configurations
+
 ```http
 GET /api/reports/layouts/configurations
 ```
 
 **Response (200 OK):**
+
 ```json
 {
   "configurations": [
     {
       "layoutId": "default",
-      "widgetPlacements": { /* ... */ },
+      "widgetPlacements": {
+        /* ... */
+      },
       "lastModified": "2025-08-27T10:30:00Z"
     },
     {
-      "layoutId": "metrics-grid", 
-      "widgetPlacements": { /* ... */ },
+      "layoutId": "metrics-grid",
+      "widgetPlacements": {
+        /* ... */
+      },
       "lastModified": "2025-08-27T09:15:00Z"
     }
   ]
@@ -230,6 +255,7 @@ GET /api/reports/layouts/configurations
 ### Error Handling
 
 #### Common Error Responses
+
 ```json
 // 400 Bad Request
 {
@@ -237,7 +263,7 @@ GET /api/reports/layouts/configurations
   "details": "Layout 'invalid-layout' does not exist"
 }
 
-// 500 Internal Server Error  
+// 500 Internal Server Error
 {
   "error": "Failed to save widget placements",
   "details": "Database connection error"
@@ -249,6 +275,7 @@ GET /api/reports/layouts/configurations
 ### Database Schema
 
 #### Layout Placements Table
+
 ```sql
 CREATE TABLE report_layout_placements (
   id SERIAL PRIMARY KEY,
@@ -261,23 +288,26 @@ CREATE TABLE report_layout_placements (
 );
 
 -- Index for faster lookups
-CREATE INDEX idx_layout_placements_user_layout 
+CREATE INDEX idx_layout_placements_user_layout
 ON report_layout_placements(user_id, layout_id);
 ```
 
 ### API Implementation Guidelines
 
 #### 1. Authentication & Authorization
+
 - All endpoints require valid JWT authentication
 - Users can only access their own layout configurations
 - Admin users can access all configurations (if needed)
 
 #### 2. Data Validation
+
 ```typescript
 // Widget placement validation
 interface WidgetPlacementRequest {
-  layoutId: string;           // Required, must be valid layout ID
-  widgetPlacements: {         // Required object
+  layoutId: string; // Required, must be valid layout ID
+  widgetPlacements: {
+    // Required object
     [zoneId: string]: string | null; // Widget type or null
   };
 }
@@ -290,32 +320,43 @@ interface WidgetPlacementRequest {
 ```
 
 #### 3. Business Logic
+
 ```typescript
 // Save widget placements
-async function saveLayoutPlacements(userId: number, request: WidgetPlacementRequest) {
+async function saveLayoutPlacements(
+  userId: number,
+  request: WidgetPlacementRequest,
+) {
   // 1. Validate layout exists
   const layout = await getLayoutById(request.layoutId);
-  if (!layout) throw new Error('Invalid layout ID');
-  
+  if (!layout) throw new Error("Invalid layout ID");
+
   // 2. Validate zones and widget types
   validateWidgetPlacements(layout, request.widgetPlacements);
-  
+
   // 3. Upsert database record
-  await upsertLayoutPlacements(userId, request.layoutId, request.widgetPlacements);
-  
+  await upsertLayoutPlacements(
+    userId,
+    request.layoutId,
+    request.widgetPlacements,
+  );
+
   // 4. Return success response
   return { success: true, layoutId: request.layoutId };
 }
 ```
 
 #### 4. Performance Considerations
+
 - Use database indexes for user_id + layout_id lookups
 - Cache frequently accessed layout definitions
 - Implement request rate limiting
 - Use JSONB for efficient widget placement storage
 
 #### 5. Fallback Handling
+
 The frontend implements localStorage fallback, so the backend should:
+
 - Return appropriate HTTP status codes
 - Handle partial failures gracefully
 - Provide clear error messages
@@ -324,46 +365,48 @@ The frontend implements localStorage fallback, so the backend should:
 ## Testing Guidelines
 
 ### Frontend Testing
+
 ```typescript
 // Test layout switching
-it('should load saved placements when switching layouts', async () => {
+it("should load saved placements when switching layouts", async () => {
   const { result } = renderHook(() => useReportLayout());
-  
+
   // Mock saved placements
   mockLayoutService.loadLayoutPlacements.mockResolvedValue({
-    'metric-1': 'total-in',
-    'chart-1': 'people-flow-chart'
+    "metric-1": "total-in",
+    "chart-1": "people-flow-chart",
   });
-  
+
   // Switch layout
   await act(async () => {
-    await result.current.setCurrentLayout('default');
+    await result.current.setCurrentLayout("default");
   });
-  
+
   // Verify placements loaded
   expect(result.current.widgetPlacements).toEqual({
-    'metric-1': 'total-in',
-    'chart-1': 'people-flow-chart'
+    "metric-1": "total-in",
+    "chart-1": "people-flow-chart",
   });
 });
 ```
 
 ### Backend Testing
+
 ```typescript
 // Test save endpoint
-describe('POST /api/reports/layouts/placements', () => {
-  it('should save valid widget placements', async () => {
+describe("POST /api/reports/layouts/placements", () => {
+  it("should save valid widget placements", async () => {
     const response = await request(app)
-      .post('/api/reports/layouts/placements')
-      .set('Authorization', `Bearer ${validToken}`)
+      .post("/api/reports/layouts/placements")
+      .set("Authorization", `Bearer ${validToken}`)
       .send({
-        layoutId: 'default',
+        layoutId: "default",
         widgetPlacements: {
-          'metric-1': 'total-in',
-          'chart-1': 'people-flow-chart'
-        }
+          "metric-1": "total-in",
+          "chart-1": "people-flow-chart",
+        },
       });
-      
+
     expect(response.status).toBe(201);
     expect(response.body.success).toBe(true);
   });
@@ -373,11 +416,13 @@ describe('POST /api/reports/layouts/placements', () => {
 ## Migration & Deployment
 
 ### Existing Data Migration
+
 If upgrading from a previous system:
+
 ```sql
 -- Migrate existing configurations to new format
 INSERT INTO report_layout_placements (user_id, layout_id, widget_placements)
-SELECT 
+SELECT
   user_id,
   'default' as layout_id,
   JSON_BUILD_OBJECT(
@@ -389,15 +434,18 @@ FROM legacy_report_configs;
 ```
 
 ### Feature Flags
+
 Consider implementing feature flags for:
+
 - New layout types
-- Advanced widget configurations  
+- Advanced widget configurations
 - Experimental features
 - A/B testing different UI approaches
 
 ## Future Enhancements
 
 ### Planned Features
+
 1. **Custom Layout Builder**: Allow users to create entirely custom layouts
 2. **Widget Configuration**: Per-widget settings and customization
 3. **Template Sharing**: Share layout templates between users
@@ -405,6 +453,7 @@ Consider implementing feature flags for:
 5. **Analytics**: Track layout usage and optimization suggestions
 
 ### Technical Improvements
+
 1. **Real-time Collaboration**: Multiple users editing same layout
 2. **Version History**: Track changes over time
 3. **Performance Optimization**: Virtual scrolling for large layouts

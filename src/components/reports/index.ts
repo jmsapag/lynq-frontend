@@ -8,7 +8,10 @@ export { ReportDropZone } from "./ReportDropZone";
 export { ReportWidget } from "./ReportWidget";
 
 // Widget factory
-export { createReportWidgets, getReportWidgetMeta } from "./reportWidgetFactory";
+export {
+  createReportWidgets,
+  getReportWidgetMeta,
+} from "./reportWidgetFactory";
 
 // Hook
 export { useReportLayout } from "../../hooks/reports/useReportLayout";
@@ -17,9 +20,9 @@ export { useReportLayout } from "../../hooks/reports/useReportLayout";
 export { ReportLayoutService } from "../../services/reportLayoutService";
 
 // Types
-export type { 
+export type {
   ReportWidget as ReportWidgetType,
   ReportLayoutConfig,
   ReportWidgetPlacements,
-  ReportConfiguration
+  ReportConfiguration,
 } from "../../types/reportLayout";

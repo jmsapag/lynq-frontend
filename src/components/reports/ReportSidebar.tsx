@@ -89,7 +89,9 @@ export const ReportSidebar: React.FC<ReportSidebarProps> = ({
       >
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-gray-50">
-          <h2 className="text-lg font-semibold text-gray-900">Report Widgets</h2>
+          <h2 className="text-lg font-semibold text-gray-900">
+            Report Widgets
+          </h2>
           <button
             onClick={onToggle}
             className="p-1 hover:bg-gray-200 rounded"

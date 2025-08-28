@@ -1,16 +1,36 @@
 import React, { useMemo } from "react";
 import { DndContext } from "@dnd-kit/core";
-import { Button, Switch, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, addToast } from "@heroui/react";
-import { PencilIcon, EyeIcon, Squares2X2Icon, ChevronDownIcon, DocumentArrowDownIcon } from "@heroicons/react/24/outline";
+import {
+  Button,
+  Switch,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+  addToast,
+} from "@heroui/react";
+import {
+  PencilIcon,
+  EyeIcon,
+  Squares2X2Icon,
+  ChevronDownIcon,
+  DocumentArrowDownIcon,
+} from "@heroicons/react/24/outline";
 
 import { useReportLayout } from "../../hooks/reports/useReportLayout";
 import { ReportSidebar } from "./ReportSidebar";
 import { ReportLayoutRenderer } from "./ReportLayoutRenderer";
-import { createReportWidgets, getReportWidgetMeta } from "./reportWidgetFactory";
+import {
+  createReportWidgets,
+  getReportWidgetMeta,
+} from "./reportWidgetFactory";
 import { ReportConfig } from "../../types/reports";
 import { ReportLayoutService } from "../../services/reportLayoutService";
 import { type WidgetFactoryParams } from "../dashboard/layout-dashboard/widgets";
-import { GroupByTimeAmount, AggregationType } from "../../types/sensorDataResponse";
+import {
+  GroupByTimeAmount,
+  AggregationType,
+} from "../../types/sensorDataResponse";
 import { Time } from "@internationalized/date";
 
 interface ReportDragDropInterfaceProps {
@@ -37,12 +57,14 @@ interface ReportDragDropInterfaceProps {
   dateRange?: { start: Date; end: Date };
   sensorIdsList?: string;
   getSensorDetails?: () => any[];
-  
+
   // Report configuration
   onSaveConfiguration?: (reportConfig: ReportConfig, layoutConfig: any) => void;
 }
 
-export const ReportDragDropInterface: React.FC<ReportDragDropInterfaceProps> = ({
+export const ReportDragDropInterface: React.FC<
+  ReportDragDropInterfaceProps
+> = ({
   metrics,
   chartData,
   sensorData,
@@ -71,38 +93,47 @@ export const ReportDragDropInterface: React.FC<ReportDragDropInterfaceProps> = (
   // Create widget factory params
   const widgetParams: WidgetFactoryParams | null = useMemo(() => {
     if (!metrics || !chartData) return null;
-    
+
     // Provide default sensorRecordsFormData structure if not provided
     const defaultSensorRecordsFormData = {
       sensorIds: [],
       fetchedDateRange: dateRange || null,
       dateRange: dateRange || { start: new Date(), end: new Date() },
-      hourRange: { 
-        start: new Time(0, 0), 
-        end: new Time(23, 59) 
+      hourRange: {
+        start: new Time(0, 0),
+        end: new Time(23, 59),
       },
       rawData: [],
       groupBy: "hour" as GroupByTimeAmount,
       aggregationType: "sum" as AggregationType,
       needToFetch: false,
     };
-    
+
     return {
       metrics,
       chartData,
       sensorData: sensorData || [],
-      sensorRecordsFormData: sensorRecordsFormData || defaultSensorRecordsFormData,
+      sensorRecordsFormData:
+        sensorRecordsFormData || defaultSensorRecordsFormData,
       dateRange,
       sensorIdsList,
       getSensorDetails,
     };
-  }, [metrics, chartData, sensorData, sensorRecordsFormData, dateRange, sensorIdsList, getSensorDetails]);
+  }, [
+    metrics,
+    chartData,
+    sensorData,
+    sensorRecordsFormData,
+    dateRange,
+    sensorIdsList,
+    getSensorDetails,
+  ]);
 
   // Create available widgets for dragging
   const availableWidgets = useMemo(() => {
     if (!widgetParams) {
       // Return metadata-only widgets for UI purposes
-      return getReportWidgetMeta().map(meta => ({
+      return getReportWidgetMeta().map((meta) => ({
         id: meta.id,
         type: meta.type,
         title: meta.title,
@@ -114,7 +145,7 @@ export const ReportDragDropInterface: React.FC<ReportDragDropInterfaceProps> = (
         ),
       }));
     }
-    
+
     return createReportWidgets(widgetParams);
   }, [widgetParams]);
 
@@ -135,18 +166,20 @@ export const ReportDragDropInterface: React.FC<ReportDragDropInterfaceProps> = (
   // Handle save configuration
   const handleSaveConfiguration = async () => {
     if (!currentLayout) return;
-    
-    const placedWidgetsCount = Object.values(widgetPlacements).filter(Boolean).length;
-    
+
+    const placedWidgetsCount =
+      Object.values(widgetPlacements).filter(Boolean).length;
+
     if (placedWidgetsCount === 0) {
       addToast({
         title: "No Widgets Placed",
-        description: "Please place at least one widget before saving the configuration.",
+        description:
+          "Please place at least one widget before saving the configuration.",
         severity: "warning",
       });
       return;
     }
-    
+
     // Create a basic report config (this could be enhanced with more options)
     const reportConfig: ReportConfig = {
       type: "weekly",
@@ -167,13 +200,15 @@ export const ReportDragDropInterface: React.FC<ReportDragDropInterfaceProps> = (
     // Save using the API with localStorage fallback
     const reportLayoutService = ReportLayoutService.getInstance();
     try {
-      await reportLayoutService.saveLayoutPlacements(currentLayout.id, widgetPlacements);
+      await reportLayoutService.saveLayoutPlacements(
+        currentLayout.id,
+        widgetPlacements,
+      );
     } catch (error) {
-      console.error('Failed to save layout placements via API:', error);
+      console.error("Failed to save layout placements via API:", error);
       // Error handling is done within the service method
     }
 
-    
     if (onSaveConfiguration) {
       onSaveConfiguration(reportConfig, {
         layout: currentLayout,
@@ -216,14 +251,23 @@ export const ReportDragDropInterface: React.FC<ReportDragDropInterfaceProps> = (
                 aria-label="Report layout selection"
                 onAction={(key) => handleLayoutChange(key as string)}
                 selectionMode="single"
-                items={[...availableLayouts, { id: "create-custom", name: "+ Create Custom Layout" }]}
+                items={[
+                  ...availableLayouts,
+                  { id: "create-custom", name: "+ Create Custom Layout" },
+                ]}
               >
                 {(item: any) => (
-                  <DropdownItem 
-                    key={item.id} 
+                  <DropdownItem
+                    key={item.id}
                     textValue={item.name}
-                    onPress={item.id === "create-custom" ? handleCreateCustomLayout : undefined}
-                    className={item.id === "create-custom" ? "text-blue-600" : ""}
+                    onPress={
+                      item.id === "create-custom"
+                        ? handleCreateCustomLayout
+                        : undefined
+                    }
+                    className={
+                      item.id === "create-custom" ? "text-blue-600" : ""
+                    }
                   >
                     {item.name}
                   </DropdownItem>
@@ -256,9 +300,7 @@ export const ReportDragDropInterface: React.FC<ReportDragDropInterfaceProps> = (
                 variant="bordered"
                 size="sm"
                 onPress={() => setIsSidebarOpen(!isSidebarOpen)}
-                startContent={
-                  <Squares2X2Icon className="w-4 h-4" />
-                }
+                startContent={<Squares2X2Icon className="w-4 h-4" />}
               >
                 {isSidebarOpen ? "Hide" : "Show"} Widgets
               </Button>
@@ -271,7 +313,7 @@ export const ReportDragDropInterface: React.FC<ReportDragDropInterfaceProps> = (
       <div className="flex-1">
         <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
           {/* Layout Area */}
-          <div 
+          <div
             className={`transition-all duration-300 ease-in-out ${
               isEditMode && isSidebarOpen ? "mr-80" : "mr-0"
             }`}
@@ -300,17 +342,17 @@ export const ReportDragDropInterface: React.FC<ReportDragDropInterfaceProps> = (
       </div>
 
       {/* Floating Action Button */}
-        <div className="sticky bottom-4 left-4 z-50">
-          <Button
-            color="primary"
-            size="lg"
-            startContent={<DocumentArrowDownIcon className="w-5 h-5" />}
-            onPress={handleSaveConfiguration}
-            className="shadow-lg"
-          >
-            Save
-          </Button>
-        </div>
+      <div className="sticky bottom-4 left-4 z-50">
+        <Button
+          color="primary"
+          size="lg"
+          startContent={<DocumentArrowDownIcon className="w-5 h-5" />}
+          onPress={handleSaveConfiguration}
+          className="shadow-lg"
+        >
+          Save
+        </Button>
+      </div>
     </div>
   );
 };

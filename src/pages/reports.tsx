@@ -42,17 +42,17 @@ const ReportsPage = () => {
   // Mock sensor records form data with proper structure
   const mockSensorRecordsFormData = {
     sensorIds: [1, 2, 3],
-    fetchedDateRange: { 
-      start: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), 
-      end: new Date() 
+    fetchedDateRange: {
+      start: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+      end: new Date(),
     },
-    dateRange: { 
-      start: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), 
-      end: new Date() 
+    dateRange: {
+      start: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+      end: new Date(),
     },
-    hourRange: { 
-      start: new Time(0, 0), 
-      end: new Time(23, 59) 
+    hourRange: {
+      start: new Time(0, 0),
+      end: new Time(23, 59),
     },
     rawData: [],
     groupBy: "hour" as const,
@@ -62,19 +62,20 @@ const ReportsPage = () => {
 
   // Handle saving report configuration
   const handleSaveConfiguration = (reportConfig: any, layoutConfig: any) => {
-    console.log("Report configuration saved:", { 
-      reportConfig, 
+    console.log("Report configuration saved:", {
+      reportConfig,
       layoutConfig,
       note: "Configuration now includes complete widget placements per layout",
-      example: "The saved structure now looks like: { default: { metric-1: 'total-in', metric-2: 'total-out', chart-1: 'people-flow-chart' }, 'metrics-grid': { metric-1: 'entry-rate', ... }, ... }"
+      example:
+        "The saved structure now looks like: { default: { metric-1: 'total-in', metric-2: 'total-out', chart-1: 'people-flow-chart' }, 'metrics-grid': { metric-1: 'entry-rate', ... }, ... }",
     });
-    
+
     // The system now automatically handles:
     // 1. Saving complete layout configurations (report config + widget placements) to API
     // 2. Auto-loading configurations when layouts are selected
     // 3. Falling back to localStorage if API fails
     // 4. No need for "Load Saved" button - configurations auto-load
-    
+
     // Each layout type maintains its own widget placement configuration
     // When user switches layouts, their saved widget arrangements are automatically restored
   };
@@ -87,9 +88,11 @@ const ReportsPage = () => {
             {t("reports.dragDropDescription")}
           </p>
         </div>
-        
+
         <div className="flex items-center gap-4">
-          <Button onPress={openModal} color="primary">{t("reports.configure")}</Button>
+          <Button onPress={openModal} color="primary">
+            {t("reports.configure")}
+          </Button>
         </div>
       </div>
 

@@ -8,9 +8,9 @@ export interface ReportWidget {
   order: number;
 }
 
-export type ReportWidgetType = 
+export type ReportWidgetType =
   | "total-in"
-  | "total-out" 
+  | "total-out"
   | "entry-rate"
   | "daily-average-in"
   | "daily-average-out"

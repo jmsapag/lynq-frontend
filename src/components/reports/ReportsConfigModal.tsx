@@ -42,11 +42,11 @@ const ReportConfigModal = ({
 }: ReportConfigModalProps) => {
   const { t } = useTranslation();
   const { locations } = useLocations();
-  
+
   // Get available layouts from the service
   const reportLayoutService = ReportLayoutService.getInstance();
   const availableLayouts = reportLayoutService.getAllLayouts();
-  
+
   const [config, setConfig] = useState<ReportConfig>({
     type: "weekly",
     enabled: true,
@@ -179,24 +179,28 @@ const ReportConfigModal = ({
                       layoutId: layoutId,
                     }));
                   }}
-                  placeholder={t("reports.form.selectLayout", "Choose a layout...")}
+                  placeholder={t(
+                    "reports.form.selectLayout",
+                    "Choose a layout...",
+                  )}
                 >
                   {availableLayouts.map((layout) => (
-                    <SelectItem key={layout.id}>
-                      {layout.name}
-                    </SelectItem>
+                    <SelectItem key={layout.id}>{layout.name}</SelectItem>
                   ))}
                 </Select>
                 {config.layoutId && (
                   <div className="mt-1">
                     <p className="text-xs text-gray-500">
-                      {availableLayouts.find(l => l.id === config.layoutId)?.description}
+                      {
+                        availableLayouts.find((l) => l.id === config.layoutId)
+                          ?.description
+                      }
                     </p>
                   </div>
                 )}
               </div>
             </fieldset>
-            
+
             <fieldset className="border p-4 rounded-md">
               <legend className="text-lg font-medium px-1">
                 {t("reports.form.dataFilterTitle", "Data Filter")}

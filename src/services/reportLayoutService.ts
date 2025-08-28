@@ -1,4 +1,7 @@
-import { ReportLayoutConfig, ReportWidgetPlacements } from "../types/reportLayout";
+import {
+  ReportLayoutConfig,
+  ReportWidgetPlacements,
+} from "../types/reportLayout";
 import { ReportConfig } from "../types/reports";
 import { addToast } from "@heroui/react";
 import { axiosPrivate } from "./axiosClient";
@@ -112,7 +115,11 @@ class ReportLayoutServiceClass {
             id: "main-chart",
             className: "grid grid-cols-1 mb-6",
             zones: [
-              { id: "chart-main", type: "chart", title: "Main Analytics Chart" },
+              {
+                id: "chart-main",
+                type: "chart",
+                title: "Main Analytics Chart",
+              },
             ],
           },
           {
@@ -173,7 +180,7 @@ class ReportLayoutServiceClass {
 
   getLayout(layoutId: string): ReportLayoutConfig | null {
     const layouts = this.getAllLayouts();
-    return layouts.find(layout => layout.id === layoutId) || null;
+    return layouts.find((layout) => layout.id === layoutId) || null;
   }
 
   getCurrentLayout(): ReportLayoutConfig | null {
@@ -192,27 +199,37 @@ class ReportLayoutServiceClass {
     this.currentLayoutId = layoutId;
   }
 
-  updateWidgetPlacements(layoutId: string, placements: ReportWidgetPlacements): void {
+  updateWidgetPlacements(
+    layoutId: string,
+    placements: ReportWidgetPlacements,
+  ): void {
     // In a real implementation, this would save to localStorage or API
-    console.log(`Updating widget placements for layout ${layoutId}:`, placements);
+    console.log(
+      `Updating widget placements for layout ${layoutId}:`,
+      placements,
+    );
   }
 
-  saveConfiguration(reportConfig: ReportConfig, layout: ReportLayoutConfig, placements: ReportWidgetPlacements): void {
+  saveConfiguration(
+    reportConfig: ReportConfig,
+    layout: ReportLayoutConfig,
+    placements: ReportWidgetPlacements,
+  ): void {
     try {
       const configKey = `report-config-${layout.id}`;
       const placementsKey = `report-placements-${layout.id}`;
-      
+
       // Save to localStorage for persistence
       localStorage.setItem(configKey, JSON.stringify(reportConfig));
       localStorage.setItem(placementsKey, JSON.stringify(placements));
-      
+
       console.log("Report configuration saved successfully:", {
         layoutId: layout.id,
         layoutName: layout.name,
         reportConfig,
         placements,
       });
-      
+
       // Show success toast notification
       addToast({
         title: "Configuration Saved",
@@ -255,25 +272,28 @@ class ReportLayoutServiceClass {
         version: "1.0.0",
       },
     };
-    
+
     return newLayout;
   }
 
   // API Integration Methods
-  
+
   /**
    * Save widget placements for a layout
    */
   async saveLayoutPlacements(
-    layoutId: string, 
-    widgetPlacements: ReportWidgetPlacements
+    layoutId: string,
+    widgetPlacements: ReportWidgetPlacements,
   ): Promise<void> {
     try {
       // Try to save to API first
-      const response = await axiosPrivate.post('/api/reports/layouts/placements', {
-        layoutId,
-        widgetPlacements,
-      });
+      const response = await axiosPrivate.post(
+        "/api/reports/layouts/placements",
+        {
+          layoutId,
+          widgetPlacements,
+        },
+      );
 
       if (response.status === 200 || response.status === 201) {
         addToast({
@@ -284,9 +304,12 @@ class ReportLayoutServiceClass {
         return;
       }
     } catch (error) {
-      console.warn('Failed to save to API, using localStorage fallback:', error);
+      console.warn(
+        "Failed to save to API, using localStorage fallback:",
+        error,
+      );
     }
-    
+
     // Fallback to localStorage if API fails
     this.saveLayoutPlacementsLocally(layoutId, widgetPlacements);
   }
@@ -294,21 +317,28 @@ class ReportLayoutServiceClass {
   /**
    * Load widget placements for a layout
    */
-  async loadLayoutPlacements(layoutId: string): Promise<ReportWidgetPlacements | null> {
+  async loadLayoutPlacements(
+    layoutId: string,
+  ): Promise<ReportWidgetPlacements | null> {
     try {
       // Try to load from API first
-      const response = await axiosPrivate.get(`/api/reports/layouts/placements/${layoutId}`);
+      const response = await axiosPrivate.get(
+        `/api/reports/layouts/placements/${layoutId}`,
+      );
 
       if (response.status === 200 && response.data) {
         return response.data.widgetPlacements || null;
       }
     } catch (error) {
-      console.warn('Failed to load from API, using localStorage fallback:', error);
+      console.warn(
+        "Failed to load from API, using localStorage fallback:",
+        error,
+      );
     }
-    
+
     // Fallback to localStorage if API fails
     const localPlacements = this.loadLayoutPlacementsLocally(layoutId);
-    
+
     if (localPlacements) {
       if (navigator.onLine) {
         addToast({
@@ -317,10 +347,10 @@ class ReportLayoutServiceClass {
           color: "warning",
         });
       }
-      
+
       return localPlacements;
     }
-    
+
     return null;
   }
 
@@ -328,20 +358,20 @@ class ReportLayoutServiceClass {
    * Save widget placements to localStorage (fallback method)
    */
   private saveLayoutPlacementsLocally(
-    layoutId: string, 
-    widgetPlacements: ReportWidgetPlacements
+    layoutId: string,
+    widgetPlacements: ReportWidgetPlacements,
   ): void {
     try {
       const configKey = `report-layout-placements-${layoutId}`;
       localStorage.setItem(configKey, JSON.stringify(widgetPlacements));
-      
+
       addToast({
         title: "Layout Saved Locally",
         description: `Widget placements saved locally for ${this.getLayout(layoutId)?.name}`,
         color: "success",
       });
     } catch (error) {
-      console.error('Failed to save to localStorage:', error);
+      console.error("Failed to save to localStorage:", error);
       addToast({
         title: "Save Failed",
         description: "Unable to save layout - storage unavailable",
@@ -353,14 +383,16 @@ class ReportLayoutServiceClass {
   /**
    * Load widget placements from localStorage (fallback method)
    */
-  private loadLayoutPlacementsLocally(layoutId: string): ReportWidgetPlacements | null {
+  private loadLayoutPlacementsLocally(
+    layoutId: string,
+  ): ReportWidgetPlacements | null {
     try {
       const configKey = `report-layout-placements-${layoutId}`;
       const stored = localStorage.getItem(configKey);
       if (stored) {
         return JSON.parse(stored);
       }
-      
+
       // Check for legacy storage format
       const legacyKey = `report-complete-config-${layoutId}`;
       const legacyStored = localStorage.getItem(legacyKey);
@@ -368,10 +400,10 @@ class ReportLayoutServiceClass {
         const legacyData = JSON.parse(legacyStored);
         return legacyData.widgetPlacements || null;
       }
-      
+
       return null;
     } catch (error) {
-      console.error('Failed to load from localStorage:', error);
+      console.error("Failed to load from localStorage:", error);
       return null;
     }
   }
@@ -379,31 +411,37 @@ class ReportLayoutServiceClass {
   /**
    * Get all saved layout configurations (both API and localStorage)
    */
-  async getAllSavedConfigurations(): Promise<Array<{
-    layoutId: string, 
-    widgetPlacements: ReportWidgetPlacements | null,
-    source: 'api' | 'local'
-  }>> {
+  async getAllSavedConfigurations(): Promise<
+    Array<{
+      layoutId: string;
+      widgetPlacements: ReportWidgetPlacements | null;
+      source: "api" | "local";
+    }>
+  > {
     const configurations: Array<{
-      layoutId: string, 
-      widgetPlacements: ReportWidgetPlacements | null,
-      source: 'api' | 'local'
+      layoutId: string;
+      widgetPlacements: ReportWidgetPlacements | null;
+      source: "api" | "local";
     }> = [];
-    
+
     try {
       // Try to fetch from API first
-      const response = await axiosPrivate.get('/api/reports/layouts/configurations');
+      const response = await axiosPrivate.get(
+        "/api/reports/layouts/configurations",
+      );
 
       if (response.status === 200) {
         const apiConfigs = response.data;
-        configurations.push(...apiConfigs.map((config: any) => ({
-          layoutId: config.layoutId,
-          widgetPlacements: config.widgetPlacements,
-          source: 'api' as const,
-        })));
+        configurations.push(
+          ...apiConfigs.map((config: any) => ({
+            layoutId: config.layoutId,
+            widgetPlacements: config.widgetPlacements,
+            source: "api" as const,
+          })),
+        );
       }
     } catch (error) {
-      console.warn('Failed to fetch configurations from API:', error);
+      console.warn("Failed to fetch configurations from API:", error);
     }
 
     // Also check localStorage for any configurations
@@ -412,19 +450,18 @@ class ReportLayoutServiceClass {
       const localPlacements = this.loadLayoutPlacementsLocally(layout.id);
       if (localPlacements) {
         // Only add if not already present from API
-        const exists = configurations.some(c => c.layoutId === layout.id);
+        const exists = configurations.some((c) => c.layoutId === layout.id);
         if (!exists) {
           configurations.push({
             layoutId: layout.id,
             widgetPlacements: localPlacements,
-            source: 'local',
+            source: "local",
           });
         }
       }
     }
     return configurations;
   }
-
 }
 
 export const ReportLayoutService = ReportLayoutServiceClass;

@@ -252,7 +252,7 @@ const Dashboard = () => {
 
     // Get chart widgets (excluding all metrics that are in overview)
     const chartWidgets = createWidgetConfig(params).filter(
-      (widget) => widget.category === "chart"
+      (widget) => widget.category === "chart",
     );
 
     // Get all overview metric widgets (includes all metric widgets)

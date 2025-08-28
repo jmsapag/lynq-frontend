@@ -1,7 +1,11 @@
 import React from "react";
 import { ReportDropZone } from "./ReportDropZone";
 import { ReportWidget } from "./ReportWidget";
-import { ReportLayoutConfig, ReportWidgetPlacements, ReportWidgetType } from "../../types/reportLayout";
+import {
+  ReportLayoutConfig,
+  ReportWidgetPlacements,
+  ReportWidgetType,
+} from "../../types/reportLayout";
 
 interface ReportWidgetInfo {
   id: string;
@@ -83,7 +87,7 @@ export const ReportLayoutRenderer: React.FC<ReportLayoutRendererProps> = ({
       <div className="space-y-6">
         {layout.sections.map((section) => {
           const hasWidgets = section.zones.some(
-            (zone) => widgetPlacements[zone.id]
+            (zone) => widgetPlacements[zone.id],
           );
           if (!hasWidgets) return null;
 

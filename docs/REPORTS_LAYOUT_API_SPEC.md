@@ -27,6 +27,7 @@ Save widget placements for a specific layout.
 **Endpoint:** `POST /api/reports/layouts/placements`
 
 **Request Body:**
+
 ```json
 {
   "layoutId": "default",
@@ -42,14 +43,16 @@ Save widget placements for a specific layout.
 ```
 
 **Request Schema:**
+
 ```typescript
 interface SavePlacementsRequest {
-  layoutId: string;                           // Required: Layout identifier
+  layoutId: string; // Required: Layout identifier
   widgetPlacements: Record<string, string | null>; // Required: Zone-to-widget mapping
 }
 ```
 
 **Success Response (201 Created):**
+
 ```json
 {
   "success": true,
@@ -61,7 +64,8 @@ interface SavePlacementsRequest {
 
 **Error Responses:**
 
-*400 Bad Request - Invalid Layout:*
+_400 Bad Request - Invalid Layout:_
+
 ```json
 {
   "error": "Invalid layout ID",
@@ -70,7 +74,8 @@ interface SavePlacementsRequest {
 }
 ```
 
-*400 Bad Request - Invalid Widget Placement:*
+_400 Bad Request - Invalid Widget Placement:_
+
 ```json
 {
   "error": "Invalid widget placement",
@@ -79,7 +84,8 @@ interface SavePlacementsRequest {
 }
 ```
 
-*500 Internal Server Error:*
+_500 Internal Server Error:_
+
 ```json
 {
   "error": "Failed to save widget placements",
@@ -95,9 +101,11 @@ Retrieve saved widget placements for a specific layout.
 **Endpoint:** `GET /api/reports/layouts/placements/{layoutId}`
 
 **Path Parameters:**
+
 - `layoutId` (string): The layout identifier
 
 **Success Response (200 OK):**
+
 ```json
 {
   "layoutId": "default",
@@ -116,7 +124,8 @@ Retrieve saved widget placements for a specific layout.
 
 **Error Responses:**
 
-*404 Not Found:*
+_404 Not Found:_
+
 ```json
 {
   "error": "Layout placements not found",
@@ -133,10 +142,12 @@ Retrieve all saved layout configurations for the authenticated user.
 **Endpoint:** `GET /api/reports/layouts/configurations`
 
 **Query Parameters:**
+
 - `include_defaults` (boolean, optional): Include default layout configurations (default: false)
 - `modified_since` (ISO 8601 datetime, optional): Only return configurations modified after this date
 
 **Success Response (200 OK):**
+
 ```json
 {
   "configurations": [
@@ -174,16 +185,19 @@ Remove saved widget placements for a specific layout.
 **Endpoint:** `DELETE /api/reports/layouts/placements/{layoutId}`
 
 **Path Parameters:**
+
 - `layoutId` (string): The layout identifier
 
 **Success Response (204 No Content):**
+
 ```
 (Empty response body)
 ```
 
 **Error Responses:**
 
-*404 Not Found:*
+_404 Not Found:_
+
 ```json
 {
   "error": "Layout placements not found",
@@ -200,6 +214,7 @@ Update multiple layout configurations in a single request.
 **Endpoint:** `PUT /api/reports/layouts/placements/bulk`
 
 **Request Body:**
+
 ```json
 {
   "configurations": [
@@ -222,6 +237,7 @@ Update multiple layout configurations in a single request.
 ```
 
 **Success Response (200 OK):**
+
 ```json
 {
   "success": true,
@@ -234,7 +250,7 @@ Update multiple layout configurations in a single request.
       "timestamp": "2025-08-27T10:30:00Z"
     },
     {
-      "layoutId": "metrics-grid", 
+      "layoutId": "metrics-grid",
       "status": "success",
       "timestamp": "2025-08-27T10:30:01Z"
     }
@@ -247,10 +263,11 @@ Update multiple layout configurations in a single request.
 ### Widget Types (Enums)
 
 **Metric Widgets:**
+
 ```typescript
-type MetricWidgetType = 
+type MetricWidgetType =
   | "total-in"
-  | "total-out" 
+  | "total-out"
   | "entry-rate"
   | "daily-average-in"
   | "daily-average-out"
@@ -263,8 +280,9 @@ type MetricWidgetType =
 ```
 
 **Chart Widgets:**
+
 ```typescript
-type ChartWidgetType = 
+type ChartWidgetType =
   | "people-flow-chart"
   | "traffic-heatmap"
   | "entry-rate-chart"
@@ -301,12 +319,12 @@ const LAYOUT_DEFINITIONS: LayoutDefinition[] = [
       "metric-3": { type: "metric" },
       "chart-1": { type: "chart" },
       "chart-2": { type: "chart" },
-      "chart-3": { type: "chart" }
-    }
+      "chart-3": { type: "chart" },
+    },
   },
   {
     id: "metrics-grid",
-    name: "Metrics Grid", 
+    name: "Metrics Grid",
     description: "A 4x2 grid layout dedicated to metrics",
     zones: {
       "metric-1": { type: "metric" },
@@ -316,8 +334,8 @@ const LAYOUT_DEFINITIONS: LayoutDefinition[] = [
       "metric-5": { type: "metric" },
       "metric-6": { type: "metric" },
       "metric-7": { type: "metric" },
-      "metric-8": { type: "metric" }
-    }
+      "metric-8": { type: "metric" },
+    },
   },
   {
     id: "compact-view",
@@ -326,9 +344,9 @@ const LAYOUT_DEFINITIONS: LayoutDefinition[] = [
     zones: {
       "metric-1": { type: "metric" },
       "metric-2": { type: "metric" },
-      "chart-1": { type: "chart" }
-    }
-  }
+      "chart-1": { type: "chart" },
+    },
+  },
 ];
 ```
 
@@ -345,7 +363,7 @@ CREATE TABLE report_layout_placements (
   version VARCHAR(10) NOT NULL DEFAULT '1.0',
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-  
+
   CONSTRAINT unique_user_layout UNIQUE(user_id, layout_id),
   CONSTRAINT valid_layout_id CHECK (layout_id ~ '^[a-z0-9-_]+$'),
   CONSTRAINT valid_widget_placements CHECK (jsonb_typeof(widget_placements) = 'object')
@@ -356,15 +374,15 @@ CREATE TABLE report_layout_placements (
 
 ```sql
 -- Primary lookup index
-CREATE INDEX idx_layout_placements_user_layout 
+CREATE INDEX idx_layout_placements_user_layout
 ON report_layout_placements(user_id, layout_id);
 
 -- Modified timestamp index for sync queries
-CREATE INDEX idx_layout_placements_updated 
+CREATE INDEX idx_layout_placements_updated
 ON report_layout_placements(updated_at);
 
 -- JSONB GIN index for widget placement queries
-CREATE INDEX idx_layout_placements_widgets 
+CREATE INDEX idx_layout_placements_widgets
 ON report_layout_placements USING GIN (widget_placements);
 ```
 
@@ -380,7 +398,7 @@ BEGIN
 END;
 $$ language 'plpgsql';
 
-CREATE TRIGGER update_layout_placements_updated_at 
+CREATE TRIGGER update_layout_placements_updated_at
 BEFORE UPDATE ON report_layout_placements
 FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 ```
@@ -388,68 +406,85 @@ FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 ## Validation Rules
 
 ### 1. Layout ID Validation
+
 ```typescript
 function validateLayoutId(layoutId: string): boolean {
-  const validLayouts = ['default', 'metrics-grid', 'compact-view'];
+  const validLayouts = ["default", "metrics-grid", "compact-view"];
   return validLayouts.includes(layoutId) || /^custom-\d+$/.test(layoutId);
 }
 ```
 
 ### 2. Widget Placement Validation
+
 ```typescript
 function validateWidgetPlacements(
-  layoutId: string, 
-  placements: Record<string, string | null>
+  layoutId: string,
+  placements: Record<string, string | null>,
 ): ValidationResult {
   const layout = getLayoutDefinition(layoutId);
   const errors: string[] = [];
-  
+
   for (const [zoneId, widgetType] of Object.entries(placements)) {
     // Check if zone exists in layout
     if (!layout.zones[zoneId]) {
       errors.push(`Invalid zone: ${zoneId}`);
       continue;
     }
-    
+
     // Skip validation for null placements
     if (widgetType === null) continue;
-    
+
     // Check widget type validity
     if (!isValidWidgetType(widgetType)) {
       errors.push(`Invalid widget type: ${widgetType}`);
       continue;
     }
-    
+
     // Check zone-widget compatibility
     const zone = layout.zones[zoneId];
     if (!isCompatibleWidgetType(zone.type, widgetType)) {
-      errors.push(`Widget ${widgetType} not compatible with zone ${zoneId} (type: ${zone.type})`);
+      errors.push(
+        `Widget ${widgetType} not compatible with zone ${zoneId} (type: ${zone.type})`,
+      );
     }
   }
-  
+
   return { valid: errors.length === 0, errors };
 }
 ```
 
 ### 3. Widget Type Compatibility
+
 ```typescript
 function isCompatibleWidgetType(zoneType: string, widgetType: string): boolean {
-  if (zoneType === 'any') return true;
-  
+  if (zoneType === "any") return true;
+
   const metricWidgets = [
-    'total-in', 'total-out', 'entry-rate', 'daily-average-in',
-    'daily-average-out', 'most-crowded-day', 'least-crowded-day',
-    'percentage-change', 'returning-customers', 'avg-visit-duration', 'affluence'
+    "total-in",
+    "total-out",
+    "entry-rate",
+    "daily-average-in",
+    "daily-average-out",
+    "most-crowded-day",
+    "least-crowded-day",
+    "percentage-change",
+    "returning-customers",
+    "avg-visit-duration",
+    "affluence",
   ];
-  
+
   const chartWidgets = [
-    'people-flow-chart', 'traffic-heatmap', 'entry-rate-chart',
-    'occupancy-chart', 'comparative-chart', 'cumulative-chart'
+    "people-flow-chart",
+    "traffic-heatmap",
+    "entry-rate-chart",
+    "occupancy-chart",
+    "comparative-chart",
+    "cumulative-chart",
   ];
-  
-  if (zoneType === 'metric') return metricWidgets.includes(widgetType);
-  if (zoneType === 'chart') return chartWidgets.includes(widgetType);
-  
+
+  if (zoneType === "metric") return metricWidgets.includes(widgetType);
+  if (zoneType === "chart") return chartWidgets.includes(widgetType);
+
   return false;
 }
 ```
@@ -460,63 +495,69 @@ function isCompatibleWidgetType(zoneType: string, widgetType: string): boolean {
 
 ```typescript
 interface ApiError {
-  error: string;          // Human-readable error message
-  details?: string;       // Additional error details
-  code: string;          // Machine-readable error code
-  timestamp: string;     // ISO 8601 timestamp
-  requestId?: string;    // Request tracking ID
+  error: string; // Human-readable error message
+  details?: string; // Additional error details
+  code: string; // Machine-readable error code
+  timestamp: string; // ISO 8601 timestamp
+  requestId?: string; // Request tracking ID
 }
 ```
 
 ### Error Codes
 
-| Code | Description | HTTP Status |
-|------|-------------|-------------|
-| `INVALID_LAYOUT_ID` | Layout ID does not exist | 400 |
-| `INCOMPATIBLE_WIDGET_ZONE` | Widget type not compatible with zone | 400 |
-| `INVALID_WIDGET_TYPE` | Widget type does not exist | 400 |
-| `PLACEMENTS_NOT_FOUND` | No saved placements for layout | 404 |
-| `UNAUTHORIZED` | Invalid or missing authentication | 401 |
-| `FORBIDDEN` | User lacks permission for operation | 403 |
-| `VALIDATION_ERROR` | Request validation failed | 400 |
-| `DATABASE_ERROR` | Database operation failed | 500 |
-| `INTERNAL_ERROR` | Unexpected server error | 500 |
+| Code                       | Description                          | HTTP Status |
+| -------------------------- | ------------------------------------ | ----------- |
+| `INVALID_LAYOUT_ID`        | Layout ID does not exist             | 400         |
+| `INCOMPATIBLE_WIDGET_ZONE` | Widget type not compatible with zone | 400         |
+| `INVALID_WIDGET_TYPE`      | Widget type does not exist           | 400         |
+| `PLACEMENTS_NOT_FOUND`     | No saved placements for layout       | 404         |
+| `UNAUTHORIZED`             | Invalid or missing authentication    | 401         |
+| `FORBIDDEN`                | User lacks permission for operation  | 403         |
+| `VALIDATION_ERROR`         | Request validation failed            | 400         |
+| `DATABASE_ERROR`           | Database operation failed            | 500         |
+| `INTERNAL_ERROR`           | Unexpected server error              | 500         |
 
 ## Performance Considerations
 
 ### 1. Caching Strategy
+
 - Cache layout definitions in memory
 - Use Redis for frequently accessed user configurations
 - Implement cache invalidation on updates
 
 ### 2. Database Optimization
+
 - Use prepared statements for common queries
 - Implement connection pooling
 - Consider read replicas for heavy read workloads
 
 ### 3. Rate Limiting
+
 ```typescript
 // Example rate limiting configuration
 const rateLimits = {
-  saveLayoutPlacements: { requests: 10, window: '1m' },
-  loadLayoutPlacements: { requests: 100, window: '1m' },
-  bulkUpdate: { requests: 5, window: '1m' }
+  saveLayoutPlacements: { requests: 10, window: "1m" },
+  loadLayoutPlacements: { requests: 100, window: "1m" },
+  bulkUpdate: { requests: 5, window: "1m" },
 };
 ```
 
 ## Security Considerations
 
 ### 1. Input Sanitization
+
 - Validate all JSON inputs
 - Sanitize layout IDs to prevent injection
 - Limit widget placement object size
 
 ### 2. Authorization
+
 - Users can only access their own configurations
 - Implement role-based access for admin features
 - Log all configuration changes for audit
 
 ### 3. Data Protection
+
 - Encrypt sensitive configuration data at rest
 - Use HTTPS for all API communication
 - Implement request signing for critical operations
@@ -524,34 +565,39 @@ const rateLimits = {
 ## Testing
 
 ### Unit Tests
+
 ```typescript
-describe('Widget Placement Validation', () => {
-  test('should accept valid widget placements', () => {
-    const placements = { 'metric-1': 'total-in', 'chart-1': 'people-flow-chart' };
-    const result = validateWidgetPlacements('default', placements);
+describe("Widget Placement Validation", () => {
+  test("should accept valid widget placements", () => {
+    const placements = {
+      "metric-1": "total-in",
+      "chart-1": "people-flow-chart",
+    };
+    const result = validateWidgetPlacements("default", placements);
     expect(result.valid).toBe(true);
   });
-  
-  test('should reject incompatible widget types', () => {
-    const placements = { 'metric-1': 'people-flow-chart' }; // Chart in metric zone
-    const result = validateWidgetPlacements('default', placements);
+
+  test("should reject incompatible widget types", () => {
+    const placements = { "metric-1": "people-flow-chart" }; // Chart in metric zone
+    const result = validateWidgetPlacements("default", placements);
     expect(result.valid).toBe(false);
   });
 });
 ```
 
 ### Integration Tests
+
 ```typescript
-describe('POST /api/reports/layouts/placements', () => {
-  test('should save valid placements', async () => {
+describe("POST /api/reports/layouts/placements", () => {
+  test("should save valid placements", async () => {
     const response = await request(app)
-      .post('/api/reports/layouts/placements')
-      .set('Authorization', `Bearer ${validToken}`)
+      .post("/api/reports/layouts/placements")
+      .set("Authorization", `Bearer ${validToken}`)
       .send({
-        layoutId: 'default',
-        widgetPlacements: { 'metric-1': 'total-in' }
+        layoutId: "default",
+        widgetPlacements: { "metric-1": "total-in" },
       });
-      
+
     expect(response.status).toBe(201);
     expect(response.body.success).toBe(true);
   });
@@ -561,6 +607,7 @@ describe('POST /api/reports/layouts/placements', () => {
 ## Monitoring
 
 ### Key Metrics
+
 - API response times
 - Error rates by endpoint
 - Database query performance
@@ -568,6 +615,7 @@ describe('POST /api/reports/layouts/placements', () => {
 - User configuration change frequency
 
 ### Alerts
+
 - High error rates (>5%)
 - Slow response times (>500ms)
 - Database connection issues
