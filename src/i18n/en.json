@@ -33,6 +33,7 @@
     "needHelp": "Have questions? Check our",
     "faqLink": "FAQs",
     "ticketListPlaceholder": "Your support tickets will be displayed here.",
+    "lastUpdated": "Last updated",
     "faq": {
       "title": "Frequently Asked Questions",
       "q1Title": "How do I reset my password?",
@@ -58,6 +59,12 @@
       "status": "Status",
       "created": "Created",
       "updated": "Updated"
+    },
+    "status": {
+      "open": "Open",
+      "in_progress": "In Progress",
+      "resolved": "Resolved",
+      "closed": "Closed"
     }
   },
   "footer": {
