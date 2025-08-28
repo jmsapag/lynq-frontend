@@ -14,6 +14,19 @@ const NoDataMessage = () => (
   </div>
 );
 
+const transformChartDataForExport = (chartData: {
+  categories: string[];
+  values: Array<{ in: number; out: number }>;
+}): any[][] => {
+  const headers = ["category", "in", "out"];
+  const dataRows = chartData.categories.map((category, index) => [
+    category,
+    chartData.values[index]?.in ?? 0,
+    chartData.values[index]?.out ?? 0,
+  ]);
+  return [headers, ...dataRows];
+};
+
 export const ChartWidgets = {
   createPeopleFlowChartWidget: (params: WidgetFactoryParams): WidgetConfig => ({
     id: "people-flow-chart",
@@ -25,6 +38,7 @@ export const ChartWidgets = {
       <ChartCard
         title="Flujo de Personas (In/Out)"
         translationKey="dashboard.charts.peopleFlow"
+        data={transformChartDataForExport(params.chartData)}
       >
         {params.chartData.categories.length === 0 ? (
           <NoDataMessage />
@@ -48,6 +62,7 @@ export const ChartWidgets = {
       <ChartCard
         title="Traffic Heatmap (By Day & Hour)"
         translationKey="dashboard.charts.trafficHeatmap"
+        data={transformChartDataForExport(params.chartData)}
       >
         {params.chartData.categories.length === 0 ? (
           <NoDataMessage />
@@ -68,6 +83,7 @@ export const ChartWidgets = {
       <ChartCard
         title="Entry Rate Over Time"
         translationKey="dashboard.charts.entryRateOverTime"
+        data={transformChartDataForExport(params.chartData)}
       >
         {params.chartData.categories.length === 0 ? (
           <NoDataMessage />
@@ -93,6 +109,7 @@ export const ChartWidgets = {
       <ChartCard
         title="Cumulative Entries (Daily Reset)"
         translationKey="dashboard.charts.cumulativeEntries"
+        data={transformChartDataForExport(params.chartData)}
       >
         {params.chartData.categories.length === 0 ? (
           <NoDataMessage />
@@ -106,8 +123,9 @@ export const ChartWidgets = {
     ),
   }),
 
-  // FootfallCam Chart Widgets
-  createReturningCustomersChartWidget: (params: WidgetFactoryParams): WidgetConfig => ({
+  createReturningCustomersChartWidget: (
+    params: WidgetFactoryParams,
+  ): WidgetConfig => ({
     id: "returning-customers-chart",
     type: "returning-customers-chart",
     title: "Returning Customers Chart",
@@ -117,8 +135,10 @@ export const ChartWidgets = {
       <ChartCard
         title="Returning Customers Over Time"
         translationKey="dashboard.charts.returningCustomersChart"
+        data={transformChartDataForExport(params.chartData)}
       >
-        {!params.sensorData?.returningCustomers || params.sensorData.returningCustomers.length === 0 ? (
+        {!params.sensorData?.returningCustomers ||
+        params.sensorData.returningCustomers.length === 0 ? (
           <div className="flex items-center justify-center h-64 text-gray-500">
             No FootfallCam data available for returning customers.
           </div>
@@ -135,7 +155,9 @@ export const ChartWidgets = {
     ),
   }),
 
-  createAvgVisitDurationChartWidget: (params: WidgetFactoryParams): WidgetConfig => ({
+  createAvgVisitDurationChartWidget: (
+    params: WidgetFactoryParams,
+  ): WidgetConfig => ({
     id: "avg-visit-duration-chart",
     type: "avg-visit-duration-chart",
     title: "Avg Visit Duration Chart",
@@ -145,8 +167,10 @@ export const ChartWidgets = {
       <ChartCard
         title="Average Visit Duration Over Time"
         translationKey="dashboard.charts.avgVisitDurationChart"
+        data={transformChartDataForExport(params.chartData)}
       >
-        {!params.sensorData?.avgVisitDuration || params.sensorData.avgVisitDuration.length === 0 ? (
+        {!params.sensorData?.avgVisitDuration ||
+        params.sensorData.avgVisitDuration.length === 0 ? (
           <div className="flex items-center justify-center h-64 text-gray-500">
             No FootfallCam data available for visit duration.
           </div>
@@ -173,8 +197,10 @@ export const ChartWidgets = {
       <ChartCard
         title="Affluence Over Time"
         translationKey="dashboard.charts.affluenceChart"
+        data={transformChartDataForExport(params.chartData)}
       >
-        {!params.sensorData?.affluence || params.sensorData.affluence.length === 0 ? (
+        {!params.sensorData?.affluence ||
+        params.sensorData.affluence.length === 0 ? (
           <div className="flex items-center justify-center h-64 text-gray-500">
             No FootfallCam data available for affluence.
           </div>

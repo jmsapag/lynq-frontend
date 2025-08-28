@@ -25,6 +25,7 @@ import { RoleRoute } from "./components/auth/roleRoute.tsx";
 import ConnectionsPageWrapper from "./pages/connections-wrapper.tsx";
 import Overview from "./pages/overview.tsx";
 import ReportsPage from "./pages/reports.tsx";
+import FaqPage from "./pages/faq.tsx";
 
 function AppLayoutWithState() {
   const { isOpen, handleToggle, handleClose } = useSidebar();
@@ -73,6 +74,7 @@ function App() {
               <Route path="reports" element={<ReportsPage />} />
               <Route path="/profile" element={<UsersPage />} />
               <Route path="help" element={<HelpPage />} />
+              <Route path="/faq" element={<FaqPage />} />
 
               {/* LYNQ_TEAM only routes */}
               <Route element={<RoleRoute allowedRoles="LYNQ_TEAM" />}>

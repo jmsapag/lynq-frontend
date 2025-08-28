@@ -1,6 +1,9 @@
 import React from "react";
 import Draggable from "../drag-drop/draggable/draggable";
-import { TransformedSensorData, GroupByTimeAmount } from "../../../types/sensorDataResponse.ts";
+import {
+  TransformedSensorData,
+  GroupByTimeAmount,
+} from "../../../types/sensorDataResponse.ts";
 import { ReturningCustomersCard } from "../charts/returning-customers-card.tsx";
 import { AvgVisitDurationCard } from "../charts/avg-visit-duration-card.tsx";
 import { AffluenceCard } from "../charts/affluence-card.tsx";
@@ -15,10 +18,9 @@ interface DraggableNewMetricsProps {
 }
 
 // Draggable Metric Cards
-export const DraggableReturningCustomersCard: React.FC<DraggableNewMetricsProps> = ({
-  data,
-  dateRange,
-}) => (
+export const DraggableReturningCustomersCard: React.FC<
+  DraggableNewMetricsProps
+> = ({ data, dateRange }) => (
   <Draggable id="returning-customers-card" type="card">
     <ReturningCustomersCard
       data={data}
@@ -28,10 +30,9 @@ export const DraggableReturningCustomersCard: React.FC<DraggableNewMetricsProps>
   </Draggable>
 );
 
-export const DraggableAvgVisitDurationCard: React.FC<DraggableNewMetricsProps> = ({
-  data,
-  dateRange,
-}) => (
+export const DraggableAvgVisitDurationCard: React.FC<
+  DraggableNewMetricsProps
+> = ({ data, dateRange }) => (
   <Draggable id="avg-visit-duration-card" type="card">
     <AvgVisitDurationCard
       data={data}
@@ -55,11 +56,9 @@ export const DraggableAffluenceCard: React.FC<DraggableNewMetricsProps> = ({
 );
 
 // Draggable Chart Cards
-export const DraggableReturningCustomersChartCard: React.FC<DraggableNewMetricsProps> = ({
-  data,
-  groupBy,
-  dateRange,
-}) => (
+export const DraggableReturningCustomersChartCard: React.FC<
+  DraggableNewMetricsProps
+> = ({ data, groupBy, dateRange }) => (
   <Draggable id="returning-customers-chart" type="chart-card">
     <ReturningCustomersChartCard
       data={data}
@@ -70,11 +69,9 @@ export const DraggableReturningCustomersChartCard: React.FC<DraggableNewMetricsP
   </Draggable>
 );
 
-export const DraggableAvgVisitDurationChartCard: React.FC<DraggableNewMetricsProps> = ({
-  data,
-  groupBy,
-  dateRange,
-}) => (
+export const DraggableAvgVisitDurationChartCard: React.FC<
+  DraggableNewMetricsProps
+> = ({ data, groupBy, dateRange }) => (
   <Draggable id="avg-visit-duration-chart" type="chart-card">
     <AvgVisitDurationChartCard
       data={data}
@@ -85,11 +82,9 @@ export const DraggableAvgVisitDurationChartCard: React.FC<DraggableNewMetricsPro
   </Draggable>
 );
 
-export const DraggableAffluenceChartCard: React.FC<DraggableNewMetricsProps> = ({
-  data,
-  groupBy,
-  dateRange,
-}) => (
+export const DraggableAffluenceChartCard: React.FC<
+  DraggableNewMetricsProps
+> = ({ data, groupBy, dateRange }) => (
   <Draggable id="affluence-chart" type="chart-card">
     <AffluenceChartCard
       data={data}

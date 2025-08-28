@@ -87,7 +87,7 @@ const LayoutDashboardPage: React.FC = () => {
           sensorData.avgVisitDuration.reduce(
             (sum: number, value: number) => sum + value,
             0,
-          ) / sensorData.avgVisitDuration.length
+          ) / sensorData.avgVisitDuration.length,
         )
       : 0;
 
@@ -98,9 +98,9 @@ const LayoutDashboardPage: React.FC = () => {
         )
       : 0;
 
-    return { 
-      totalIn, 
-      totalOut, 
+    return {
+      totalIn,
+      totalOut,
       entryRate,
       totalReturningCustomers,
       totalAvgVisitDuration,

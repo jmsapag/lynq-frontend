@@ -13,6 +13,7 @@ New range extends beyond fetched range (repetitivo)
 ## Causas del Problema
 
 ### 1. **Doble UseEffect Redundante**
+
 ```typescript
 // ❌ ANTES: Dos efectos separados
 useEffect(() => {
@@ -20,22 +21,25 @@ useEffect(() => {
 }, [groupBy, aggregationType, dateRange, rawData, filterData, processData]);
 
 useEffect(() => {
-  // Efecto 2: Fetch y procesar datos 
+  // Efecto 2: Fetch y procesar datos
 }, [sensorIds, dateRange, groupBy, aggregationType, needToFetch, hourRange]);
 ```
 
 ### 2. **Dependencias Problemáticas**
+
 - `filterData` y `processData` son funciones que pueden cambiar en cada render
 - `needToFetch` se actualizaba dentro del efecto y también estaba en las dependencias
 - Esto creaba un **dependency loop** infinito
 
 ### 3. **Estado Redundante**
+
 - La variable `needToFetch` se calculaba y actualizaba innecesariamente
 - Causaba re-renders adicionales sin beneficio
 
 ## Solución Implementada
 
 ### 1. **Consolidación de Efectos**
+
 ```typescript
 // ✅ DESPUÉS: Un solo efecto optimizado
 useEffect(() => {
@@ -53,14 +57,19 @@ useEffect(() => {
 ```
 
 ### 2. **Eliminación de Dependencias Problemáticas**
+
 - ❌ Removido: `filterData`, `processData` de las dependencias
-- ❌ Removido: `needToFetch` del estado y dependencias  
+- ❌ Removido: `needToFetch` del estado y dependencias
 - ✅ Mantenido: Solo las dependencias esenciales que realmente cambian
 
 ### 3. **Manejo Optimizado de SensorIds**
+
 ```typescript
 // Mejor comparación de arrays y early return
-if (prevSensorIds.length > 0 && prevSensorIds.join(',') !== sensorIds.join(',')) {
+if (
+  prevSensorIds.length > 0 &&
+  prevSensorIds.join(",") !== sensorIds.join(",")
+) {
   setSensorRecordsFormData((prev) => ({
     ...prev,
     fetchedDateRange: null,
@@ -72,6 +81,7 @@ if (prevSensorIds.length > 0 && prevSensorIds.join(',') !== sensorIds.join(','))
 ```
 
 ### 4. **Lógica Unificada**
+
 ```typescript
 if (shouldFetch) {
   console.log("New range extends beyond fetched range");
@@ -85,21 +95,25 @@ if (shouldFetch) {
 ## Beneficios de la Optimización
 
 ### 1. **Eliminación de Loops**
+
 - ✅ Un solo log "Checking if data fetch is needed..." por cambio
 - ✅ Un solo log de procesamiento por cambio de configuración
 - ✅ No más efectos repetitivos
 
 ### 2. **Mejor Performance**
+
 - ✅ Menos re-renders innecesarios
 - ✅ Menos cálculos redundantes
 - ✅ Fetch más eficiente
 
 ### 3. **Código Más Mantenible**
+
 - ✅ Lógica consolidada en un solo lugar
 - ✅ Dependencias claras y mínimas
 - ✅ Flujo de datos más predecible
 
 ### 4. **Debugging Mejorado**
+
 - ✅ Logs más claros y únicos
 - ✅ Comportamiento predecible
 - ✅ Fácil seguimiento del flujo de datos
@@ -107,6 +121,7 @@ if (shouldFetch) {
 ## Casos de Uso Verificados
 
 ### Scenario 1: Cambio de Fecha Hacia Atrás
+
 ```
 Usuario: Cambia fecha de "Hoy" a "Ayer"
 Antes: 5-6 logs repetitivos, múltiples re-renders
@@ -114,6 +129,7 @@ Después: 1 log "Checking if data fetch is needed...", procesamiento único
 ```
 
 ### Scenario 2: Cambio de Agrupación
+
 ```
 Usuario: Cambia de "daily" a "hourly"
 Antes: Doble procesamiento, efectos cruzados
@@ -121,6 +137,7 @@ Después: Procesamiento único con log claro "reprocessing data"
 ```
 
 ### Scenario 3: Cambio de Sensores
+
 ```
 Usuario: Selecciona diferentes sensores
 Antes: Loops durante el reset de datos
@@ -136,7 +153,7 @@ Para verificar que la optimización funciona correctamente, los logs deberían m
 Checking if data fetch is needed...
 [Solo UNA vez por cambio genuino]
 
-groupBy or aggregationType changed, reprocessing data  
+groupBy or aggregationType changed, reprocessing data
 [Solo cuando realmente cambian estos parámetros]
 
 New range extends beyond fetched range

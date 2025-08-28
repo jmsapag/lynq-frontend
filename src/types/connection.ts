@@ -10,8 +10,7 @@ export type ProviderType =
   // | "MQTT"
   // | "FTP"
   // | "SFTP"
-  | "FootfallCamV9API"
-  | "Other";
+  "FootfallCamV9API" | "Other";
 
 // Provider-specific authentication parameters
 export interface AuthParams {
@@ -92,10 +91,13 @@ export function getProviderAuthFields(provider: ProviderType): Array<{
   }
 }
 
-export function createAuthParams(provider: ProviderType, fields: Record<string, string>): AuthParams {
+export function createAuthParams(
+  provider: ProviderType,
+  fields: Record<string, string>,
+): AuthParams {
   const authParams: AuthParams = {};
   const authFields = getProviderAuthFields(provider);
-  
+
   for (const field of authFields) {
     if (fields[field.key]) {
       authParams[field.key as keyof AuthParams] = fields[field.key];

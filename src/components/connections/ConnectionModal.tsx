@@ -12,11 +12,11 @@ import {
 } from "@heroui/react";
 import { CheckIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useTranslation } from "react-i18next";
-import { 
+import {
   getProviderDisplayName,
-  Connection, 
-  CreateConnectionInput, 
-  UpdateConnectionInput, 
+  Connection,
+  CreateConnectionInput,
+  UpdateConnectionInput,
   ProviderType,
   getProviderAuthFields,
   createAuthParams,
@@ -253,7 +253,7 @@ const ConnectionModal: React.FC<ConnectionModalProps> = ({
       businessId: parseInt(businessId, 10),
       authParams,
     };
- 
+
     const success = await onSubmit(submitData);
     if (success) {
       onClose();
@@ -318,8 +318,14 @@ const ConnectionModal: React.FC<ConnectionModalProps> = ({
                 type={field.type}
                 placeholder={
                   isEdit && field.type === "password"
-                    ? t("connections.sensitiveFieldEditPlaceholder", "Leave empty to keep current value")
-                    : t(`connections.auth.${field.key}Placeholder`, field.placeholder)
+                    ? t(
+                        "connections.sensitiveFieldEditPlaceholder",
+                        "Leave empty to keep current value",
+                      )
+                    : t(
+                        `connections.auth.${field.key}Placeholder`,
+                        field.placeholder,
+                      )
                 }
                 value={formData.authFields[field.key] || ""}
                 onChange={(e) => handleAuthChange(field.key, e.target.value)}

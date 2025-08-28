@@ -11,7 +11,8 @@
     "user-management": "Gestión de Usuarios",
     "locations": "Ubicaciones",
     "overview": "Resumen General",
-    "reports": "Reportes"
+    "reports": "Reportes",
+    "faq": "FAQs"
   },
   "days": {
     "sunday": "Domingo",
@@ -25,10 +26,21 @@
   "help": {
     "userGuide": "Guía de Uso",
     "userGuideText": "Aquí encontrarás información sobre cómo usar la aplicación People Counter.",
-    "faq": "Preguntas Frecuentes",
     "faqText": "Consulta las respuestas a las preguntas más comunes.",
     "openTicket": "Abrir Ticket de Soporte",
     "openTicketText": "¿Necesitas ayuda? Crea un ticket de soporte y te responderemos lo antes posible.",
+    "needHelp": "¿Tienes preguntas? Revisa nuestras",
+    "faqLink": "FAQs",
+    "ticketListPlaceholder": "Tus tickets de soporte se mostrarán aquí.",
+    "faq": {
+      "title": "Preguntas Frecuentes",
+      "q1Title": "¿Cómo restablezco mi contraseña?",
+      "q1Content": "Puedes restablecer tu contraseña desde la página de inicio de sesión haciendo clic en el enlace '¿Olvidaste tu contraseña?'.",
+      "q2Title": "¿Cómo se protegen mis datos?",
+      "q2Content": "Utilizamos prácticas de seguridad y encriptación estándar de la industria para proteger tus datos en todo momento.",
+      "q3Title": "¿Cómo agrego un nuevo usuario?",
+      "q3Content": "Como administrador, puedes agregar nuevos usuarios desde la sección 'Gestión de Usuarios' en la configuración."
+    },
     "ticketForm": {
       "subject": "Asunto",
       "subjectPlaceholder": "Breve descripción de tu problema",
@@ -512,6 +524,9 @@
     "businessNotFound": "Empresa no encontrada"
   },
   "reports": {
+    "title": "Reportes",
+    "description": "Configure y genere reportes para su negocio.",
+    "dragDropDescription": "Diseñe el diseño de su reporte arrastrando y soltando widgets.",
     "configure": "Configurar",
     "modalTitle": "Configurar Reporte",
     "form": {
@@ -532,13 +547,12 @@
       "saveSuccessDesc": "La configuración del reporte se ha guardado correctamente.",
       "saveErrorTitle": "Error al Guardar",
       "saveErrorDesc": "Hubo un error al guardar la configuración del reporte."
-    },
-    "businessNotFound": "Empresa no encontrada",
-    "auth": {
-      "user": "Usuario",
-      "password": "Password",
-      "userPlaceholder": "Enter username",
-      "passwordPlaceholder": "Enter password"
     }
+  },
+  "auth": {
+    "user": "Usuario",
+    "password": "Password",
+    "userPlaceholder": "Enter username",
+    "passwordPlaceholder": "Enter password"
   }
 }

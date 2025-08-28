@@ -13,11 +13,9 @@ interface ReturningCustomersChartProps {
   className?: string;
 }
 
-export const ReturningCustomersChart: React.FC<ReturningCustomersChartProps> = ({
-  data,
-  groupBy,
-  className,
-}) => {
+export const ReturningCustomersChart: React.FC<
+  ReturningCustomersChartProps
+> = ({ data, groupBy, className }) => {
   const { t } = useTranslation();
   const start: number = (() => {
     switch (groupBy) {
@@ -43,7 +41,7 @@ export const ReturningCustomersChart: React.FC<ReturningCustomersChartProps> = (
   })();
 
   // Check if we have any meaningful data
-  const hasData = data.values.some(val => val > 0);
+  const hasData = data.values.some((val) => val > 0);
 
   const option: EChartsOption = {
     tooltip: {
@@ -96,16 +94,18 @@ export const ReturningCustomersChart: React.FC<ReturningCustomersChartProps> = (
       },
     ],
     // Show empty data message if no data
-    graphic: !hasData ? {
-      type: "text",
-      left: "center",
-      top: "middle",
-      style: {
-        text: "Datos no disponibles",
-        fontSize: 16,
-        fill: "#6B7280",
-      },
-    } : undefined,
+    graphic: !hasData
+      ? {
+          type: "text",
+          left: "center",
+          top: "middle",
+          style: {
+            text: "Datos no disponibles",
+            fontSize: 16,
+            fill: "#6B7280",
+          },
+        }
+      : undefined,
   };
 
   return (

@@ -174,7 +174,6 @@ const Dashboard = () => {
     }));
   };
 
-
   const handleHourRangeChange = (start: Time, end: Time) => {
     setSensorRecordsFormData((prev) => ({
       ...prev,
@@ -251,13 +250,12 @@ const Dashboard = () => {
       comparisonPeriod: comparisonPeriods?.previous,
     };
 
-    // Get chart widgets (excluding the basic metrics that are in overview)
+    // Get chart widgets (excluding all metrics that are in overview)
     const chartWidgets = createWidgetConfig(params).filter(
-      (widget) =>
-        !["total-in", "total-out", "entry-rate"].includes(widget.type),
+      (widget) => widget.category === "chart",
     );
 
-    // Get all overview metric widgets (includes the basic metrics plus new ones)
+    // Get all overview metric widgets (includes all metric widgets)
     const overviewWidgets = createWidgetConfigOverview(params);
 
     return [...chartWidgets, ...overviewWidgets];
