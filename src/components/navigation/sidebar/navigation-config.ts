@@ -13,8 +13,7 @@ import {
 } from "@heroicons/react/16/solid";
 
 export const navItems = [
-  { title: "overview", href: "/overview", icon: HomeIcon },
-  { title: "dashboard", href: "/dashboard", icon: ChartBarIcon },
+  { title: "home", href: "/home", icon: HomeIcon },
   { title: "comparison", href: "/comparison", icon: ArrowsRightLeftIcon },
   { title: "reports", href: "/reports", icon: DocumentChartBarIcon },
   { title: "help", href: "/help", icon: QuestionMarkCircleIcon },
@@ -27,8 +26,7 @@ export const superAdminNavItems = [
 ];
 
 export const adminNavItems = [
-  // { title: "overview", href: "/overview", icon: HomeIcon },
-  { title: "dashboard", href: "/dashboard", icon: ChartBarIcon },
+  { title: "home", href: "/home", icon: HomeIcon },
   { title: "comparison", href: "/comparison", icon: ArrowsRightLeftIcon },
   { title: "reports", href: "/reports", icon: DocumentChartBarIcon },
   { title: "user-management", href: "/user-management", icon: UserGroupIcon },

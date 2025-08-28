@@ -1,5 +1,4 @@
 import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
-import Dashboard from "./pages/dashboard";
 import { SidebarWithState } from "./components/navigation/sidebar/sidebar-with-state.tsx";
 import Header from "./components/navigation/header/header.tsx";
 import { useSidebar } from "./hooks/useSidebar.ts";
@@ -23,7 +22,7 @@ import Locations from "./pages/locations.tsx";
 import RoleRedirect from "./components/auth/roleRedirect.tsx";
 import { RoleRoute } from "./components/auth/roleRoute.tsx";
 import ConnectionsPageWrapper from "./pages/connections-wrapper.tsx";
-import Overview from "./pages/overview.tsx";
+import Home from "./pages/home.tsx";
 import ReportsPage from "./pages/reports.tsx";
 import FaqPage from "./pages/faq.tsx";
 
@@ -66,10 +65,9 @@ function App() {
             element={<ChangePasswordPage />}
           />
           <Route element={<PrivateRoute />}>
-            <Route path="/home" element={<RoleRedirect />} />
+            <Route path="/" element={<RoleRedirect />} />
             <Route element={<AppLayoutWithState />}>
-              <Route path="/overview" element={<Overview />} />
-              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/home" element={<Home />} />
               <Route path="/comparison" element={<Comparison />} />
               <Route path="reports" element={<ReportsPage />} />
               <Route path="/profile" element={<UsersPage />} />

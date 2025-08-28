@@ -1,6 +1,6 @@
 {
   "nav": {
-    "dashboard": "Dashboard",
+    "home": "Home",
     "comparison": "Comparison",
     "users": "Users",
     "devices": "Devices",
@@ -10,7 +10,6 @@
     "profile": "Profile",
     "user-management": "User Management",
     "locations": "Locations",
-    "overview": "Overview",
     "support": "Support",
     "reports": "Reports",
     "faq": "FAQs"
@@ -287,7 +286,7 @@
   "landing": {
     "title": "People Counter",
     "subtitle": "Track, analyze, and optimize people flow. Powerful insights from accurate sensors and smart dashboards — all in one platform.",
-    "goToDashboard": "Go to Dashboard",
+    "goToHome": "Go to Home",
     "features": {
       "trafficAnalytics": "Traffic Analytics",
       "trafficAnalyticsDesc": "Monitor people flow with comprehensive visualizations",

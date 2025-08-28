@@ -1,6 +1,6 @@
 {
   "nav": {
-    "dashboard": "Tablero",
+    "home": "Inicio",
     "users": "Usuarios",
     "comparison": "Comparación",
     "devices": "Dispositivos",
@@ -10,7 +10,6 @@
     "profile": "Perfil",
     "user-management": "Gestión de Usuarios",
     "locations": "Ubicaciones",
-    "overview": "Resumen General",
     "reports": "Reportes",
     "faq": "FAQs"
   },
@@ -286,7 +285,7 @@
   "landing": {
     "title": "Contador de Personas",
     "subtitle": "Rastrea, analiza y optimiza el flujo de personas. Información poderosa de sensores precisos y paneles inteligentes, todo en una sola plataforma.",
-    "goToDashboard": "Ir al Tablero",
+    "goToHome": "Ir al Inicio",
     "features": {
       "trafficAnalytics": "Analítica de Tráfico",
       "trafficAnalyticsDesc": "Monitorea el flujo de personas con visualizaciones completas",

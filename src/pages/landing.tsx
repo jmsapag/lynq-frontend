@@ -122,7 +122,7 @@ const Landing = () => {
               className="px-8 py-3 bg-[#00A5B1] text-white text-lg font-medium rounded-md
                 hover:bg-[#008a94] transition-all flex items-center justify-center shadow-lg shadow-[#00A5B1]/20"
             >
-              {t("landing.goToDashboard", "Go to Dashboard")}
+              {t("landing.goToHome", "Go to Home")}
               <span className="ml-2 transform transition-transform group-hover:translate-x-1">
                 →
               </span>
