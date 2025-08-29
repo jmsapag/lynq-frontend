@@ -35,10 +35,11 @@ const getInitialFormData = (): SensorRecordsFormData => ({
 });
 
 const Comparison = () => {
-  const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
   const [sensorMap, setSensorMap] = useState<
     Map<number, { position: string; locationName: string }>
   >(new Map());
+  const [isLocalAggregationEnabled, setIsLocalAggregationEnabled] =
+    useState<boolean>(false);
   const {
     locations,
     loading: sensorsLoading,
@@ -69,23 +70,38 @@ const Comparison = () => {
     );
   }, [selectedSensorIds]);
 
-  const sensorResults = formDataArr.map((formData, idx) =>
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    useSensorRecords(formData, (updater) =>
+  // Create memoized callbacks to prevent unnecessary re-renders
+  const updateCallbacks = useMemo(() => {
+    return Array.from({ length: MAX_SENSORS }, (_, idx) => (updater: any) => {
       setFormDataArr((prevArr) => {
         const newArr = [...prevArr];
         newArr[idx] =
           typeof updater === "function" ? updater(prevArr[idx]) : updater;
         return newArr;
-      }),
-    ),
+      });
+    });
+  }, []);
+
+  const sensorResults = Array.from({ length: MAX_SENSORS }, (_, idx) =>
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useSensorRecords(formDataArr[idx], updateCallbacks[idx]),
   );
 
   const { inChartData, outChartData } = useMemo(() => {
     const validResults = sensorResults
       .map((result, idx) =>
-        selectedSensorIds[idx] !== undefined
-          ? { sensorId: selectedSensorIds[idx], ...result }
+        selectedSensorIds[idx] !== undefined &&
+        result.data?.timestamps?.length > 0
+          ? {
+              sensorId: selectedSensorIds[idx],
+              data: {
+                timestamps: [...(result.data.timestamps || [])],
+                in: result.data.in ? [...result.data.in] : [],
+                out: result.data.out ? [...result.data.out] : [],
+              },
+              loading: result.loading,
+              error: result.error,
+            }
           : null,
       )
       .filter((result): result is NonNullable<typeof result> =>
@@ -110,61 +126,124 @@ const Comparison = () => {
     }
     const categories = firstWithData.data.timestamps;
 
-    // Find duplicate position names across different locations
-    const positionCounts = new Map<string, number>();
-    validResults.forEach((result) => {
-      const sensorInfo = sensorMap.get(result.sensorId);
-      if (sensorInfo) {
-        const position = sensorInfo.position;
-        positionCounts.set(position, (positionCounts.get(position) || 0) + 1);
-      }
-    });
+    if (isLocalAggregationEnabled) {
+      // Aggregate by location - group sensors by location and sum their values
+      const locationMap = new Map<
+        string,
+        { inValues: number[]; outValues: number[] }
+      >();
 
-    const inDevices = validResults
-      .filter((r) => r?.data?.in && r.data.in.length > 0)
-      .map((r) => {
-        const sensorInfo = sensorMap.get(r.sensorId);
-        let name = `Sensor ${r.sensorId}`;
+      validResults.forEach((result) => {
+        const sensorInfo = sensorMap.get(result.sensorId);
+        if (sensorInfo && result.data) {
+          const locationName = sensorInfo.locationName;
 
-        if (sensorInfo) {
-          // Only include location name if there are multiple sensors with the same position
-          name =
-            (positionCounts.get(sensorInfo.position) || 0) > 1
-              ? `${sensorInfo.position} (${sensorInfo.locationName})`
-              : sensorInfo.position;
+          if (!locationMap.has(locationName)) {
+            locationMap.set(locationName, {
+              inValues: new Array(categories.length).fill(0),
+              outValues: new Array(categories.length).fill(0),
+            });
+          }
+
+          const locationData = locationMap.get(locationName)!;
+
+          // Sum the values for each timestamp
+          if (result.data.in && result.data.in.length > 0) {
+            result.data.in.forEach((value, idx) => {
+              if (idx < locationData.inValues.length) {
+                locationData.inValues[idx] =
+                  (locationData.inValues[idx] || 0) + (value || 0);
+              }
+            });
+          }
+
+          if (result.data.out && result.data.out.length > 0) {
+            result.data.out.forEach((value, idx) => {
+              if (idx < locationData.outValues.length) {
+                locationData.outValues[idx] =
+                  (locationData.outValues[idx] || 0) + (value || 0);
+              }
+            });
+          }
         }
-
-        return {
-          name,
-          values: r.data.in,
-        };
       });
 
-    const outDevices = validResults
-      .filter((r) => r?.data?.out && r.data.out.length > 0)
-      .map((r) => {
-        const sensorInfo = sensorMap.get(r.sensorId);
-        let name = `Sensor ${r.sensorId}`;
+      const inDevices = Array.from(locationMap.entries())
+        .filter(([, data]) => data.inValues.some((val) => val > 0))
+        .map(([locationName, data]) => ({
+          name: locationName,
+          values: data.inValues,
+        }));
 
+      const outDevices = Array.from(locationMap.entries())
+        .filter(([, data]) => data.outValues.some((val) => val > 0))
+        .map(([locationName, data]) => ({
+          name: locationName,
+          values: data.outValues,
+        }));
+
+      return {
+        inChartData: { categories, devices: inDevices },
+        outChartData: { categories, devices: outDevices },
+      };
+    } else {
+      // Original logic - one series per sensor
+      // Find duplicate position names across different locations
+      const positionCounts = new Map<string, number>();
+      validResults.forEach((result) => {
+        const sensorInfo = sensorMap.get(result.sensorId);
         if (sensorInfo) {
-          // Only include location name if there are multiple sensors with the same position
-          name =
-            (positionCounts.get(sensorInfo.position) || 0) > 1
-              ? `${sensorInfo.position} (${sensorInfo.locationName})`
-              : sensorInfo.position;
+          const position = sensorInfo.position;
+          positionCounts.set(position, (positionCounts.get(position) || 0) + 1);
         }
-
-        return {
-          name,
-          values: r.data.out,
-        };
       });
 
-    return {
-      inChartData: { categories, devices: inDevices },
-      outChartData: { categories, devices: outDevices },
-    };
-  }, [sensorResults, selectedSensorIds, sensorMap]);
+      const inDevices = validResults
+        .filter((r) => r?.data?.in && r.data.in.length > 0)
+        .map((r) => {
+          const sensorInfo = sensorMap.get(r.sensorId);
+          let name = `Sensor ${r.sensorId}`;
+
+          if (sensorInfo) {
+            // Only include location name if there are multiple sensors with the same position
+            name =
+              (positionCounts.get(sensorInfo.position) || 0) > 1
+                ? `${sensorInfo.position} (${sensorInfo.locationName})`
+                : sensorInfo.position;
+          }
+
+          return {
+            name,
+            values: r.data.in,
+          };
+        });
+
+      const outDevices = validResults
+        .filter((r) => r?.data?.out && r.data.out.length > 0)
+        .map((r) => {
+          const sensorInfo = sensorMap.get(r.sensorId);
+          let name = `Sensor ${r.sensorId}`;
+
+          if (sensorInfo) {
+            // Only include location name if there are multiple sensors with the same position
+            name =
+              (positionCounts.get(sensorInfo.position) || 0) > 1
+                ? `${sensorInfo.position} (${sensorInfo.locationName})`
+                : sensorInfo.position;
+          }
+
+          return {
+            name,
+            values: r.data.out,
+          };
+        });
+
+      return {
+        inChartData: { categories, devices: inDevices },
+        outChartData: { categories, devices: outDevices },
+      };
+    }
+  }, [sensorResults, selectedSensorIds, sensorMap, isLocalAggregationEnabled]);
 
   const dataLoading = sensorResults.some(
     (result, idx) => selectedSensorIds[idx] !== undefined && result.loading,
@@ -240,22 +319,6 @@ const Comparison = () => {
     );
   };
 
-  const handleRefreshData = () => {
-    const now = new Date();
-    localStorage.setItem("lastUpdated", now.toISOString());
-    setLastUpdated(now);
-    setFormDataArr((prevArr) =>
-      prevArr.map((formData) => ({
-        ...formData,
-        dateRange: {
-          start: formData.dateRange.start,
-          end: new Date(),
-        },
-        needToFetch: true,
-      })),
-    );
-  };
-
   const handleHourRangeChange = (start: Time, end: Time) => {
     setFormDataArr((prevArr) =>
       prevArr.map((formData) => ({
@@ -266,12 +329,9 @@ const Comparison = () => {
     );
   };
 
-  useEffect(() => {
-    const storedLastUpdated = localStorage.getItem("lastUpdated");
-    if (storedLastUpdated) {
-      setLastUpdated(new Date(storedLastUpdated));
-    }
-  }, []);
+  const handleLocalAggregationToggle = (enabled: boolean) => {
+    setIsLocalAggregationEnabled(enabled);
+  };
 
   useEffect(() => {
     const handleGroupByChangeFromFilter = (e: CustomEvent) => {
@@ -318,6 +378,9 @@ const Comparison = () => {
         onHourRangeChange={handleHourRangeChange}
         onAggregationChange={handleAggregationChange}
         locations={locations}
+        showLocalToggle={true}
+        isLocalAggregationEnabled={isLocalAggregationEnabled}
+        onLocalAggregationToggle={handleLocalAggregationToggle}
       />
       <div className="flex flex-col gap-6">
         <ChartCard
