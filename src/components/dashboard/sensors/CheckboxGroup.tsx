@@ -3,7 +3,7 @@ import { Checkbox } from "@heroui/react";
 
 interface CheckboxGroupProps {
   id: string;
-  label: string;
+  label: string | React.ReactNode;
   checked: boolean;
   indeterminate?: boolean;
   onChange: (checked: boolean) => void;
@@ -41,7 +41,7 @@ export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
         radius="md"
         size="lg"
         color="primary"
-        aria-label={label}
+        aria-label={typeof label === 'string' ? label : id}
       >
         {label}
       </Checkbox>

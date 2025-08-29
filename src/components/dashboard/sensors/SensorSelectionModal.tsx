@@ -11,6 +11,7 @@ import {
   AccordionItem,
 } from "@heroui/react";
 import { CheckboxGroup } from "./CheckboxGroup";
+import { ProviderBadge } from "./ProviderBadge";
 import { sensorMetadata } from "../../../types/sensorMetadata";
 import { SensorLocation } from "../../../types/sensorLocation.ts";
 
@@ -177,7 +178,17 @@ const SensorSelectionModal: React.FC<SensorSelectionModalProps> = ({
                         <CheckboxGroup
                           key={`sensor-${location.id}-${sensor.id}`}
                           id={`sensor-${location.id}-${sensor.id}`}
-                          label={sensor.position}
+                          label={
+                            <div className="flex items-center gap-2">
+                              <span>{sensor.position}</span>
+                              {typeof sensor.provider === "string" && /footfallcam/i.test(sensor.provider) && (
+                                <ProviderBadge 
+                                  provider="FootfallCam" 
+                                  className="ml-1"
+                                />
+                              )}
+                            </div>
+                          }
                           checked={localSelectedSensors.has(sensor.id)}
                           onChange={(checked) =>
                             handleSensorChange(sensor.id, checked)
