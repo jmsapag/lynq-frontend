@@ -38,7 +38,7 @@ class ReportLayoutServiceClass {
           },
           {
             id: "charts-grid",
-            className: "grid grid-row-1 lg:grid-row-2 xl:grid-row-3 gap-6",
+            className: "flex flex-col md:flex-col gap-6 mt-6",
             zones: [
               { id: "chart-1", type: "chart", title: "Chart 1" },
               { id: "chart-2", type: "chart", title: "Chart 2" },
@@ -113,7 +113,7 @@ class ReportLayoutServiceClass {
           },
           {
             id: "main-chart",
-            className: "grid grid-cols-1 mb-6",
+            className: "flex flex-col mb-6 w-full",
             zones: [
               {
                 id: "chart-main",
@@ -124,10 +124,20 @@ class ReportLayoutServiceClass {
           },
           {
             id: "secondary-charts",
-            className: "grid grid-cols-1 lg:grid-cols-2 gap-6",
+            className: "flex flex-col lg:flex-row gap-6",
             zones: [
-              { id: "chart-1", type: "chart", title: "Secondary Chart 1" },
-              { id: "chart-2", type: "chart", title: "Secondary Chart 2" },
+              {
+                id: "chart-1",
+                type: "chart",
+                title: "Secondary Chart 1",
+                className: "flex-1 min-w-0",
+              },
+              {
+                id: "chart-2",
+                type: "chart",
+                title: "Secondary Chart 2",
+                className: "flex-1 min-w-0",
+              },
             ],
           },
         ],
@@ -160,7 +170,7 @@ class ReportLayoutServiceClass {
           },
           {
             id: "compact-chart",
-            className: "grid grid-cols-1",
+            className: "flex flex-col",
             zones: [{ id: "chart-1", type: "chart", title: "Main Chart" }],
           },
         ],

@@ -5,6 +5,29 @@ import {
 } from "../../types/sensorDataResponse.ts";
 import { useCallback } from "react";
 
+// Helper function to validate returning customer values
+function isValidReturningCustomerValue(
+  currentValue: number | null | undefined,
+  previousValue: number | null | undefined,
+  index: number,
+): boolean {
+  // Handle null/undefined as invalid
+  if (currentValue == null) return false;
+
+  // First element: 0 is valid (no previous to compare)
+  if (index === 0) return true;
+
+  // If current is 0 and previous was also 0 → valid (consecutive zeros)
+  if (currentValue === 0 && previousValue === 0) return true;
+
+  // If current is 0 and previous was non-zero → invalid (sudden drop)
+  if (currentValue === 0 && previousValue != null && previousValue !== 0)
+    return false;
+
+  // Non-zero values are always valid
+  return true;
+}
+
 function useTransformData() {
   return useCallback((data: SensorDataPoint[]): TransformedSensorData => {
     const timestamps = data.map((point) => {
@@ -15,10 +38,16 @@ function useTransformData() {
     const inValues = data.map((point) => point.total_count_in);
     const outValues = data.map((point) => point.total_count_out);
 
-    // Handle optional FootfallCam metrics - these might not be present in all data points
-    const returningCustomers = data.map(
-      (point) => point.returningCustomer ?? 0,
-    );
+    // Handle optional FootfallCam metrics with validation logic
+    const returningCustomers = data.map((point, index) => {
+      const currentValue = point.returningCustomer ?? null;
+      const previousValue =
+        index > 0 ? (data[index - 1].returningCustomer ?? null) : null;
+
+      return isValidReturningCustomerValue(currentValue, previousValue, index)
+        ? (currentValue ?? 0)
+        : 0; // Invalid values become 0 for display purposes
+    });
     const avgVisitDuration = data.map((point) => point.avgVisitDuration ?? 0);
     const outsideTraffic = data.map((point) => point.outsideTraffic ?? 0);
 

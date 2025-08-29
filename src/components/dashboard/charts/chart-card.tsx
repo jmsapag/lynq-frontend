@@ -131,7 +131,7 @@ export const ChartCard: React.FC<ChartCardProps> = ({
   return (
     <div
       ref={cardRef}
-      className={`bg-white rounded-lg border border-gray-200 p-4 h-full flex flex-col relative ${className}`}
+      className={`bg-white rounded-lg border border-gray-200 p-4 h-3/4 flex flex-col relative ${className}`}
     >
       {!hideExport && (
         <div

@@ -9,6 +9,48 @@ import {
   type MetricComparison,
 } from "../../utils/comparisonUtils";
 
+// Helper function to validate returning customer values
+function isValidReturningCustomerValue(
+  currentValue: number | null | undefined,
+  previousValue: number | null | undefined,
+  index: number,
+): boolean {
+  // Handle null/undefined as invalid
+  if (currentValue == null) return false;
+
+  // First element: 0 is valid (no previous to compare)
+  if (index === 0) return true;
+
+  // If current is 0 and previous was also 0 → valid (consecutive zeros)
+  if (currentValue === 0 && previousValue === 0) return true;
+
+  // If current is 0 and previous was non-zero → invalid (sudden drop)
+  if (currentValue === 0 && previousValue != null && previousValue !== 0)
+    return false;
+
+  // Non-zero values are always valid
+  return true;
+}
+
+// Helper function to calculate weighted average percentage
+function calculateWeightedAveragePercentage(
+  percentages: number[],
+  weights: number[], // traffic volumes
+  validityFlags: boolean[],
+): number {
+  let weightedSum = 0;
+  let totalWeight = 0;
+
+  for (let i = 0; i < percentages.length; i++) {
+    if (validityFlags[i] && weights[i] > 0) {
+      weightedSum += percentages[i] * weights[i];
+      totalWeight += weights[i];
+    }
+  }
+
+  return totalWeight > 0 ? weightedSum / totalWeight : 0;
+}
+
 interface OverviewMetrics {
   totalIn: number;
   totalOut: number;
@@ -149,6 +191,26 @@ export const useOverviewMetrics = (
     comparisonFormData || fallbackFormData,
     comparisonFormData ? comparisonSetter : fallbackSetter,
   );
+
+  // Calculate returning customers weighted average outside main metrics calculation
+  const returningCustomersWeightedAvg = useMemo(() => {
+    if (!sensorData?.returningCustomers || !sensorData?.in) return 0;
+
+    const validityFlags = sensorData.returningCustomers.map((value, index) =>
+      isValidReturningCustomerValue(
+        value,
+        index > 0 ? sensorData.returningCustomers[index - 1] : null,
+        index,
+      ),
+    );
+
+    return calculateWeightedAveragePercentage(
+      sensorData.returningCustomers,
+      sensorData.in, // use traffic as weights
+      validityFlags,
+    );
+  }, [sensorData?.returningCustomers, sensorData?.in]);
+
   const metrics = useMemo(() => {
     if (!sensorData || !sensorData.in || !sensorData.out) {
       return {
@@ -257,13 +319,7 @@ export const useOverviewMetrics = (
           : null;
     }
 
-    // Calculate FootfallCam metrics with optional data handling
-    const totalReturningCustomers = sensorData.returningCustomers
-      ? sensorData.returningCustomers.reduce(
-          (sum: number, value: number) => sum + value,
-          0,
-        )
-      : 0;
+    // Use the pre-calculated returning customers weighted average
 
     const totalAvgVisitDuration = sensorData.avgVisitDuration
       ? Math.round(
@@ -292,7 +348,7 @@ export const useOverviewMetrics = (
       percentageChange: Math.round(percentageChange),
       mostCrowdedDay,
       leastCrowdedDay,
-      returningCustomers: totalReturningCustomers,
+      returningCustomers: Math.round(returningCustomersWeightedAvg),
       avgVisitDuration: totalAvgVisitDuration,
       affluence: totalAffluence,
     };
@@ -362,6 +418,7 @@ export const useOverviewMetrics = (
     dailySensorData,
     comparisonPeriods,
     comparisonSensorData,
+    returningCustomersWeightedAvg,
   ]);
 
   const getSensorDetails = () => {

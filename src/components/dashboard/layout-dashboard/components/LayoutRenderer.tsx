@@ -75,7 +75,12 @@ export const LayoutRenderer: React.FC<LayoutRendererProps> = ({
               {section.zones.map((zone) => {
                 const placedWidget = widgetPlacements[zone.id];
                 return placedWidget ? (
-                  <div key={zone.id}>{renderWidget(placedWidget)}</div>
+                  <div
+                    key={zone.id}
+                    className={`relative overflow-hidden ${zone.className || ""}`}
+                  >
+                    {renderWidget(placedWidget)}
+                  </div>
                 ) : null;
               })}
             </div>

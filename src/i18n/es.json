@@ -118,7 +118,7 @@
       "trafficHeatmap": "Mapa de Calor (Por Día y Hora)",
       "entryRateOverTime": "Tasa de Entrada a lo Largo del Tiempo",
       "peopleInStore": "Personas en Tienda (Acumulativo)",
-      "returningCustomersChart": "Clientes que Retornan a lo Largo del Tiempo",
+      "returningCustomersChart": "Tasa de Retorno a lo Largo del Tiempo",
       "avgVisitDurationChart": "Tiempo Promedio de Visita a lo Largo del Tiempo",
       "affluenceChart": "Afluencia a lo Largo del Tiempo",
       "entries": "Entradas",
@@ -136,8 +136,8 @@
       "dailyReset": "Reinicio Diario",
       "cumulativeNote": "El conteo acumulado se reinicia diariamente a medianoche",
       "returningCustomers": {
-        "title": "Clientes que Retornan",
-        "description": "Evolución de clientes que regresan al establecimiento"
+        "title": "Tasa de Retorno",
+        "description": "El porcentaje de visitantes que habían realizado previamente una visita a la misma tienda dentro de los últimos 60 días"
       },
       "avgVisitDuration": {
         "title": "Tiempo Promedio en Local",
@@ -165,8 +165,8 @@
       "mostCrowdedDayDescription": "Día del período seleccionado con mayor cantidad de entradas registradas.",
       "leastCrowdedDay": "Día menos concurrido",
       "leastCrowdedDayDescription": "Día del período seleccionado con menor cantidad de entradas registradas.",
-      "returningCustomers": "Clientes que Retornan",
-      "returningCustomersDescription": "Total de clientes que han regresado al establecimiento",
+      "returningCustomers": "Tasa de Retorno",
+      "returningCustomersDescription": "El porcentaje de visitantes que habían realizado previamente una visita a la misma tienda dentro de los últimos 60 días",
       "avgVisitDuration": "Tiempo Promedio en Local",
       "avgVisitDurationDescription": "Tiempo promedio que los clientes permanecen en el establecimiento",
       "affluence": "Afluencia",
