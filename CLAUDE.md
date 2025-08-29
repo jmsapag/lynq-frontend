@@ -15,6 +15,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `npm run lint` - Run ESLint with TypeScript, React, and Prettier rules
 - `npm run format` - Format code with Prettier
 
+### Testing
+
+- Uses **Vitest** for unit testing with browser support (`@vitest/browser`)
+- **Playwright** for end-to-end testing
+- **Storybook** with addon-vitest integration for component testing
+
 ### Storybook
 
 - `npm run storybook` - Start Storybook development server on port 6006
@@ -33,6 +39,9 @@ This is a **React 18 + TypeScript + Vite** frontend for the LYNQ pedestrian anal
 - **Charts**: ECharts for data visualization
 - **Export**: HTML2Canvas + jsPDF for report generation
 - **i18n**: react-i18next with English/Spanish support
+- **Drag & Drop**: @dnd-kit suite for dashboard layout customization
+- **Animation**: Framer Motion for UI transitions
+- **Forms**: React Tailwind Datepicker for date selection
 
 ### Authentication & Authorization
 
@@ -108,8 +117,11 @@ This is a **React 18 + TypeScript + Vite** frontend for the LYNQ pedestrian anal
 
 ### Testing & Quality
 
-- **ESLint**: TypeScript + React + Prettier integration
-- **Storybook**: Component documentation and testing
+- **ESLint**: TypeScript + React + Prettier integration with zero warnings policy
+- **Vitest**: Unit testing framework with browser support and coverage (`@vitest/coverage-v8`)
+- **Playwright**: End-to-end testing framework
+- **Storybook**: Component documentation, testing, and accessibility checks (`@storybook/addon-a11y`)
+- **Husky**: Git hooks for code quality enforcement (pre-commit formatting)
 - **Strict TypeScript**: All hooks and unused parameters/locals checked
 
 ### Deployment
@@ -118,7 +130,47 @@ This is a **React 18 + TypeScript + Vite** frontend for the LYNQ pedestrian anal
 - **Static build** output to `dist/` directory
 - **Base URL** configurable via environment variables
 
+## Important Development Patterns
+
+### Component Patterns
+
+Follow the **feature-first structure** documented in `docs/folderStructureConventions.md`:
+
+- Organize components by domain/feature rather than atomic design
+- Use Hero UI components consistently with Tailwind classes
+- Co-locate component assets (styles, tests, stories) within component directories
+
+### Authentication Patterns
+
+```typescript
+// Route protection
+<Route element={<RoleRoute allowedRoles={["ADMIN", "LYNQ_TEAM"]} />}>
+  <Route path="user-management" element={<UserManagement />} />
+</Route>
+
+// API service pattern
+export const getLocationData = async (locationId: number): Promise<LocationData> => {
+  const response = await axiosPrivate.get(`/locations/${locationId}`);
+  return response.data;
+};
+```
+
+### Data Fetching Patterns
+
+- Use custom hooks in `src/hooks/` for domain-specific data fetching
+- Time series data uses configurable aggregation strategies (5min, 15min, hour, day, week, month)
+- Sensor data hooks provide real-time filtering capabilities
+
 ## Project Context
 
-To have context of the global context please refer to items under .ai folder.
-Items .ai/\*
+### Documentation Structure
+
+- **`.ai/` folder**: Comprehensive system documentation
+  - `00_architecture.md` - System design overview
+  - `01_standard_formats.md` - API response formats
+  - `03_code_base.md` - Repository organization
+  - `07_secure_development_mcp.md` - Security requirements
+  - `08_system_flows.md` - Authentication and data flows
+- **`docs/` folder**: Implementation-specific documentation
+  - `folderStructureConventions.md` - Component organization principles
+  - Feature-specific implementation docs for dashboard, reports, etc.

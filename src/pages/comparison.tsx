@@ -317,11 +317,9 @@ const Comparison = () => {
         hourRange={formDataArr[0].hourRange}
         onHourRangeChange={handleHourRangeChange}
         onAggregationChange={handleAggregationChange}
-        onRefreshData={handleRefreshData}
         locations={locations}
-        lastUpdated={lastUpdated}
       />
-      <div className="grid grid-cols-1 gap-6">
+      <div className="flex flex-col gap-6">
         <ChartCard
           title="Device Comparison (Entries)"
           translationKey="comparison.charts.deviceComparisonIn"
