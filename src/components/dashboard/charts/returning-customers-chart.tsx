@@ -1,8 +1,31 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { BaseChart } from "./base-chart.tsx";
 import type { EChartsOption } from "echarts";
 import { useTranslation } from "react-i18next";
 import { GroupByTimeAmount } from "../../../types/sensorDataResponse.ts";
+
+// Helper function to validate returning customer values (filter scattered zeros)
+function isValidReturningCustomerValue(
+  currentValue: number | null | undefined,
+  previousValue: number | null | undefined,
+  index: number,
+): boolean {
+  // Handle null/undefined as invalid
+  if (currentValue == null) return false;
+
+  // First element: 0 is valid (no previous to compare)
+  if (index === 0) return true;
+
+  // If current is 0 and previous was also 0 → valid (consecutive zeros/cluster)
+  if (currentValue === 0 && previousValue === 0) return true;
+
+  // If current is 0 and previous was non-zero → invalid (scattered zero/error)
+  if (currentValue === 0 && previousValue != null && previousValue !== 0)
+    return false;
+
+  // Non-zero values are always valid
+  return true;
+}
 
 interface ReturningCustomersChartProps {
   data: {
@@ -40,8 +63,36 @@ export const ReturningCustomersChart: React.FC<
     }
   })();
 
-  // Check if we have any meaningful data
-  const hasData = data.values.some((val) => val > 0);
+  // Process data to filter scattered zeros and convert to percentages
+  const processedData = useMemo(() => {
+    const filteredData: number[] = [];
+    const validCategories: string[] = [];
+
+    for (let i = 0; i < data.values.length; i++) {
+      const currentValue = data.values[i];
+      const previousValue = i > 0 ? data.values[i - 1] : null;
+
+      const isValid = isValidReturningCustomerValue(
+        currentValue,
+        previousValue,
+        i,
+      );
+
+      if (isValid) {
+        // Convert decimal to percentage (0.14 -> 14%)
+        const percentageValue = currentValue * 100;
+        filteredData.push(Math.round(percentageValue * 10) / 10); // Round to 1 decimal
+        validCategories.push(data.categories[i]);
+      }
+      // Skip invalid scattered zeros entirely - don't add to arrays
+    }
+
+    return {
+      values: filteredData,
+      categories: validCategories,
+      hasValidData: filteredData.some((val) => val > 0),
+    };
+  }, [data.values, data.categories]);
 
   const option: EChartsOption = {
     tooltip: {
@@ -54,7 +105,7 @@ export const ReturningCustomersChart: React.FC<
       },
       formatter: (params: any) => {
         const param = Array.isArray(params) ? params[0] : params;
-        return `${param.axisValue}<br/>${t("dashboard.returningCustomers.title")}: ${param.value}`;
+        return `${param.axisValue}<br/>${t("dashboard.returningCustomers.title")}: ${param.value}%`;
       },
     },
     legend: {
@@ -62,13 +113,17 @@ export const ReturningCustomersChart: React.FC<
     },
     xAxis: {
       type: "category",
-      data: data.categories,
+      data: processedData.categories,
     },
     yAxis: {
       type: "value",
-      name: t("dashboard.quantity"),
+      name: "Percentage (%)",
       nameLocation: "middle",
       nameGap: 40,
+      axisLabel: {
+        formatter: "{value}%",
+      },
+      min: 0,
     },
     dataZoom: [
       {
@@ -81,20 +136,30 @@ export const ReturningCustomersChart: React.FC<
     series: [
       {
         name: t("dashboard.charts.returningCustomers.title"),
-        type: "bar",
-        data: data.values,
-        itemStyle: {
-          color: hasData ? "#10B981" : "#D1D5DB", // Green for data, gray for no data
+        type: "line",
+        data: processedData.values,
+        smooth: true,
+        lineStyle: {
+          color: processedData.hasValidData ? "#10B981" : "#D1D5DB",
+          width: 2,
         },
+        itemStyle: {
+          color: processedData.hasValidData ? "#10B981" : "#D1D5DB",
+        },
+        symbol: "circle",
+        symbolSize: 4,
         emphasis: {
           itemStyle: {
-            color: hasData ? "#059669" : "#9CA3AF",
+            color: processedData.hasValidData ? "#059669" : "#9CA3AF",
+          },
+          lineStyle: {
+            color: processedData.hasValidData ? "#059669" : "#9CA3AF",
           },
         },
       },
     ],
     // Show empty data message if no data
-    graphic: !hasData
+    graphic: !processedData.hasValidData
       ? {
           type: "text",
           left: "center",

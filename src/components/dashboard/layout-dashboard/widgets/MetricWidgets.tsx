@@ -2,6 +2,77 @@ import { format } from "date-fns";
 import { SensorDataCard } from "../../charts/card";
 import { WidgetConfig, WidgetFactoryParams } from "./types";
 
+// Helper function to validate returning customer values (filter scattered zeros)
+function isValidReturningCustomerValue(
+  currentValue: number | null | undefined,
+  previousValue: number | null | undefined,
+  index: number,
+): boolean {
+  // Handle null/undefined as invalid
+  if (currentValue == null) return false;
+
+  // First element: 0 is valid (no previous to compare)
+  if (index === 0) return true;
+
+  // If current is 0 and previous was also 0 → valid (consecutive zeros/cluster)
+  if (currentValue === 0 && previousValue === 0) return true;
+
+  // If current is 0 and previous was non-zero → invalid (scattered zero/error)
+  if (currentValue === 0 && previousValue != null && previousValue !== 0)
+    return false;
+
+  // Non-zero values are always valid
+  return true;
+}
+
+// Helper function to calculate weighted average percentage for returning customers
+function calculateReturningCustomerPercentage(
+  returningCustomers: number[],
+  trafficData: number[],
+): { percentage: number; hasData: boolean } {
+  if (!returningCustomers || !trafficData || returningCustomers.length === 0) {
+    return { percentage: 0, hasData: false };
+  }
+
+  let weightedSum = 0;
+  let totalWeight = 0;
+  let hasValidData = false;
+
+  for (let i = 0; i < returningCustomers.length; i++) {
+    const decimalValue = returningCustomers[i]; // 0.14 means 14%
+    const traffic = trafficData[i];
+    const previousValue = i > 0 ? returningCustomers[i - 1] : null;
+
+    // Filter out scattered error zeros using validation logic
+    const isValid = isValidReturningCustomerValue(
+      decimalValue,
+      previousValue,
+      i,
+    );
+
+    if (
+      isValid &&
+      decimalValue !== null &&
+      decimalValue !== undefined &&
+      traffic > 0
+    ) {
+      hasValidData = true;
+      // Use decimal value directly in weighted calculation
+      weightedSum += decimalValue * traffic;
+      totalWeight += traffic;
+    }
+  }
+
+  // Convert final result to percentage for display (0.14 -> 14%)
+  const calculatedPercentage =
+    totalWeight > 0 ? Math.round((weightedSum / totalWeight) * 100) : 0;
+
+  return {
+    percentage: calculatedPercentage,
+    hasData: hasValidData,
+  };
+}
+
 export const MetricWidgets = {
   // Keep existing widgets
   createTotalInWidget: (params: WidgetFactoryParams): WidgetConfig => ({
@@ -293,42 +364,55 @@ export const MetricWidgets = {
   // New FootfallCam metrics
   createReturningCustomersWidget: (
     params: WidgetFactoryParams,
-  ): WidgetConfig => ({
-    id: "returning-customers",
-    type: "returning-customers",
-    title: "Returning Customers",
-    translationKey: "dashboard.metrics.returningCustomers",
-    category: "metric",
-    component: (
-      <SensorDataCard
-        title="Returning Customers"
-        value={
-          params.metrics.returningCustomers > 0
-            ? params.metrics.returningCustomers.toLocaleString()
-            : "N/A"
-        }
-        translationKey="dashboard.metrics.returningCustomers"
-        descriptionTranslationKey="dashboard.metrics.returningCustomersDescription"
-        unit={params.metrics.returningCustomers > 0 ? "customers" : ""}
-        dateRange={params.dateRange}
-        comparison={params.comparisons?.returningCustomers}
-        comparisonPeriod={params.comparisonPeriod}
-        data={{
-          returning_customers: params.metrics.returningCustomers,
-          date_range_start: params.dateRange
-            ? format(params.dateRange.start, "yyyy-MM-dd")
-            : "",
-          date_range_end: params.dateRange
-            ? format(params.dateRange.end, "yyyy-MM-dd")
-            : "",
-          sensors: params.sensorIdsList || "",
-          sensorDetails: params.getSensorDetails
-            ? params.getSensorDetails()
-            : [],
-        }}
-      />
-    ),
-  }),
+  ): WidgetConfig => {
+    // Calculate proper returning customer percentage
+    const returningCustomerResult = calculateReturningCustomerPercentage(
+      params.sensorData?.returningCustomers || [],
+      params.sensorData?.in || [],
+    );
+
+    return {
+      id: "returning-customers",
+      type: "returning-customers",
+      title: "Returning Rate",
+      translationKey: "dashboard.metrics.returningCustomers",
+      category: "metric",
+      component: (
+        <SensorDataCard
+          title="Returning Rate"
+          value={
+            returningCustomerResult.hasData
+              ? `${returningCustomerResult.percentage}%`
+              : "N/A"
+          }
+          translationKey="dashboard.metrics.returningCustomers"
+          description={
+            returningCustomerResult.hasData
+              ? "El porcentaje de visitantes que habían realizado previamente una visita a la misma tienda dentro de los últimos 60 días"
+              : "Datos no disponibles para este período"
+          }
+          descriptionTranslationKey="dashboard.metrics.returningCustomersDescription"
+          unit=""
+          dateRange={params.dateRange}
+          comparison={params.comparisons?.returningCustomers}
+          comparisonPeriod={params.comparisonPeriod}
+          data={{
+            returning_customers: returningCustomerResult.percentage,
+            date_range_start: params.dateRange
+              ? format(params.dateRange.start, "yyyy-MM-dd")
+              : "",
+            date_range_end: params.dateRange
+              ? format(params.dateRange.end, "yyyy-MM-dd")
+              : "",
+            sensors: params.sensorIdsList || "",
+            sensorDetails: params.getSensorDetails
+              ? params.getSensorDetails()
+              : [],
+          }}
+        />
+      ),
+    };
+  },
 
   createAvgVisitDurationWidget: (
     params: WidgetFactoryParams,
