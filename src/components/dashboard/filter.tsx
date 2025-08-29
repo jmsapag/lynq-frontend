@@ -45,6 +45,10 @@ type DashboardFiltersProps = {
   showComparison?: boolean;
   isComparisonEnabled?: boolean;
   onComparisonToggle?: (enabled: boolean) => void;
+  // Local aggregation props
+  showLocalToggle?: boolean;
+  isLocalAggregationEnabled?: boolean;
+  onLocalAggregationToggle?: (enabled: boolean) => void;
 };
 
 export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
@@ -65,6 +69,10 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
   showComparison = false,
   isComparisonEnabled = false,
   onComparisonToggle,
+  // Local aggregation props
+  showLocalToggle = false,
+  isLocalAggregationEnabled = false,
+  onLocalAggregationToggle,
 }) => {
   const { t } = useTranslation();
   const [startDate, setStartDate] = useState<DateValue>(() => {
@@ -395,6 +403,23 @@ export const DashboardFilters: React.FC<DashboardFiltersProps> = ({
                 size="sm"
                 color="primary"
                 aria-label={t("filters.comparison.toggle")}
+              ></Switch>
+            </div>
+          </div>
+        )}
+
+        {showLocalToggle && (
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-700">
+              Aggregate by Local
+            </label>
+            <div className="flex items-center h-full">
+              <Switch
+                isSelected={isLocalAggregationEnabled}
+                onValueChange={onLocalAggregationToggle}
+                size="sm"
+                color="primary"
+                aria-label="Aggregate by Local"
               ></Switch>
             </div>
           </div>
