@@ -298,7 +298,7 @@ class ReportLayoutServiceClass {
     try {
       // Try to save to API first
       const response = await axiosPrivate.post(
-        "/api/reports/layouts/placements",
+        "/reports/layouts/placements",
         {
           layoutId,
           widgetPlacements,
@@ -333,7 +333,7 @@ class ReportLayoutServiceClass {
     try {
       // Try to load from API first
       const response = await axiosPrivate.get(
-        `/api/reports/layouts/placements/${layoutId}`,
+        `/reports/layouts/placements/${layoutId}`,
       );
 
       if (response.status === 200 && response.data) {
@@ -437,7 +437,7 @@ class ReportLayoutServiceClass {
     try {
       // Try to fetch from API first
       const response = await axiosPrivate.get(
-        "/api/reports/layouts/configurations",
+        "/reports/layouts/configurations",
       );
 
       if (response.status === 200) {
