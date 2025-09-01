@@ -181,12 +181,13 @@ const SensorSelectionModal: React.FC<SensorSelectionModalProps> = ({
                           label={
                             <div className="flex items-center gap-2">
                               <span>{sensor.position}</span>
-                              {typeof sensor.provider === "string" && /footfallcam/i.test(sensor.provider) && (
-                                <ProviderBadge 
-                                  provider="FootfallCam" 
-                                  className="ml-1"
-                                />
-                              )}
+                              {typeof sensor.provider === "string" &&
+                                /footfallcam/i.test(sensor.provider) && (
+                                  <ProviderBadge
+                                    provider="FootfallCam"
+                                    className="ml-1"
+                                  />
+                                )}
                             </div>
                           }
                           checked={localSelectedSensors.has(sensor.id)}
