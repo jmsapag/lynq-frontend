@@ -27,7 +27,8 @@ const TicketStatusBadge = ({ status }: { status: string }) => {
     },
   };
 
-  const { text, className } = statusMap[status] || statusMap.closed;
+  const { text, className } =
+    statusMap[status.toLowerCase()] || statusMap.closed;
 
   return (
     <span
@@ -40,6 +41,8 @@ const TicketStatusBadge = ({ status }: { status: string }) => {
 
 const TicketListItem = ({ ticket }: { ticket: Ticket }) => {
   const { t } = useTranslation();
+  const ticketId = ticket.ticketId || ticket.id?.toString() || "";
+
   return (
     <div className="px-4 py-4 sm:px-6">
       <div className="flex items-center justify-between">
@@ -52,18 +55,18 @@ const TicketListItem = ({ ticket }: { ticket: Ticket }) => {
       </div>
       <div className="mt-2 sm:flex sm:justify-between">
         <div className="sm:flex">
-          <p className="flex items-center text-sm text-gray-500">
-            #{ticket.id}
-          </p>
+          <p className="flex items-center text-sm text-gray-500">#{ticketId}</p>
         </div>
-        <div className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
-          <p>
-            {t("help.lastUpdated")}{" "}
-            <time dateTime={ticket.updatedAt}>
-              {new Date(ticket.updatedAt).toLocaleDateString()}
-            </time>
-          </p>
-        </div>
+        {ticket.updatedAt && (
+          <div className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
+            <p>
+              {t("help.lastUpdated")}{" "}
+              <time dateTime={ticket.updatedAt}>
+                {new Date(ticket.updatedAt).toLocaleDateString()}
+              </time>
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -138,7 +141,7 @@ const HelpPage = () => {
       <div className="bg-white shadow overflow-hidden sm:rounded-md mt-4">
         <ul className="divide-y divide-gray-200">
           {tickets.map((ticket) => (
-            <li key={ticket.id}>
+            <li key={ticket.ticketId || ticket.id}>
               <TicketListItem ticket={ticket} />
             </li>
           ))}
