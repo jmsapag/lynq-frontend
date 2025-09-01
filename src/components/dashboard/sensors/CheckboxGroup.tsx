@@ -41,7 +41,7 @@ export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
         radius="md"
         size="lg"
         color="primary"
-        aria-label={typeof label === 'string' ? label : id}
+        aria-label={typeof label === "string" ? label : id}
       >
         {label}
       </Checkbox>

@@ -297,13 +297,10 @@ class ReportLayoutServiceClass {
   ): Promise<void> {
     try {
       // Try to save to API first
-      const response = await axiosPrivate.post(
-        "/reports/layouts/placements",
-        {
-          layoutId,
-          widgetPlacements,
-        },
-      );
+      const response = await axiosPrivate.post("/reports/layouts/placements", {
+        layoutId,
+        widgetPlacements,
+      });
 
       if (response.status === 200 || response.status === 201) {
         addToast({

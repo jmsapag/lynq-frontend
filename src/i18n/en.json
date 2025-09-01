@@ -105,6 +105,7 @@
     "percentage": "Percentage (%)",
     "quantity": "Quantity",
     "minutes": "Minutes",
+    "seconds": "Seconds",
     "filters": {
       "selectDates": "Select dates",
       "startDate": "Start date",

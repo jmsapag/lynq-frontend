@@ -7,9 +7,9 @@ interface ProviderBadgeProps {
   className?: string;
 }
 
-export const ProviderBadge: React.FC<ProviderBadgeProps> = ({ 
-  provider, 
-  className = "" 
+export const ProviderBadge: React.FC<ProviderBadgeProps> = ({
+  provider,
+  className = "",
 }) => {
   const { t } = useTranslation();
 
@@ -23,7 +23,7 @@ export const ProviderBadge: React.FC<ProviderBadgeProps> = ({
           bgColor: "bg-blue-100",
           textColor: "text-blue-800",
           borderColor: "border-blue-200",
-          tooltip: t("sensors.provider.footfallcam", "Proveedor: FootfallCam")
+          tooltip: t("sensors.provider.footfallcam", "Proveedor: FootfallCam"),
         };
       case "xovis":
         return {
@@ -31,7 +31,7 @@ export const ProviderBadge: React.FC<ProviderBadgeProps> = ({
           bgColor: "bg-green-100",
           textColor: "text-green-800",
           borderColor: "border-green-200",
-          tooltip: t("sensors.provider.xovis", "Proveedor: Xovis")
+          tooltip: t("sensors.provider.xovis", "Proveedor: Xovis"),
         };
       case "hella":
         return {
@@ -39,7 +39,7 @@ export const ProviderBadge: React.FC<ProviderBadgeProps> = ({
           bgColor: "bg-purple-100",
           textColor: "text-purple-800",
           borderColor: "border-purple-200",
-          tooltip: t("sensors.provider.hella", "Proveedor: Hella")
+          tooltip: t("sensors.provider.hella", "Proveedor: Hella"),
         };
       default:
         return {
@@ -47,7 +47,9 @@ export const ProviderBadge: React.FC<ProviderBadgeProps> = ({
           bgColor: "bg-gray-100",
           textColor: "text-gray-800",
           borderColor: "border-gray-200",
-          tooltip: t("sensors.provider.unknown", "Proveedor: {{provider}}", { provider: providerName })
+          tooltip: t("sensors.provider.unknown", "Proveedor: {{provider}}", {
+            provider: providerName,
+          }),
         };
     }
   };
@@ -55,12 +57,8 @@ export const ProviderBadge: React.FC<ProviderBadgeProps> = ({
   const config = getProviderConfig(provider);
 
   return (
-    <Tooltip
-      content={config.tooltip}
-      placement="top"
-      showArrow
-    >
-      <div 
+    <Tooltip content={config.tooltip} placement="top" showArrow>
+      <div
         className={`inline-flex items-center justify-center px-2 py-1 text-xs font-medium rounded-full border ${config.bgColor} ${config.textColor} ${config.borderColor} ${className}`}
         title={config.tooltip}
       >

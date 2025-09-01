@@ -103,6 +103,7 @@
   "dashboard": {
     "percentage": "Porcentaje (%)",
     "quantity": "Cantidad",
+    "seconds": "Segundos",
     "minutes": "Minutos",
     "filters": {
       "selectDates": "Seleccionar fechas",

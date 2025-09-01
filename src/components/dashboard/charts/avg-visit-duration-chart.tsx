@@ -69,7 +69,7 @@ export const AvgVisitDurationChart: React.FC<AvgVisitDurationChartProps> = ({
     },
     yAxis: {
       type: "value",
-      name: t("dashboard.minutes"),
+      name: t("dashboard.seconds"),
       nameLocation: "middle",
       nameGap: 40,
     },

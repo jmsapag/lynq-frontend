@@ -6,8 +6,8 @@ interface FootfallCamBadgeProps {
   className?: string;
 }
 
-export const FootfallCamBadge: React.FC<FootfallCamBadgeProps> = ({ 
-  className = "" 
+export const FootfallCamBadge: React.FC<FootfallCamBadgeProps> = ({
+  className = "",
 }) => {
   const { t } = useTranslation();
 
@@ -17,7 +17,7 @@ export const FootfallCamBadge: React.FC<FootfallCamBadgeProps> = ({
       placement="top"
       showArrow
     >
-      <div 
+      <div
         className={`inline-flex items-center justify-center px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full border border-blue-200 ${className}`}
         title={t("sensors.provider.footfallcam", "Proveedor: FootfallCam")}
       >
