@@ -8,6 +8,12 @@ import {
 } from "../types/ticket";
 import { axiosPrivate } from "../services/axiosClient";
 
+// Add this interface for the API response
+interface TicketsListResponse {
+  tickets: Ticket[];
+  total: number;
+}
+
 class TicketsServiceImpl implements TicketsService {
   async create(input: CreateTicketInput): Promise<CreateTicketResponse> {
     try {
@@ -19,94 +25,36 @@ class TicketsServiceImpl implements TicketsService {
     }
   }
 
-  // Mock implementation for other operations (to be replaced with real API calls later)
-  private mockTickets: Ticket[] = [
-    {
-      id: 1,
-      subject: "Connection Issue",
-      description: "Unable to connect to the sensor network",
-      status: "open",
-      businessId: 1,
-      userId: 1,
-      createdAt: "2024-01-15T10:30:00Z",
-      updatedAt: "2024-01-15T10:30:00Z",
-    },
-    {
-      id: 2,
-      subject: "Data Export Problem",
-      description: "CSV export is not working properly",
-      status: "in_progress",
-      businessId: 1,
-      userId: 1,
-      createdAt: "2024-01-14T14:20:00Z",
-      updatedAt: "2024-01-15T09:15:00Z",
-    },
-  ];
-
-  async list(businessId: string): Promise<Ticket[]> {
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    return this.mockTickets.filter(
-      (ticket) => ticket.businessId === parseInt(businessId),
-    );
+  // Use real API endpoint for listing tickets
+  async list(_businessId: string): Promise<Ticket[]> {
+    try {
+      const response =
+        await axiosPrivate.get<TicketsListResponse>("/api/tickets");
+      return response.data.tickets;
+    } catch (error) {
+      console.error("Error fetching tickets:", error);
+      throw new Error("Failed to load tickets");
+    }
   }
 
+  // Keep mock implementations for other methods
   async update(
-    businessId: string,
-    id: number,
-    input: UpdateTicketInput,
+    _businessId: string,
+    _id: number,
+    _input: UpdateTicketInput,
   ): Promise<Ticket> {
-    // Simulate API delay
     await new Promise((resolve) => setTimeout(resolve, 600));
-
-    const ticketIndex = this.mockTickets.findIndex(
-      (ticket) =>
-        ticket.id === id && ticket.businessId === parseInt(businessId),
-    );
-
-    if (ticketIndex === -1) {
-      throw new Error("Ticket not found");
-    }
-
-    this.mockTickets[ticketIndex] = {
-      ...this.mockTickets[ticketIndex],
-      ...input,
-      updatedAt: new Date().toISOString(),
-    };
-
-    return this.mockTickets[ticketIndex];
+    throw new Error("Update not implemented yet");
   }
 
-  async delete(businessId: string, id: number): Promise<void> {
-    // Simulate API delay
+  async delete(_businessId: string, _id: number): Promise<void> {
     await new Promise((resolve) => setTimeout(resolve, 400));
-
-    const ticketIndex = this.mockTickets.findIndex(
-      (ticket) =>
-        ticket.id === id && ticket.businessId === parseInt(businessId),
-    );
-
-    if (ticketIndex === -1) {
-      throw new Error("Ticket not found");
-    }
-
-    this.mockTickets.splice(ticketIndex, 1);
+    throw new Error("Delete not implemented yet");
   }
 
-  async getById(businessId: string, id: number): Promise<Ticket> {
-    // Simulate API delay
+  async getById(_businessId: string, _id: number): Promise<Ticket> {
     await new Promise((resolve) => setTimeout(resolve, 300));
-
-    const ticket = this.mockTickets.find(
-      (ticket) =>
-        ticket.id === id && ticket.businessId === parseInt(businessId),
-    );
-
-    if (!ticket) {
-      throw new Error("Ticket not found");
-    }
-
-    return ticket;
+    throw new Error("Get by ID not implemented yet");
   }
 }
 
@@ -138,6 +86,8 @@ export function useTickets(businessId: string) {
     try {
       setError(null);
       const result = await ticketsService.create(input);
+      // Refresh list after creating
+      await listTickets();
       return result;
     } catch (err) {
       const errorMessage =
@@ -147,7 +97,7 @@ export function useTickets(businessId: string) {
     }
   };
 
-  // Update ticket
+  // Keep other methods as is for now
   const updateTicket = async (
     id: number,
     input: UpdateTicketInput,
@@ -167,7 +117,6 @@ export function useTickets(businessId: string) {
     }
   };
 
-  // Delete ticket
   const deleteTicket = async (id: number): Promise<void> => {
     try {
       setError(null);
@@ -181,7 +130,6 @@ export function useTickets(businessId: string) {
     }
   };
 
-  // Get ticket by ID
   const getTicketById = async (id: number): Promise<Ticket> => {
     try {
       setError(null);
@@ -194,7 +142,6 @@ export function useTickets(businessId: string) {
     }
   };
 
-  // Load tickets on mount
   useEffect(() => {
     listTickets();
   }, [businessId]);
