@@ -432,7 +432,7 @@ export const MetricWidgets = {
         }
         translationKey="dashboard.metrics.avgVisitDuration"
         descriptionTranslationKey="dashboard.metrics.avgVisitDurationDescription"
-        unit={params.metrics.avgVisitDuration > 0 ? "min" : ""}
+        unit={params.metrics.avgVisitDuration > 0 ? "secs" : ""}
         dateRange={params.dateRange}
         comparison={params.comparisons?.avgVisitDuration}
         comparisonPeriod={params.comparisonPeriod}
