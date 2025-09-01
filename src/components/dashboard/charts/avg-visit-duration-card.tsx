@@ -27,7 +27,7 @@ export const AvgVisitDurationCard: React.FC<AvgVisitDurationCardProps> = ({
     <SensorDataCard
       title="Tiempo Promedio en Local"
       value={avgVisitDuration.toFixed(2)}
-      unit="min"
+      unit="sec"
       icon={<ClockIcon className="w-6 h-6 text-purple-600" />}
       translationKey="dashboard.metrics.avgVisitDuration"
       description="Tiempo promedio que los clientes permanecen en el establecimiento"
