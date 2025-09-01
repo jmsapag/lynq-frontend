@@ -1,12 +1,13 @@
 export interface Ticket {
-  id: number;
+  id?: number;
+  ticketId?: string;
   subject: string;
-  description: string;
-  status: TicketStatus;
-  businessId: number;
-  userId: number;
-  createdAt: string;
-  updatedAt: string;
+  description?: string;
+  status: string;
+  businessId?: number;
+  userId?: number;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export type TicketStatus = "open" | "in_progress" | "resolved" | "closed";
