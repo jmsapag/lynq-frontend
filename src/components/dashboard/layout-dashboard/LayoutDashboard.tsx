@@ -239,7 +239,7 @@ export const LayoutDashboard: React.FC<LayoutDashboardProps> = ({
             title="Avg Visit Duration"
             value={metrics.totalAvgVisitDuration}
             translationKey="dashboard.metrics.avgVisitDuration"
-            unit="min"
+            unit="secs"
           />
         ),
       },
