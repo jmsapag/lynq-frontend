@@ -55,7 +55,7 @@ export const NewMetricsCards: React.FC<NewMetricsCardsProps> = ({
     <div className={`grid grid-cols-1 md:grid-cols-3 gap-4 ${className}`}>
       {/* Returning Customers Card */}
       <SensorDataCard
-        title="Clientes que Retornan"
+        title="Tasa de Retorno"
         value={
           aggregatedMetrics.hasReturningCustomersData
             ? aggregatedMetrics.totalReturningCustomers
@@ -65,7 +65,7 @@ export const NewMetricsCards: React.FC<NewMetricsCardsProps> = ({
         translationKey="dashboard.metrics.returningCustomers"
         description={
           aggregatedMetrics.hasReturningCustomersData
-            ? "Total de clientes que han regresado al establecimiento"
+            ? "El porcentaje de visitantes que habían realizado previamente una visita a la misma tienda dentro de los últimos 60 días"
             : "Datos no disponibles para este período"
         }
         descriptionTranslationKey="dashboard.metrics.returningCustomers.description"

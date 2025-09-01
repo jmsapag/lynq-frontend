@@ -119,7 +119,7 @@
       "trafficHeatmap": "Traffic Heatmap (By Day & Hour)",
       "entryRateOverTime": "Entry Rate Over Time",
       "peopleInStore": "People in Store (Cumulative)",
-      "returningCustomersChart": "Returning Customers Over Time",
+      "returningCustomersChart": "Returning Rate Over Time",
       "avgVisitDurationChart": "Average Visit Duration Over Time",
       "affluenceChart": "Affluence Over Time",
       "entries": "Entries",
@@ -137,8 +137,8 @@
       "dailyReset": "Daily Reset",
       "cumulativeNote": "Cumulative count resets daily at midnight",
       "returningCustomers": {
-        "title": "Returning Customers",
-        "description": "Evolution of customers returning to the establishment"
+        "title": "Returning Rate",
+        "description": "The percentage of visitors who had previously made a visit to the same store within the past 60 days"
       },
       "avgVisitDuration": {
         "title": "Average Visit Duration",
@@ -166,8 +166,8 @@
       "mostCrowdedDayDescription": "Day with the highest number of entries within the selected period.",
       "leastCrowdedDay": "Least Crowded Day",
       "leastCrowdedDayDescription": "Day with the lowest number of entries within the selected period.",
-      "returningCustomers": "Returning Customers",
-      "returningCustomersDescription": "Total number of customers who have returned to the establishment",
+      "returningCustomers": "Returning Rate",
+      "returningCustomersDescription": "The percentage of visitors who had previously made a visit to the same store within the past 60 days",
       "avgVisitDuration": "Average Visit Duration",
       "avgVisitDurationDescription": "Average time customers spend in the establishment",
       "affluence": "Affluence",
@@ -269,6 +269,14 @@
     "comparison": {
       "label": "Comparison",
       "toggle": "Compare periods"
+    }
+  },
+  "sensors": {
+    "provider": {
+      "footfallcam": "Provider: FootfallCam",
+      "xovis": "Provider: Xovis",
+      "hella": "Provider: Hella",
+      "unknown": "Provider: {{provider}}"
     }
   },
   "chart": {

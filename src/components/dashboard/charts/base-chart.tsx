@@ -16,8 +16,13 @@ export const BaseChart: React.FC<BaseChartProps> = ({
   const resizeObserver = useRef<ResizeObserver | null>(null);
 
   const handleResize = useCallback(() => {
-    if (chartInstance.current) {
-      chartInstance.current.resize();
+    if (chartInstance.current && chartRef.current) {
+      // Force a resize with animation disabled for better performance during rapid resizing
+      chartInstance.current.resize({
+        animation: {
+          duration: 0,
+        },
+      });
     }
   }, []);
 
@@ -26,8 +31,11 @@ export const BaseChart: React.FC<BaseChartProps> = ({
       chartInstance.current = echarts.init(chartRef.current);
 
       // Set up ResizeObserver for more reliable resize detection
-      resizeObserver.current = new ResizeObserver(() => {
-        handleResize();
+      resizeObserver.current = new ResizeObserver((entries) => {
+        // Use requestAnimationFrame to debounce rapid resize events
+        requestAnimationFrame(() => {
+          handleResize();
+        });
       });
 
       resizeObserver.current.observe(chartRef.current);
@@ -43,9 +51,17 @@ export const BaseChart: React.FC<BaseChartProps> = ({
     if (chartInstance.current) {
       chartInstance.current.setOption(option, true); // true for merge option
       // Force resize after setting option to ensure proper rendering
-      setTimeout(() => {
-        chartInstance.current?.resize();
-      }, 100);
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          if (chartInstance.current) {
+            chartInstance.current.resize({
+              animation: {
+                duration: 0,
+              },
+            });
+          }
+        }, 50);
+      });
     }
   }, [option]);
 
@@ -57,5 +73,18 @@ export const BaseChart: React.FC<BaseChartProps> = ({
     };
   }, [handleResize]);
 
-  return <div ref={chartRef} className={`w-full h-full ${className}`} />;
+  return (
+    <div
+      ref={chartRef}
+      className={`absolute inset-0 w-full h-full ${className}`}
+      style={{
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+        paddingTop: "56px",
+      }}
+    />
+  );
 };

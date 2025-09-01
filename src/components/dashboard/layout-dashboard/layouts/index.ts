@@ -40,11 +40,26 @@ export const AVAILABLE_LAYOUTS: DashboardLayout[] = [
       },
       {
         id: "charts-grid",
-        className: " grid grid-rows-1 lg:grid-rows-2 xl:grid-rows-3 gap-6",
+        className: " flex flex-col md:flex-col gap-6 mt-6",
         zones: [
-          { id: "chart-1", type: "chart", title: "Chart 1" },
-          { id: "chart-2", type: "chart", title: "Chart 2" },
-          { id: "chart-3", type: "chart", title: "Chart 3" },
+          {
+            id: "chart-1",
+            type: "chart",
+            title: "Chart 1",
+            className: "flex-1 min-w-0",
+          },
+          {
+            id: "chart-2",
+            type: "chart",
+            title: "Chart 2",
+            className: "flex-1 min-w-0",
+          },
+          {
+            id: "chart-3",
+            type: "chart",
+            title: "Chart 3",
+            className: "flex-1 min-w-0",
+          },
         ],
       },
     ],
@@ -64,7 +79,7 @@ export const AVAILABLE_LAYOUTS: DashboardLayout[] = [
     sections: [
       {
         id: "metrics-grid-section",
-        className: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4",
+        className: "grid grid-cols-2 md:grid-cols-4 gap-4",
         zones: [
           { id: "metric-1", type: "metric", title: "Metric 1" },
           { id: "metric-2", type: "metric", title: "Metric 2" },
@@ -103,7 +118,7 @@ export const AVAILABLE_LAYOUTS: DashboardLayout[] = [
       },
       {
         id: "main-chart",
-        className: "grid grid-cols-1 mb-6",
+        className: "flex flex-col mb-6",
         zones: [
           {
             id: "chart-main",
@@ -115,10 +130,20 @@ export const AVAILABLE_LAYOUTS: DashboardLayout[] = [
       },
       {
         id: "secondary-charts",
-        className: "grid grid-cols-1 lg:grid-cols-2 gap-6",
+        className: "flex flex-col lg:flex-row gap-6",
         zones: [
-          { id: "chart-1", type: "chart", title: "Secondary Chart 1" },
-          { id: "chart-2", type: "chart", title: "Secondary Chart 2" },
+          {
+            id: "chart-1",
+            type: "chart",
+            title: "Secondary Chart 1",
+            className: "flex-1 min-w-0",
+          },
+          {
+            id: "chart-2",
+            type: "chart",
+            title: "Secondary Chart 2",
+            className: "flex-1 min-w-0",
+          },
         ],
       },
     ],
@@ -137,7 +162,7 @@ export const AVAILABLE_LAYOUTS: DashboardLayout[] = [
     sections: [
       {
         id: "main-metrics",
-        className: "grid grid-cols-1 md:grid-cols-4 gap-4",
+        className: "grid grid-cols-1 md:grid-cols-4 gap-4 mb-6",
         zones: [
           { id: "metric-1", type: "metric", title: "Primary" },
           { id: "metric-2", type: "metric", title: "Secondary" },
@@ -147,7 +172,7 @@ export const AVAILABLE_LAYOUTS: DashboardLayout[] = [
       },
       {
         id: "single-chart",
-        className: "grid grid-cols-1",
+        className: "flex flex-col",
         zones: [{ id: "chart-main", type: "chart", title: "Overview Chart" }],
       },
     ],
@@ -166,7 +191,7 @@ export const AVAILABLE_LAYOUTS: DashboardLayout[] = [
     sections: [
       {
         id: "compact-metrics",
-        className: "grid grid-cols-2 gap-3 mb-4",
+        className: "grid grid-cols-1 md:grid-cols-2 gap-4 mb-6",
         zones: [
           { id: "metric-1", type: "metric", title: "Key 1" },
           { id: "metric-2", type: "metric", title: "Key 2" },
@@ -174,7 +199,7 @@ export const AVAILABLE_LAYOUTS: DashboardLayout[] = [
       },
       {
         id: "compact-chart",
-        className: "grid grid-cols-1",
+        className: "flex flex-col",
         zones: [{ id: "chart-1", type: "chart", title: "Main Chart" }],
       },
     ],
@@ -191,7 +216,7 @@ export const AVAILABLE_LAYOUTS: DashboardLayout[] = [
     sections: [
       {
         id: "custom-metrics",
-        className: "grid grid-cols-1 md:grid-cols-3 gap-4",
+        className: "grid grid-cols-1 md:grid-cols-3 gap-4 mb-6",
         zones: [
           { id: "metric-1", type: "metric", title: "Metric 1" },
           { id: "metric-2", type: "metric", title: "Metric 2" },
@@ -200,11 +225,26 @@ export const AVAILABLE_LAYOUTS: DashboardLayout[] = [
       },
       {
         id: "custom-charts",
-        className: "grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6",
+        className: "flex flex-col lg:flex-row xl:flex-wrap gap-6",
         zones: [
-          { id: "chart-1", type: "chart", title: "Chart 1" },
-          { id: "chart-2", type: "chart", title: "Chart 2" },
-          { id: "chart-3", type: "chart", title: "Chart 3" },
+          {
+            id: "chart-1",
+            type: "chart",
+            title: "Chart 1",
+            className: "flex-1 min-w-0",
+          },
+          {
+            id: "chart-2",
+            type: "chart",
+            title: "Chart 2",
+            className: "flex-1 min-w-0",
+          },
+          {
+            id: "chart-3",
+            type: "chart",
+            title: "Chart 3",
+            className: "flex-1 min-w-0",
+          },
         ],
       },
     ],

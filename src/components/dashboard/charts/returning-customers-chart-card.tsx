@@ -28,9 +28,9 @@ export const ReturningCustomersChartCard: React.FC<
 
   return (
     <ChartCard
-      title="Clientes que Retornan"
+      title="Tasa de Retorno"
       translationKey="dashboard.charts.returningCustomers.title"
-      description="Evolución de clientes que regresan al establecimiento"
+      description="El porcentaje de visitantes que habían realizado previamente una visita a la misma tienda dentro de los últimos 60 días"
       descriptionTranslationKey="dashboard.charts.returningCustomers.description"
       className={className}
       data={exportData}

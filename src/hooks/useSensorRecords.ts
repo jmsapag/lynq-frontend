@@ -56,6 +56,13 @@ export function useSensorRecords(
   const transformData = useTransformData();
   const processData = useDataProcessing(timeSeriesAggregator, transformData);
 
+  // Use refs for values that don't need to trigger callback recreation
+  const processDataRef = useRef(processData);
+  const groupByRef = useRef(groupBy);
+
+  processDataRef.current = processData;
+  groupByRef.current = groupBy;
+
   // Stable process function to avoid dependency issues
   const processDataCallback = useCallback(
     async (
@@ -114,7 +121,10 @@ export function useSensorRecords(
 
           if (!confirmFetch) {
             // Process existing data
-            const processedData = processData(dataInRange, groupBy);
+            const processedData = processDataRef.current(
+              dataInRange,
+              groupByRef.current,
+            );
             setData(processedData);
             return;
           }
@@ -171,12 +181,18 @@ export function useSensorRecords(
 
           // Process the data
           const filteredData = filterData(dataToProcess, currentDateRange);
-          const processedData = processData(filteredData, groupBy);
+          const processedData = processDataRef.current(
+            filteredData,
+            groupByRef.current,
+          );
           setData(processedData);
         } else {
           // Use existing data - reprocess when groupBy or aggregationType changes
           console.log("groupBy or aggregationType changed, reprocessing data");
-          const processedData = processData(dataInRange, groupBy);
+          const processedData = processDataRef.current(
+            dataInRange,
+            groupByRef.current,
+          );
           setData(processedData);
         }
       } finally {
@@ -187,10 +203,8 @@ export function useSensorRecords(
       fetchData,
       checkFetchNecessity,
       filterData,
-      processData,
       setSensorRecordsFormData,
       prevSensorIds,
-      groupBy,
     ],
   );
 
@@ -205,8 +219,11 @@ export function useSensorRecords(
     sensorIds.join(","),
     groupBy,
     aggregationType,
-    hourRange?.start,
-    hourRange?.end,
+    hourRange?.start.toString(),
+    hourRange?.end.toString(),
+    rawData.length,
+    fetchedDateRange?.start.getTime(),
+    fetchedDateRange?.end.getTime(),
     processDataCallback,
   ]);
 
