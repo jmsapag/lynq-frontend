@@ -86,6 +86,20 @@ export function useFetchData() {
           }
         }
 
+        // Fill from 'from' to first data point
+        if (data.length > 0) {
+          const firstData = data[0];
+          let firstDate = new Date(firstData.timestamp).getTime();
+          while (firstDate - 5 * 60 * 1000 > startDate.getTime()) {
+            firstDate -= 5 * 60 * 1000;
+            missingPoints.push({
+              timestamp: new Date(firstDate).toISOString(),
+              total_count_in: 0,
+              total_count_out: 0,
+            });
+          }
+        }
+
         // Fill from last data point to now if needed
         if (data.length > 0) {
           const lastData = data[data.length - 1];
