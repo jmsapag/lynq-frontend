@@ -553,6 +553,9 @@
       "scheduleDays": "Días de Programación",
       "executionTime": "Hora de Ejecución",
       "timezone": "Zona Horaria",
+      "selectTimezone": "Seleccionar zona horaria...",
+      "timezoneError": "Error al cargar zonas horarias",
+      "invalidTimezone": "Formato de zona horaria inválido",
       "enabled": "Habilitado",
       "save": "Guardar Configuración",
       "start": "Inicio",
@@ -562,7 +565,8 @@
       "saveSuccessTitle": "Configuración Guardada",
       "saveSuccessDesc": "La configuración del reporte se ha guardado correctamente.",
       "saveErrorTitle": "Error al Guardar",
-      "saveErrorDesc": "Hubo un error al guardar la configuración del reporte."
+      "saveErrorDesc": "Hubo un error al guardar la configuración del reporte.",
+      "timezoneErrorTitle": "Zona Horaria Inválida"
     }
   },
   "auth": {

@@ -12,9 +12,10 @@ import {
 } from "@heroui/react";
 import { useTranslation } from "react-i18next";
 import { ReportConfig } from "../../types/reports";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocations } from "../../hooks/locations/useLocations";
 import { ReportLayoutService } from "../../services/reportLayoutService";
+import { getTimezones } from "../../services/reportsService";
 
 interface ReportConfigModalProps {
   isOpen: boolean;
@@ -23,7 +24,6 @@ interface ReportConfigModalProps {
   isLoading: boolean;
 }
 
-const timezones = ["America/New_York", "Europe/London", "Asia/Tokyo"];
 const daysOfWeekOptions = [
   { value: 1, label: "Mon" },
   { value: 2, label: "Tue" },
@@ -50,7 +50,7 @@ const ReportConfigModal = ({
   const [config, setConfig] = useState<ReportConfig>({
     type: "weekly",
     enabled: true,
-    timezone: "America/New_York",
+    timezone: "UTC", // Default to UTC
     layoutId: "default", // Set default layout
     dataFilter: {
       locationIds: [],
@@ -62,6 +62,20 @@ const ReportConfigModal = ({
       executionTime: { hour: 8, minute: 0 },
     },
   });
+
+  const [timezones, setTimezones] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchTimezones = async () => {
+      try {
+        const timezoneList = await getTimezones();
+        setTimezones(timezoneList);
+      } catch (error) {
+        console.error("Error fetching timezones:", error);
+      }
+    };
+    fetchTimezones();
+  }, []);
 
   const handleLocationToggle = (locationId: number) => {
     setConfig((prev) => {

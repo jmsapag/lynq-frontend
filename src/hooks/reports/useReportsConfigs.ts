@@ -21,10 +21,19 @@ export const useReportConfig = () => {
       });
       setIsModalOpen(false);
     } catch (error: any) {
+      // Handle timezone validation errors specifically
+      const errorMessage =
+        error?.response?.data?.message || t("reports.toasts.saveErrorDesc");
+      const isTimezoneError =
+        error?.response?.status === 400 &&
+        (errorMessage.toLowerCase().includes("timezone") ||
+          errorMessage.toLowerCase().includes("invalid"));
+
       addToast({
-        title: t("reports.toasts.saveErrorTitle"),
-        description:
-          error?.response?.data?.message || t("reports.toasts.saveErrorDesc"),
+        title: isTimezoneError
+          ? t("reports.toasts.timezoneErrorTitle", "Invalid Timezone")
+          : t("reports.toasts.saveErrorTitle"),
+        description: errorMessage,
         severity: "danger",
         color: "danger",
       });
