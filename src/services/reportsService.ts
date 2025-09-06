@@ -6,3 +6,8 @@ export const saveReportConfig = async (config: ReportConfig) => {
   const response = await axiosPrivate.post("/report-config", { config });
   return response.data;
 };
+
+export const getTimezones = async (): Promise<string[]> => {
+  const response = await axiosPrivate.get("/report-config/timezones");
+  return response.data;
+};

@@ -555,6 +555,9 @@
       "scheduleDays": "Schedule Days",
       "executionTime": "Execution Time",
       "timezone": "Timezone",
+      "selectTimezone": "Select timezone...",
+      "timezoneError": "Error loading timezones",
+      "invalidTimezone": "Invalid timezone format",
       "enabled": "Enabled",
       "save": "Save Configuration",
       "start": "Start",
@@ -564,7 +567,8 @@
       "saveSuccessTitle": "Configuration Saved",
       "saveSuccessDesc": "The report configuration has been saved successfully.",
       "saveErrorTitle": "Error Saving",
-      "saveErrorDesc": "There was an error saving the report configuration."
+      "saveErrorDesc": "There was an error saving the report configuration.",
+      "timezoneErrorTitle": "Invalid Timezone"
     }
   }
 }
