@@ -304,7 +304,8 @@
       "advancedComparisonsDesc": "Compare metrics across locations and time periods",
       "keyMetrics": "Key Metrics",
       "keyMetricsDesc": "Track entries, exits, and conversion rates"
-    }
+    },
+    "tryFreeDemo": "Try Demo"
   },
   "login": {
     "welcome": "Welcome back!",
@@ -570,5 +571,9 @@
       "saveErrorDesc": "There was an error saving the report configuration.",
       "timezoneErrorTitle": "Invalid Timezone"
     }
+  },
+  "freeTrial": {
+    "demoNotice": "You are viewing a demo. Data is for illustration only.",
+    "login": "Log In"
   }
 }

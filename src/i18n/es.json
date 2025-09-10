@@ -303,7 +303,8 @@
       "advancedComparisonsDesc": "Compara métricas entre ubicaciones y periodos de tiempo",
       "keyMetrics": "Métricas Clave",
       "keyMetricsDesc": "Sigue entradas, salidas y tasas de conversión"
-    }
+    },
+    "tryFreeDemo": "Prueba la Demo"
   },
   "login": {
     "welcome": "¡Bienvenido de nuevo!",
@@ -574,5 +575,9 @@
     "password": "Password",
     "userPlaceholder": "Enter username",
     "passwordPlaceholder": "Enter password"
+  },
+  "freeTrial": {
+    "demoNotice": "Estás viendo una demostración. Los datos son solo ilustrativos.",
+    "login": "Iniciar sesión"
   }
 }
