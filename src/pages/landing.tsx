@@ -115,8 +115,8 @@ const Landing = () => {
             )}
           </p>
 
-          {/* Dashboard Button */}
-          <div className="flex justify-center">
+          {/* Dashboard & Free Demo Buttons */}
+          <div className="flex flex-col items-center gap-4 mt-4">
             <button
               onClick={() => navigate("/home")}
               className="px-8 py-3 bg-[#00A5B1] text-white text-lg font-medium rounded-md
@@ -126,6 +126,14 @@ const Landing = () => {
               <span className="ml-2 transform transition-transform group-hover:translate-x-1">
                 →
               </span>
+            </button>
+            <button
+              onClick={() => navigate("/free-trial")}
+              className="px-8 py-3 bg-white border border-[#00A5B1] text-[#00A5B1] text-lg font-medium rounded-md
+                hover:bg-[#00A5B1] hover:text-white transition-all flex items-center justify-center shadow-lg shadow-[#00A5B1]/10"
+            >
+              {t("landing.tryFreeDemo", "Try Free Demo")}
+              <span className="ml-2">🚀</span>
             </button>
           </div>
         </div>

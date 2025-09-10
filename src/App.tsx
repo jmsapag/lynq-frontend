@@ -26,6 +26,7 @@ import ConnectionsPageWrapper from "./pages/connections-wrapper.tsx";
 import Overview from "./pages/overview.tsx";
 import ReportsPage from "./pages/reports.tsx";
 import FaqPage from "./pages/faq.tsx";
+import FreeTrialWrapper from "./pages/free-trial.tsx";
 
 function AppLayoutWithState() {
   const { isOpen, handleToggle, handleClose } = useSidebar();
@@ -65,6 +66,8 @@ function App() {
             path="/auth/change-password"
             element={<ChangePasswordPage />}
           />
+          <Route path="/free-trial" element={<FreeTrialWrapper />} />
+
           <Route element={<PrivateRoute />}>
             <Route path="/home" element={<RoleRedirect />} />
             <Route element={<AppLayoutWithState />}>
