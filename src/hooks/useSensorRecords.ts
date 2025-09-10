@@ -12,6 +12,8 @@ import { useDataProcessing } from "./sensor-data/useDataProcessing.ts";
 import { calculateFetchRange } from "../utils/sensor-data/calculate-fetch-range.ts";
 import { useFetchData } from "./sensor-data/useFetchData.ts";
 import { SensorRecordsFormData } from "../types/sensorRecordsFormData";
+import { getUserRoleFromToken } from "./auth/useAuth";
+import { generateMockSensorData } from "../utils/dataUtils";
 
 interface UseSensorRecordsResult {
   data: TransformedSensorData;
@@ -62,6 +64,28 @@ export function useSensorRecords(
 
   processDataRef.current = processData;
   groupByRef.current = groupBy;
+
+  // Mock data fetching function for unauthenticated users
+  const fetchMockData = useCallback(
+    async (
+      startDate: Date,
+      endDate: Date,
+      sensorIds: number[],
+      setError: (error: string) => void,
+    ): Promise<SensorDataPoint[]> => {
+      try {
+        // Simulate API delay
+        await new Promise((resolve) => setTimeout(resolve, 500));
+
+        return generateMockSensorData(startDate, endDate, sensorIds);
+      } catch (error) {
+        console.error("Error generating mock sensor data:", error);
+        setError("Error generating mock data");
+        return [];
+      }
+    },
+    [],
+  );
 
   // Stable process function to avoid dependency issues
   const processDataCallback = useCallback(
@@ -129,14 +153,31 @@ export function useSensorRecords(
             return;
           }
 
+          // Check if user is authenticated
+          const userRole = getUserRoleFromToken();
+
           // Fetch and process data
           setLoading(true);
-          const newData = await fetchData(
-            fetchStart,
-            fetchEnd,
-            currentSensorIds,
-            setError,
-          );
+
+          let newData: SensorDataPoint[];
+
+          if (userRole) {
+            // Use real API for authenticated users (not free trial)
+            newData = await fetchData(
+              fetchStart,
+              fetchEnd,
+              currentSensorIds,
+              setError,
+            );
+          } else {
+            // Use mock data for unauthenticated users and free trial users
+            newData = await fetchMockData(
+              fetchStart,
+              fetchEnd,
+              currentSensorIds,
+              setError,
+            );
+          }
 
           let dataToProcess: SensorDataPoint[] = [];
 
