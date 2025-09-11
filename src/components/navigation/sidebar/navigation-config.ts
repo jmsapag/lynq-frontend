@@ -5,6 +5,7 @@ import {
   MapPinIcon,
   HomeIcon,
   DocumentChartBarIcon,
+  CreditCardIcon,
 } from "@heroicons/react/24/outline";
 import {
   ArrowsRightLeftIcon,
@@ -33,5 +34,10 @@ export const adminNavItems = [
   { title: "reports", href: "/reports", icon: DocumentChartBarIcon },
   { title: "user-management", href: "/user-management", icon: UserGroupIcon },
   { title: "locations", href: "/locations", icon: MapPinIcon },
+  {
+    title: "payment-integrations",
+    href: "/payment-integrations",
+    icon: CreditCardIcon,
+  },
   { title: "help", href: "/help", icon: QuestionMarkCircleIcon },
 ];

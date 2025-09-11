@@ -20,6 +20,7 @@ import BusinessesPage from "./pages/businesses.tsx";
 import ManageUsersPage from "./pages/manage-users.tsx";
 import UserManagement from "./pages/user-management.tsx";
 import Locations from "./pages/locations.tsx";
+import PaymentIntegrationsPage from "./pages/payment-integrations.tsx";
 import RoleRedirect from "./components/auth/roleRedirect.tsx";
 import { RoleRoute } from "./components/auth/roleRoute.tsx";
 import ConnectionsPageWrapper from "./pages/connections-wrapper.tsx";
@@ -94,6 +95,10 @@ function App() {
               <Route element={<RoleRoute allowedRoles="ADMIN" />}>
                 <Route path="user-management" element={<UserManagement />} />
                 <Route path="locations" element={<Locations />} />
+                <Route
+                  path="payment-integrations"
+                  element={<PaymentIntegrationsPage />}
+                />
               </Route>
             </Route>
           </Route>
