@@ -1,6 +1,8 @@
 import { sensorResponse } from "../types/deviceResponse";
 import { useEffect, useState } from "react";
 import { axiosPrivate } from "../services/axiosClient.ts";
+import { mockSensorData } from "../utils/dataUtils";
+import { getUserRoleFromToken } from "./auth/useAuth";
 
 function useSensorData() {
   const [sensors, setSensors] = useState<sensorResponse[]>([]);
@@ -13,6 +15,15 @@ function useSensorData() {
       setError(null);
       setLoading(true);
       try {
+        const userRole = getUserRoleFromToken();
+        if (!userRole) {
+          setTimeout(() => {
+            setSensors(mockSensorData);
+            setLoading(false);
+          }, 500);
+          return;
+        }
+
         const response = await axiosPrivate.get("/devices/accessible", {});
         if (response.status !== 200) {
           setError("Error fetching sensors");
