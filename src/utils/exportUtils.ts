@@ -152,3 +152,39 @@ export const exportAsCsv = (
   link.click();
   document.body.removeChild(link);
 };
+
+export const exportAndSendByEmail = async (
+  elementRef: HTMLElement,
+  fileName: string,
+  sendEmail: (attachment: {
+    filename: string;
+    content: string;
+    contentType: string;
+  }) => Promise<any>,
+): Promise<void> => {
+  const canvas = await html2canvas(elementRef, {
+    backgroundColor: "#ffffff",
+    scale: 1,
+  });
+
+  return new Promise((resolve, reject) => {
+    canvas.toBlob(async (blob) => {
+      if (!blob) return reject(new Error("Failed to create image blob"));
+      const reader = new FileReader();
+      reader.onloadend = async () => {
+        const base64 = (reader.result as string).split(",")[1];
+        try {
+          await sendEmail({
+            filename: `${fileName}.png`,
+            content: base64,
+            contentType: "image/png",
+          });
+          resolve();
+        } catch (err) {
+          reject(err);
+        }
+      };
+      reader.readAsDataURL(blob);
+    }, "image/png");
+  });
+};

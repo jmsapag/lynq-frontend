@@ -99,7 +99,8 @@
     "warning": "Warning",
     "exportAsPng": "Export as PNG",
     "exportAsPdf": "Export as PDF",
-    "exportAsCSV": "Export as CSV"
+    "exportAsCSV": "Export as CSV",
+    "sendByEmail": "Send by Email"
   },
   "dashboard": {
     "percentage": "Percentage (%)",
