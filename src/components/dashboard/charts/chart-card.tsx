@@ -131,10 +131,9 @@ export const ChartCard: React.FC<ChartCardProps> = ({
         cardRef.current,
         getFileName(),
         sendChartEmail,
+        description ?? "default-widget-type",
       );
-      // Optionally show a toast notification for success
     } catch (error) {
-      // Optionally show a toast notification for error
       console.error("Error sending chart by email:", error);
     } finally {
       setIsCapturing(false);

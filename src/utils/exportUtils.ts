@@ -156,11 +156,12 @@ export const exportAsCsv = (
 export const exportAndSendByEmail = async (
   elementRef: HTMLElement,
   fileName: string,
-  sendEmail: (attachment: {
+  sendEmail: (payload: {
+    imageBase64: string;
     filename: string;
-    content: string;
-    contentType: string;
+    widgetType: string;
   }) => Promise<any>,
+  widgetType: string,
 ): Promise<void> => {
   const canvas = await html2canvas(elementRef, {
     backgroundColor: "#ffffff",
@@ -175,9 +176,9 @@ export const exportAndSendByEmail = async (
         const base64 = (reader.result as string).split(",")[1];
         try {
           await sendEmail({
+            imageBase64: base64,
             filename: `${fileName}.png`,
-            content: base64,
-            contentType: "image/png",
+            widgetType,
           });
           resolve();
         } catch (err) {
