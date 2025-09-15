@@ -2,9 +2,9 @@ import { useState } from "react";
 import { axiosPrivate } from "../../services/axiosClient";
 
 export interface EmailAttachment {
+  imageBase64: string;
   filename: string;
-  content: string;
-  contentType?: string;
+  widgetType: string;
 }
 
 export function useSendChartEmail() {
