@@ -116,12 +116,10 @@ const SubscriptionEventsFeed = () => {
       <div className="flex justify-end items-center mb-4 gap-4">
         {isLynqTeam && (
           <Input
-            label="Company ID"
             placeholder={t("subscriptions.events.companyIdFilter")}
             value={filters.companyId}
             onChange={(e) => handleFilterChange("companyId", e.target.value)}
             size="sm"
-            variant="bordered"
             className="w-48"
           />
         )}

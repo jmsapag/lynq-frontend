@@ -28,6 +28,7 @@ import ReportsPage from "./pages/reports.tsx";
 import FaqPage from "./pages/faq.tsx";
 import FreeTrialWrapper from "./pages/free-trial.tsx";
 import SubscriptionFeed from "./pages/subscription-feed.tsx";
+import PlanCreate from "./pages/plans.tsx";
 
 function AppLayoutWithState() {
   const { isOpen, handleToggle, handleClose } = useSidebar();
@@ -90,6 +91,7 @@ function App() {
                   element={<ConnectionsPageWrapper />}
                 />
                 <Route path="manage/users" element={<ManageUsersPage />} />
+                <Route path="plans" element={<PlanCreate />} />
               </Route>
 
               {/* ADMIN only routes */}
