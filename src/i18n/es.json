@@ -13,7 +13,8 @@
     "overview": "Resumen General",
     "reports": "Reportes",
     "faq": "FAQs",
-    "subscriptions": "Suscripciones"
+    "subscriptions": "Suscripciones",
+    "plans": "Planes de Subscripcion"
   },
   "days": {
     "sunday": "Domingo",
@@ -604,5 +605,24 @@
       "noEventsFiltered": "No se encontraron eventos con los filtros aplicados",
       "noEventsAvailable": "No hay eventos de suscripción disponibles"
     }
+  },
+  "planWizard": {
+    "createPlanBtn": "Crear Plan",
+    "createNewPlan": "Crear Nuevo Plan",
+    "planCreated": "Plan Creado",
+    "planId": "ID del Plan",
+    "status": "Estado",
+    "planName": "Nombre del Plan",
+    "maxSensors": "Sensores Máximos",
+    "retentionMonths": "Retención (meses)",
+    "months": "meses",
+    "priceCents": "Precio (centavos)",
+    "currency": "Moneda",
+    "billingInterval": "Intervalo de Facturación",
+    "summary": "Resumen",
+    "confirmAndCreate": "Confirmar y Crear",
+    "successTitle": "Éxito",
+    "successDesc": "¡Plan creado exitosamente!",
+    "errorTitle": "Error"
   }
 }
