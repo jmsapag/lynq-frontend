@@ -12,7 +12,8 @@
     "locations": "Ubicaciones",
     "overview": "Resumen General",
     "reports": "Reportes",
-    "faq": "FAQs"
+    "faq": "FAQs",
+    "subscriptions": "Suscripciones"
   },
   "days": {
     "sunday": "Domingo",
@@ -580,5 +581,28 @@
   "freeTrial": {
     "demoNotice": "Estás viendo una demostración. Los datos son solo ilustrativos.",
     "login": "Iniciar sesión"
+  },
+  "subscriptions": {
+    "events": {
+      "title": "Eventos de Suscripción",
+      "companyIdFilter": "Filtrar por ID de empresa",
+      "typeFilter": "Filtrar por tipo",
+      "searchPlaceholder": "Buscar",
+      "clearFilters": "Limpiar Filtros",
+      "fromDate": "Desde fecha",
+      "toDate": "Hasta fecha",
+      "allTypes": "Todos los tipos",
+      "subscriptionCreated": "Suscripción Creada",
+      "subscriptionUpdated": "Suscripción Actualizada",
+      "subscriptionCancelled": "Suscripción Cancelada",
+      "paymentSuccessful": "Pago Exitoso",
+      "paymentFailed": "Pago Fallido",
+      "invoiceCreated": "Factura Creada",
+      "invoicePaid": "Factura Pagada",
+      "loadingError": "Error al cargar eventos de suscripción",
+      "eventsLoadError": "Error al cargar eventos",
+      "noEventsFiltered": "No se encontraron eventos con los filtros aplicados",
+      "noEventsAvailable": "No hay eventos de suscripción disponibles"
+    }
   }
 }
