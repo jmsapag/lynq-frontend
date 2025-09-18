@@ -27,6 +27,7 @@ import Overview from "./pages/overview.tsx";
 import ReportsPage from "./pages/reports.tsx";
 import FaqPage from "./pages/faq.tsx";
 import FreeTrialWrapper from "./pages/free-trial.tsx";
+import SubscriptionFeed from "./pages/subscription-feed.tsx";
 
 function AppLayoutWithState() {
   const { isOpen, handleToggle, handleClose } = useSidebar();
@@ -78,6 +79,7 @@ function App() {
               <Route path="/profile" element={<UsersPage />} />
               <Route path="help" element={<HelpPage />} />
               <Route path="/faq" element={<FaqPage />} />
+              <Route path="/subscriptions" element={<SubscriptionFeed />} />
 
               {/* LYNQ_TEAM only routes */}
               <Route element={<RoleRoute allowedRoles="LYNQ_TEAM" />}>

@@ -13,7 +13,8 @@
     "overview": "Overview",
     "support": "Support",
     "reports": "Reports",
-    "faq": "FAQs"
+    "faq": "FAQs",
+    "subscriptions": "Subscriptions"
   },
   "days": {
     "sunday": "Sunday",
@@ -576,5 +577,28 @@
   "freeTrial": {
     "demoNotice": "You are viewing a demo. Data is for illustration only.",
     "login": "Log In"
+  },
+  "subscriptions": {
+    "events": {
+      "title": "Subscription Events",
+      "companyIdFilter": "Filter by company ID",
+      "typeFilter": "Filter by type",
+      "searchPlaceholder": "Search",
+      "clearFilters": "Clear Filters",
+      "fromDate": "From date",
+      "toDate": "To date",
+      "allTypes": "All types",
+      "subscriptionCreated": "Subscription Created",
+      "subscriptionUpdated": "Subscription Updated",
+      "subscriptionCancelled": "Subscription Cancelled",
+      "paymentSuccessful": "Payment Successful",
+      "paymentFailed": "Payment Failed",
+      "invoiceCreated": "Invoice Created",
+      "invoicePaid": "Invoice Paid",
+      "loadingError": "Error loading subscription events",
+      "eventsLoadError": "Error loading events",
+      "noEventsFiltered": "No events found with applied filters",
+      "noEventsAvailable": "No subscription events available"
+    }
   }
 }
