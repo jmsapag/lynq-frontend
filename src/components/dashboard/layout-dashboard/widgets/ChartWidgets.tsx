@@ -6,13 +6,77 @@ import { ChartHeatMap } from "../../charts/heat-map/chart-heat-map";
 import { ReturningCustomersChart } from "../../charts/returning-customers-chart";
 import { AvgVisitDurationChart } from "../../charts/avg-visit-duration-chart";
 import { AffluenceChart } from "../../charts/affluence-chart";
+import { DeviceComparisonChart } from "../../charts/device-comparison.tsx";
 import { WidgetConfig, WidgetFactoryParams } from "./types";
+import { useTranslation } from "react-i18next";
+import React from "react";
 
-const NoDataMessage = () => (
-  <div className="flex items-center justify-center h-64 text-gray-500">
-    No data available. Please select sensors and date range.
-  </div>
-);
+const NoDataMessage = () => {
+  const { t } = useTranslation();
+  return (
+    <div className="flex items-center justify-center h-64 text-gray-500">
+      {t("dashboard.errors.noDataAvailable")}
+    </div>
+  );
+};
+
+const HeatmapIncompatibleMessage: React.FC<{ groupBy: string }> = ({
+  groupBy,
+}) => {
+  const { t } = useTranslation();
+  return (
+    <div className="flex items-center justify-center h-64 text-orange-500">
+      <div className="text-center">
+        <div className="text-sm font-medium mb-2">
+          {t("dashboard.errors.heatmapIncompatibleGrouping", { groupBy })}
+        </div>
+        <div className="text-xs text-gray-600">
+          {t("dashboard.errors.heatmapIncompatibleInstructions")}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const LocationComparisonNoDataMessage = () => {
+  const { t } = useTranslation();
+  return (
+    <div className="flex items-center justify-center h-64 text-gray-500">
+      <div className="text-center">
+        <div className="text-sm">
+          {t("dashboard.noData.locationComparison")}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const ReturningCustomersNoDataMessage = () => {
+  const { t } = useTranslation();
+  return (
+    <div className="flex items-center justify-center h-64 text-gray-500">
+      {t("dashboard.noData.returningCustomers")}
+    </div>
+  );
+};
+
+const VisitDurationNoDataMessage = () => {
+  const { t } = useTranslation();
+  return (
+    <div className="flex items-center justify-center h-64 text-gray-500">
+      {t("dashboard.noData.visitDuration")}
+    </div>
+  );
+};
+
+const AffluenceNoDataMessage = () => {
+  const { t } = useTranslation();
+  return (
+    <div className="flex items-center justify-center h-64 text-gray-500">
+      {t("dashboard.noData.affluence")}
+    </div>
+  );
+};
 
 const transformChartDataForExport = (chartData: {
   categories: string[];
@@ -64,11 +128,22 @@ export const ChartWidgets = {
         translationKey="dashboard.charts.trafficHeatmap"
         data={transformChartDataForExport(params.chartData)}
       >
-        {params.chartData.categories.length === 0 ? (
-          <NoDataMessage />
-        ) : (
-          <ChartHeatMap data={params.sensorData} />
-        )}
+        {(() => {
+          // Check if data is available
+          if (params.chartData.categories.length === 0) {
+            return <NoDataMessage />;
+          }
+
+          // Check if groupBy is compatible with heatmap (only works well with hourly or smaller intervals)
+          const groupBy = params.sensorRecordsFormData.groupBy;
+          const incompatibleGroupings = ["day", "week", "month"];
+
+          if (incompatibleGroupings.includes(groupBy)) {
+            return <HeatmapIncompatibleMessage groupBy={groupBy} />;
+          }
+
+          return <ChartHeatMap data={params.sensorData} />;
+        })()}
       </ChartCard>
     ),
   }),
@@ -139,9 +214,7 @@ export const ChartWidgets = {
       >
         {!params.sensorData?.returningCustomers ||
         params.sensorData.returningCustomers.length === 0 ? (
-          <div className="flex items-center justify-center h-64 text-gray-500">
-            No FootfallCam data available for returning customers.
-          </div>
+          <ReturningCustomersNoDataMessage />
         ) : (
           <ReturningCustomersChart
             data={{
@@ -171,9 +244,7 @@ export const ChartWidgets = {
       >
         {!params.sensorData?.avgVisitDuration ||
         params.sensorData.avgVisitDuration.length === 0 ? (
-          <div className="flex items-center justify-center h-64 text-gray-500">
-            No FootfallCam data available for visit duration.
-          </div>
+          <VisitDurationNoDataMessage />
         ) : (
           <AvgVisitDurationChart
             data={{
@@ -201,9 +272,7 @@ export const ChartWidgets = {
       >
         {!params.sensorData?.affluence ||
         params.sensorData.affluence.length === 0 ? (
-          <div className="flex items-center justify-center h-64 text-gray-500">
-            No FootfallCam data available for affluence.
-          </div>
+          <AffluenceNoDataMessage />
         ) : (
           <AffluenceChart
             data={{
@@ -213,6 +282,88 @@ export const ChartWidgets = {
             groupBy={params.sensorRecordsFormData.groupBy}
           />
         )}
+      </ChartCard>
+    ),
+  }),
+
+  createLocationComparisonWidget: (
+    params: WidgetFactoryParams,
+  ): WidgetConfig => ({
+    id: "location-comparison-chart",
+    type: "location-comparison-chart",
+    title: "Location Comparison",
+    translationKey: "dashboard.charts.locationComparison",
+    category: "chart",
+    component: (
+      <ChartCard
+        title="Location Comparison"
+        translationKey="dashboard.charts.locationComparison"
+        data={[]}
+      >
+        {(() => {
+          // Check if we have any sensor data by location
+          if (
+            !params.sensorDataByLocation ||
+            params.sensorDataByLocation.length === 0
+          ) {
+            return <LocationComparisonNoDataMessage />;
+          }
+
+          // Get all unique timestamps from all locations (in case they differ)
+          const allTimestamps = params.sensorDataByLocation
+            .reduce((acc, location) => {
+              if (location?.data?.timestamps) {
+                location.data.timestamps.forEach((timestamp) => {
+                  if (!acc.includes(timestamp)) {
+                    acc.push(timestamp);
+                  }
+                });
+              }
+              return acc;
+            }, [] as string[])
+            .sort();
+
+          // Filter locations that have valid data
+          const validLocations = params.sensorDataByLocation.filter(
+            (location) =>
+              location?.data?.in &&
+              location.data.in.length > 0 &&
+              location.locationName &&
+              location.data.in.some((value) => value > 0), // Check if there's at least one non-zero value
+          );
+
+          const chartData = {
+            categories: allTimestamps.length > 0 ? allTimestamps : [],
+            devices: validLocations.map((location) => ({
+              name: location.locationName,
+              values: location.data.in || [],
+            })),
+          };
+
+          // If no valid locations with data, show specific no data message
+          if (
+            chartData.devices.length === 0 ||
+            chartData.categories.length === 0
+          ) {
+            return <LocationComparisonNoDataMessage />;
+          }
+
+          console.log("Location Comparison Chart Data:", {
+            locationsCount: params.sensorDataByLocation.length,
+            validLocationsCount: validLocations.length,
+            devicesCount: chartData.devices.length,
+            categories: chartData.categories.length,
+            devices: chartData.devices.map((d) => ({
+              name: d.name,
+              valueCount: d.values.length,
+              hasData: d.values.some((v) => v > 0),
+            })),
+          });
+
+          return (
+            <DeviceComparisonChart data={chartData} className="h-[300px]" />
+          );
+        })()}
       </ChartCard>
     ),
   }),

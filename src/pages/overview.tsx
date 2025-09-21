@@ -6,6 +6,7 @@ import {
 import { Time } from "@internationalized/date";
 import { useSensorData } from "../hooks/useSensorData";
 import { useSensorRecords } from "../hooks/useSensorRecords";
+import { useGroupLocations } from "../hooks/useGroupLocations";
 import { sensorResponse } from "../types/deviceResponse";
 import { sensorMetadata } from "../types/sensorMetadata";
 import { SensorRecordsFormData } from "../types/sensorRecordsFormData";
@@ -64,10 +65,13 @@ export const Overview: React.FC = () => {
     });
 
   const {
-    data: sensorData,
+    data: sensorDataByLocation,
     loading: dataLoading,
     error: dataError,
   } = useSensorRecords(sensorRecordsFormData, setSensorRecordsFormData);
+
+  // Group location data for overview metrics
+  const sensorData = useGroupLocations(sensorDataByLocation);
 
   // Comparison hook
   const { isComparisonEnabled, comparisonPeriods, toggleComparison } =

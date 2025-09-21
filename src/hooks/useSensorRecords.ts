@@ -1,22 +1,22 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import {
-  SensorDataPoint,
-  TransformedSensorData,
+  SensorDataResponse,
+  TransformedSensorDataByLocation,
 } from "../types/sensorDataResponse";
 import { isAfter, isBefore } from "date-fns";
-import { useTimeSeriesAggregator } from "./sensor-data/useTimeSeriesAggregator";
-import { useTransformData } from "./sensor-data/useTransformData.ts";
+import { useTimeSeriesAggregatorByLocation } from "./sensor-data/useTimeSeriesAggregatorByLocation";
+import { useTransformDataByLocation } from "./sensor-data/useTransformDataByLocation.ts";
 import { useFetchNecessity } from "./sensor-data/useFetchNeccesity.ts";
-import { useDataFiltering } from "./sensor-data/useDataFiltering.ts";
-import { useDataProcessing } from "./sensor-data/useDataProcessing.ts";
+import { useDataFilteringByLocation } from "./sensor-data/useDataFilteringByLocation.ts";
+import { useDataProcessingByLocation } from "./sensor-data/useDataProcessingByLocation.ts";
 import { calculateFetchRange } from "../utils/sensor-data/calculate-fetch-range.ts";
-import { useFetchData } from "./sensor-data/useFetchData.ts";
+import { useFetchDataByLocation } from "./sensor-data/useFetchDataByLocation.ts";
 import { SensorRecordsFormData } from "../types/sensorRecordsFormData";
 import { getUserRoleFromToken } from "./auth/useAuth";
-import { generateMockSensorData } from "../utils/dataUtils";
+import { generateMockSensorDataByLocation } from "../utils/dataUtils";
 
 interface UseSensorRecordsResult {
-  data: TransformedSensorData;
+  data: TransformedSensorDataByLocation[];
   loading: boolean;
   error: string | null;
 }
@@ -36,27 +36,27 @@ export function useSensorRecords(
     groupBy,
     aggregationType,
   } = sensorRecordsFormData;
-  const [data, setData] = useState<TransformedSensorData>({
-    timestamps: [],
-    in: [],
-    out: [],
-    returningCustomers: [],
-    avgVisitDuration: [],
-    outsideTraffic: [],
-    affluence: [],
-  });
+
+  const [data, setData] = useState<TransformedSensorDataByLocation[]>([]);
+  const [rawDataByLocation, setRawDataByLocation] = useState<
+    SensorDataResponse[]
+  >([]);
   const [prevSensorIds, setPrevSensorIds] = useState<number[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const isProcessingRef = useRef<boolean>(false);
 
   // Custom hooks
-  const fetchData = useFetchData();
+  const fetchData = useFetchDataByLocation();
   const checkFetchNecessity = useFetchNecessity();
-  const filterData = useDataFiltering();
-  const timeSeriesAggregator = useTimeSeriesAggregator(aggregationType);
-  const transformData = useTransformData();
-  const processData = useDataProcessing(timeSeriesAggregator, transformData);
+  const filterData = useDataFilteringByLocation();
+  const timeSeriesAggregator =
+    useTimeSeriesAggregatorByLocation(aggregationType);
+  const transformData = useTransformDataByLocation();
+  const processData = useDataProcessingByLocation(
+    timeSeriesAggregator,
+    transformData,
+  );
 
   // Use refs for values that don't need to trigger callback recreation
   const processDataRef = useRef(processData);
@@ -72,12 +72,12 @@ export function useSensorRecords(
       endDate: Date,
       sensorIds: number[],
       setError: (error: string) => void,
-    ): Promise<SensorDataPoint[]> => {
+    ): Promise<SensorDataResponse[]> => {
       try {
         // Simulate API delay
         await new Promise((resolve) => setTimeout(resolve, 500));
 
-        return generateMockSensorData(startDate, endDate, sensorIds);
+        return generateMockSensorDataByLocation(startDate, endDate, sensorIds);
       } catch (error) {
         console.error("Error generating mock sensor data:", error);
         setError("Error generating mock data");
@@ -87,12 +87,33 @@ export function useSensorRecords(
     [],
   );
 
+  // Helper function to convert SensorDataPoint[] to SensorDataResponse[] for compatibility
+  const convertRawDataToByLocation = useCallback(
+    (rawData: any[]): SensorDataResponse[] => {
+      // If rawData is already in the correct format, return as is
+      if (rawData.length > 0 && "location_id" in rawData[0]) {
+        return rawData as SensorDataResponse[];
+      }
+
+      // Otherwise, we need to convert from the old format
+      // For now, create a single location with all data
+      return [
+        {
+          location_id: 0,
+          location_name: "Combined Location",
+          data: rawData,
+        },
+      ];
+    },
+    [],
+  );
+
   // Stable process function to avoid dependency issues
   const processDataCallback = useCallback(
     async (
       currentDateRange: { start: Date; end: Date },
       currentSensorIds: number[],
-      currentRawData: SensorDataPoint[],
+      currentRawDataByLocation: SensorDataResponse[],
       currentFetchedDateRange: { start: Date; end: Date } | null,
     ) => {
       // Early return if already processing
@@ -115,6 +136,7 @@ export function useSensorRecords(
             fetchedDateRange: null,
             rawData: [],
           }));
+          setRawDataByLocation([]);
           setPrevSensorIds(currentSensorIds);
           return; // Exit early, will re-trigger with new data
         }
@@ -125,13 +147,19 @@ export function useSensorRecords(
         }
 
         // Filter data in the requested range
-        const dataInRange = filterData(currentRawData, currentDateRange);
+        const dataInRange = filterData(
+          currentRawDataByLocation,
+          currentDateRange,
+        );
 
-        // Check if we need to fetch new data
+        // Check if we need to fetch new data (using flat data for compatibility)
+        const flatData = currentRawDataByLocation.flatMap(
+          (location) => location.data,
+        );
         const shouldFetch = checkFetchNecessity(
           currentDateRange,
           currentFetchedDateRange,
-          dataInRange,
+          flatData,
         );
 
         if (shouldFetch) {
@@ -159,7 +187,7 @@ export function useSensorRecords(
           // Fetch and process data
           setLoading(true);
 
-          let newData: SensorDataPoint[];
+          let newData: SensorDataResponse[];
 
           if (userRole) {
             // Use real API for authenticated users (not free trial)
@@ -179,11 +207,31 @@ export function useSensorRecords(
             );
           }
 
-          let dataToProcess: SensorDataPoint[] = [];
+          let dataToProcess: SensorDataResponse[] = [];
 
           if (currentFetchedDateRange) {
-            // Merge with existing data
-            dataToProcess = [...currentRawData, ...newData];
+            // Merge with existing data by location
+            const locationMap = new Map<number, SensorDataResponse>();
+
+            // Add existing data
+            currentRawDataByLocation.forEach((location) => {
+              locationMap.set(location.location_id, { ...location });
+            });
+
+            // Merge new data
+            newData.forEach((newLocation) => {
+              if (locationMap.has(newLocation.location_id)) {
+                const existing = locationMap.get(newLocation.location_id)!;
+                locationMap.set(newLocation.location_id, {
+                  ...existing,
+                  data: [...existing.data, ...newLocation.data],
+                });
+              } else {
+                locationMap.set(newLocation.location_id, { ...newLocation });
+              }
+            });
+
+            dataToProcess = Array.from(locationMap.values());
 
             // Update the fetched date range
             const newStart = isBefore(
@@ -203,7 +251,7 @@ export function useSensorRecords(
             setSensorRecordsFormData((prev: SensorRecordsFormData) => ({
               ...prev,
               fetchedDateRange: { start: newStart, end: newEnd },
-              rawData: dataToProcess,
+              rawData: dataToProcess.flatMap((location) => location.data), // Keep as SensorDataPoint[] for compatibility
             }));
           } else {
             // First fetch
@@ -214,10 +262,11 @@ export function useSensorRecords(
                 start: currentDateRange.start,
                 end: currentDateRange.end,
               },
-              rawData: dataToProcess,
+              rawData: dataToProcess.flatMap((location) => location.data), // Keep as SensorDataPoint[] for compatibility
             }));
           }
 
+          setRawDataByLocation(dataToProcess);
           setLoading(false);
 
           // Process the data
@@ -246,6 +295,7 @@ export function useSensorRecords(
       filterData,
       setSensorRecordsFormData,
       prevSensorIds,
+      fetchMockData,
     ],
   );
 
@@ -253,7 +303,22 @@ export function useSensorRecords(
   useEffect(() => {
     if (!dateRange || sensorIds.length === 0) return;
 
-    processDataCallback(dateRange, sensorIds, rawData, fetchedDateRange);
+    // Use existing rawDataByLocation if available, otherwise convert rawData
+    const currentRawDataByLocation =
+      rawDataByLocation.length > 0
+        ? rawDataByLocation
+        : convertRawDataToByLocation(rawData);
+
+    if (rawDataByLocation.length === 0) {
+      setRawDataByLocation(currentRawDataByLocation);
+    }
+
+    processDataCallback(
+      dateRange,
+      sensorIds,
+      currentRawDataByLocation,
+      fetchedDateRange,
+    );
   }, [
     dateRange?.start.getTime(),
     dateRange?.end.getTime(),
@@ -263,9 +328,11 @@ export function useSensorRecords(
     hourRange?.start.toString(),
     hourRange?.end.toString(),
     rawData.length,
+    rawDataByLocation.length,
     fetchedDateRange?.start.getTime(),
     fetchedDateRange?.end.getTime(),
     processDataCallback,
+    convertRawDataToByLocation,
   ]);
 
   return { data, loading, error };

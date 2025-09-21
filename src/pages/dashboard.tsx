@@ -6,6 +6,7 @@ import {
 import { useEffect, useState, useMemo } from "react";
 import { useSensorData } from "../hooks/useSensorData.ts";
 import { useSensorRecords } from "../hooks/useSensorRecords.ts";
+import { useGroupLocations } from "../hooks/useGroupLocations";
 import { sensorResponse } from "../types/deviceResponse";
 import { sensorMetadata } from "../types/sensorMetadata";
 import {
@@ -88,10 +89,13 @@ const Dashboard = () => {
 
   // Use the sensor records hook
   const {
-    data: sensorData,
+    data: sensorDataByLocation,
     loading: dataLoading,
     error: dataError,
   } = useSensorRecords(sensorRecordsFormData, setSensorRecordsFormData);
+
+  // Group location data for charts that need unified data
+  const sensorData = useGroupLocations(sensorDataByLocation);
 
   // Comparison hook
   const { isComparisonEnabled, comparisonPeriods, toggleComparison } =
@@ -242,6 +246,7 @@ const Dashboard = () => {
       metrics: metrics.current,
       chartData,
       sensorData,
+      sensorDataByLocation: sensorDataByLocation || [],
       sensorRecordsFormData,
       dateRange: sensorRecordsFormData.dateRange,
       sensorIdsList,
@@ -263,6 +268,7 @@ const Dashboard = () => {
     metrics,
     chartData,
     sensorData,
+    sensorDataByLocation,
     sensorRecordsFormData,
     sensorIdsList,
     getSensorDetails,

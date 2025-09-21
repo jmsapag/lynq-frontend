@@ -109,6 +109,25 @@
     "quantity": "Quantity",
     "minutes": "Minutes",
     "seconds": "Seconds",
+    "loading": {
+      "preparingData": "Preparing dashboard data...",
+      "loadingCharts": "Loading charts...",
+      "processingData": "Processing sensor data..."
+    },
+    "errors": {
+      "loadingData": "Error loading dashboard data",
+      "chartLoadError": "Error loading chart data",
+      "noDataAvailable": "No data available for the selected period",
+      "heatmapIncompatibleGrouping": "Heat Map not compatible with {{groupBy}} grouping",
+      "heatmapIncompatibleInstructions": "Heat maps work best with hourly or smaller time intervals. Please change the grouping to \"5min\", \"15min\", \"30min\", or \"hour\"."
+    },
+    "noData": {
+      "locationComparison": "No valid location data available for comparison. Please ensure sensors have recorded data for the selected period.",
+      "heatmapIncompatible": "This view is not available with the current time grouping.",
+      "returningCustomers": "No FootfallCam data available for returning customers.",
+      "visitDuration": "No FootfallCam data available for visit duration.",
+      "affluence": "No FootfallCam data available for affluence."
+    },
     "filters": {
       "selectDates": "Select dates",
       "startDate": "Start date",
@@ -121,6 +140,7 @@
       "weeklyTrend": "Weekly Trend",
       "peopleFlow": "People Flow (In/Out)",
       "trafficHeatmap": "Traffic Heatmap (By Day & Hour)",
+      "locationComparison": "Location Comparison",
       "entryRateOverTime": "Entry Rate Over Time",
       "peopleInStore": "People in Store (Cumulative)",
       "returningCustomersChart": "Returning Rate Over Time",

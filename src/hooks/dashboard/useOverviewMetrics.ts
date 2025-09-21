@@ -1,6 +1,7 @@
 import { useMemo, useState, useEffect } from "react";
 import { sensorMetadata } from "../../types/sensorMetadata";
 import { useSensorRecords } from "../useSensorRecords";
+import { useGroupLocations } from "../useGroupLocations";
 import { Time } from "@internationalized/date";
 import { SensorRecordsFormData } from "../../types/sensorRecordsFormData";
 import {
@@ -104,10 +105,11 @@ export const useOverviewMetrics = (
     }));
   }, [sensorIds, sensorMap, dateRange]);
 
-  const { data: dailySensorData } = useSensorRecords(
+  const { data: dailySensorDataByLocation } = useSensorRecords(
     dailyDataFormData,
     setDailyDataFormData,
   );
+  const dailySensorData = useGroupLocations(dailySensorDataByLocation);
 
   // Fetch comparison data if comparison periods are provided
   const [comparisonFormData, setComparisonFormData] =
@@ -187,9 +189,12 @@ export const useOverviewMetrics = (
     [],
   );
 
-  const { data: comparisonSensorData } = useSensorRecords(
+  const { data: comparisonSensorDataByLocation } = useSensorRecords(
     comparisonFormData || fallbackFormData,
     comparisonFormData ? comparisonSetter : fallbackSetter,
+  );
+  const comparisonSensorData = useGroupLocations(
+    comparisonSensorDataByLocation,
   );
 
   // Calculate returning customers weighted average outside main metrics calculation
