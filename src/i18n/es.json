@@ -122,7 +122,10 @@
     },
     "noData": {
       "locationComparison": "No hay datos válidos de ubicaciones disponibles para comparar. Por favor asegúrate de que los sensores hayan registrado datos para el período seleccionado.",
-      "heatmapIncompatible": "Esta vista no está disponible con la agrupación de tiempo actual."
+      "heatmapIncompatible": "Esta vista no está disponible con la agrupación de tiempo actual.",
+      "returningCustomers": "No hay datos de FootfallCam disponibles para clientes recurrentes.",
+      "visitDuration": "No hay datos de FootfallCam disponibles para duración de visita.",
+      "affluence": "No hay datos de FootfallCam disponibles para afluencia."
     },
     "filters": {
       "selectDates": "Seleccionar fechas",

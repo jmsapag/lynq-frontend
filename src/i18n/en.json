@@ -123,7 +123,10 @@
     },
     "noData": {
       "locationComparison": "No valid location data available for comparison. Please ensure sensors have recorded data for the selected period.",
-      "heatmapIncompatible": "This view is not available with the current time grouping."
+      "heatmapIncompatible": "This view is not available with the current time grouping.",
+      "returningCustomers": "No FootfallCam data available for returning customers.",
+      "visitDuration": "No FootfallCam data available for visit duration.",
+      "affluence": "No FootfallCam data available for affluence."
     },
     "filters": {
       "selectDates": "Select dates",
