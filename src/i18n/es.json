@@ -108,6 +108,16 @@
     "quantity": "Cantidad",
     "seconds": "Segundos",
     "minutes": "Minutos",
+    "loading": {
+      "preparingData": "Preparando datos del dashboard...",
+      "loadingCharts": "Cargando gráficos...",
+      "processingData": "Procesando datos de sensores..."
+    },
+    "errors": {
+      "loadingData": "Error al cargar datos del dashboard",
+      "chartLoadError": "Error al cargar datos del gráfico",
+      "noDataAvailable": "No hay datos disponibles para el período seleccionado"
+    },
     "filters": {
       "selectDates": "Seleccionar fechas",
       "startDate": "Fecha inicio",

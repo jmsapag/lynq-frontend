@@ -18,7 +18,8 @@ export type DashboardWidgetType =
   | "affluence"
   | "returning-customers-chart"
   | "avg-visit-duration-chart"
-  | "affluence-chart";
+  | "affluence-chart"
+  | "location-comparison-chart";
 
 export interface WidgetConfig {
   id: string;
@@ -48,6 +49,7 @@ export interface WidgetFactoryParams {
     values: Array<{ in: number; out: number }>;
   };
   sensorData: any;
+  sensorDataByLocation?: any;
   sensorRecordsFormData: any;
   dateRange?: { start: Date; end: Date }; // Adding dateRange
   sensorIdsList?: string;

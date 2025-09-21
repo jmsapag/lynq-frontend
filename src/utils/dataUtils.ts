@@ -1,5 +1,8 @@
 import { sensorResponse } from "../types/deviceResponse";
-import { SensorDataPoint } from "../types/sensorDataResponse.ts";
+import {
+  SensorDataPoint,
+  SensorDataResponse,
+} from "../types/sensorDataResponse.ts";
 
 export const mockSensorData: sensorResponse[] = [
   {
@@ -105,4 +108,68 @@ export const generateMockSensorData = (
   }
 
   return mockData;
+};
+
+export const generateMockSensorDataByLocation = (
+  startDate: Date,
+  endDate: Date,
+  sensorIds: number[],
+): SensorDataResponse[] => {
+  console.log("generateMockSensorDataByLocation called with:", { sensorIds });
+
+  // Find the relevant locations for the requested sensors
+  const relevantLocations = mockSensorData.filter((location) =>
+    location.sensors.some((sensor) => sensorIds.includes(sensor.id)),
+  );
+
+  console.log(
+    "Relevant locations found:",
+    relevantLocations.map((l) => ({ id: l.id, name: l.name })),
+  );
+
+  const result = relevantLocations.map((location) => {
+    const mockData: SensorDataPoint[] = [];
+    const currentDate = new Date(startDate);
+
+    while (currentDate <= endDate) {
+      // Generate data for each 5-minute interval
+      const timestamp = currentDate.toISOString();
+
+      // Generate realistic random data for this specific location
+      const total_count_in = Math.floor(Math.random() * 25) + 5;
+      const total_count_out = Math.floor(Math.random() * 20) + 3;
+      const outsideTraffic = Math.floor(Math.random() * 100) + 50;
+      const avgVisitDuration = Math.random() * 30 + 10;
+      const returningCustomer = Math.floor(Math.random() * 60) + 20;
+
+      mockData.push({
+        timestamp,
+        total_count_in,
+        total_count_out,
+        outsideTraffic,
+        avgVisitDuration,
+        returningCustomer,
+      });
+
+      // Increment by 5 minutes
+      currentDate.setMinutes(currentDate.getMinutes() + 5);
+    }
+
+    return {
+      location_id: parseInt(location.id),
+      location_name: location.name,
+      data: mockData,
+    };
+  });
+
+  console.log(
+    "Generated mock data by location:",
+    result.map((r) => ({
+      location_id: r.location_id,
+      location_name: r.location_name,
+      dataPoints: r.data.length,
+    })),
+  );
+
+  return result;
 };

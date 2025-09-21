@@ -109,6 +109,16 @@
     "quantity": "Quantity",
     "minutes": "Minutes",
     "seconds": "Seconds",
+    "loading": {
+      "preparingData": "Preparing dashboard data...",
+      "loadingCharts": "Loading charts...",
+      "processingData": "Processing sensor data..."
+    },
+    "errors": {
+      "loadingData": "Error loading dashboard data",
+      "chartLoadError": "Error loading chart data",
+      "noDataAvailable": "No data available for the selected period"
+    },
     "filters": {
       "selectDates": "Select dates",
       "startDate": "Start date",

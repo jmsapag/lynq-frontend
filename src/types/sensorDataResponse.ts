@@ -23,6 +23,12 @@ export type TransformedSensorData = {
   affluence: number[]; // Calculated as in/outsideTraffic
 };
 
+export type TransformedSensorDataByLocation = {
+  locationId: number;
+  locationName: string;
+  data: TransformedSensorData;
+};
+
 export type GroupByTimeAmount =
   | "5min"
   | "10min"

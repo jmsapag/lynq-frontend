@@ -3,6 +3,7 @@ import { DashboardFilters } from "../components/dashboard/filter";
 import { useEffect, useState, useMemo } from "react";
 import { useSensorData } from "../hooks/useSensorData";
 import { useSensorRecords } from "../hooks/useSensorRecords.ts";
+import { useGroupLocations } from "../hooks/useGroupLocations";
 import { sensorResponse } from "../types/deviceResponse";
 import { sensorMetadata } from "../types/sensorMetadata";
 import {
@@ -82,10 +83,17 @@ const Comparison = () => {
     });
   }, []);
 
-  const sensorResults = Array.from({ length: MAX_SENSORS }, (_, idx) =>
+  const sensorResultsRaw = Array.from({ length: MAX_SENSORS }, (_, idx) =>
     // eslint-disable-next-line react-hooks/rules-of-hooks
     useSensorRecords(formDataArr[idx], updateCallbacks[idx]),
   );
+
+  // Group the data for each sensor result
+  const sensorResults = sensorResultsRaw.map((result) => ({
+    ...result,
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    data: useGroupLocations(result.data || []),
+  }));
 
   const { inChartData, outChartData } = useMemo(() => {
     const validResults = sensorResults

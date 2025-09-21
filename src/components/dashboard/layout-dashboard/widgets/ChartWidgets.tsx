@@ -6,6 +6,7 @@ import { ChartHeatMap } from "../../charts/heat-map/chart-heat-map";
 import { ReturningCustomersChart } from "../../charts/returning-customers-chart";
 import { AvgVisitDurationChart } from "../../charts/avg-visit-duration-chart";
 import { AffluenceChart } from "../../charts/affluence-chart";
+import { DeviceComparisonChart } from "../../charts/device-comparison.tsx";
 import { WidgetConfig, WidgetFactoryParams } from "./types";
 
 const NoDataMessage = () => (
@@ -212,6 +213,76 @@ export const ChartWidgets = {
             }}
             groupBy={params.sensorRecordsFormData.groupBy}
           />
+        )}
+      </ChartCard>
+    ),
+  }),
+
+  createLocationComparisonWidget: (
+    params: WidgetFactoryParams,
+  ): WidgetConfig => ({
+    id: "location-comparison-chart",
+    type: "location-comparison-chart",
+    title: "Location Comparison",
+    translationKey: "dashboard.charts.locationComparison",
+    category: "chart",
+    component: (
+      <ChartCard
+        title="Location Comparison"
+        translationKey="dashboard.charts.locationComparison"
+        data={[]}
+      >
+        {!params.sensorDataByLocation ||
+        params.sensorDataByLocation.length === 0 ? (
+          <NoDataMessage />
+        ) : (
+          (() => {
+            // Get all unique timestamps from all locations (in case they differ)
+            const allTimestamps = params.sensorDataByLocation
+              .reduce((acc, location) => {
+                if (location?.data?.timestamps) {
+                  location.data.timestamps.forEach((timestamp) => {
+                    if (!acc.includes(timestamp)) {
+                      acc.push(timestamp);
+                    }
+                  });
+                }
+                return acc;
+              }, [] as string[])
+              .sort();
+
+            const chartData = {
+              categories:
+                allTimestamps.length > 0
+                  ? allTimestamps
+                  : params.sensorDataByLocation[0]?.data?.timestamps || [],
+              devices: params.sensorDataByLocation
+                .filter(
+                  (location) =>
+                    location?.data?.in &&
+                    location.data.in.length > 0 &&
+                    location.locationName,
+                )
+                .map((location) => ({
+                  name: location.locationName,
+                  values: location.data.in || [],
+                })),
+            };
+
+            console.log("Location Comparison Chart Data:", {
+              locationsCount: params.sensorDataByLocation.length,
+              devicesCount: chartData.devices.length,
+              categories: chartData.categories.length,
+              devices: chartData.devices.map((d) => ({
+                name: d.name,
+                valueCount: d.values.length,
+              })),
+            });
+
+            return (
+              <DeviceComparisonChart data={chartData} className="h-[300px]" />
+            );
+          })()
         )}
       </ChartCard>
     ),
