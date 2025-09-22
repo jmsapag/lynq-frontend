@@ -40,7 +40,7 @@ export const AVAILABLE_LAYOUTS: DashboardLayout[] = [
       },
       {
         id: "charts-grid",
-        className: " flex flex-col md:flex-col gap-6 mt-6",
+        className: "flex flex-col md:flex-col gap-6 mt-6",
         zones: [
           {
             id: "chart-1",

@@ -5,6 +5,18 @@ import {
 import { parseISO } from "date-fns";
 import { timeGroupingStrategies } from "./index.ts";
 
+/**
+ * Time aggregation service that ensures timezone consistency.
+ *
+ * All timestamps are processed in UTC to prevent differences between
+ * users in different timezones (e.g., Germany vs Argentina).
+ *
+ * Key changes for timezone consistency:
+ * - Timestamps maintain 'Z' suffix to indicate UTC
+ * - All grouping strategies use UTC methods (getUTCHours, getUTCDate, etc.)
+ * - Chart parsing and display components handle UTC properly
+ */
+
 // Helper function to validate returning customer values
 function isValidReturningCustomerValue(
   currentValue: number | null | undefined,
@@ -94,7 +106,11 @@ const aggregateTimeSeries = (
       index,
     );
 
-    if (isValidReturning && point.returningCustomer !== null) {
+    if (
+      isValidReturning &&
+      point.returningCustomer !== null &&
+      point.returningCustomer !== undefined
+    ) {
       // Use weighted aggregation for percentages
       group.returningCustomerWeightedSum +=
         point.returningCustomer * point.total_count_in;
@@ -147,7 +163,7 @@ const aggregateTimeSeries = (
       // For 'sum' and 'none', we use the total as is
 
       return {
-        timestamp: timestamp.replace("Z", ""), // Remove 'Z' for consistency
+        timestamp: timestamp, // Keep 'Z' for UTC consistency across timezones
         total_count_in: total_in,
         total_count_out: total_out,
         outsideTraffic,

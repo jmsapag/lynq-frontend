@@ -26,59 +26,56 @@ export const HOURS = Array.from({ length: 24 }, (_, i) => i);
  */
 export function parseTimestamp(timestamp: string): Date | null {
   try {
-    // Custom parsing for timestamps in format "May 24, 00:00"
-    if (typeof timestamp === "string" && timestamp.includes(",")) {
-      const parts = timestamp.split(", ");
-      if (parts.length === 2) {
-        const datePart = parts[0]; // e.g. "May 24"
-        const timePart = parts[1]; // e.g. "00:00"
+    // If it's a standard ISO format (including UTC 'Z'), parse directly
+    if (timestamp.includes("T") || timestamp.includes("Z")) {
+      const date = new Date(timestamp);
+      if (!isNaN(date.getTime())) {
+        return date;
+      }
+    }
 
-        // Parse the time
-        const [hours, minutes] = timePart.split(":").map(Number);
+    // Handle "May 24, 00:00" format
+    const regex = /^(\w{3})\s(\d{1,2}),\s(\d{2}):(\d{2})$/;
+    const match = timestamp.match(regex);
 
-        // Parse the date - we'll assume current year since it's not in the string
-        const currentYear = new Date().getFullYear();
-        const monthDay = datePart.split(" ");
+    if (match) {
+      const [, monthStr, dayStr, hoursStr, minutesStr] = match;
+      const currentYear = new Date().getUTCFullYear();
+      const hours = parseInt(hoursStr, 10);
+      const minutes = parseInt(minutesStr, 10);
 
-        // Map month name to number (0-based)
-        const months: Record<string, number> = {
-          Jan: 0,
-          Feb: 1,
-          Mar: 2,
-          Apr: 3,
-          May: 4,
-          Jun: 5,
-          Jul: 6,
-          Aug: 7,
-          Sep: 8,
-          Oct: 9,
-          Nov: 10,
-          Dec: 11,
-        };
+      const months: Record<string, number> = {
+        Jan: 0,
+        Feb: 1,
+        Mar: 2,
+        Apr: 3,
+        May: 4,
+        Jun: 5,
+        Jul: 6,
+        Aug: 7,
+        Sep: 8,
+        Oct: 9,
+        Nov: 10,
+        Dec: 11,
+      };
 
-        const month = months[monthDay[0]];
-        const day = parseInt(monthDay[1], 10);
+      const month = months[monthStr];
+      const day = parseInt(dayStr, 10);
 
-        if (!isNaN(month) && !isNaN(day) && !isNaN(hours) && !isNaN(minutes)) {
-          return new Date(currentYear, month, day, hours, minutes);
-        } else {
-          console.warn(`Cannot parse timestamp parts: ${timestamp}`);
-          return null;
-        }
+      if (!isNaN(month) && !isNaN(day) && !isNaN(hours) && !isNaN(minutes)) {
+        // Use UTC methods to ensure consistent timezone handling
+        return new Date(Date.UTC(currentYear, month, day, hours, minutes));
       } else {
-        console.warn(`Unexpected timestamp format: ${timestamp}`);
+        console.warn(`Cannot parse timestamp parts: ${timestamp}`);
         return null;
       }
     } else {
       // Try standard date parsing for other formats
       const date = new Date(timestamp);
-
-      // Check if the date is valid
       if (isNaN(date.getTime())) {
         console.warn(`Invalid timestamp after parsing: ${timestamp}`);
         return null;
       }
-
       return date;
     }
   } catch (error) {
@@ -110,8 +107,8 @@ export function processDataForHeatMap(
 
       if (!date) return; // Skip if timestamp parsing failed
 
-      const dayOfWeek = date.getDay(); // 0 = Sunday, 6 = Saturday
-      const hour = date.getHours();
+      const dayOfWeek = date.getUTCDay(); // 0 = Sunday, 6 = Saturday
+      const hour = date.getUTCHours();
 
       // Validate dayOfWeek and hour are within expected ranges
       if (dayOfWeek < 0 || dayOfWeek > 6 || hour < 0 || hour > 23) {
