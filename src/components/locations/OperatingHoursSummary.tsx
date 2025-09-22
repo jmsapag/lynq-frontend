@@ -31,7 +31,27 @@ export default function OperatingHoursSummary({ location }: Props) {
   const { t } = useTranslation();
 
   const oh = (location as any)?.operating_hours;
-  if (!oh || Object.keys(oh).length === 0) {
+  // remove empty day entries
+  const hasAny = () => {
+    if (!oh) return false;
+    const days = [
+      "monday",
+      "tuesday",
+      "wednesday",
+      "thursday",
+      "friday",
+      "saturday",
+      "sunday",
+    ] as const;
+    return days.some((d) => {
+      const v = oh[d];
+      if (!v) return false;
+      if (v.is24h) return true;
+      return Array.isArray(v.ranges) && v.ranges.length > 0;
+    });
+  };
+
+  if (!oh || !hasAny()) {
     return (
       <span className="text-default-500 text-sm">
         {t("operatingHours.noneConfigured")}
@@ -39,19 +59,5 @@ export default function OperatingHoursSummary({ location }: Props) {
     );
   }
 
-  return (
-    <div className="text-sm">
-      <div className="text-default-500">{oh.timezone || ""}</div>
-      <div className="grid grid-cols-2 gap-x-4 gap-y-1 mt-1">
-        {DAYS.map((d) => (
-          <div key={d} className="flex gap-2">
-            <div className="min-w-20 capitalize text-default-600">
-              {t(`days.${d}`)}:
-            </div>
-            <div className="text-default-800">{dayToText(oh[d])}</div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+  return null; // Detailed view will be handled in collapsible panel
 }

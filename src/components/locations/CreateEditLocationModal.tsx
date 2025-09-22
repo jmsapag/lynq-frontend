@@ -43,6 +43,8 @@ const CreateEditLocationModal: React.FC<CreateEditLocationModalProps> = ({
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [operatingHours, setOperatingHours] = useState<OperatingHours>({});
+  const [originalOperatingHours, setOriginalOperatingHours] =
+    useState<OperatingHours>({});
 
   const {
     createLocation,
@@ -63,17 +65,82 @@ const CreateEditLocationModal: React.FC<CreateEditLocationModalProps> = ({
     useSaveOperatingHours();
   const { byId: ohById } = useOperatingHoursAll();
 
+  function sanitizeOperatingHours(oh: OperatingHours): OperatingHours {
+    const copy: OperatingHours = { ...oh };
+    const days: (keyof OperatingHours)[] = [
+      "monday",
+      "tuesday",
+      "wednesday",
+      "thursday",
+      "friday",
+      "saturday",
+      "sunday",
+    ];
+    for (const d of days) {
+      const v: any = (copy as any)[d];
+      if (!v) continue;
+      if (v.is24h) {
+        (copy as any)[d] = { is24h: true };
+      } else if (Array.isArray(v.ranges)) {
+        const ranges = v.ranges
+          .filter((r: any) => r && r.start && r.end)
+          .map((r: any) => ({ start: r.start, end: r.end }));
+        if (ranges.length === 0) delete (copy as any)[d];
+        else (copy as any)[d] = { ranges };
+      } else {
+        delete (copy as any)[d];
+      }
+    }
+    // keep timezone if present
+    if (!copy.timezone) delete (copy as any).timezone;
+    return copy;
+  }
+
+  function hasAnyDayConfigured(oh: any): boolean {
+    const keys = [
+      "monday",
+      "tuesday",
+      "wednesday",
+      "thursday",
+      "friday",
+      "saturday",
+      "sunday",
+    ];
+    return keys.some((k) => !!oh?.[k]);
+  }
+
+  function toBackendPayload(oh: OperatingHours): OperatingHours {
+    // Backend expects only day keys with DayOperatingHours
+    const { timezone, exceptions, ...days } = oh as any;
+    const result: any = {};
+    for (const k of Object.keys(days)) {
+      result[k] = days[k];
+    }
+    return result as OperatingHours;
+  }
+
+  function deepEqual(a: any, b: any): boolean {
+    try {
+      return JSON.stringify(a) === JSON.stringify(b);
+    } catch {
+      return false;
+    }
+  }
+
   useEffect(() => {
     if (location) {
       setName(location.name);
       setAddress(location.address);
       const withOH = ohById.get(location.id) as any;
       const existing = withOH?.operating_hours as OperatingHours | undefined;
-      setOperatingHours(existing || {});
+      const sanitized = sanitizeOperatingHours(existing || {});
+      setOperatingHours(sanitized);
+      setOriginalOperatingHours(sanitized);
     } else {
       setName("");
       setAddress("");
       setOperatingHours({});
+      setOriginalOperatingHours({});
     }
   }, [location, isOpen, ohById]);
 
@@ -98,9 +165,14 @@ const CreateEditLocationModal: React.FC<CreateEditLocationModalProps> = ({
 
       if (isEditing && location) {
         await editLocation(location.id, locationData);
-        // Save operating hours if any
-        if (Object.keys(operatingHours || {}).length > 0) {
-          await saveOperatingHours(location.id, operatingHours);
+        // Save operating hours if changed and non-empty
+        const sanitized = sanitizeOperatingHours(operatingHours || {});
+        const changed = !deepEqual(sanitized, originalOperatingHours || {});
+        if (changed && hasAnyDayConfigured(sanitized)) {
+          const payload = toBackendPayload(sanitized);
+          if (hasAnyDayConfigured(payload)) {
+            await saveOperatingHours(location.id, payload);
+          }
         }
         addToast({
           title: t("locations.updateSuccessTitle"),
