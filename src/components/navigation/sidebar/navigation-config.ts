@@ -9,6 +9,7 @@ import {
 import {
   ArrowsRightLeftIcon,
   BriefcaseIcon,
+  ClipboardDocumentListIcon,
   CurrencyDollarIcon,
   DeviceTabletIcon,
 } from "@heroicons/react/16/solid";
@@ -25,6 +26,7 @@ export const superAdminNavItems = [
   { title: "businesses", href: "/businesses", icon: BriefcaseIcon },
   { title: "devices", href: "/devices", icon: DeviceTabletIcon },
   { title: "users", href: "/manage/users", icon: UserGroupIcon },
+  { title: "plans", href: "/plans", icon: ClipboardDocumentListIcon },
   { title: "subscriptions", href: "/subscriptions", icon: CurrencyDollarIcon },
 ];
 
