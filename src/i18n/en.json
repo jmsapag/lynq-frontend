@@ -26,6 +26,18 @@
     "friday": "Friday",
     "saturday": "Saturday"
   },
+  "operatingHours": {
+    "title": "Operating Hours",
+    "timezone": "Timezone",
+    "openDay": "Open this day",
+    "start": "Start",
+    "end": "End",
+    "addRange": "Add time range",
+    "exceptions": "Exceptions / Holidays",
+    "exceptionsHint": "Exceptions can be configured in a future update.",
+    "noneConfigured": "No operating hours configured",
+    "tableHeader": "Operating Hours"
+  },
   "help": {
     "userGuide": "User Guide",
     "userGuideText": "Here you will find information on how to use the People Counter application.",

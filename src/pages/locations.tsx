@@ -6,6 +6,7 @@ import CreateEditLocationModal from "../components/locations/CreateEditLocationM
 import { useLocations } from "../hooks/locations/useLocations";
 import { Location } from "../types/location";
 import SearchBar from "../components/search/SearchBar"; // Add this import
+import { useOperatingHoursAll } from "../hooks/locations/useOperatingHours";
 
 export default function Locations() {
   const { t } = useTranslation();
@@ -22,6 +23,13 @@ export default function Locations() {
     refetch,
   } = useLocations();
 
+  const {
+    byId: operatingHoursById,
+    loading: ohLoading,
+    error: ohError,
+    refetch: refetchOH,
+  } = useOperatingHoursAll();
+
   const handleEditLocation = (location: Location) => {
     setSelectedLocation(location);
     setIsEditModalOpen(true);
@@ -34,6 +42,7 @@ export default function Locations() {
 
   const handleLocationSuccess = () => {
     refetch();
+    refetchOH();
   };
 
   const [search, setSearch] = useState("");
@@ -68,10 +77,11 @@ export default function Locations() {
 
       <LocationsTable
         locations={filteredLocations}
-        loading={locationsLoading}
-        error={locationsError}
+        loading={locationsLoading || ohLoading}
+        error={locationsError || ohError}
         onEdit={handleEditLocation}
         onLocationDeleted={handleLocationSuccess}
+        operatingHoursById={operatingHoursById}
       />
 
       {/* Create Location Modal */}

@@ -71,6 +71,18 @@
   "footer": {
     "rights": "© {{year}} LYNQ, People Counter. Todos los derechos reservados."
   },
+  "operatingHours": {
+    "title": "Horas operativas",
+    "timezone": "Zona horaria",
+    "openDay": "Abierto este día",
+    "start": "Inicio",
+    "end": "Fin",
+    "addRange": "Agregar franja",
+    "exceptions": "Excepciones / Feriados",
+    "exceptionsHint": "Las excepciones podrán configurarse en una próxima actualización.",
+    "noneConfigured": "Sin horas de operación configuradas",
+    "tableHeader": "Horas operativas"
+  },
   "logout": "Cerrar sesión",
   "profile": "Perfil",
   "role": {
