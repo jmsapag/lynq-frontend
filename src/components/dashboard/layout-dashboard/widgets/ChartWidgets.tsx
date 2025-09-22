@@ -7,6 +7,7 @@ import { ReturningCustomersChart } from "../../charts/returning-customers-chart"
 import { AvgVisitDurationChart } from "../../charts/avg-visit-duration-chart";
 import { AffluenceChart } from "../../charts/affluence-chart";
 import { DeviceComparisonChart } from "../../charts/device-comparison.tsx";
+import { TopStoresChartCard } from "../../charts/top-stores-chart-card";
 import { WidgetConfig, WidgetFactoryParams } from "./types";
 import { useTranslation } from "react-i18next";
 import React from "react";
@@ -74,6 +75,22 @@ const AffluenceNoDataMessage = () => {
   return (
     <div className="flex items-center justify-center h-64 text-gray-500">
       {t("dashboard.noData.affluence")}
+    </div>
+  );
+};
+
+const TopStoresNoDataMessage = () => {
+  const { t } = useTranslation();
+  return (
+    <div className="flex items-center justify-center h-64 text-gray-500">
+      <div className="text-center">
+        <div className="text-sm font-medium mb-2">
+          {t("dashboard.noData.topStores")}
+        </div>
+        <div className="text-xs text-gray-600">
+          {t("dashboard.noData.topStoresDescription")}
+        </div>
+      </div>
     </div>
   );
 };
@@ -366,5 +383,24 @@ export const ChartWidgets = {
         })()}
       </ChartCard>
     ),
+  }),
+
+  createTopStoresChartWidget: (params: WidgetFactoryParams): WidgetConfig => ({
+    id: "top-stores-chart",
+    type: "top-stores-chart",
+    title: "Top Stores Chart",
+    translationKey: "dashboard.charts.topStores",
+    category: "chart",
+    component: (() => {
+      if (!params.topStoresData || params.topStoresData.length === 0) {
+        return <TopStoresNoDataMessage />;
+      }
+      return (
+        <TopStoresChartCard
+          data={params.topStoresData}
+          dateRange={params.dateRange}
+        />
+      );
+    })(),
   }),
 };

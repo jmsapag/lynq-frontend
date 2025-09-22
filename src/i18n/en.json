@@ -126,7 +126,9 @@
       "heatmapIncompatible": "This view is not available with the current time grouping.",
       "returningCustomers": "No FootfallCam data available for returning customers.",
       "visitDuration": "No FootfallCam data available for visit duration.",
-      "affluence": "No FootfallCam data available for affluence."
+      "affluence": "No FootfallCam data available for affluence.",
+      "topStores": "No store data available",
+      "topStoresDescription": "No location data available for the selected period. Please ensure you have multiple locations with sensor data."
     },
     "filters": {
       "selectDates": "Select dates",
@@ -171,7 +173,14 @@
       "affluence": {
         "title": "Affluence",
         "description": "Percentage of entries relative to outside traffic (Entries/Outside traffic)"
-      }
+      },
+      "topStores": "Top Stores",
+      "topStoresDescription": "Top performing stores based on selected metrics"
+    },
+    "topStores": {
+      "metric": "Metric",
+      "selectMetric": "Select metric",
+      "topCount": "Show top"
     },
     "metrics": {
       "totalIn": "Total In",

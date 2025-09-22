@@ -26,7 +26,8 @@ export type ReportWidgetType =
   | "affluence"
   | "returning-customers-chart"
   | "avg-visit-duration-chart"
-  | "affluence-chart";
+  | "affluence-chart"
+  | "top-stores-chart";
 
 export interface ReportDropZone {
   id: string;
