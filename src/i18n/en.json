@@ -29,7 +29,7 @@
   "operatingHours": {
     "title": "Operating Hours",
     "timezone": "Timezone",
-    "open24h": "Open 24h",
+    "openDay": "Open this day",
     "start": "Start",
     "end": "End",
     "addRange": "Add time range",

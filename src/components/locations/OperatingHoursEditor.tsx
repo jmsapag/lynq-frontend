@@ -46,12 +46,18 @@ export default function OperatingHoursEditor({
 
   const updateTimezone = (tz: string) => onChange({ ...value, timezone: tz });
 
-  const getDay = (day: Weekday): DayOperatingHours => ({
-    is24h: value?.[day]?.is24h ?? false,
-    ranges: value?.[day]?.ranges
-      ? [...(value[day]!.ranges as TimeRange[])]
-      : [],
-  });
+  const getDay = (day: Weekday): DayOperatingHours => {
+    const raw = (value as any)?.[day] || {};
+    const ranges = Array.isArray(raw.ranges)
+      ? raw.ranges
+      : Array.isArray(raw.timeSlots)
+        ? raw.timeSlots
+        : [];
+    return {
+      isOpen: raw.isOpen ?? (ranges.length > 0 ? true : false),
+      ranges: [...(ranges as TimeRange[])],
+    };
+  };
 
   const setDay = (day: Weekday, next: DayOperatingHours) =>
     onChange({ ...value, [day]: next });
@@ -59,7 +65,7 @@ export default function OperatingHoursEditor({
   const addRange = (day: Weekday) => {
     const d = getDay(day);
     const ranges = [...(d.ranges || []), { start: "09:00", end: "18:00" }];
-    setDay(day, { ...d, ranges });
+    setDay(day, { ...d, isOpen: true, ranges });
   };
 
   const updateRange = (
@@ -78,14 +84,12 @@ export default function OperatingHoursEditor({
   const removeRange = (day: Weekday, idx: number) => {
     const d = getDay(day);
     const ranges = (d.ranges || []).filter((_, i) => i !== idx);
-    setDay(day, { ...d, ranges });
+    setDay(day, { ...d, isOpen: ranges.length > 0 ? true : d.isOpen, ranges });
   };
 
-  const toggle24h = (day: Weekday, checked: boolean) => {
-    setDay(day, {
-      is24h: checked,
-      ranges: checked ? [] : value?.[day]?.ranges || [],
-    });
+  const toggleIsOpen = (day: Weekday, checked: boolean) => {
+    const d = getDay(day);
+    setDay(day, { ...d, isOpen: checked });
   };
 
   return (
@@ -110,7 +114,7 @@ export default function OperatingHoursEditor({
         </Select>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="space-y-3">
         {WEEK_DAYS.map((day) => {
           const d = getDay(day);
           return (
@@ -118,41 +122,43 @@ export default function OperatingHoursEditor({
               <div className="flex items-center justify-between mb-2">
                 <div className="font-medium capitalize">{t(`days.${day}`)}</div>
                 <Checkbox
-                  isSelected={!!d.is24h}
-                  onValueChange={(v) => toggle24h(day, v)}
+                  isSelected={!!d.isOpen}
+                  onValueChange={(v) => toggleIsOpen(day, v)}
                   isDisabled={disabled}
                 >
-                  {t("operatingHours.open24h")}
+                  {t("operatingHours.openDay")}
                 </Checkbox>
               </div>
 
-              {!d.is24h && (
+              {d.isOpen && (
                 <div className="space-y-2">
                   {(d.ranges || []).map((r, idx) => (
-                    <div key={idx} className="grid grid-cols-9 gap-2 items-end">
-                      <div className="col-span-4">
-                        <Input
-                          type="time"
-                          label={t("operatingHours.start")}
-                          value={r.start}
-                          onChange={(e) =>
-                            updateRange(day, idx, "start", e.target.value)
-                          }
-                          isDisabled={disabled}
-                        />
+                    <div key={idx} className="space-y-2">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div>
+                          <Input
+                            type="time"
+                            label={t("operatingHours.start")}
+                            value={r.start}
+                            onChange={(e) =>
+                              updateRange(day, idx, "start", e.target.value)
+                            }
+                            isDisabled={disabled}
+                          />
+                        </div>
+                        <div>
+                          <Input
+                            type="time"
+                            label={t("operatingHours.end")}
+                            value={r.end}
+                            onChange={(e) =>
+                              updateRange(day, idx, "end", e.target.value)
+                            }
+                            isDisabled={disabled}
+                          />
+                        </div>
                       </div>
-                      <div className="col-span-4">
-                        <Input
-                          type="time"
-                          label={t("operatingHours.end")}
-                          value={r.end}
-                          onChange={(e) =>
-                            updateRange(day, idx, "end", e.target.value)
-                          }
-                          isDisabled={disabled}
-                        />
-                      </div>
-                      <div className="col-span-1 flex justify-end">
+                      <div>
                         <Button
                           size="sm"
                           variant="light"

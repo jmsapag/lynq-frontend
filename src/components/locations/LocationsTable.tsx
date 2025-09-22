@@ -60,16 +60,17 @@ const LocationsTable: React.FC<LocationsTableProps> = ({
 
     const dayText = (v: any) => {
       if (!v) return "—";
-      if (v.is24h) return "24h";
-      if (!Array.isArray(v.ranges) || v.ranges.length === 0) return "—";
-      return v.ranges.map((r: any) => `${r.start}–${r.end}`).join(", ");
+      if (!v.isOpen) return "—";
+      const ranges = v.ranges || v.timeSlots || [];
+      if (!Array.isArray(ranges) || ranges.length === 0) return "—";
+      return ranges.map((r: any) => `${r.start}–${r.end}`).join(", ");
     };
 
     const hasAny = days.some((d) => {
       const v = d.value;
       if (!v) return false;
-      if (v.is24h) return true;
-      return Array.isArray(v.ranges) && v.ranges.length > 0;
+      const ranges = v.ranges || v.timeSlots || [];
+      return v.isOpen === true && Array.isArray(ranges) && ranges.length > 0;
     });
 
     if (!hasAny) {

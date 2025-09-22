@@ -74,7 +74,7 @@
   "operatingHours": {
     "title": "Horas operativas",
     "timezone": "Zona horaria",
-    "open24h": "Abierto 24h",
+    "openDay": "Abierto este día",
     "start": "Inicio",
     "end": "Fin",
     "addRange": "Agregar franja",

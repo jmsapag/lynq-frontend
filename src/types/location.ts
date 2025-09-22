@@ -45,8 +45,11 @@ export interface TimeRange {
 }
 
 export interface DayOperatingHours {
-  is24h?: boolean;
-  ranges?: TimeRange[]; // ignored if is24h === true
+  // Backend model uses isOpen + timeSlots. We normalize to ranges for UI.
+  isOpen?: boolean;
+  ranges?: TimeRange[]; // UI-friendly alias of backend timeSlots
+  // Accept backend field in data coming from API
+  timeSlots?: TimeRange[];
 }
 
 export interface OperatingHours {

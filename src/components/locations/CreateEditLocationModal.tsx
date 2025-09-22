@@ -79,17 +79,20 @@ const CreateEditLocationModal: React.FC<CreateEditLocationModalProps> = ({
     for (const d of days) {
       const v: any = (copy as any)[d];
       if (!v) continue;
-      if (v.is24h) {
-        (copy as any)[d] = { is24h: true };
-      } else if (Array.isArray(v.ranges)) {
-        const ranges = v.ranges
-          .filter((r: any) => r && r.start && r.end)
-          .map((r: any) => ({ start: r.start, end: r.end }));
-        if (ranges.length === 0) delete (copy as any)[d];
-        else (copy as any)[d] = { ranges };
-      } else {
+      const rangesSource = Array.isArray(v.ranges)
+        ? v.ranges
+        : Array.isArray(v.timeSlots)
+          ? v.timeSlots
+          : [];
+      const ranges = rangesSource
+        .filter((r: any) => r && r.start && r.end)
+        .map((r: any) => ({ start: r.start, end: r.end }));
+      const isOpen = v.isOpen === true || ranges.length > 0;
+      if (!isOpen) {
         delete (copy as any)[d];
+        continue;
       }
+      (copy as any)[d] = { isOpen: true, ranges };
     }
     // keep timezone if present
     if (!copy.timezone) delete (copy as any).timezone;
@@ -114,7 +117,9 @@ const CreateEditLocationModal: React.FC<CreateEditLocationModalProps> = ({
     const { timezone, exceptions, ...days } = oh as any;
     const result: any = {};
     for (const k of Object.keys(days)) {
-      result[k] = days[k];
+      const v = days[k];
+      const slots = Array.isArray(v.ranges) ? v.ranges : v.timeSlots || [];
+      result[k] = { isOpen: true, timeSlots: slots };
     }
     return result as OperatingHours;
   }

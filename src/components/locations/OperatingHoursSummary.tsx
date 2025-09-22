@@ -22,9 +22,10 @@ const DAYS: Weekday[] = [
 
 function dayToText(day: DayOperatingHours | undefined) {
   if (!day) return "—";
-  if (day.is24h) return "24h";
-  if (!day.ranges || day.ranges.length === 0) return "—";
-  return day.ranges.map((r) => `${r.start}–${r.end}`).join(", ");
+  const ranges = day.ranges || (day as any).timeSlots || [];
+  if (!day.isOpen) return "—";
+  if (!ranges || ranges.length === 0) return "—";
+  return ranges.map((r: any) => `${r.start}–${r.end}`).join(", ");
 }
 
 export default function OperatingHoursSummary({ location }: Props) {
@@ -46,8 +47,8 @@ export default function OperatingHoursSummary({ location }: Props) {
     return days.some((d) => {
       const v = oh[d];
       if (!v) return false;
-      if (v.is24h) return true;
-      return Array.isArray(v.ranges) && v.ranges.length > 0;
+      const ranges = v.ranges || v.timeSlots || [];
+      return v.isOpen === true && Array.isArray(ranges) && ranges.length > 0;
     });
   };
 
