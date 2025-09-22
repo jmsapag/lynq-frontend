@@ -1,5 +1,6 @@
 import { ChartCard } from "../../charts/chart-card";
 import { LineChart } from "../../charts/line-chart";
+import IngressMixedChart from "../../charts/ingress-mixed-chart";
 import { CumulativeChart } from "../../charts/cumulative-chart";
 import { EntryRateChart } from "../../charts/entry-rate/entry-rate-chart";
 import { ChartHeatMap } from "../../charts/heat-map/chart-heat-map";
@@ -124,9 +125,10 @@ export const ChartWidgets = {
         {params.chartData.categories.length === 0 ? (
           <NoDataMessage />
         ) : (
-          <LineChart
+          <IngressMixedChart
             data={params.chartData}
             groupBy={params.sensorRecordsFormData.groupBy}
+            rawData={params.sensorData}
           />
         )}
       </ChartCard>
