@@ -19,6 +19,12 @@ import {
   EditLocationInput,
 } from "../../hooks/locations/useEditLocation";
 import { Location } from "../../types/location";
+import OperatingHoursEditor from "./OperatingHoursEditor";
+import {
+  useOperatingHoursAll,
+  useSaveOperatingHours,
+} from "../../hooks/locations/useOperatingHours";
+import { OperatingHours } from "../../types/location";
 
 interface CreateEditLocationModalProps {
   isOpen: boolean;
@@ -36,6 +42,7 @@ const CreateEditLocationModal: React.FC<CreateEditLocationModalProps> = ({
   const { t } = useTranslation();
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
+  const [operatingHours, setOperatingHours] = useState<OperatingHours>({});
 
   const {
     createLocation,
@@ -52,15 +59,23 @@ const CreateEditLocationModal: React.FC<CreateEditLocationModalProps> = ({
   const loading = creating || editing;
   const error = createError || editError;
 
+  const { save: saveOperatingHours, loading: savingOH } =
+    useSaveOperatingHours();
+  const { byId: ohById } = useOperatingHoursAll();
+
   useEffect(() => {
     if (location) {
       setName(location.name);
       setAddress(location.address);
+      const withOH = ohById.get(location.id) as any;
+      const existing = withOH?.operating_hours as OperatingHours | undefined;
+      setOperatingHours(existing || {});
     } else {
       setName("");
       setAddress("");
+      setOperatingHours({});
     }
-  }, [location, isOpen]);
+  }, [location, isOpen, ohById]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -83,6 +98,10 @@ const CreateEditLocationModal: React.FC<CreateEditLocationModalProps> = ({
 
       if (isEditing && location) {
         await editLocation(location.id, locationData);
+        // Save operating hours if any
+        if (Object.keys(operatingHours || {}).length > 0) {
+          await saveOperatingHours(location.id, operatingHours);
+        }
         addToast({
           title: t("locations.updateSuccessTitle"),
           description: t("locations.updateSuccessDesc"),
@@ -158,6 +177,18 @@ const CreateEditLocationModal: React.FC<CreateEditLocationModalProps> = ({
               placeholder={t("locations.locationAddress")}
             />
           </form>
+          {isEditing && (
+            <div className="mt-4">
+              <div className="text-sm font-medium mb-2">
+                {t("operatingHours.title")}
+              </div>
+              <OperatingHoursEditor
+                value={operatingHours}
+                onChange={setOperatingHours}
+                disabled={savingOH}
+              />
+            </div>
+          )}
         </ModalBody>
         <ModalFooter>
           <Button
@@ -174,7 +205,7 @@ const CreateEditLocationModal: React.FC<CreateEditLocationModalProps> = ({
             form="location-form"
             variant="solid"
             size="sm"
-            isLoading={loading}
+            isLoading={loading || savingOH}
             color="primary"
           >
             {isEditing

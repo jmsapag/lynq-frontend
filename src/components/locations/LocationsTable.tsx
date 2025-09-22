@@ -18,6 +18,7 @@ import {
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useTranslation } from "react-i18next";
 import { Location } from "../../types/location";
+import OperatingHoursSummary from "./OperatingHoursSummary";
 import { useDeleteLocation } from "../../hooks/locations/useDeleteLocation";
 
 interface LocationsTableProps {
@@ -26,6 +27,7 @@ interface LocationsTableProps {
   error: string | null;
   onEdit: (location: Location) => void;
   onLocationDeleted: () => void;
+  operatingHoursById?: Map<number, any>;
 }
 
 const LocationsTable: React.FC<LocationsTableProps> = ({
@@ -34,6 +36,7 @@ const LocationsTable: React.FC<LocationsTableProps> = ({
   error,
   onEdit,
   onLocationDeleted,
+  operatingHoursById,
 }) => {
   const { t } = useTranslation();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -104,6 +107,7 @@ const LocationsTable: React.FC<LocationsTableProps> = ({
           <TableColumn>{t("locations.name")}</TableColumn>
           <TableColumn>{t("locations.address")}</TableColumn>
           <TableColumn>{t("locations.createdAt")}</TableColumn>
+          <TableColumn>{t("operatingHours.tableHeader")}</TableColumn>
           <TableColumn>{t("locations.actions")}</TableColumn>
         </TableHeader>
         <TableBody emptyContent={loading ? " " : t("locations.noLocations")}>
@@ -119,6 +123,11 @@ const LocationsTable: React.FC<LocationsTableProps> = ({
                 <div className="text-default-600">
                   {formatDate(location.created_at)}
                 </div>
+              </TableCell>
+              <TableCell>
+                <OperatingHoursSummary
+                  location={operatingHoursById?.get(location.id) || null}
+                />
               </TableCell>
               <TableCell>
                 <div className="flex gap-2">
