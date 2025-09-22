@@ -179,9 +179,9 @@
         "title": "Tiempo Promedio en Local",
         "description": "Tiempo promedio que los clientes permanecen en el establecimiento"
       },
-      "affluence": {
-        "title": "Afluencia",
-        "description": "Porcentaje de entradas respecto al tráfico exterior (Entradas/Tráfico exterior)"
+      "turnIn": {
+        "title": "Turn-in Ratio",
+        "description": "Proporción de clientes Recurrentes vs Nuevos basada en entradas ponderadas"
       }
     },
     "metrics": {
@@ -205,8 +205,8 @@
       "returningCustomersDescription": "El porcentaje de visitantes que habían realizado previamente una visita a la misma tienda dentro de los últimos 60 días",
       "avgVisitDuration": "Tiempo Promedio en Local",
       "avgVisitDurationDescription": "Tiempo promedio que los clientes permanecen en el establecimiento",
-      "affluence": "Afluencia",
-      "affluenceDescription": "Porcentaje de entradas respecto al tráfico exterior (Entradas/Tráfico exterior)",
+      "turnInRatio": "Turn-in Ratio",
+      "turnInRatioDescription": "Proporción de Recurrentes vs Nuevos calculada desde entradas ponderadas",
       "noDataAvailable": "Datos no disponibles para este período",
       "footfallcamDataRequired": "Requiere datos de analíticas FootfallCam",
       "percentage": "Porcentaje (%)",
@@ -216,6 +216,12 @@
       "saveLayout": "Guardar Diseño",
       "editLayout": "Editar Diseño",
       "hiddenCards": "Tarjetas Ocultas"
+    }
+  },
+  "dashboard": {
+    "turnIn": {
+      "newCustomer": "Cliente Nuevo",
+      "returningCustomer": "Cliente Recurrente"
     }
   },
   "users": {

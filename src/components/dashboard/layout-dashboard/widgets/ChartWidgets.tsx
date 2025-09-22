@@ -5,7 +5,8 @@ import { EntryRateChart } from "../../charts/entry-rate/entry-rate-chart";
 import { ChartHeatMap } from "../../charts/heat-map/chart-heat-map";
 import { ReturningCustomersChart } from "../../charts/returning-customers-chart";
 import { AvgVisitDurationChart } from "../../charts/avg-visit-duration-chart";
-import { AffluenceChart } from "../../charts/affluence-chart";
+// Removed affluence chart; replaced with Turn-in Ratio donut
+import { TurnInRatioDonut } from "../../charts/turn-in-ratio-donut";
 import { DeviceComparisonChart } from "../../charts/device-comparison.tsx";
 import { TopStoresChartCard } from "../../charts/top-stores-chart-card";
 import { WidgetConfig, WidgetFactoryParams } from "./types";
@@ -70,11 +71,11 @@ const VisitDurationNoDataMessage = () => {
   );
 };
 
-const AffluenceNoDataMessage = () => {
+const TurnInNoDataMessage = () => {
   const { t } = useTranslation();
   return (
     <div className="flex items-center justify-center h-64 text-gray-500">
-      {t("dashboard.noData.affluence")}
+      {t("dashboard.errors.noDataAvailable")}
     </div>
   );
 };
@@ -275,29 +276,24 @@ export const ChartWidgets = {
     ),
   }),
 
-  createAffluenceChartWidget: (params: WidgetFactoryParams): WidgetConfig => ({
-    id: "affluence-chart",
-    type: "affluence-chart",
-    title: "Affluence Chart",
-    translationKey: "dashboard.charts.affluenceChart",
+  createTurnInRatioDonutWidget: (
+    params: WidgetFactoryParams,
+  ): WidgetConfig => ({
+    id: "turn-in-ratio-donut",
+    type: "turn-in-ratio-donut",
+    title: "Turn-in Ratio",
+    translationKey: "dashboard.metrics.turnInRatio",
     category: "chart",
     component: (
       <ChartCard
-        title="Affluence Over Time"
-        translationKey="dashboard.charts.affluenceChart"
-        data={transformChartDataForExport(params.chartData)}
+        title="Turn-in Ratio"
+        translationKey="dashboard.metrics.turnInRatio"
+        data={[]}
       >
-        {!params.sensorData?.affluence ||
-        params.sensorData.affluence.length === 0 ? (
-          <AffluenceNoDataMessage />
+        {!params.sensorData?.in || params.sensorData.in.length === 0 ? (
+          <TurnInNoDataMessage />
         ) : (
-          <AffluenceChart
-            data={{
-              categories: params.sensorData.timestamps || [],
-              values: params.sensorData.affluence || [],
-            }}
-            groupBy={params.sensorRecordsFormData.groupBy}
-          />
+          <TurnInRatioDonut data={params.sensorData} />
         )}
       </ChartCard>
     ),

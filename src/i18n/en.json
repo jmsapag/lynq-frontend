@@ -182,9 +182,9 @@
         "title": "Average Visit Duration",
         "description": "Average time customers spend in the establishment"
       },
-      "affluence": {
-        "title": "Affluence",
-        "description": "Percentage of entries relative to outside traffic (Entries/Outside traffic)"
+      "turnIn": {
+        "title": "Turn-in Ratio",
+        "description": "Proportion of Returning vs New customers based on weighted entries"
       },
       "topStores": "Top Stores",
       "topStoresDescription": "Top performing stores based on selected metrics"
@@ -215,8 +215,8 @@
       "returningCustomersDescription": "The percentage of visitors who had previously made a visit to the same store within the past 60 days",
       "avgVisitDuration": "Average Visit Duration",
       "avgVisitDurationDescription": "Average time customers spend in the establishment",
-      "affluence": "Affluence",
-      "affluenceDescription": "Percentage of entries relative to outside traffic (Entries/Outside traffic)",
+      "turnInRatio": "Turn-in Ratio",
+      "turnInRatioDescription": "Share of Returning vs New customers computed from weighted entries",
       "noDataAvailable": "Data not available for this period",
       "footfallcamDataRequired": "Requires FootfallCam analytics data",
       "percentage": "Percentage (%)",
@@ -226,6 +226,11 @@
       "saveLayout": "Save Layout",
       "editLayout": "Edit Layout",
       "hiddenCards": "Hidden Cards"
+    }
+    ,
+    "turnIn": {
+      "newCustomer": "New Customer",
+      "returningCustomer": "Returning Customer"
     }
   },
   "users": {

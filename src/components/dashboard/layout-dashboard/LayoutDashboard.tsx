@@ -27,7 +27,7 @@ import { ChartHeatMap } from "../charts/heat-map/chart-heat-map";
 import { EntryRateChart } from "../charts/entry-rate/entry-rate-chart";
 import { ReturningCustomersChart } from "../charts/returning-customers-chart";
 import { AvgVisitDurationChart } from "../charts/avg-visit-duration-chart";
-import { AffluenceChart } from "../charts/affluence-chart";
+import { TurnInRatioDonut } from "../charts/turn-in-ratio-donut";
 
 interface LayoutDashboardProps {
   // Dashboard data props
@@ -64,10 +64,10 @@ export type DashboardWidgetType =
   | "percentage-change"
   | "returning-customers"
   | "avg-visit-duration"
-  | "affluence"
+  | "turn-in-ratio"
   | "returning-customers-chart"
   | "avg-visit-duration-chart"
-  | "affluence-chart";
+  | "turn-in-ratio-donut";
 
 interface WidgetConfig {
   id: string;
@@ -244,17 +244,17 @@ export const LayoutDashboard: React.FC<LayoutDashboardProps> = ({
         ),
       },
       {
-        id: "affluence",
-        type: "affluence",
-        title: "Affluence",
-        translationKey: "dashboard.metrics.affluence",
+        id: "turn-in-ratio",
+        type: "turn-in-ratio",
+        title: "Turn-in Ratio",
+        translationKey: "dashboard.metrics.turnInRatio",
         category: "metric",
         component: (
           <SensorDataCard
-            title="Affluence"
-            value={metrics.totalAffluence}
-            translationKey="dashboard.metrics.affluence"
-            unit="people"
+            title="Turn-in Ratio"
+            value={metrics.totalReturningCustomers}
+            translationKey="dashboard.metrics.turnInRatio"
+            unit="%"
           />
         ),
       },
@@ -316,28 +316,19 @@ export const LayoutDashboard: React.FC<LayoutDashboardProps> = ({
         ),
       },
       {
-        id: "affluence-chart",
-        type: "affluence-chart",
-        title: "Affluence Chart",
-        translationKey: "dashboard.charts.affluenceChart",
+        id: "turn-in-ratio-donut",
+        type: "turn-in-ratio-donut",
+        title: "Turn-in Ratio",
+        translationKey: "dashboard.metrics.turnInRatio",
         category: "chart",
         component: (
-          <ChartCard
-            title="Affluence Over Time"
-            translationKey="dashboard.charts.affluenceChart"
-          >
-            {!sensorData?.affluence || sensorData.affluence.length === 0 ? (
+          <ChartCard title="Turn-in Ratio" translationKey="dashboard.metrics.turnInRatio">
+            {!sensorData?.in || sensorData.in.length === 0 ? (
               <div className="flex items-center justify-center h-64 text-gray-500">
-                No FootfallCam data available for affluence.
+                No data available.
               </div>
             ) : (
-              <AffluenceChart
-                data={{
-                  categories: sensorData.timestamps || [],
-                  values: sensorData.affluence || [],
-                }}
-                groupBy={sensorRecordsFormData.groupBy}
-              />
+              <TurnInRatioDonut data={sensorData} />
             )}
           </ChartCard>
         ),
