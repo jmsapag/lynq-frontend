@@ -8,6 +8,12 @@ export interface SubscriptionStatus {
   trialEndAt: string | null;
 }
 
+export interface SensorLimitError {
+  code: "SENSOR_LIMIT_EXCEEDED";
+  limit: number;
+  current: number;
+}
+
 const getCompanySubscription = async (
   companyId: string,
 ): Promise<SubscriptionStatus> => {
@@ -44,10 +50,20 @@ export const useCompanySubscription = () => {
     fetchSubscription();
   }, [companyId]);
 
+  const isTrialActive = subscription?.status === "TRIAL";
+  const trialDaysLeft = subscription?.trialEndAt
+    ? Math.ceil(
+        (new Date(subscription.trialEndAt).getTime() - Date.now()) /
+          (1000 * 60 * 60 * 24),
+      )
+    : 0;
+
   return {
     subscription,
     loading,
     error,
     refetch: fetchSubscription,
+    isTrialActive,
+    trialDaysLeft,
   };
 };
