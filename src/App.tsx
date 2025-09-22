@@ -29,9 +29,19 @@ import FaqPage from "./pages/faq.tsx";
 import FreeTrialWrapper from "./pages/free-trial.tsx";
 import SubscriptionFeed from "./pages/subscription-feed.tsx";
 import PlanCreate from "./pages/plans.tsx";
+import { TrialBanner } from "./components/trial/TrialBanner";
+import { useCompanySubscription } from "./hooks/payments/useCompanySubscription";
+import { useNavigate } from "react-router-dom";
 
 function AppLayoutWithState() {
   const { isOpen, handleToggle, handleClose } = useSidebar();
+
+  const { isTrialActive, trialDaysLeft } = useCompanySubscription();
+  const navigate = useNavigate();
+
+  const handleUpgrade = () => {
+    navigate("/plans", { state: { fromTrial: true } });
+  };
 
   return (
     <div className="flex h-screen bg-white text-black">
@@ -42,6 +52,12 @@ function AppLayoutWithState() {
           className="flex-1 overflow-y-auto p-4 md:p-6"
           onClick={() => isOpen && handleClose()}
         >
+          {isTrialActive && (
+            <TrialBanner
+              trialDaysLeft={trialDaysLeft}
+              onUpgrade={handleUpgrade}
+            />
+          )}
           <Outlet />
         </main>
         <Footer />
