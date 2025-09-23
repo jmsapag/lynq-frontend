@@ -27,6 +27,7 @@ import {
 import { ReportConfig } from "../../types/reports";
 import { ReportLayoutService } from "../../services/reportLayoutService";
 import { type WidgetFactoryParams } from "../dashboard/layout-dashboard/widgets";
+import { useLanguage } from "../../hooks/useLanguage";
 import {
   GroupByTimeAmount,
   AggregationType,
@@ -89,6 +90,8 @@ export const ReportDragDropInterface: React.FC<
     createCustomLayout,
     getPlacedWidgets,
   } = useReportLayout();
+
+  const { getCurrentLanguage } = useLanguage();
 
   // Create widget factory params
   const widgetParams: WidgetFactoryParams | null = useMemo(() => {
@@ -181,11 +184,13 @@ export const ReportDragDropInterface: React.FC<
     }
 
     // Create a basic report config (this could be enhanced with more options)
+    const currentLanguage = getCurrentLanguage();
     const reportConfig: ReportConfig = {
       type: "weekly",
       enabled: true,
       timezone: "America/New_York",
       layoutId: currentLayout.id, // Include the layout ID
+      language: currentLanguage, // Include current language
       dataFilter: {
         locationIds: [],
         daysOfWeek: [1, 2, 3, 4, 5],

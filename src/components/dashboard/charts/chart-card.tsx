@@ -1,19 +1,22 @@
 import React, { ReactNode, useRef, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Tooltip, Button } from "@heroui/react";
+import { Tooltip, Button, Spinner } from "@heroui/react";
 import {
   InformationCircleIcon,
   ArrowDownTrayIcon,
   DocumentIcon,
   PhotoIcon,
   TableCellsIcon,
+  EnvelopeIcon,
 } from "@heroicons/react/24/outline";
 import {
   exportAsPng,
   exportAsPdf,
   exportAsCsv,
   formatDateRangeForFilename,
+  exportAndSendByEmail,
 } from "../../../utils/exportUtils";
+import { useSendChartEmail } from "../../../hooks/reports/useSendChartEmail";
 
 interface ChartCardProps {
   title: string;
@@ -46,6 +49,8 @@ export const ChartCard: React.FC<ChartCardProps> = ({
   const [isExporting, setIsExporting] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [isCapturing, setIsCapturing] = useState(false);
+
+  const { sendChartEmail, loading: isSending } = useSendChartEmail();
 
   const displayTitle = translationKey
     ? t(translationKey, translationParams)
@@ -115,6 +120,27 @@ export const ChartCard: React.FC<ChartCardProps> = ({
     }
   };
 
+  const handleSendByEmail = async () => {
+    if (!cardRef.current) return;
+    setIsExporting(true);
+    setShowDropdown(false);
+    try {
+      setIsCapturing(true);
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      await exportAndSendByEmail(
+        cardRef.current,
+        getFileName(),
+        sendChartEmail,
+        description ?? "default-widget-type",
+      );
+    } catch (error) {
+      console.error("Error sending chart by email:", error);
+    } finally {
+      setIsCapturing(false);
+      setIsExporting(false);
+    }
+  };
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -149,7 +175,7 @@ export const ChartCard: React.FC<ChartCardProps> = ({
               <ArrowDownTrayIcon className="w-3.5 h-3.5 text-gray-500" />
             </Button>
             {showDropdown && (
-              <div className="absolute right-0 mt-1 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-20">
+              <div className="absolute right-0 mt-1 w-56 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-20">
                 <div className="py-1">
                   <button
                     onClick={handleExportPng}
@@ -172,6 +198,21 @@ export const ChartCard: React.FC<ChartCardProps> = ({
                   >
                     <TableCellsIcon className="h-5 w-5 mr-3 text-gray-500" />
                     {t("common.exportAsCSV")}
+                  </button>
+                  <button
+                    onClick={handleSendByEmail}
+                    disabled={isSending}
+                    className="flex items-center w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <EnvelopeIcon className="h-5 w-5 mr-3 text-gray-500" />
+                    {isSending ? (
+                      <span className="flex items-center gap-2">
+                        <Spinner size="sm" className="mr-2" />
+                        {t("common.sendingByEmail")}
+                      </span>
+                    ) : (
+                      t("common.sendByEmail")
+                    )}
                   </button>
                 </div>
               </div>

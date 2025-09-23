@@ -20,4 +20,5 @@ export interface ReportConfig {
   timezone: string;
   enabled: boolean;
   layoutId?: string; // Selected layout from ReportLayoutService
+  language?: string;
 }

@@ -12,7 +12,9 @@
     "locations": "Ubicaciones",
     "overview": "Resumen General",
     "reports": "Reportes",
-    "faq": "FAQs"
+    "faq": "FAQs",
+    "subscriptions": "Suscripciones",
+    "plans": "Planes de Subscripcion"
   },
   "days": {
     "sunday": "Domingo",
@@ -69,6 +71,18 @@
   "footer": {
     "rights": "© {{year}} LYNQ, People Counter. Todos los derechos reservados."
   },
+  "operatingHours": {
+    "title": "Horas operativas",
+    "timezone": "Zona horaria",
+    "openDay": "Abierto este día",
+    "start": "Inicio",
+    "end": "Fin",
+    "addRange": "Agregar franja",
+    "exceptions": "Excepciones / Feriados",
+    "exceptionsHint": "Las excepciones podrán configurarse en una próxima actualización.",
+    "noneConfigured": "Sin horas de operación configuradas",
+    "tableHeader": "Horas operativas"
+  },
   "logout": "Cerrar sesión",
   "profile": "Perfil",
   "role": {
@@ -98,13 +112,33 @@
     "warning": "Advertencia",
     "exportAsPng": "Exportar como PNG",
     "exportAsPdf": "Exportar como PDF",
-    "exportAsCSV": "Exportar como CSV"
+    "exportAsCSV": "Exportar como CSV",
+    "sendByEmail": "Enviar por correo"
   },
   "dashboard": {
     "percentage": "Porcentaje (%)",
     "quantity": "Cantidad",
     "seconds": "Segundos",
     "minutes": "Minutos",
+    "loading": {
+      "preparingData": "Preparando datos del dashboard...",
+      "loadingCharts": "Cargando gráficos...",
+      "processingData": "Procesando datos de sensores..."
+    },
+    "errors": {
+      "loadingData": "Error al cargar datos del dashboard",
+      "chartLoadError": "Error al cargar datos del gráfico",
+      "noDataAvailable": "No hay datos disponibles para el período seleccionado",
+      "heatmapIncompatibleGrouping": "Mapa de Calor no compatible con agrupación {{groupBy}}",
+      "heatmapIncompatibleInstructions": "Los mapas de calor funcionan mejor con intervalos de tiempo por hora o menores. Por favor cambia la agrupación a \"5min\", \"15min\", \"30min\", o \"hour\"."
+    },
+    "noData": {
+      "locationComparison": "No hay datos válidos de ubicaciones disponibles para comparar. Por favor asegúrate de que los sensores hayan registrado datos para el período seleccionado.",
+      "heatmapIncompatible": "Esta vista no está disponible con la agrupación de tiempo actual.",
+      "returningCustomers": "No hay datos de FootfallCam disponibles para clientes recurrentes.",
+      "visitDuration": "No hay datos de FootfallCam disponibles para duración de visita.",
+      "affluence": "No hay datos de FootfallCam disponibles para afluencia."
+    },
     "filters": {
       "selectDates": "Seleccionar fechas",
       "startDate": "Fecha inicio",
@@ -117,6 +151,7 @@
       "weeklyTrend": "Tendencia Semanal",
       "peopleFlow": "Flujo de Personas (Entradas/Salidas)",
       "trafficHeatmap": "Mapa de Calor (Por Día y Hora)",
+      "locationComparison": "Comparación de Ubicaciones",
       "entryRateOverTime": "Tasa de Entrada a lo Largo del Tiempo",
       "peopleInStore": "Personas en Tienda (Acumulativo)",
       "returningCustomersChart": "Tasa de Retorno a lo Largo del Tiempo",
@@ -579,5 +614,47 @@
   "freeTrial": {
     "demoNotice": "Estás viendo una demostración. Los datos son solo ilustrativos.",
     "login": "Iniciar sesión"
+  },
+  "subscriptions": {
+    "events": {
+      "title": "Eventos de Suscripción",
+      "companyIdFilter": "Filtrar por ID de empresa",
+      "typeFilter": "Filtrar por tipo",
+      "searchPlaceholder": "Buscar",
+      "clearFilters": "Limpiar Filtros",
+      "fromDate": "Desde fecha",
+      "toDate": "Hasta fecha",
+      "allTypes": "Todos los tipos",
+      "subscriptionCreated": "Suscripción Creada",
+      "subscriptionUpdated": "Suscripción Actualizada",
+      "subscriptionCancelled": "Suscripción Cancelada",
+      "paymentSuccessful": "Pago Exitoso",
+      "paymentFailed": "Pago Fallido",
+      "invoiceCreated": "Factura Creada",
+      "invoicePaid": "Factura Pagada",
+      "loadingError": "Error al cargar eventos de suscripción",
+      "eventsLoadError": "Error al cargar eventos",
+      "noEventsFiltered": "No se encontraron eventos con los filtros aplicados",
+      "noEventsAvailable": "No hay eventos de suscripción disponibles"
+    }
+  },
+  "planWizard": {
+    "createPlanBtn": "Crear Plan",
+    "createNewPlan": "Crear Nuevo Plan",
+    "planCreated": "Plan Creado",
+    "planId": "ID del Plan",
+    "status": "Estado",
+    "planName": "Nombre del Plan",
+    "maxSensors": "Sensores Máximos",
+    "retentionMonths": "Retención (meses)",
+    "months": "meses",
+    "priceCents": "Precio (centavos)",
+    "currency": "Moneda",
+    "billingInterval": "Intervalo de Facturación",
+    "summary": "Resumen",
+    "confirmAndCreate": "Confirmar y Crear",
+    "successTitle": "Éxito",
+    "successDesc": "¡Plan creado exitosamente!",
+    "errorTitle": "Error"
   }
 }

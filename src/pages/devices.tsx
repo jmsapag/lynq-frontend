@@ -19,6 +19,7 @@ import {
   addToast,
 } from "@heroui/react";
 import { TrashIcon } from "@heroicons/react/24/outline";
+import { useNavigate } from "react-router-dom";
 import { useDevices } from "../hooks/devices/useDevices";
 import { useBusinesses } from "../hooks/business/useBusiness";
 import { useLocations } from "../hooks/devices/useLocations";
@@ -26,15 +27,22 @@ import { useCreateDevice } from "../hooks/devices/useCreateDevice";
 import { useDeleteDevice } from "../hooks/devices/useDeleteDevice";
 import { useTranslation } from "react-i18next";
 import SearchBar from "../components/search/SearchBar";
+import { SensorLimitModal } from "../components/trial/SensorLimitModal";
+import { SensorLimitError } from "../hooks/payments/useCompanySubscription";
 
 export default function DevicesPage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+
   const [showModal, setShowModal] = useState(false);
   const [serialNumber, setSerialNumber] = useState("");
   const [provider, setProvider] = useState("");
   const [position, setPosition] = useState("");
   const [businessId, setBusinessId] = useState<number | "">("");
   const [locationId, setLocationId] = useState<number | "">("");
+
+  const [showLimitModal, setShowLimitModal] = useState(false);
+  const [limitError, setLimitError] = useState<SensorLimitError | null>(null);
 
   const [page, setPage] = useState(1);
   const limit = 15;
@@ -132,14 +140,29 @@ export default function DevicesPage() {
       setLocationId("");
       setTimeout(() => window.location.reload(), 1200);
     } catch (err: any) {
-      addToast({
-        title: t("devices.createErrorTitle"),
-        description:
-          err?.response?.data?.message || t("devices.createErrorDesc"),
-        severity: "danger",
-        color: "danger",
-      });
+      // Handle sensor limit exceeded
+      if (
+        err?.response?.status === 409 &&
+        err?.response?.data?.code === "SENSOR_LIMIT_EXCEEDED"
+      ) {
+        setLimitError(err.response.data);
+        setShowLimitModal(true);
+        setShowModal(false); // Close the create modal
+      } else {
+        addToast({
+          title: t("devices.createErrorTitle"),
+          description:
+            err?.response?.data?.message || t("devices.createErrorDesc"),
+          severity: "danger",
+          color: "danger",
+        });
+      }
     }
+  };
+
+  const handleUpgradeFromLimit = () => {
+    setShowLimitModal(false);
+    navigate("/plans", { state: { fromTrial: true } });
   };
 
   const handleDeleteClick = (device: any) => {
@@ -391,6 +414,15 @@ export default function DevicesPage() {
           </ModalFooter>
         </ModalContent>
       </Modal>
+
+      {/* Sensor Limit Modal */}
+      <SensorLimitModal
+        isOpen={showLimitModal}
+        onClose={() => setShowLimitModal(false)}
+        onUpgrade={handleUpgradeFromLimit}
+        currentSensors={limitError?.current || 0}
+        sensorLimit={limitError?.limit || 3}
+      />
     </div>
   );
 }

@@ -3,16 +3,24 @@ import { useTranslation } from "react-i18next";
 import { addToast } from "@heroui/react";
 import { saveReportConfig } from "../../services/reportsService.ts";
 import { ReportConfig } from "../../types/reports.ts";
+import { useLanguage } from "../useLanguage";
 
 export const useReportConfig = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { t } = useTranslation();
+  const { getCurrentLanguage } = useLanguage();
 
   const saveConfig = async (config: ReportConfig) => {
     setIsLoading(true);
     try {
-      await saveReportConfig(config);
+      const currentLanguage = getCurrentLanguage();
+      const configWithLanguage = {
+        ...config,
+        language: currentLanguage,
+      };
+
+      await saveReportConfig(configWithLanguage);
       addToast({
         title: t("reports.toasts.saveSuccessTitle"),
         description: t("reports.toasts.saveSuccessDesc"),

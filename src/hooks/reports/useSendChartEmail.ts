@@ -1,31 +1,37 @@
 import { useState } from "react";
-import { axiosClient } from "../../services/axiosClient.ts";
+import { axiosPrivate } from "../../services/axiosClient";
 import { useLanguage } from "../useLanguage";
 
-export function useForgotPassword() {
+export interface EmailAttachment {
+  imageBase64: string;
+  filename: string;
+  widgetType: string;
+}
+
+export function useSendChartEmail() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { getCurrentLanguage } = useLanguage();
 
-  const forgotPassword = async (email: string) => {
+  const sendChartEmail = async (attachment: EmailAttachment) => {
     setLoading(true);
     setError(null);
     try {
       const currentLanguage = getCurrentLanguage();
       const payload = {
-        email,
+        ...attachment,
         language: currentLanguage,
       };
 
-      await axiosClient.post("/auth/forgot-password", payload);
-      return true;
+      const res = await axiosPrivate.post("/email/graph", payload);
+      return res.data;
     } catch (err: any) {
-      setError(err.response?.data?.message || "Failed to send recovery email");
+      setError(err.response?.data?.message || err.message);
       throw err;
     } finally {
       setLoading(false);
     }
   };
 
-  return { forgotPassword, loading, error };
+  return { sendChartEmail, loading, error };
 }

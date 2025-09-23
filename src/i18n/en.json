@@ -13,7 +13,9 @@
     "overview": "Overview",
     "support": "Support",
     "reports": "Reports",
-    "faq": "FAQs"
+    "faq": "FAQs",
+    "subscriptions": "Subscriptions",
+    "plans": "Subscription Plans"
   },
   "days": {
     "sunday": "Sunday",
@@ -23,6 +25,18 @@
     "thursday": "Thursday",
     "friday": "Friday",
     "saturday": "Saturday"
+  },
+  "operatingHours": {
+    "title": "Operating Hours",
+    "timezone": "Timezone",
+    "openDay": "Open this day",
+    "start": "Start",
+    "end": "End",
+    "addRange": "Add time range",
+    "exceptions": "Exceptions / Holidays",
+    "exceptionsHint": "Exceptions can be configured in a future update.",
+    "noneConfigured": "No operating hours configured",
+    "tableHeader": "Operating Hours"
   },
   "help": {
     "userGuide": "User Guide",
@@ -99,13 +113,35 @@
     "warning": "Warning",
     "exportAsPng": "Export as PNG",
     "exportAsPdf": "Export as PDF",
-    "exportAsCSV": "Export as CSV"
+    "exportAsCSV": "Export as CSV",
+    "sendByEmail": "Send by Email"
   },
   "dashboard": {
     "percentage": "Percentage (%)",
     "quantity": "Quantity",
     "minutes": "Minutes",
     "seconds": "Seconds",
+    "loading": {
+      "preparingData": "Preparing dashboard data...",
+      "loadingCharts": "Loading charts...",
+      "processingData": "Processing sensor data..."
+    },
+    "errors": {
+      "loadingData": "Error loading dashboard data",
+      "chartLoadError": "Error loading chart data",
+      "noDataAvailable": "No data available for the selected period",
+      "heatmapIncompatibleGrouping": "Heat Map not compatible with {{groupBy}} grouping",
+      "heatmapIncompatibleInstructions": "Heat maps work best with hourly or smaller time intervals. Please change the grouping to \"5min\", \"15min\", \"30min\", or \"hour\"."
+    },
+    "noData": {
+      "locationComparison": "No valid location data available for comparison. Please ensure sensors have recorded data for the selected period.",
+      "heatmapIncompatible": "This view is not available with the current time grouping.",
+      "returningCustomers": "No FootfallCam data available for returning customers.",
+      "visitDuration": "No FootfallCam data available for visit duration.",
+      "affluence": "No FootfallCam data available for affluence.",
+      "topStores": "No store data available",
+      "topStoresDescription": "No location data available for the selected period. Please ensure you have multiple locations with sensor data."
+    },
     "filters": {
       "selectDates": "Select dates",
       "startDate": "Start date",
@@ -118,6 +154,7 @@
       "weeklyTrend": "Weekly Trend",
       "peopleFlow": "People Flow (In/Out)",
       "trafficHeatmap": "Traffic Heatmap (By Day & Hour)",
+      "locationComparison": "Location Comparison",
       "entryRateOverTime": "Entry Rate Over Time",
       "peopleInStore": "People in Store (Cumulative)",
       "returningCustomersChart": "Returning Rate Over Time",
@@ -148,7 +185,14 @@
       "affluence": {
         "title": "Affluence",
         "description": "Percentage of entries relative to outside traffic (Entries/Outside traffic)"
-      }
+      },
+      "topStores": "Top Stores",
+      "topStoresDescription": "Top performing stores based on selected metrics"
+    },
+    "topStores": {
+      "metric": "Metric",
+      "selectMetric": "Select metric",
+      "topCount": "Show top"
     },
     "metrics": {
       "totalIn": "Total In",
@@ -575,5 +619,47 @@
   "freeTrial": {
     "demoNotice": "You are viewing a demo. Data is for illustration only.",
     "login": "Log In"
+  },
+  "subscriptions": {
+    "events": {
+      "title": "Subscription Events",
+      "companyIdFilter": "Filter by company ID",
+      "typeFilter": "Filter by type",
+      "searchPlaceholder": "Search",
+      "clearFilters": "Clear Filters",
+      "fromDate": "From date",
+      "toDate": "To date",
+      "allTypes": "All types",
+      "subscriptionCreated": "Subscription Created",
+      "subscriptionUpdated": "Subscription Updated",
+      "subscriptionCancelled": "Subscription Cancelled",
+      "paymentSuccessful": "Payment Successful",
+      "paymentFailed": "Payment Failed",
+      "invoiceCreated": "Invoice Created",
+      "invoicePaid": "Invoice Paid",
+      "loadingError": "Error loading subscription events",
+      "eventsLoadError": "Error loading events",
+      "noEventsFiltered": "No events found with applied filters",
+      "noEventsAvailable": "No subscription events available"
+    }
+  },
+  "planWizard": {
+    "createPlanBtn": "Create Plan",
+    "createNewPlan": "Create New Plan",
+    "planCreated": "Plan Created",
+    "planId": "Plan ID",
+    "status": "Status",
+    "planName": "Plan Name",
+    "maxSensors": "Max Sensors",
+    "retentionMonths": "Retention (months)",
+    "months": "months",
+    "priceCents": "Price (cents)",
+    "currency": "Currency",
+    "billingInterval": "Billing Interval",
+    "summary": "Summary",
+    "confirmAndCreate": "Confirm & Create",
+    "successTitle": "Success",
+    "successDesc": "Plan created successfully!",
+    "errorTitle": "Error"
   }
 }

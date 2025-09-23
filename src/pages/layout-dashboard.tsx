@@ -4,6 +4,7 @@ import { DashboardFilters } from "../components/dashboard/filter";
 import { LayoutDashboard } from "../components/dashboard/layout-dashboard/LayoutDashboard";
 import { useSensorData } from "../hooks/useSensorData";
 import { useSensorRecords } from "../hooks/useSensorRecords";
+import { useGroupLocations } from "../hooks/useGroupLocations";
 import { sensorResponse } from "../types/deviceResponse";
 import { sensorMetadata } from "../types/sensorMetadata";
 import {
@@ -43,10 +44,13 @@ const LayoutDashboardPage: React.FC = () => {
 
   // Use the sensor records hook
   const {
-    data: sensorData,
+    data: sensorDataByLocation,
     loading: dataLoading,
     error: dataError,
   } = useSensorRecords(sensorRecordsFormData, setSensorRecordsFormData);
+
+  // Group location data for metrics
+  const sensorData = useGroupLocations(sensorDataByLocation);
 
   const metrics = useMemo(() => {
     if (!sensorData || !sensorData.in || !sensorData.out) {

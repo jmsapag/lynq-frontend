@@ -26,6 +26,8 @@ export const createWidgetConfig = (
     ChartWidgets.createReturningCustomersChartWidget(params),
     ChartWidgets.createAvgVisitDurationChartWidget(params),
     ChartWidgets.createAffluenceChartWidget(params),
+    ChartWidgets.createLocationComparisonWidget(params),
+    ChartWidgets.createTopStoresChartWidget(params),
   ];
 };
 

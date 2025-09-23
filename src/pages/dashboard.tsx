@@ -6,6 +6,7 @@ import {
 import { useEffect, useState, useMemo } from "react";
 import { useSensorData } from "../hooks/useSensorData.ts";
 import { useSensorRecords } from "../hooks/useSensorRecords.ts";
+import { useGroupLocations } from "../hooks/useGroupLocations";
 import { sensorResponse } from "../types/deviceResponse";
 import { sensorMetadata } from "../types/sensorMetadata";
 import {
@@ -88,10 +89,13 @@ const Dashboard = () => {
 
   // Use the sensor records hook
   const {
-    data: sensorData,
+    data: sensorDataByLocation,
     loading: dataLoading,
     error: dataError,
   } = useSensorRecords(sensorRecordsFormData, setSensorRecordsFormData);
+
+  // Group location data for charts that need unified data
+  const sensorData = useGroupLocations(sensorDataByLocation);
 
   // Comparison hook
   const { isComparisonEnabled, comparisonPeriods, toggleComparison } =
@@ -236,12 +240,71 @@ const Dashboard = () => {
     };
   }, [sensorData]);
 
+  // Compute Top Stores data from sensorDataByLocation
+  const topStoresData = useMemo(() => {
+    if (!sensorDataByLocation || sensorDataByLocation.length === 0) {
+      return [] as Array<{
+        locationId: number;
+        locationName: string;
+        footfall: number;
+        salesRevenue?: number;
+        returningCustomers: number;
+        avgVisitDuration: number;
+        affluence: number;
+      }>;
+    }
+
+    return sensorDataByLocation.map((loc) => {
+      const data = loc?.data;
+      const inSeries: number[] = Array.isArray(data?.in) ? data.in : [];
+      const returningSeries: number[] = Array.isArray(data?.returningCustomers)
+        ? data.returningCustomers
+        : [];
+      const avgVisitSeries: number[] = Array.isArray(data?.avgVisitDuration)
+        ? data.avgVisitDuration
+        : [];
+      const affluenceSeries: number[] = Array.isArray(data?.affluence)
+        ? data.affluence
+        : [];
+
+      const footfall = inSeries.reduce((sum, v) => sum + (v || 0), 0);
+      const returningCustomers = returningSeries.reduce(
+        (sum, v) => sum + (v || 0),
+        0,
+      );
+
+      const validAvgVisit = avgVisitSeries.filter((v) => (v || 0) > 0);
+      const avgVisitDuration =
+        validAvgVisit.length > 0
+          ? validAvgVisit.reduce((s, v) => s + v, 0) / validAvgVisit.length
+          : 0;
+
+      const validAffluence = affluenceSeries.filter((v) => (v || 0) > 0);
+      const affluence =
+        validAffluence.length > 0
+          ? validAffluence.reduce((s, v) => s + v, 0) / validAffluence.length
+          : 0;
+
+      return {
+        locationId: loc.locationId,
+        locationName: loc.locationName,
+        footfall,
+        salesRevenue: 0,
+        returningCustomers,
+        avgVisitDuration,
+        affluence,
+      };
+    });
+  }, [sensorDataByLocation]);
+
   // Create widget configurations using the factory - combining charts with overview metrics (avoiding duplicates)
   const availableWidgets: WidgetConfig[] = useMemo(() => {
     const params: WidgetFactoryParams = {
       metrics: metrics.current,
       chartData,
       sensorData,
+      sensorDataByLocation: sensorDataByLocation || [],
+      topStoresData,
       sensorRecordsFormData,
       dateRange: sensorRecordsFormData.dateRange,
       sensorIdsList,
@@ -263,6 +326,7 @@ const Dashboard = () => {
     metrics,
     chartData,
     sensorData,
+    sensorDataByLocation,
     sensorRecordsFormData,
     sensorIdsList,
     getSensorDetails,
