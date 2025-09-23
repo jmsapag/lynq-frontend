@@ -1,83 +1,156 @@
-import { Button } from "@heroui/react";
+import { Spinner, Button } from "@heroui/react";
 import { useTranslation } from "react-i18next";
+import { useEffect, useMemo, useState } from "react";
+import { Time } from "@internationalized/date";
 
 import ReportConfigModal from "../components/reports/ReportsConfigModal.tsx";
 import { useReportConfig } from "../hooks/reports/useReportsConfigs.ts";
 import { ReportDragDropInterface } from "../components/reports/ReportDragDropInterface";
-import { Time } from "@internationalized/date";
+import {
+  DashboardFilters,
+  PredefinedPeriod,
+} from "../components/dashboard/filter";
+import { useSensorData } from "../hooks/useSensorData";
+import { useSensorRecords } from "../hooks/useSensorRecords";
+import { useGroupLocations } from "../hooks/useGroupLocations";
+import { useOverviewMetrics } from "../hooks/dashboard/useOverviewMetrics";
+import { sensorResponse } from "../types/deviceResponse";
+import { sensorMetadata } from "../types/sensorMetadata";
+import { GroupByTimeAmount } from "../types/sensorDataResponse";
+import { SensorRecordsFormData } from "../types/sensorRecordsFormData";
+
+function getInitialDateRange() {
+  return {
+    start: new Date(new Date().setDate(new Date().getDate() - 14)),
+    end: new Date(),
+  };
+}
 
 const ReportsPage = () => {
   const { t } = useTranslation();
-  const { isModalOpen, openModal, closeModal, saveConfig, isLoading } =
-    useReportConfig();
+  const {
+    isModalOpen,
+    openModal,
+    closeModal,
+    saveConfig,
+    isLoading: isConfigLoading,
+  } = useReportConfig();
 
-  // Mock data for the drag & drop interface
-  const mockMetrics = {
-    totalIn: 1250,
-    totalOut: 1180,
-    dailyAverageIn: 178.6,
-    dailyAverageOut: 168.6,
-    mostCrowdedDay: { date: new Date(), value: 250 },
-    leastCrowdedDay: { date: new Date(), value: 95 },
-    entryRate: 5.6,
-    percentageChange: 12.5,
-    returningCustomers: 85,
-    avgVisitDuration: 45.2,
-    affluence: 78,
+  const [sensorMap, setSensorMap] = useState<Map<number, string>>(new Map());
+  const [selectedPeriod, setSelectedPeriod] =
+    useState<PredefinedPeriod>("last7Days");
+
+  const {
+    locations,
+    loading: sensorsLoading,
+    error: sensorsError,
+  } = useSensorData();
+
+  const [sensorRecordsFormData, setSensorRecordsFormData] =
+    useState<SensorRecordsFormData>({
+      sensorIds: [],
+      fetchedDateRange: null,
+      dateRange: getInitialDateRange(),
+      hourRange: { start: new Time(0, 0), end: new Time(23, 59) },
+      rawData: [],
+      groupBy: "day",
+      aggregationType: "sum",
+      needToFetch: true,
+    });
+
+  const {
+    data: sensorDataByLocation,
+    loading: dataLoading,
+    error: dataError,
+  } = useSensorRecords(sensorRecordsFormData, setSensorRecordsFormData);
+
+  const sensorData = useGroupLocations(sensorDataByLocation);
+
+  const { metrics, getSensorDetails, sensorIdsList } = useOverviewMetrics(
+    sensorData,
+    sensorRecordsFormData.dateRange,
+    sensorMap,
+    locations || [],
+    sensorRecordsFormData.sensorIds,
+    undefined,
+  );
+
+  useEffect(() => {
+    const newSensorMap = new Map<number, string>();
+    locations?.forEach((location: sensorResponse) => {
+      location.sensors.forEach((sensor: sensorMetadata) => {
+        newSensorMap.set(sensor.id, sensor.position);
+      });
+    });
+    setSensorMap(newSensorMap);
+  }, [locations]);
+
+  useEffect(() => {
+    if (locations && locations.length > 0) {
+      const allSensorIds = locations.flatMap((location) =>
+        location.sensors.map((sensor) => sensor.id),
+      );
+      setSensorRecordsFormData((prev) => ({
+        ...prev,
+        sensorIds: allSensorIds,
+        needToFetch: true,
+      }));
+    }
+  }, [locations]);
+
+  const handleDateRangeChange = (startDate: Date, endDate: Date) => {
+    setSensorRecordsFormData((prev) => ({
+      ...prev,
+      dateRange: { start: startDate, end: endDate },
+      needToFetch: true,
+    }));
   };
 
-  const mockChartData = {
-    categories: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-    values: [
-      { in: 120, out: 110 },
-      { in: 150, out: 140 },
-      { in: 180, out: 170 },
-      { in: 200, out: 190 },
-      { in: 250, out: 240 },
-      { in: 220, out: 210 },
-      { in: 130, out: 120 },
-    ],
+  const handleSensorsChange = (sensors: number[]) => {
+    setSensorRecordsFormData((prev: SensorRecordsFormData) => {
+      return {
+        ...prev,
+        sensorIds: sensors
+          .map((sensor) => {
+            const sensorEntry = Array.from(sensorMap.entries()).find(
+              ([id]) => id === sensor,
+            );
+            return sensorEntry ? sensorEntry[0] : null;
+          })
+          .filter((id): id is number => id !== null),
+      };
+    });
   };
 
-  // Mock sensor records form data with proper structure
-  const mockSensorRecordsFormData = {
-    sensorIds: [1, 2, 3],
-    fetchedDateRange: {
-      start: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
-      end: new Date(),
-    },
-    dateRange: {
-      start: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
-      end: new Date(),
-    },
-    hourRange: {
-      start: new Time(0, 0),
-      end: new Time(23, 59),
-    },
-    rawData: [],
-    groupBy: "hour" as const,
-    aggregationType: "sum" as const,
-    needToFetch: false,
+  const handlePredefinedPeriodChange = (period: PredefinedPeriod) => {
+    setSelectedPeriod(period);
   };
 
-  // Handle saving report configuration
+  const chartData = useMemo(() => {
+    if (
+      !sensorData ||
+      !sensorData.timestamps ||
+      sensorData.timestamps.length === 0
+    ) {
+      return { categories: [], values: [] };
+    }
+    return {
+      categories: sensorData.timestamps,
+      values: sensorData.in.map((value, index) => ({
+        in: value,
+        out: sensorData.out[index],
+      })),
+    };
+  }, [sensorData]);
+
+  const isLoading = sensorsLoading || dataLoading;
+  const hasError = sensorsError || dataError;
+
   const handleSaveConfiguration = (reportConfig: any, layoutConfig: any) => {
     console.log("Report configuration saved:", {
       reportConfig,
       layoutConfig,
-      note: "Configuration now includes complete widget placements per layout",
-      example:
-        "The saved structure now looks like: { default: { metric-1: 'total-in', metric-2: 'total-out', chart-1: 'people-flow-chart' }, 'metrics-grid': { metric-1: 'entry-rate', ... }, ... }",
     });
-
-    // The system now automatically handles:
-    // 1. Saving complete layout configurations (report config + widget placements) to API
-    // 2. Auto-loading configurations when layouts are selected
-    // 3. Falling back to localStorage if API fails
-    // 4. No need for "Load Saved" button - configurations auto-load
-
-    // Each layout type maintains its own widget placement configuration
-    // When user switches layouts, their saved widget arrangements are automatically restored
   };
 
   return (
@@ -96,25 +169,59 @@ const ReportsPage = () => {
         </div>
       </div>
 
-      <div className="h-[calc(100vh-200px)]">
-        <ReportDragDropInterface
-          metrics={mockMetrics}
-          chartData={mockChartData}
-          sensorRecordsFormData={mockSensorRecordsFormData}
-          dateRange={{
-            start: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
-            end: new Date(),
-          }}
-          sensorIdsList="1,2,3"
-          onSaveConfiguration={handleSaveConfiguration}
+      <div className="mb-4">
+        <DashboardFilters
+          onDateRangeChange={handleDateRangeChange}
+          currentDateRange={sensorRecordsFormData.dateRange}
+          onSensorsChange={handleSensorsChange}
+          currentSensors={
+            sensorRecordsFormData.sensorIds?.map((id) => id) || []
+          }
+          hourRange={sensorRecordsFormData.hourRange}
+          onHourRangeChange={(start, end) =>
+            setSensorRecordsFormData((prev) => ({
+              ...prev,
+              hourRange: { start, end },
+            }))
+          }
+          locations={locations}
+          showPredefinedPeriods={true}
+          currentPredefinedPeriod={selectedPeriod}
+          onPredefinedPeriodChange={handlePredefinedPeriodChange}
+          showComparison={false}
+          isComparisonEnabled={false}
+          onComparisonToggle={() => {}}
         />
       </div>
+
+      {isLoading ? (
+        <div className="flex items-center justify-center h-64">
+          <Spinner size="lg" />
+        </div>
+      ) : hasError ? (
+        <div className="flex items-center justify-center h-64 text-red-500">
+          Error loading data. Please try again.
+        </div>
+      ) : (
+        <div className="h-[calc(100vh-260px)]">
+          <ReportDragDropInterface
+            metrics={metrics.current}
+            chartData={chartData}
+            sensorData={sensorData}
+            sensorRecordsFormData={sensorRecordsFormData}
+            dateRange={sensorRecordsFormData.dateRange}
+            sensorIdsList={sensorIdsList}
+            getSensorDetails={getSensorDetails}
+            onSaveConfiguration={handleSaveConfiguration}
+          />
+        </div>
+      )}
 
       <ReportConfigModal
         isOpen={isModalOpen}
         onClose={closeModal}
         onSave={saveConfig}
-        isLoading={isLoading}
+        isLoading={isConfigLoading}
       />
     </>
   );
