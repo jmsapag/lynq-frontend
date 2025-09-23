@@ -8,6 +8,7 @@ interface NavItemProps {
   href: string;
   icon: React.ElementType;
   badge?: string;
+  isCollapsed?: boolean;
 }
 
 export const NavItem: React.FC<NavItemProps> = ({
@@ -15,10 +16,36 @@ export const NavItem: React.FC<NavItemProps> = ({
   href,
   icon: Icon,
   badge,
+  isCollapsed = false,
 }) => {
   const { pathname } = useLocation();
   const { t } = useTranslation();
   const isActive = pathname === href;
+
+  if (isCollapsed) {
+    return (
+      <Link
+        to={href}
+        className={`group flex items-center justify-center rounded-lg p-3 text-sm font-medium transition-all relative ${
+          isActive
+            ? "bg-gray-200 text-gray-900"
+            : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+        }`}
+        title={t(`nav.${title}`)}
+      >
+        <Icon
+          className={`h-5 w-5 ${
+            isActive
+              ? "text-gray-700"
+              : "text-gray-500 group-hover:text-gray-700"
+          }`}
+        />
+        {badge && (
+          <span className="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-red-500"></span>
+        )}
+      </Link>
+    );
+  }
 
   return (
     <Link

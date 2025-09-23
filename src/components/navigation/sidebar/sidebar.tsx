@@ -1,6 +1,10 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { XMarkIcon } from "@heroicons/react/24/outline";
+import {
+  XMarkIcon,
+  ChevronDoubleLeftIcon,
+  ChevronDoubleRightIcon,
+} from "@heroicons/react/24/outline";
 import {
   navItems,
   superAdminNavItems,
@@ -14,10 +18,17 @@ import { useSelfUserProfile } from "../../../hooks/users/useSelfUserProfile";
 
 interface SidebarProps {
   isOpen?: boolean;
+  isCollapsed?: boolean;
   onClose?: () => void;
+  onToggleCollapse?: () => void;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
+export const Sidebar: React.FC<SidebarProps> = ({
+  isOpen,
+  isCollapsed = false,
+  onClose,
+  onToggleCollapse,
+}) => {
   const navigate = useNavigate();
   const { user, loading } = useSelfUserProfile();
 
@@ -26,38 +37,73 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
     navigate("/login", { replace: true });
   };
 
+  const sidebarWidth = isCollapsed ? "w-16" : "w-72";
+
   const SidebarContent = () => (
     <div className="flex h-full flex-col bg-white text-black">
-      <div className="flex h-16 shrink-0 items-center justify-center border-b border-gray-200 px-4">
+      <div
+        className={`flex h-16 shrink-0 items-center border-b border-gray-200 relative ${
+          isCollapsed ? "justify-center px-2" : "justify-center px-4"
+        }`}
+      >
         <Link to="/home" className="flex items-center">
-          <img src={logoImage} alt="Company Logo" className="h-10 w-auto" />
+          <img
+            src={logoImage}
+            alt="Company Logo"
+            className={isCollapsed ? "h-8 w-8 object-contain" : "h-10 w-auto"}
+          />
         </Link>
+        {onToggleCollapse && !isCollapsed && (
+          <button
+            onClick={onToggleCollapse}
+            className="hidden md:flex p-1 rounded-md hover:bg-gray-100 text-gray-500 hover:text-gray-700 transition-colors absolute right-2"
+            aria-label="Collapse sidebar"
+          >
+            <ChevronDoubleLeftIcon className="h-4 w-4" />
+          </button>
+        )}
       </div>
+
+      {/* Expand button when collapsed - positioned below header */}
+      {onToggleCollapse && isCollapsed && (
+        <div className="hidden md:flex justify-center py-2 border-b border-gray-200">
+          <button
+            onClick={onToggleCollapse}
+            className="p-2 rounded-md hover:bg-gray-100 text-gray-500 hover:text-gray-700 transition-colors"
+            aria-label="Expand sidebar"
+          >
+            <ChevronDoubleRightIcon className="h-5 w-5" />
+          </button>
+        </div>
+      )}
 
       <div className="flex flex-1 flex-col justify-between overflow-hidden">
         <div className="flex-1 overflow-y-auto">
           {loading || !user ? (
             <div className="text-xs text-gray-400 px-2 py-3"></div>
           ) : (
-            <nav className="grid gap-1 px-3 py-2">
+            <nav className={`grid gap-1 py-2 ${isCollapsed ? "px-2" : "px-3"}`}>
               {(user.role === "LYNQ_TEAM"
                 ? superAdminNavItems
                 : user.role === "ADMIN"
                   ? adminNavItems
                   : navItems
               ).map((item) => (
-                <NavItem key={item.href} {...item} />
+                <NavItem key={item.href} {...item} isCollapsed={isCollapsed} />
               ))}
             </nav>
           )}
         </div>
-        <div className="border-t border-gray-200 p-2">
+        <div
+          className={`border-t border-gray-200 ${isCollapsed ? "p-1" : "p-2"}`}
+        >
           <ProfileMenu
             user={{
               name: user?.name || "—",
               role: user?.role || "—",
             }}
             onLogout={handleLogout}
+            isCollapsed={isCollapsed}
           />
         </div>
       </div>
@@ -65,7 +111,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   );
 
   if (isOpen === undefined || !onClose) {
-    return <SidebarContent />;
+    return (
+      <aside
+        className={`hidden border-r border-gray-200 bg-white md:flex md:flex-col transition-all duration-300 ${sidebarWidth}`}
+      >
+        <SidebarContent />
+      </aside>
+    );
   }
 
   return (
@@ -95,7 +147,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
         <SidebarContent />
       </aside>
 
-      <aside className="hidden border-r border-gray-200 bg-white md:flex md:w-72 md:flex-col">
+      <aside
+        className={`hidden border-r border-gray-200 bg-white md:flex md:flex-col transition-all duration-300 ${sidebarWidth}`}
+      >
         <SidebarContent />
       </aside>
     </div>

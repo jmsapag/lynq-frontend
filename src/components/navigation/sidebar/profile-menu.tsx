@@ -2,6 +2,7 @@ import React, { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { createPortal } from "react-dom";
 
 interface User {
   name: string;
@@ -11,11 +12,20 @@ interface User {
 interface ProfileMenuProps {
   user: User;
   onLogout: () => void;
+  isCollapsed?: boolean;
 }
 
-export const ProfileMenu: React.FC<ProfileMenuProps> = ({ user, onLogout }) => {
+export const ProfileMenu: React.FC<ProfileMenuProps> = ({
+  user,
+  onLogout,
+  isCollapsed = false,
+}) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [buttonRef, setButtonRef] = React.useState<HTMLButtonElement | null>(
+    null,
+  );
+  const [buttonRect, setButtonRect] = React.useState<DOMRect | null>(null);
 
   const initials = user.name
     ? user.name
@@ -24,6 +34,95 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({ user, onLogout }) => {
         .join("")
         .toUpperCase()
     : "";
+
+  const updateButtonRect = () => {
+    if (buttonRef) {
+      setButtonRect(buttonRef.getBoundingClientRect());
+    }
+  };
+
+  React.useEffect(() => {
+    if (buttonRef) {
+      updateButtonRect();
+      const handleResize = () => updateButtonRect();
+      window.addEventListener("resize", handleResize);
+      return () => window.removeEventListener("resize", handleResize);
+    }
+  }, [buttonRef]);
+
+  if (isCollapsed) {
+    return (
+      <div className="flex items-center justify-center">
+        <Menu as="div" className="relative">
+          {({ open }) => (
+            <>
+              <Menu.Button
+                ref={setButtonRef}
+                onClick={updateButtonRect}
+                className="flex items-center justify-center rounded-full p-2 text-left hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-gray-400 transition-colors"
+              >
+                <div className="h-8 w-8 rounded-full bg-gray-300 flex items-center justify-center text-xs font-medium text-gray-700">
+                  {initials}
+                </div>
+              </Menu.Button>
+
+              {open &&
+                buttonRect &&
+                createPortal(
+                  <MenuTransition>
+                    <Menu.Items
+                      className="fixed w-48 rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50"
+                      style={{
+                        left: buttonRect.right + 8,
+                        bottom: window.innerHeight - buttonRect.top + 8,
+                      }}
+                    >
+                      <div className="px-3 py-2 border-b border-gray-100">
+                        <div className="text-sm font-medium text-gray-900 truncate">
+                          {user.name}
+                        </div>
+                        <div className="text-xs text-gray-500 truncate">
+                          {t(`role.${user.role}`)}
+                        </div>
+                      </div>
+                      <Menu.Item>
+                        {({ active }) => (
+                          <button
+                            onClick={() => navigate("/profile")}
+                            className={`${
+                              active
+                                ? "bg-gray-100 text-gray-900"
+                                : "text-gray-700"
+                            } group flex w-full items-center rounded-md px-3 py-2 text-sm`}
+                          >
+                            {t("profile")}
+                          </button>
+                        )}
+                      </Menu.Item>
+                      <Menu.Item>
+                        {({ active }) => (
+                          <button
+                            onClick={onLogout}
+                            className={`${
+                              active
+                                ? "bg-gray-100 text-gray-900"
+                                : "text-gray-700"
+                            } group flex w-full items-center rounded-md px-3 py-2 text-sm`}
+                          >
+                            {t("logout")}
+                          </button>
+                        )}
+                      </Menu.Item>
+                    </Menu.Items>
+                  </MenuTransition>,
+                  document.body,
+                )}
+            </>
+          )}
+        </Menu>
+      </div>
+    );
+  }
 
   return (
     <div className="flex items-center justify-between gap-2">
