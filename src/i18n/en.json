@@ -341,16 +341,89 @@
     "title": "People Counter",
     "subtitle": "Track, analyze, and optimize people flow. Powerful insights from accurate sensors and smart dashboards — all in one platform.",
     "goToDashboard": "Go to Dashboard",
+    "tryFreeDemo": "Try Demo",
     "features": {
+      "title": "Powerful Features for Smart Decisions",
+      "subtitle": "Unlock the full potential of your space with our comprehensive people counting platform.",
       "trafficAnalytics": "Traffic Analytics",
       "trafficAnalyticsDesc": "Monitor people flow with comprehensive visualizations",
       "advancedComparisons": "Advanced Comparisons",
       "advancedComparisonsDesc": "Compare metrics across locations and time periods",
       "keyMetrics": "Key Metrics",
-      "keyMetricsDesc": "Track entries, exits, and conversion rates"
+      "keyMetricsDesc": "Track entries, exits, and conversion rates",
+      "customizable": {
+        "title": "Customizable Dashboards",
+        "desc": "Tailor your dashboard with drag-and-drop widgets and save multiple layouts"
+      },
+      "unified": {
+        "title": "Unified Platform",
+        "desc": "Manage all your locations and sensors in one place"
+      },
+      "updates": {
+        "title": "5-Minute Updates",
+        "desc": "Get near real-time data with frequent updates"
+      },
+      "multiLocation": "Multi-Location Support",
+      "multiLocationDesc": "Easily manage and compare multiple locations",
+      "automaticReports": "Automatic Reports",
+      "automaticReportsDesc": "Schedule and receive regular reports via email",
+      "customization": "Customization Options",
+      "customizationDesc": "Choose from a variety of chart types and metrics to suit your needs",
+      "smartAlerts": {
+        "title": "Smart Alerts",
+        "desc": "Set up notifications for key events and thresholds"
+      },
+      "analytics": {
+        "title": "Comprehensive Analytics",
+        "desc": "In-depth insights with a wide range of charts and visualizations"
+      },
+      "mobile": {
+        "title": "Mobile Friendly",
+        "desc": "Access your dashboard and reports on any device, anywhere"
+      },
+      "secure": {
+        "title": "Secure & Reliable",
+        "desc": "Your data is protected with industry-standard security practices"
+      }
     },
-    "tryFreeDemo": "Try Demo"
+    "analytics": {
+      "title": "Comprehensive Analytics Dashboard",
+      "subtitle": "Monitor your space with powerful charts and customizable views. Get insights updated every 5 minutes with a wide range of visualization options.",
+      "liveUpdates": "5-Min Updates",
+      "interactiveChart": "Interactive Chart",
+      "weeklyTraffic": "Weekly Traffic Overview",
+      "chartTitle": "Hourly Traffic Patterns"
+    },
+    "comparison": {
+      "title": "Multi-Location Intelligence",
+      "subtitle": "Compare performance across all your locations with side-by-side analytics and unified reporting.",
+      "feature1": "Everything in One Place",
+      "feature1Desc": "Unified dashboard for all locations",
+      "feature2": "Fully Customizable",
+      "feature2Desc": "Tailor charts and metrics to your needs",
+      "feature3": "Wide Range of Charts",
+      "feature3Desc": "From heatmaps to trend analysis"
+    },
+    "platform": {
+      "title": "Why Choose Our Platform?",
+      "subtitle": "Built for businesses that need accurate, actionable insights from their space analytics.",
+      "feature1": "Wide Range of Charts",
+      "feature1Desc": "Heatmaps, trends, comparisons, and more",
+      "feature2": "Fully Customizable",
+      "feature2Desc": "Tailor dashboards to your specific needs",
+      "feature3": "Everything in One Place",
+      "feature3Desc": "Unified platform for all your analytics",
+      "feature4": "5-Minute Updates",
+      "feature4Desc": "Near real-time data for timely decisions"
+    },
+    "cta": {
+      "title": "Ready to Transform Your Space Analytics?",
+      "subtitle": "Join hundreds of businesses using our platform to optimize their operations and enhance customer experience.",
+      "startTrial": "Start Free Trial",
+      "contactSales": "Contact Sales"
+    }
   },
+
   "login": {
     "welcome": "Welcome back!",
     "subtitle": "Login to continue exploring your metrics.",
