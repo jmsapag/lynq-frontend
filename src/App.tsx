@@ -34,7 +34,13 @@ import { useCompanySubscription } from "./hooks/payments/useCompanySubscription"
 import { useNavigate } from "react-router-dom";
 
 function AppLayoutWithState() {
-  const { isOpen, handleToggle, handleClose } = useSidebar();
+  const {
+    isOpen,
+    isCollapsed,
+    handleToggle,
+    handleClose,
+    handleToggleCollapse,
+  } = useSidebar();
 
   const { isTrialActive, trialDaysLeft } = useCompanySubscription();
   const navigate = useNavigate();
@@ -45,7 +51,12 @@ function AppLayoutWithState() {
 
   return (
     <div className="flex h-screen bg-white text-black">
-      <SidebarWithState isOpen={isOpen} onClose={handleClose} />
+      <SidebarWithState
+        isOpen={isOpen}
+        isCollapsed={isCollapsed}
+        onClose={handleClose}
+        onToggleCollapse={handleToggleCollapse}
+      />
       <div className="flex flex-1 flex-col overflow-hidden">
         <Header onMobileToggleClick={handleToggle} />
         <main
