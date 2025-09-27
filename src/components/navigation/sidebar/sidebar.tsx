@@ -40,7 +40,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const sidebarWidth = isCollapsed ? "w-16" : "w-72";
 
   const SidebarContent = () => (
-    <div className="flex h-full flex-col bg-white text-black">
+    <div
+      className="flex h-full flex-col bg-white text-black"
+      data-tour="sidebar-menu"
+    >
       <div
         className={`flex h-16 shrink-0 items-center border-b border-gray-200 relative ${
           isCollapsed ? "justify-center px-2" : "justify-center px-4"
