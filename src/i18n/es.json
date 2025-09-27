@@ -728,5 +728,40 @@
     "successTitle": "Éxito",
     "successDesc": "¡Plan creado exitosamente!",
     "errorTitle": "Error"
+  },
+  "tour": {
+    "dashboard": {
+      "welcome": {
+        "title": "¡Bienvenido a tu Tablero!",
+        "content": "Aquí puedes ver y analizar los datos de tus sensores en tiempo real."
+      },
+      "filters": {
+        "title": "Filtros de Datos",
+        "content": "Usa estos filtros para seleccionar rangos de fechas, sensores específicos y personalizar tu vista de datos según tus necesidades."
+      },
+      "metrics": {
+        "title": "Métricas Clave",
+        "content": "Estas tarjetas muestran métricas importantes como entradas totales, salidas y promedios diarios para el período seleccionado."
+      },
+      "charts": {
+        "title": "Gráficos y Visualizaciones",
+        "content": "Esta área muestra gráficos interactivos y widgets de datos. Puedes personalizar qué gráficos ver y cómo se organizan."
+      },
+      "editLayout": {
+        "title": "Personalizar Diseño",
+        "content": "Haz clic aquí para entrar en modo edición. Podrás arrastrar y soltar widgets para reorganizar tu tablero según tus preferencias."
+      },
+      "layoutSelector": {
+        "title": "Selector de Diseño",
+        "content": "Cambia entre diferentes diseños predefinidos para tu tablero. Cada diseño ofrece una organización diferente de los widgets."
+      }
+    },
+    "buttons": {
+      "back": "Atrás",
+      "close": "Cerrar",
+      "finish": "Finalizar",
+      "next": "Siguiente",
+      "skip": "Saltar tour"
+    }
   }
 }

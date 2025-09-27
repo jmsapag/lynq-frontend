@@ -734,5 +734,44 @@
     "successTitle": "Success",
     "successDesc": "Plan created successfully!",
     "errorTitle": "Error"
+  },
+  "tour": {
+    "dashboard": {
+      "welcome": {
+        "title": "Welcome to Dashboard",
+        "content": "This is your main dashboard where you can view and analyze your pedestrian data."
+      },
+      "filters": {
+        "title": "Dashboard Filters",
+        "content": "Use these controls to filter your data by date range, sensors, and time periods."
+      },
+      "metrics": {
+        "title": "Key Metrics",
+        "content": "View important metrics and KPIs for your selected time period and locations."
+      },
+      "charts": {
+        "title": "Data Visualizations",
+        "content": "Interactive charts showing your pedestrian analytics data with various visualization options."
+      },
+      "editLayout": {
+        "title": "Edit Mode",
+        "content": "Click here to enter edit mode and customize your dashboard layout."
+      },
+      "widgetArea": {
+        "title": "Widget Area",
+        "content": "This is where your dashboard widgets are displayed. In edit mode, you can drag and drop widgets to customize the layout."
+      },
+      "layoutSelector": {
+        "title": "Layout Selection",
+        "content": "Choose from different dashboard layouts to organize your widgets."
+      }
+    },
+    "buttons": {
+      "back": "Back",
+      "next": "Next",
+      "finish": "Finish",
+      "skip": "Skip",
+      "close": "Close"
+    }
   }
 }
