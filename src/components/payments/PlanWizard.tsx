@@ -11,6 +11,7 @@ import {
   ModalFooter,
   addToast,
 } from "@heroui/react";
+import { createStripeCheckoutSession } from "../../services/stripeCheckoutService";
 import { useTranslation } from "react-i18next";
 import { useCreatePlanWizard } from "../../hooks/payments/useCreatePlan";
 
@@ -25,6 +26,8 @@ const billingOptions = [
 ];
 
 export const PlanWizard = () => {
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const {
@@ -40,6 +43,14 @@ export const PlanWizard = () => {
     submit,
     success,
   } = useCreatePlanWizard();
+      if (checkoutError) {
+        addToast({
+          title: t("planWizard.errorTitle"),
+          description: checkoutError,
+          severity: "danger",
+          color: "danger",
+        });
+      }
 
   useEffect(() => {
     if (success) {
@@ -66,6 +77,30 @@ export const PlanWizard = () => {
     // eslint-disable-next-line
   }, [success, error]);
 
+                  <Button
+                    color="primary"
+                    onPress={async () => {
+                      if (!success?.id) return;
+                      setCheckoutLoading(true);
+                      setCheckoutError(null);
+                      try {
+                        const res = await createStripeCheckoutSession(success.id);
+                        window.location.href = res.url;
+                      } catch (e: any) {
+                        setCheckoutError(e?.response?.data?.message || "Stripe checkout failed");
+                      } finally {
+                        setCheckoutLoading(false);
+                      }
+                    }}
+                    isLoading={checkoutLoading}
+                    disabled={checkoutLoading}
+                    className="mt-4"
+                  >
+                    {t("planWizard.goToCheckout")}
+                  </Button>
+                  {checkoutError && (
+                    <div className="text-danger-600 mt-2">{checkoutError}</div>
+                  )}
   const handleInput = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
