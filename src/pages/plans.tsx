@@ -1,4 +1,5 @@
 import { PlanWizard } from "../components/payments/PlanWizard";
+import { SubscriptionCard } from "../components/payments/SubscriptionCard";
 import { useLocation } from "react-router-dom";
 import { Card, CardBody } from "@heroui/react";
 
@@ -21,6 +22,22 @@ const PlanCreate = () => {
           </CardBody>
         </Card>
       )}
+      <div className="flex flex-wrap gap-6 mb-8">
+        <SubscriptionCard
+          planName="LYNQ Pro"
+          basePriceCents={1000}
+          fareTax={0.21}
+          currency="USD"
+          maxSensors={50}
+        />
+        <SubscriptionCard
+          planName="LYNQ Enterprise"
+          basePriceCents={800}
+          fareTax={0.21}
+          currency="USD"
+          maxSensors={200}
+        />
+      </div>
       <PlanWizard />
     </div>
   );
