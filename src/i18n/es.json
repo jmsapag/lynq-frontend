@@ -329,17 +329,89 @@
   },
   "landing": {
     "title": "Contador de Personas",
-    "subtitle": "Rastrea, analiza y optimiza el flujo de personas. Información poderosa de sensores precisos y paneles inteligentes, todo en una sola plataforma.",
-    "goToDashboard": "Ir al Tablero",
+    "subtitle": "Rastrea, analiza y optimiza el flujo de personas. Información valiosa de sensores precisos y tableros inteligentes — todo en una plataforma.",
+    "goToDashboard": "Ir al Panel",
+    "tryFreeDemo": "Probar Demo",
     "features": {
-      "trafficAnalytics": "Analítica de Tráfico",
+      "title": "Funcionalidades Poderosas para Decisiones Inteligentes",
+      "subtitle": "Nuestra plataforma integral ofrece análisis detallados y comparaciones entre ubicaciones, todo en un solo lugar.",
+      "trafficAnalytics": "Análisis de Tráfico",
       "trafficAnalyticsDesc": "Monitorea el flujo de personas con visualizaciones completas",
       "advancedComparisons": "Comparaciones Avanzadas",
-      "advancedComparisonsDesc": "Compara métricas entre ubicaciones y periodos de tiempo",
+      "advancedComparisonsDesc": "Compara métricas entre ubicaciones y períodos de tiempo",
       "keyMetrics": "Métricas Clave",
-      "keyMetricsDesc": "Sigue entradas, salidas y tasas de conversión"
+      "keyMetricsDesc": "Rastrea entradas, salidas y tasas de conversión",
+      "customizable": {
+        "title": "Panel Completamente Personalizable",
+        "desc": "Adapta el diseño, los gráficos y las métricas a tus necesidades específicas"
+      },
+      "unified": {
+        "title": "Plataforma Unificada",
+        "desc": "Gestiona todos tus sensores y análisis en un solo lugar"
+      },
+      "updates": {
+        "title": "Actualizaciones de 5 Minutos",
+        "desc": "Datos casi en tiempo real para decisiones oportunas"
+      },
+      "multiLocation": "Multi-Ubicación",
+      "multiLocationDesc": "Gestiona y compara el rendimiento en todas tus ubicaciones",
+      "automaticReports": "Reportes Automáticos",
+      "automaticReportsDesc": "Recibe reportes programados directamente en tu correo",
+      "customization": "Personalización",
+      "customizationDesc": "Adapta gráficos y métricas a tus necesidades",
+      "smartAlerts": {
+        "title": "Alertas Inteligentes",
+        "desc": "Recibe notificaciones proactivas sobre cambios significativos en los datos"
+      },
+      "analytics": {
+        "title": "Análisis Integral",
+        "desc": "Gráficos potentes y vistas personalizables para monitorear tu espacio"
+      },
+      "mobile": {
+        "title": "Optimizado para Móviles",
+        "desc": "Accede a tus datos y análisis desde cualquier dispositivo"
+      },
+      "secure": {
+        "title": "Seguridad Robusta",
+        "desc": "Protección de datos de nivel empresarial y controles de acceso"
+      }
     },
-    "tryFreeDemo": "Prueba la Demo"
+    "analytics": {
+      "title": "Panel de Análisis Integral",
+      "subtitle": "Monitorea tu espacio con gráficos potentes y vistas personalizables. Obtén información actualizada cada 5 minutos con una amplia variedad de opciones de visualización.",
+      "liveUpdates": "Actualizaciones de 5 Min",
+      "interactiveChart": "Gráfico Interactivo",
+      "weeklyTraffic": "Resumen de Tráfico Semanal",
+      "chartTitle": "Patrones de Tráfico por Hora"
+    },
+    "comparison": {
+      "title": "Inteligencia Multi-Ubicación",
+      "subtitle": "Compara el rendimiento en todas tus ubicaciones con análisis lado a lado y reportes unificados.",
+      "feature1": "Todo en Un Solo Lugar",
+      "feature1Desc": "Panel unificado para todas las ubicaciones",
+      "feature2": "Completamente Personalizable",
+      "feature2Desc": "Adapta gráficos y métricas a tus necesidades",
+      "feature3": "Amplia Variedad de Gráficos",
+      "feature3Desc": "Desde mapas de calor hasta análisis de tendencias"
+    },
+    "platform": {
+      "title": "¿Por Qué Elegir Nuestra Plataforma?",
+      "subtitle": "Construida para empresas que necesitan información precisa y accionable de sus análisis de espacios.",
+      "feature1": "Amplia Variedad de Gráficos",
+      "feature1Desc": "Mapas de calor, tendencias, comparaciones y más",
+      "feature2": "Completamente Personalizable",
+      "feature2Desc": "Adapta paneles a tus necesidades específicas",
+      "feature3": "Todo en Un Solo Lugar",
+      "feature3Desc": "Plataforma unificada para todos tus análisis",
+      "feature4": "Actualizaciones de 5 Minutos",
+      "feature4Desc": "Datos casi en tiempo real para decisiones oportunas"
+    },
+    "cta": {
+      "title": "¿Listo para transformar tus espacios de análisis?",
+      "subtitle": "Únete a cientos de empresas que usan nuestra plataforma para optimizar sus operaciones y mejorar la experiencia del cliente.",
+      "startTrial": "Iniciar Prueba Gratuita",
+      "contactSales": "Contactar Ventas"
+    }
   },
   "login": {
     "welcome": "¡Bienvenido de nuevo!",
@@ -656,5 +728,40 @@
     "successTitle": "Éxito",
     "successDesc": "¡Plan creado exitosamente!",
     "errorTitle": "Error"
+  },
+  "tour": {
+    "dashboard": {
+      "welcome": {
+        "title": "¡Bienvenido a tu Tablero!",
+        "content": "Aquí puedes ver y analizar los datos de tus sensores en tiempo real."
+      },
+      "filters": {
+        "title": "Filtros de Datos",
+        "content": "Usa estos filtros para seleccionar rangos de fechas, sensores específicos y personalizar tu vista de datos según tus necesidades."
+      },
+      "metrics": {
+        "title": "Métricas Clave",
+        "content": "Estas tarjetas muestran métricas importantes como entradas totales, salidas y promedios diarios para el período seleccionado."
+      },
+      "charts": {
+        "title": "Gráficos y Visualizaciones",
+        "content": "Esta área muestra gráficos interactivos y widgets de datos. Puedes personalizar qué gráficos ver y cómo se organizan."
+      },
+      "editLayout": {
+        "title": "Personalizar Diseño",
+        "content": "Haz clic aquí para entrar en modo edición. Podrás arrastrar y soltar widgets para reorganizar tu tablero según tus preferencias."
+      },
+      "layoutSelector": {
+        "title": "Selector de Diseño",
+        "content": "Cambia entre diferentes diseños predefinidos para tu tablero. Cada diseño ofrece una organización diferente de los widgets."
+      }
+    },
+    "buttons": {
+      "back": "Atrás",
+      "close": "Cerrar",
+      "finish": "Finalizar",
+      "next": "Siguiente",
+      "skip": "Saltar tour"
+    }
   }
 }

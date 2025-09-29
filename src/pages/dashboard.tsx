@@ -46,6 +46,10 @@ import {
   getDefaultLayout,
   type DashboardLayout,
 } from "../components/dashboard/layout-dashboard/layouts";
+import WalkingTour from "../components/tour/WalkingTour";
+import { useTour } from "../hooks/tour/useTour";
+import { getDashboardTourSteps } from "../components/tour/TourConfig";
+import { useTranslation } from "react-i18next";
 
 function getFirstFetchedDateRange() {
   return {
@@ -69,6 +73,10 @@ const Dashboard = () => {
   >({});
   const [currentLayout, setCurrentLayout] =
     useState<DashboardLayout>(getDefaultLayout());
+
+  const { isTourOpen, closeTour } = useTour();
+  const { t } = useTranslation();
+  const tourSteps = getDashboardTourSteps(t);
 
   const {
     locations,
@@ -408,8 +416,11 @@ const Dashboard = () => {
       >
         {/* Main Content Area */}
         <div className="p-6 space-y-6">
-          <div className="flex items-center justify-between">
-            <div className="flex-1">
+          <div
+            className="flex items-center justify-between"
+            data-tour="dashboard-title"
+          >
+            <div className="flex-1" data-tour="filters">
               <DashboardFilters
                 onDateRangeChange={handleDateRangeChange}
                 currentDateRange={sensorRecordsFormData.dateRange}
@@ -432,27 +443,31 @@ const Dashboard = () => {
             {/* Edit Mode Toggle */}
             <div className="flex items-center gap-3 ml-4">
               {/* Layout Selector */}
-              <LayoutSelector
-                currentLayout={currentLayout}
-                onLayoutChange={handleLayoutChange}
-                availableLayouts={AVAILABLE_LAYOUTS}
-              />
+              <div data-tour="layout-selector">
+                <LayoutSelector
+                  currentLayout={currentLayout}
+                  onLayoutChange={handleLayoutChange}
+                  availableLayouts={AVAILABLE_LAYOUTS}
+                />
+              </div>
 
-              <Button
-                variant={isEditing ? "flat" : "solid"}
-                color="primary"
-                startContent={
-                  isEditing ? (
-                    <EyeIcon className="w-4 h-4" />
-                  ) : (
-                    <PencilIcon className="w-4 h-4" />
-                  )
-                }
-                onPress={() => setIsEditing(!isEditing)}
-                size="sm"
-              >
-                {isEditing ? "" : ""}
-              </Button>
+              <div data-tour="edit-mode">
+                <Button
+                  variant={isEditing ? "flat" : "solid"}
+                  color="primary"
+                  startContent={
+                    isEditing ? (
+                      <EyeIcon className="w-4 h-4" />
+                    ) : (
+                      <PencilIcon className="w-4 h-4" />
+                    )
+                  }
+                  onPress={() => setIsEditing(!isEditing)}
+                  size="sm"
+                >
+                  {isEditing ? "" : ""}
+                </Button>
+              </div>
             </div>
           </div>
 
@@ -465,13 +480,15 @@ const Dashboard = () => {
               Error loading data. Please try again.
             </div>
           ) : (
-            <LayoutRenderer
-              isEditing={isEditing}
-              currentLayout={currentLayout}
-              widgetPlacements={widgetPlacements}
-              availableWidgets={availableWidgets}
-              draggedWidget={draggedWidget}
-            />
+            <div className="dashboard-layout-area" data-tour="widget-area">
+              <LayoutRenderer
+                isEditing={isEditing}
+                currentLayout={currentLayout}
+                widgetPlacements={widgetPlacements}
+                availableWidgets={availableWidgets}
+                draggedWidget={draggedWidget}
+              />
+            </div>
           )}
         </div>
 
@@ -488,6 +505,14 @@ const Dashboard = () => {
           }))}
           placedWidgets={getPlacedWidgets(widgetPlacements)}
           draggedWidget={draggedWidget}
+        />
+
+        {/* Walking Tour Component */}
+        <WalkingTour
+          isOpen={isTourOpen}
+          onClose={closeTour}
+          onComplete={closeTour}
+          steps={tourSteps}
         />
       </div>
     </DndContext>
