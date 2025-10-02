@@ -4,6 +4,7 @@ import { ReportWidgetType } from "../../types/reportLayout";
 // Import dashboard widgets to reuse them
 import { SensorDataCard } from "../dashboard/charts/card";
 import { LineChart } from "../dashboard/charts/line-chart";
+import IngressMixedChart from "../dashboard/charts/ingress-mixed-chart";
 import { ChartHeatMap } from "../dashboard/charts/heat-map/chart-heat-map";
 import { EntryRateChart } from "../dashboard/charts/entry-rate/entry-rate-chart";
 import { CumulativeChart } from "../dashboard/charts/cumulative-chart";
@@ -310,9 +311,10 @@ export const createReportWidgets = (
       title: "People Flow Chart",
       category: "chart",
       component: (
-        <LineChart
+        <IngressMixedChart
           data={params.chartData}
           groupBy={params.sensorRecordsFormData.groupBy}
+          rawData={params.sensorData}
         />
       ),
     },

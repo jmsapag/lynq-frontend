@@ -26,7 +26,8 @@
     "reports": "Reportes",
     "faq": "FAQs",
     "subscriptions": "Suscripciones",
-    "plans": "Planes de Subscripcion"
+    "plans": "Planes de Subscripcion",
+    "subscriptions/customize": "Personalizar Subscripcion"
   },
   "subscription": {
     "subscription-success-message": {
@@ -782,6 +783,29 @@
       "finish": "Finalizar",
       "next": "Siguiente",
       "skip": "Saltar tour"
+    }
+  },
+  "customizedPlan": {
+    "title": "Solicitar Plan Personalizado",
+    "subtitle": "Cuéntanos sobre tus necesidades específicas y te ayudaremos a crear una solución a medida para tu empresa.",
+    "form": {
+      "companyLabel": "Nombre de la Empresa",
+      "companyPlaceholder": "Ingresa el nombre de tu empresa",
+      "companyRequired": "El nombre de la empresa es requerido",
+      "emailLabel": "Email de Contacto",
+      "emailPlaceholder": "ejemplo@empresa.com",
+      "emailRequired": "El email de contacto es requerido",
+      "emailInvalid": "El email no tiene un formato válido",
+      "messageLabel": "Mensaje (Opcional)",
+      "messagePlaceholder": "Describe tus necesidades específicas, número de ubicaciones, volumen de tráfico esperado, funcionalidades especiales requeridas, etc.",
+      "submit": "Enviar Solicitud",
+      "submitting": "Enviando..."
+    },
+    "success": {
+      "title": "¡Solicitud Enviada Exitosamente!",
+      "description": "Hemos recibido tu solicitud de plan personalizado. Nuestro equipo se pondrá en contacto contigo en las próximas 24-48 horas para discutir tus necesidades específicas.",
+      "backToPlans": "Volver a Planes",
+      "newRequest": "Nueva Solicitud"
     }
   }
 }
