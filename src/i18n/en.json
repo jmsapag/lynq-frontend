@@ -776,10 +776,8 @@
   },
   "payment": {
     "error": {
-      "title": "Payment Error",
       "cancelledTitle": "Payment Cancelled",
       "cancelledByUser": "The payment process was cancelled. You can try again anytime.",
-      "genericError": "There was an issue processing your payment. Please try again or contact support.",
       "tryAgain": "Try Again",
       "contactSupport": "Contact Support",
       "needHelp": "Need assistance? Our support team is here to help."

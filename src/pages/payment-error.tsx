@@ -1,45 +1,27 @@
 import { useState } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Card, CardBody, Button, addToast } from "@heroui/react";
 import { useTranslation } from "react-i18next";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import CreateTicketModal from "../components/help/CreateTicketModal";
 import { useTickets } from "../hooks/useTickets";
 import { CreateTicketInput } from "../types/ticket";
+import { getBusinessIdFromToken } from "../hooks/auth/useAuth";
 
 const PaymentError = () => {
   const { t } = useTranslation();
-  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [isTicketModalOpen, setIsTicketModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const reason = searchParams.get("reason");
+  const businessId = getBusinessIdFromToken();
+  const { createTicket } = useTickets(businessId?.toString() || "");
 
-  // Mock business ID - in real app would come from context/token
-  const businessId = "1";
-  const { createTicket } = useTickets(businessId);
-
-  // Get contextual message based on reason
-  const getErrorMessage = () => {
-    switch (reason) {
-      case "cancelled_by_user":
-        return {
-          title: t("payment.error.cancelledTitle"),
-          description: t("payment.error.cancelledByUser"),
-        };
-      default:
-        return {
-          title: t("payment.error.title"),
-          description: t("payment.error.genericError"),
-        };
-    }
-  };
-
-  const { title, description } = getErrorMessage();
+  // Only 'cancelled_by_user' is handled (user clicked back in Stripe Checkout)
+  const title = t("payment.error.cancelledTitle");
+  const description = t("payment.error.cancelledByUser");
 
   const handleTryAgain = () => {
-    // Redirect to plans page to retry checkout
     navigate("/plans");
   };
 
