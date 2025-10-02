@@ -3,7 +3,7 @@
     "subscription/cancel": "Pago fallido",
     "subscription-fail-message": {
       "desc": "Tu pago no pudo ser procesado. Por favor, revisa tus datos e intenta nuevamente.",
-      "help": "Si el problema persiste, contacta a soporte.",
+      "help": "Si el problema persiste, contacta a soporte",
       "goToDashboard": "Ir al Tablero",
       "retry": "Reintentar pago",
       "retrying": "Reintentando...",
