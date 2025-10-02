@@ -1,24 +1,21 @@
 import { useState } from "react";
-import { Card, CardBody, Button, Input } from "@heroui/react";
+import { Card, CardBody, Button } from "@heroui/react";
+import { createStripeCheckoutSession } from "../../services/stripeCheckoutService";
 
-export interface SubscriptionCardProps {
-  planName: string;
+interface SubscriptionCardProps {
+  businessId: string;
   basePriceCents: number;
-  fareTax: number; // e.g. 0.21 for 21%
+  fareTax: number;
   currency: string;
   maxSensors?: number;
 }
 
-export const SubscriptionCard = ({
-  planName,
-  basePriceCents,
-  fareTax,
-  currency,
-  maxSensors = 100,
-}: SubscriptionCardProps) => {
+export const SubscriptionCard = ({ businessId, basePriceCents, fareTax, currency, maxSensors = 100 }: SubscriptionCardProps) => {
   const [sensorCount, setSensorCount] = useState(1);
   const [inputValue, setInputValue] = useState('1');
   const [inputError, setInputError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
   const pricePerSensor = basePriceCents * (1 + fareTax);
   const totalPrice = pricePerSensor * sensorCount;
 
@@ -27,7 +24,7 @@ export const SubscriptionCard = ({
       <CardBody className="p-6 flex flex-col gap-4">
         <div className="mb-2">
           <span className="block text-3xl font-extrabold text-primary-700 tracking-tight mb-1">
-            {planName}
+            Suscripción LYNQ
           </span>
         </div>
         <div className="flex flex-col gap-1">
@@ -105,10 +102,25 @@ export const SubscriptionCard = ({
         <Button
           color="primary"
           className="w-full mt-4 py-3 text-base font-bold rounded-lg shadow-sm hover:bg-primary-700 transition"
-          disabled={!!inputError}
+          disabled={!!inputError || loading}
+          onPress={async () => {
+            setLoading(true);
+            setCheckoutError(null);
+            try {
+              const res = await createStripeCheckoutSession(businessId);
+              window.location.href = res.url;
+            } catch (e: any) {
+              setCheckoutError(e?.response?.data?.message || "Error al iniciar checkout");
+            } finally {
+              setLoading(false);
+            }
+          }}
         >
-          Suscribirme
+          {loading ? "Redirigiendo..." : "Suscribirme"}
         </Button>
+        {checkoutError && (
+          <div className="text-danger-600 text-sm mt-2 text-center">{checkoutError}</div>
+        )}
       </CardBody>
     </Card>
   );
