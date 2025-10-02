@@ -15,7 +15,8 @@
     "reports": "Reports",
     "faq": "FAQs",
     "subscriptions": "Subscriptions",
-    "plans": "Subscription Plans"
+    "plans": "Subscription Plans",
+    "subscriptions/customize": "Customized Plan"
   },
   "days": {
     "sunday": "Sunday",
@@ -772,6 +773,29 @@
       "finish": "Finish",
       "skip": "Skip",
       "close": "Close"
+    }
+  },
+  "customizedPlan": {
+    "title": "Request Customized Plan",
+    "subtitle": "Tell us about your specific needs and we'll help you create a tailored solution for your business.",
+    "form": {
+      "companyLabel": "Company Name",
+      "companyPlaceholder": "Enter your company name",
+      "companyRequired": "Company name is required",
+      "emailLabel": "Contact Email",
+      "emailPlaceholder": "example@company.com",
+      "emailRequired": "Contact email is required",
+      "emailInvalid": "Please enter a valid email address",
+      "messageLabel": "Message (Optional)",
+      "messagePlaceholder": "Describe your specific needs, number of locations, expected traffic volume, required special features, etc.",
+      "submit": "Send Request",
+      "submitting": "Sending..."
+    },
+    "success": {
+      "title": "Request Sent Successfully!",
+      "description": "We have received your customized plan request. Our team will contact you within the next 24-48 hours to discuss your specific needs.",
+      "backToPlans": "Back to Plans",
+      "newRequest": "New Request"
     }
   },
   "payment": {

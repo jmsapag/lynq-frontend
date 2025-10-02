@@ -33,6 +33,7 @@ import PaymentError from "./pages/payment-error.tsx";
 import { TrialBanner } from "./components/trial/TrialBanner";
 import { useCompanySubscription } from "./hooks/payments/useCompanySubscription";
 import { useNavigate } from "react-router-dom";
+import CustomizedPlan from "./pages/customized-plan.tsx";
 
 function AppLayoutWithState() {
   const {
@@ -110,6 +111,10 @@ function App() {
               <Route path="help" element={<HelpPage />} />
               <Route path="/faq" element={<FaqPage />} />
               <Route path="/subscriptions" element={<SubscriptionFeed />} />
+              <Route
+                path="/subscriptions/customize"
+                element={<CustomizedPlan />}
+              />
 
               {/* LYNQ_TEAM only routes */}
               <Route element={<RoleRoute allowedRoles="LYNQ_TEAM" />}>
