@@ -27,12 +27,8 @@
     "faq": "FAQs",
     "subscriptions": "Subscriptions",
     "plans": "Subscription Plans",
-<<<<<<< HEAD
-    "subscription/success": "Subscription Successful"
-
-=======
+    "subscription/success": "Subscription Successful",
     "subscriptions/customize": "Customized Plan"
->>>>>>> dev
   },
   "days": {
     "sunday": "Sunday",
@@ -791,16 +787,6 @@
       "close": "Close"
     }
   },
-<<<<<<< HEAD
-  "subscription": {
-      "subscription/success": "Subscription Successful",
-      "subscription-success-message": {
-        "desc": "Your payment has been processed successfully and your subscription is active.",
-        "thanks": "Thank you for trusting LYNQ!",
-        "goToDashboard": "Go to Dashboard"
-    }
-    }
-=======
   "customizedPlan": {
     "title": "Request Customized Plan",
     "subtitle": "Tell us about your specific needs and we'll help you create a tailored solution for your business.",
@@ -823,6 +809,13 @@
       "backToPlans": "Back to Plans",
       "newRequest": "New Request"
     }
-  }
->>>>>>> dev
+  },
+  "subscription": {
+      "subscription/success": "Subscription Successful",
+      "subscription-success-message": {
+        "desc": "Your payment has been processed successfully and your subscription is active.",
+        "thanks": "Thank you for trusting LYNQ!",
+        "goToDashboard": "Go to Dashboard"
+    }
+    }
 }
