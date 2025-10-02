@@ -797,5 +797,14 @@
       "backToPlans": "Back to Plans",
       "newRequest": "New Request"
     }
+  },
+  "payment": {
+    "error": {
+      "cancelledTitle": "Payment Cancelled",
+      "cancelledByUser": "The payment process was cancelled. You can try again anytime.",
+      "tryAgain": "Try Again",
+      "contactSupport": "Contact Support",
+      "needHelp": "Need assistance? Our support team is here to help."
+    }
   }
 }

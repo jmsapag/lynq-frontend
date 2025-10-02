@@ -787,5 +787,14 @@
       "backToPlans": "Volver a Planes",
       "newRequest": "Nueva Solicitud"
     }
+  },
+  "payment": {
+    "error": {
+      "cancelledTitle": "Pago Cancelado",
+      "cancelledByUser": "El proceso de pago fue cancelado. Puedes intentar de nuevo cuando quieras.",
+      "tryAgain": "Intentar de Nuevo",
+      "contactSupport": "Contactar Soporte",
+      "needHelp": "¿Necesitas ayuda? Nuestro equipo de soporte está aquí para ayudarte."
+    }
   }
 }
