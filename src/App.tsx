@@ -29,6 +29,8 @@ import FaqPage from "./pages/faq.tsx";
 import FreeTrialWrapper from "./pages/free-trial.tsx";
 import SubscriptionFeed from "./pages/subscription-feed.tsx";
 import SubscriptionPage from "./pages/subscription";
+import SubscriptionSuccessPage from "./pages/subscription-success";
+import SubscriptionFailPage from "./pages/subscription-fail";
 import { TrialBanner } from "./components/trial/TrialBanner";
 import { useCompanySubscription } from "./hooks/payments/useCompanySubscription";
 import { useNavigate } from "react-router-dom";
@@ -125,6 +127,8 @@ function App() {
                 <Route path="user-management" element={<UserManagement />} />
                 <Route path="locations" element={<Locations />} />
                 <Route path="/subscription" element={<SubscriptionPage />} />
+                <Route path="/subscription/success" element={<SubscriptionSuccessPage />} />
+                 <Route path="/subscription/cancel" element={<SubscriptionFailPage />} />
               </Route>
             </Route>
           </Route>

@@ -1,5 +1,16 @@
 {
   "nav": {
+    "subscription/cancel": "Payment Failed",
+    "subscription-fail-message": {
+      "desc": "Your payment could not be processed. Please check your details and try again.",
+      "help": "If the problem persists, contact support.",
+      "goToDashboard": "Go to Dashboard",
+      "retry": "Retry Payment",
+      "retrying": "Retrying...",
+      "retryError": "Could not retry payment. Please try again later.",
+      "here": "here",
+      "orContact": "or open a ticket "
+    },
     "dashboard": "Dashboard",
     "comparison": "Comparison",
     "users": "Users",
@@ -15,7 +26,9 @@
     "reports": "Reports",
     "faq": "FAQs",
     "subscriptions": "Subscriptions",
-    "plans": "Subscription Plans"
+    "plans": "Subscription Plans",
+    "subscription/success": "Subscription Successful"
+
   },
   "days": {
     "sunday": "Sunday",
@@ -773,5 +786,13 @@
       "skip": "Skip",
       "close": "Close"
     }
-  }
+  },
+  "subscription": {
+      "subscription/success": "Subscription Successful",
+      "subscription-success-message": {
+        "desc": "Your payment has been processed successfully and your subscription is active.",
+        "thanks": "Thank you for trusting LYNQ!",
+        "goToDashboard": "Go to Dashboard"
+    }
+    }
 }
