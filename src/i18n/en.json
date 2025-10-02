@@ -28,7 +28,8 @@
     "subscriptions": "Subscriptions",
     "plans": "Subscription Plans",
     "subscription/success": "Subscription Successful",
-    "subscriptions/customize": "Customized Plan"
+    "subscriptions/customize": "Customized Plan",
+    "subscription": "Subscription"
   },
   "days": {
     "sunday": "Sunday",
@@ -816,6 +817,15 @@
         "desc": "Your payment has been processed successfully and your subscription is active.",
         "thanks": "Thank you for trusting LYNQ!",
         "goToDashboard": "Go to Dashboard"
-    }
+    },
+    "cardTitle": "Choose Your Plan",
+    "pricePerSensor": "Price per Sensor",
+    "includesTax": "Includes Tax",
+    "sensorCount": "Number of Sensors",
+    "sensorCountError": "Must be between 1 and {{max}}",
+    "totalMonthly": "Total Monthly",
+    "redirecting": "Redirecting...",
+    "subscribe": "Subscribe",
+    "checkoutError": "Error initiating checkout: {{error}}"
     }
 }

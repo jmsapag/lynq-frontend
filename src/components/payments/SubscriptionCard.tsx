@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Card, CardBody, Button } from "@heroui/react";
 import { createStripeCheckoutSession } from "../../services/stripeCheckoutService";
 
@@ -18,22 +19,23 @@ export const SubscriptionCard = ({ businessId, basePriceCents, fareTax, currency
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
   const pricePerSensor = basePriceCents * (1 + fareTax);
   const totalPrice = pricePerSensor * sensorCount;
+  const { t } = useTranslation();
 
   return (
     <Card className="w-full max-w-sm shadow-lg border border-primary-200 rounded-xl bg-white flex flex-col justify-between">
       <CardBody className="p-6 flex flex-col gap-4">
         <div className="mb-2">
           <span className="block text-3xl font-extrabold text-primary-700 tracking-tight mb-1">
-            Suscripción LYNQ
+            {t('subscription.cardTitle')}
           </span>
         </div>
         <div className="flex flex-col gap-1">
-          <span className="text-sm text-gray-500">Precio por sensor</span>
+          <span className="text-sm text-gray-500">{t('subscription.pricePerSensor')}</span>
           <span className="text-2xl font-bold text-primary-700">{(pricePerSensor / 100).toFixed(2)} {currency}</span>
-          <span className="text-xs text-gray-400">Incluye impuestos</span>
+          <span className="text-xs text-gray-400">{t('subscription.includesTax')}</span>
         </div>
         <div className="flex items-center gap-3 mt-4">
-          <span className="text-sm text-gray-600">Cantidad de sensores</span>
+          <span className="text-sm text-gray-600">{t('subscription.sensorCount')}</span>
           <div className="flex items-center gap-2">
             <Button
               variant="bordered"
@@ -65,7 +67,7 @@ export const SubscriptionCard = ({ businessId, basePriceCents, fareTax, currency
                   } else {
                     const num = Number(val);
                     if (num < 1 || num > maxSensors) {
-                      setInputError(`Debe ser entre 1 y ${maxSensors}`);
+                      setInputError(t('subscription.sensorCountError', { max: maxSensors }));
                     } else {
                       setInputError(null);
                     }
@@ -96,7 +98,7 @@ export const SubscriptionCard = ({ businessId, basePriceCents, fareTax, currency
           </div>
         </div>
         <div className="flex flex-col gap-1 mt-2">
-          <span className="text-sm text-gray-500">Total mensual</span>
+          <span className="text-sm text-gray-500">{t('subscription.totalMonthly')}</span>
           <span className="text-3xl font-extrabold text-primary-600">{(totalPrice / 100).toFixed(2)} {currency}</span>
         </div>
         <Button
@@ -116,10 +118,10 @@ export const SubscriptionCard = ({ businessId, basePriceCents, fareTax, currency
             }
           }}
         >
-          {loading ? "Redirigiendo..." : "Suscribirme"}
+          {loading ? t('subscription.redirecting') : t('subscription.subscribe')}
         </Button>
         {checkoutError && (
-          <div className="text-danger-600 text-sm mt-2 text-center">{checkoutError}</div>
+          <div className="text-danger-600 text-sm mt-2 text-center">{t('subscription.checkoutError', { error: checkoutError })}</div>
         )}
       </CardBody>
     </Card>
