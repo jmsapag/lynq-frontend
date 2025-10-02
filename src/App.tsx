@@ -29,6 +29,7 @@ import FaqPage from "./pages/faq.tsx";
 import FreeTrialWrapper from "./pages/free-trial.tsx";
 import SubscriptionFeed from "./pages/subscription-feed.tsx";
 import PlanCreate from "./pages/plans.tsx";
+import PaymentError from "./pages/payment-error.tsx";
 import { TrialBanner } from "./components/trial/TrialBanner";
 import { useCompanySubscription } from "./hooks/payments/useCompanySubscription";
 import { useNavigate } from "react-router-dom";
@@ -99,6 +100,7 @@ function App() {
 
           <Route element={<PrivateRoute />}>
             <Route path="/home" element={<RoleRedirect />} />
+            <Route path="/payment/error" element={<PaymentError />} />
             <Route element={<AppLayoutWithState />}>
               <Route path="/overview" element={<Overview />} />
               <Route path="/dashboard" element={<Dashboard />} />

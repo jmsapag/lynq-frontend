@@ -763,5 +763,16 @@
       "next": "Siguiente",
       "skip": "Saltar tour"
     }
+  },
+  "payment": {
+    "error": {
+      "title": "Error en el Pago",
+      "cancelledTitle": "Pago Cancelado",
+      "cancelledByUser": "El proceso de pago fue cancelado. Puedes intentar de nuevo cuando quieras.",
+      "genericError": "Hubo un problema al procesar tu pago. Por favor, intenta de nuevo o contacta a soporte.",
+      "tryAgain": "Intentar de Nuevo",
+      "contactSupport": "Contactar Soporte",
+      "needHelp": "¿Necesitas ayuda? Nuestro equipo de soporte está aquí para ayudarte."
+    }
   }
 }
