@@ -125,7 +125,7 @@ export default function BillingPage() {
     () =>
       new Intl.NumberFormat(i18n.language || "en", {
         style: "currency",
-        currency: "USD",
+        currency: "EUR",
         maximumFractionDigits: 2,
       }),
     [i18n.language],
@@ -227,11 +227,15 @@ export default function BillingPage() {
 
   const periodStart = subscription.currentPeriodStart
     ? formatDate(subscription.currentPeriodStart)
-    : t("billing.notAvailable");
+    : subscription.trialPeriodStart
+      ? formatDate(subscription.trialPeriodStart)
+      : t("billing.notAvailable");
 
   const periodEnd = subscription.currentPeriodEnd
     ? formatDate(subscription.currentPeriodEnd)
-    : t("billing.notAvailable");
+    : subscription.trialPeriodEnd
+      ? formatDate(subscription.trialPeriodEnd)
+      : t("billing.notAvailable");
 
   const summaryNextHelper = subscription.currentPeriodEnd
     ? t("billing.summary.nextBillingHelper")
@@ -320,7 +324,7 @@ export default function BillingPage() {
         </Card>
       )}
 
-      <Card className="overflow-hidden border border-primary-100 bg-gradient-to-br from-primary-50/80 via-white to-white shadow-md">
+      <Card className="overflow-hidden border border-primary-100 shadow-none">
         <CardBody className="p-6 md:p-8">
           <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
             <div className="space-y-4">
@@ -353,13 +357,13 @@ export default function BillingPage() {
               <span className="text-sm text-gray-500">
                 {t("billing.summary.amountLabel")}
               </span>
-              <span className="text-3xl font-bold text-primary-700">
+              <span className="text-3xl font-bold text-foreground">
                 {formattedDisplayedAmount}
               </span>
               <p className="text-xs text-gray-500">{t("billing.preTax")}</p>
               <Button
                 color="primary"
-                variant="shadow"
+                variant="solid"
                 onPress={handleCreateSubscription}
               >
                 {manageButtonLabel}
@@ -391,7 +395,7 @@ export default function BillingPage() {
       </Card>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card className="border border-gray-200 shadow-sm">
+        <Card className="border border-gray-200 shadow-none">
           <CardHeader className="flex flex-col gap-2 p-6">
             <h2 className="text-xl font-semibold">
               {t("billing.subscriptionDetails")}
@@ -485,7 +489,7 @@ export default function BillingPage() {
                     return (
                       <div
                         key={`${tier.up_to ?? "infinity"}-${index}`}
-                        className="flex items-center justify-between rounded-xl border border-primary-100 bg-primary-50/60 p-4"
+                        className="flex animate-all duration-300 items-center justify-between rounded-xl  border border-primary-100 p-4"
                       >
                         <div>
                           <span className="text-xs font-semibold uppercase tracking-wide text-primary-600">
@@ -494,7 +498,7 @@ export default function BillingPage() {
                           <p className="text-sm text-gray-600">{rangeLabel}</p>
                         </div>
                         <div className="text-right">
-                          <p className="text-base font-semibold text-primary-700">
+                          <p className="text-base font-semibold text-foreground ">
                             {pricePerUnit}
                             {t("billing.perSensor")}
                           </p>
