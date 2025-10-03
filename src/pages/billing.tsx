@@ -57,23 +57,20 @@ const calculateTieredPrice = (
 
   // Handle tiered/graduated billing
   if (pricing.billingScheme === "tiered" && pricing.tiers) {
-    let total = 0;
-    let remaining = sensorQty;
+    // this is volume pricing, so find the tier that matches the current sensorQty
+    const currentTier = pricing.tiers.find((tier) => {
+      const prevTierIndex = pricing.tiers!.indexOf(tier) - 1;
+      const prevLimit =
+        prevTierIndex >= 0 ? pricing.tiers![prevTierIndex].up_to || 0 : 0;
+      return (
+        sensorQty > prevLimit &&
+        (tier.up_to === null || sensorQty <= tier.up_to)
+      );
+    });
 
-    for (let i = 0; i < pricing.tiers.length; i++) {
-      const tier = pricing.tiers[i];
-      const prevLimit = i === 0 ? 0 : pricing.tiers[i - 1].up_to || 0;
-      const currentLimit = tier.up_to || Infinity;
-      const tierSize = currentLimit - prevLimit;
-
-      if (remaining <= 0) break;
-
-      const unitsInTier = Math.min(remaining, tierSize);
-      total += (unitsInTier * tier.unit_amount) / 100;
-      remaining -= unitsInTier;
+    if (currentTier) {
+      return (currentTier.unit_amount * sensorQty) / 100;
     }
-
-    return total;
   }
 
   return 0;

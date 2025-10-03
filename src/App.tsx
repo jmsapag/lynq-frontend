@@ -7,7 +7,7 @@ import UsersPage from "./pages/profile.tsx";
 import DevicesPage from "./pages/devices";
 import { Footer } from "./components/navigation/footer/footer.tsx";
 import HelpPage from "./pages/help.tsx";
-import { HeroUIProvider } from "@heroui/react";
+import { HeroUIProvider, ToastProvider } from "@heroui/react";
 import Comparison from "./pages/comparison.tsx";
 import { PrivateRoute } from "./components/auth/privateRoutes.tsx";
 import Landing from "./pages/landing.tsx";
@@ -85,6 +85,7 @@ function App() {
 
   return (
     <HeroUIProvider>
+      <ToastProvider placement="bottom-right" />
       <BrowserRouter basename={basename}>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
