@@ -28,8 +28,79 @@
     "subscriptions": "Suscripciones",
     "plans": "Planes de Subscripción",
     "subscriptions/customize": "Personalizar Subscripción",
-    "subscription": "Suscripción"
-
+    "subscription": "Suscripción",
+    "billing": "Facturación"
+  },
+  "billing": {
+    "title": "Facturación",
+    "subtitle": "Controla el estado de pago, la tarifa y el uso de sensores desde un solo lugar.",
+    "summaryTitle": "Resumen de facturación",
+    "summarySubtitle": "Mantén tus pagos y próximos cobros bajo control.",
+    "summaryDescription": "Revisa el ciclo actual, el uso de sensores y el próximo monto a pagar.",
+    "errorLoading": "No pudimos cargar los detalles de tu suscripción en este momento.",
+    "retry": "Intentar nuevamente",
+    "noSubscription": "Aún no tienes una suscripción activa.",
+    "createSubscription": "Crear suscripción",
+    "manageSubscription": "Actualizar datos de pago",
+    "subscriptionDetails": "Detalles de la suscripción",
+    "detailsDescription": "Información clave de tu suscripción y del período de facturación actual.",
+    "subscriptionId": "ID de suscripción",
+    "monthlyAmount": "Monto mensual",
+    "monthlyAmountHint": "Monto base devuelto por Stripe.",
+    "calculatedPrice": "Precio calculado",
+    "calculatedPriceHint": "Calculado dinámicamente según la configuración de niveles antes de impuestos.",
+    "preTax": "(antes de impuestos)",
+    "sensorQuantity": "Cantidad de sensores",
+    "currentPeriodStart": "Inicio del período actual",
+    "currentPeriodEnd": "Fin del período actual",
+    "cancelAtPeriodEnd": "Cancelar al final del período",
+    "cancelAtPeriodEndHelper": "Esta suscripción finalizará al cierre del período actual.",
+    "cancelAtPeriodEndActive": "La suscripción se renovará automáticamente.",
+    "yes": "Sí",
+    "no": "No",
+    "notAvailable": "No disponible",
+    "pastDueWarning": {
+      "title": "Pago vencido",
+      "description": "No pudimos cobrar el pago de este mes. Todavía tienes acceso completo, pero actualiza tus datos de facturación ahora para evitar perder acceso el próximo mes."
+    },
+    "unpaidWarning": {
+      "title": "Acceso limitado",
+      "description": "Tu suscripción está impaga y el acceso está restringido. Actualiza tu método de pago para restablecerlo. Si no tomas acción, la suscripción se cancelará y tus datos se eliminarán."
+    },
+    "reactivateSubscription": "Reactivar suscripción",
+    "reactivateDescription": "Tu plan anterior fue cancelado. Inicia una nueva suscripción para recuperar el acceso antes de que tus datos se eliminen de forma permanente.",
+    "createNewSubscription": "Crear nueva suscripción",
+    "status": {
+      "active": "Activa",
+      "past_due": "Pago vencido",
+      "unpaid": "Impaga",
+      "canceled": "Cancelada",
+      "incomplete": "Incompleta",
+      "incomplete_expired": "Incompleta (expirada)",
+      "trialing": "Período de prueba",
+      "paused": "Pausada",
+      "none": "Sin suscripción"
+    },
+    "summary": {
+      "amountLabel": "Total mensual estimado",
+      "sensorsLabel": "Sensores en el plan",
+      "nextBilling": "El ciclo actual finaliza",
+      "nextBillingHelper": "Intentaremos el próximo cobro en esta fecha.",
+      "sensorHelper": "{{count}} sensores considerados en esta estimación.",
+      "statusLabel": "Estado"
+    },
+    "pricingModel": "Modelo de precios",
+    "pricingHint": "Los cargos se ajustan automáticamente a medida que los sensores cambian de nivel.",
+    "tierRange": "{{from}} a {{to}} sensores",
+    "tierUnlimited": "{{from}}+ sensores",
+    "tierLabel": "Nivel {{index}}",
+    "perSensor": "/sensor",
+    "schemeLabel": {
+      "tiered": "Precio por niveles",
+      "per_unit": "Por unidad",
+      "graduated": "Precio graduado"
+    },
+    "pricingEmpty": "Aún no hay información de niveles disponible."
   },
   "subscription": {
     "subscription-success-message": {
