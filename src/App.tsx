@@ -28,7 +28,9 @@ import ReportsPage from "./pages/reports.tsx";
 import FaqPage from "./pages/faq.tsx";
 import FreeTrialWrapper from "./pages/free-trial.tsx";
 import SubscriptionFeed from "./pages/subscription-feed.tsx";
-import PlanCreate from "./pages/plans.tsx";
+import SubscriptionPage from "./pages/subscription";
+import SubscriptionSuccessPage from "./pages/subscription-success";
+import SubscriptionFailPage from "./pages/subscription-fail";
 import { TrialBanner } from "./components/trial/TrialBanner";
 import { useCompanySubscription } from "./hooks/payments/useCompanySubscription";
 import { useNavigate } from "react-router-dom";
@@ -123,19 +125,20 @@ function App() {
                   element={<ConnectionsPageWrapper />}
                 />
                 <Route path="manage/users" element={<ManageUsersPage />} />
-                <Route path="plans" element={<PlanCreate />} />
               </Route>
 
               {/* ADMIN only routes */}
               <Route element={<RoleRoute allowedRoles="ADMIN" />}>
                 <Route path="user-management" element={<UserManagement />} />
                 <Route path="locations" element={<Locations />} />
+                <Route path="/subscription" element={<SubscriptionPage />} />
+                <Route path="/subscription/success" element={<SubscriptionSuccessPage />} />
+                 <Route path="/subscription/cancel" element={<SubscriptionFailPage />} />
               </Route>
             </Route>
           </Route>
         </Routes>
       </BrowserRouter>
-      <ToastProvider />
     </HeroUIProvider>
   );
 }

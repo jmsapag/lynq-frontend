@@ -1,5 +1,17 @@
 {
   "nav": {
+    "subscription/cancel": "Pago fallido",
+    "subscription-fail-message": {
+      "desc": "Tu pago no pudo ser procesado. Por favor, revisa tus datos e intenta nuevamente.",
+      "help": "Si el problema persiste, contacta a soporte",
+      "goToDashboard": "Ir al Tablero",
+      "retry": "Reintentar pago",
+      "retrying": "Reintentando...",
+      "retryError": "No se pudo reintentar el pago. Intenta nuevamente más tarde.",
+      "here": "aquí",
+      "orContact": "o abre un ticket "
+    },
+    "subscription/success": "Suscripción exitosa",
     "dashboard": "Tablero",
     "users": "Usuarios",
     "comparison": "Comparación",
@@ -14,8 +26,27 @@
     "reports": "Reportes",
     "faq": "FAQs",
     "subscriptions": "Suscripciones",
-    "plans": "Planes de Subscripcion",
-    "subscriptions/customize": "Personalizar Subscripcion"
+    "plans": "Planes de Subscripción",
+    "subscriptions/customize": "Personalizar Subscripción",
+    "subscription": "Suscripción"
+
+  },
+  "subscription": {
+    "subscription-success-message": {
+      "desc": "Tu pago fue procesado correctamente y tu suscripción está activa.",
+      "thanks": "¡Gracias por tu confiar en LYNQ!",
+      "goToDashboard": "Ir al Tablero"
+    },
+    "subscription/success": "Suscripción exitosa",
+    "cardTitle": "Arma tu plan",
+    "pricePerSensor": "Precio por sensor",
+    "includesTax": "Incluye impuestos",
+    "sensorCount": "Cantidad de sensores",
+    "sensorCountError": "Debe ser entre 1 y {{max}}",
+    "totalMonthly": "Total mensual",
+    "redirecting": "Redirigiendo...",
+    "subscribe": "Suscribirme",
+    "checkoutError": "Error al iniciar checkout: {{error}}"
   },
   "days": {
     "sunday": "Domingo",
