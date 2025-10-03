@@ -114,7 +114,7 @@ const CustomizedPlan: React.FC = () => {
 
   return (
     <div className="max-w-2xl mx-auto">
-      <Card className="border-0 shadow-none bg-white border border-gray-200">
+      <Card className="border shadow-none bg-white  border-gray-200">
         <CardBody className="p-6">
           <div className="mb-6">
             <h1 className="text-2xl font-semibold text-gray-800 mb-2">

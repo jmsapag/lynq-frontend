@@ -1,4 +1,3 @@
-
 import { SubscriptionCard } from "../components/payments/SubscriptionCard";
 import { getBusinessIdFromToken } from "../hooks/auth/useAuth";
 

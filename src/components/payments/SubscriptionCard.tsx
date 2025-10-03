@@ -11,9 +11,15 @@ interface SubscriptionCardProps {
   maxSensors?: number;
 }
 
-export const SubscriptionCard = ({ businessId, basePriceCents, fareTax, currency, maxSensors = 100 }: SubscriptionCardProps) => {
+export const SubscriptionCard = ({
+  businessId,
+  basePriceCents,
+  fareTax,
+  currency,
+  maxSensors = 100,
+}: SubscriptionCardProps) => {
   const [sensorCount, setSensorCount] = useState(1);
-  const [inputValue, setInputValue] = useState('1');
+  const [inputValue, setInputValue] = useState("1");
   const [inputError, setInputError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
@@ -26,16 +32,24 @@ export const SubscriptionCard = ({ businessId, basePriceCents, fareTax, currency
       <CardBody className="p-6 flex flex-col gap-4">
         <div className="mb-2">
           <span className="block text-3xl font-extrabold text-primary-700 tracking-tight mb-1">
-            {t('subscription.cardTitle')}
+            {t("subscription.cardTitle")}
           </span>
         </div>
         <div className="flex flex-col gap-1">
-          <span className="text-sm text-gray-500">{t('subscription.pricePerSensor')}</span>
-          <span className="text-2xl font-bold text-primary-700">{(pricePerSensor / 100).toFixed(2)} {currency}</span>
-          <span className="text-xs text-gray-400">{t('subscription.includesTax')}</span>
+          <span className="text-sm text-gray-500">
+            {t("subscription.pricePerSensor")}
+          </span>
+          <span className="text-2xl font-bold text-primary-700">
+            {(pricePerSensor / 100).toFixed(2)} {currency}
+          </span>
+          <span className="text-xs text-gray-400">
+            {t("subscription.includesTax")}
+          </span>
         </div>
         <div className="flex items-center gap-3 mt-4">
-          <span className="text-sm text-gray-600">{t('subscription.sensorCount')}</span>
+          <span className="text-sm text-gray-600">
+            {t("subscription.sensorCount")}
+          </span>
           <div className="flex items-center gap-2">
             <Button
               variant="bordered"
@@ -59,7 +73,7 @@ export const SubscriptionCard = ({ businessId, basePriceCents, fareTax, currency
                 min={1}
                 max={maxSensors}
                 value={inputValue}
-                onChange={e => {
+                onChange={(e) => {
                   const val = e.target.value.replace(/[^0-9]/g, "");
                   setInputValue(val);
                   if (val === "") {
@@ -67,18 +81,23 @@ export const SubscriptionCard = ({ businessId, basePriceCents, fareTax, currency
                   } else {
                     const num = Number(val);
                     if (num < 1 || num > maxSensors) {
-                      setInputError(t('subscription.sensorCountError', { max: maxSensors }));
+                      setInputError(
+                        t("subscription.sensorCountError", { max: maxSensors }),
+                      );
                     } else {
                       setInputError(null);
                     }
                     setSensorCount(Math.max(1, Math.min(maxSensors, num)));
                   }
                 }}
-                className={`w-full text-center text-lg font-semibold text-primary-700 bg-primary-50 rounded-md border py-1 focus:outline-none focus:ring-2 focus:ring-primary-300 appearance-none ${inputError ? 'border-danger-500 ring-danger-300' : 'border-primary-200'}`}
-                style={{ MozAppearance: 'textfield' }}
+                className={`w-full text-center text-lg font-semibold text-primary-700 bg-primary-50 rounded-md border py-1 focus:outline-none focus:ring-2 focus:ring-primary-300 appearance-none ${inputError ? "border-danger-500 ring-danger-300" : "border-primary-200"}`}
+                style={{ MozAppearance: "textfield" }}
               />
-              <span className="block text-xs text-danger-600 h-4 mt-1 pointer-events-none select-none absolute left-0 right-0 top-full" style={{ minHeight: '1rem', height: '1rem' }}>
-                {inputError ? inputError : ''}
+              <span
+                className="block text-xs text-danger-600 h-4 mt-1 pointer-events-none select-none absolute left-0 right-0 top-full"
+                style={{ minHeight: "1rem", height: "1rem" }}
+              >
+                {inputError ? inputError : ""}
               </span>
             </div>
             <Button
@@ -98,8 +117,12 @@ export const SubscriptionCard = ({ businessId, basePriceCents, fareTax, currency
           </div>
         </div>
         <div className="flex flex-col gap-1 mt-2">
-          <span className="text-sm text-gray-500">{t('subscription.totalMonthly')}</span>
-          <span className="text-3xl font-extrabold text-primary-600">{(totalPrice / 100).toFixed(2)} {currency}</span>
+          <span className="text-sm text-gray-500">
+            {t("subscription.totalMonthly")}
+          </span>
+          <span className="text-3xl font-extrabold text-primary-600">
+            {(totalPrice / 100).toFixed(2)} {currency}
+          </span>
         </div>
         <Button
           color="primary"
@@ -112,16 +135,22 @@ export const SubscriptionCard = ({ businessId, basePriceCents, fareTax, currency
               const res = await createStripeCheckoutSession(businessId);
               window.location.href = res.url;
             } catch (e: any) {
-              setCheckoutError(e?.response?.data?.message || "Error al iniciar checkout");
+              setCheckoutError(
+                e?.response?.data?.message || "Error al iniciar checkout",
+              );
             } finally {
               setLoading(false);
             }
           }}
         >
-          {loading ? t('subscription.redirecting') : t('subscription.subscribe')}
+          {loading
+            ? t("subscription.redirecting")
+            : t("subscription.subscribe")}
         </Button>
         {checkoutError && (
-          <div className="text-danger-600 text-sm mt-2 text-center">{t('subscription.checkoutError', { error: checkoutError })}</div>
+          <div className="text-danger-600 text-sm mt-2 text-center">
+            {t("subscription.checkoutError", { error: checkoutError })}
+          </div>
         )}
       </CardBody>
     </Card>

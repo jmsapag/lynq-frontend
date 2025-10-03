@@ -8,7 +8,6 @@ import DevicesPage from "./pages/devices";
 import { Footer } from "./components/navigation/footer/footer.tsx";
 import HelpPage from "./pages/help.tsx";
 import { HeroUIProvider } from "@heroui/react";
-import { ToastProvider } from "@heroui/toast";
 import Comparison from "./pages/comparison.tsx";
 import { PrivateRoute } from "./components/auth/privateRoutes.tsx";
 import Landing from "./pages/landing.tsx";
@@ -35,6 +34,7 @@ import { TrialBanner } from "./components/trial/TrialBanner";
 import { useCompanySubscription } from "./hooks/payments/useCompanySubscription";
 import { useNavigate } from "react-router-dom";
 import CustomizedPlan from "./pages/customized-plan.tsx";
+import BillingPage from "./pages/billing";
 
 function AppLayoutWithState() {
   const {
@@ -131,9 +131,16 @@ function App() {
               <Route element={<RoleRoute allowedRoles="ADMIN" />}>
                 <Route path="user-management" element={<UserManagement />} />
                 <Route path="locations" element={<Locations />} />
+                <Route path="/billing" element={<BillingPage />} />
                 <Route path="/subscription" element={<SubscriptionPage />} />
-                <Route path="/subscription/success" element={<SubscriptionSuccessPage />} />
-                 <Route path="/subscription/cancel" element={<SubscriptionFailPage />} />
+                <Route
+                  path="/subscription/success"
+                  element={<SubscriptionSuccessPage />}
+                />
+                <Route
+                  path="/subscription/cancel"
+                  element={<SubscriptionFailPage />}
+                />
               </Route>
             </Route>
           </Route>

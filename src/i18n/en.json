@@ -29,7 +29,79 @@
     "plans": "Subscription Plans",
     "subscription/success": "Subscription Successful",
     "subscriptions/customize": "Customized Plan",
-    "subscription": "Subscription"
+    "subscription": "Subscription",
+    "billing": "Billing"
+  },
+  "billing": {
+    "title": "Billing",
+    "subtitle": "Track your payment status, pricing, and sensor usage in one place.",
+    "summaryTitle": "Billing overview",
+    "summarySubtitle": "Stay on top of your plan and upcoming invoices.",
+    "summaryDescription": "Review the current cycle, sensor usage, and what you'll pay next.",
+    "errorLoading": "We couldn't load your subscription details right now.",
+    "retry": "Try again",
+    "noSubscription": "You don't have an active subscription yet.",
+    "createSubscription": "Create subscription",
+    "manageSubscription": "Update payment details",
+    "subscriptionDetails": "Subscription details",
+    "detailsDescription": "Key information about your current subscription and billing cycle.",
+    "subscriptionId": "Subscription ID",
+    "monthlyAmount": "Monthly amount",
+    "monthlyAmountHint": "Baseline amount returned by Stripe.",
+    "calculatedPrice": "Calculated price",
+    "calculatedPriceHint": "Dynamically calculated from your tier configuration before tax.",
+    "preTax": "(before tax)",
+    "sensorQuantity": "Sensor quantity",
+    "currentPeriodStart": "Current period start",
+    "currentPeriodEnd": "Current period end",
+    "cancelAtPeriodEnd": "Cancel at period end",
+    "cancelAtPeriodEndHelper": "This subscription is scheduled to end at the close of the current period.",
+    "cancelAtPeriodEndActive": "This subscription will renew automatically.",
+    "yes": "Yes",
+    "no": "No",
+    "notAvailable": "Not available",
+    "pastDueWarning": {
+      "title": "Payment overdue",
+      "description": "We couldn't collect this month's payment. You're still fully active, but please update your billing information now to avoid losing access next month."
+    },
+    "unpaidWarning": {
+      "title": "Account access limited",
+      "description": "Your subscription is unpaid and access is restricted. Update your payment method to restore access. If no action is taken, the subscription will be canceled and your data will be removed."
+    },
+    "reactivateSubscription": "Reactivate subscription",
+    "reactivateDescription": "Your previous plan was canceled. Start a new subscription to regain full access before your data is removed permanently.",
+    "createNewSubscription": "Create subscription",
+    "status": {
+      "active": "Active",
+      "past_due": "Past due",
+      "unpaid": "Unpaid",
+      "canceled": "Canceled",
+      "incomplete": "Incomplete",
+      "incomplete_expired": "Incomplete (expired)",
+      "trialing": "Trialing",
+      "paused": "Paused",
+      "none": "No subscription"
+    },
+    "summary": {
+      "amountLabel": "Estimated monthly total",
+      "sensorsLabel": "Sensors in plan",
+      "nextBilling": "Current cycle ends",
+      "nextBillingHelper": "We'll attempt the next charge on this date.",
+      "sensorHelper": "{{count}} sensors counted in this estimate.",
+      "statusLabel": "Status"
+    },
+    "pricingModel": "Pricing model",
+    "pricingHint": "Charges adjust automatically as sensors move between tiers.",
+    "tierRange": "{{from}} to {{to}} sensors",
+    "tierUnlimited": "{{from}}+ sensors",
+    "tierLabel": "Tier {{index}}",
+    "perSensor": "/sensor",
+    "schemeLabel": {
+      "tiered": "Tiered pricing",
+      "per_unit": "Per unit",
+      "graduated": "Graduated pricing"
+    },
+    "pricingEmpty": "No tier information is available yet."
   },
   "days": {
     "sunday": "Sunday",
@@ -812,11 +884,11 @@
     }
   },
   "subscription": {
-      "subscription/success": "Subscription Successful",
-      "subscription-success-message": {
-        "desc": "Your payment has been processed successfully and your subscription is active.",
-        "thanks": "Thank you for trusting LYNQ!",
-        "goToDashboard": "Go to Dashboard"
+    "subscription/success": "Subscription Successful",
+    "subscription-success-message": {
+      "desc": "Your payment has been processed successfully and your subscription is active.",
+      "thanks": "Thank you for trusting LYNQ!",
+      "goToDashboard": "Go to Dashboard"
     },
     "cardTitle": "Choose Your Plan",
     "pricePerSensor": "Price per Sensor",
@@ -827,5 +899,5 @@
     "redirecting": "Redirecting...",
     "subscribe": "Subscribe",
     "checkoutError": "Error initiating checkout: {{error}}"
-    }
+  }
 }

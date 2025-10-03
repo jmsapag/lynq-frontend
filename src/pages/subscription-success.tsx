@@ -1,5 +1,4 @@
-
-import { CheckCircleIcon } from '@heroicons/react/24/solid';
+import { CheckCircleIcon } from "@heroicons/react/24/solid";
 import { Button } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -25,7 +24,9 @@ export default function SubscriptionSuccessPage() {
         color="primary"
         className="px-8 py-3 text-lg font-semibold shadow-md bg-blue-600 hover:bg-success-700 text-white border-none"
         onPress={() => navigate("/dashboard")}
-        aria-label={t("subscription.subscription-success-message.goToDashboard")}
+        aria-label={t(
+          "subscription.subscription-success-message.goToDashboard",
+        )}
       >
         {t("subscription.subscription-success-message.goToDashboard")}
       </Button>

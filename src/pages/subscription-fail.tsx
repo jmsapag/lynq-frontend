@@ -1,4 +1,4 @@
-import { ExclamationCircleIcon } from '@heroicons/react/24/solid';
+import { ExclamationCircleIcon } from "@heroicons/react/24/solid";
 import { Button } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -22,7 +22,12 @@ export default function SubscriptionFailPage() {
       window.location.href = res.url;
     } catch (err) {
       setRetrying(false);
-      setErrorMsg(t("nav.subscription-fail-message.retryError", "No se pudo reintentar el pago. Intenta nuevamente más tarde."));
+      setErrorMsg(
+        t(
+          "nav.subscription-fail-message.retryError",
+          "No se pudo reintentar el pago. Intenta nuevamente más tarde.",
+        ),
+      );
     }
   }, [businessId, t]);
 
@@ -34,20 +39,29 @@ export default function SubscriptionFailPage() {
       </h1>
       <div className="w-full max-w-xl">
         <p className="text-lg text-error-800 mb-6 text-center">
-          {t("nav.subscription-fail-message.desc", "Tu pago no pudo ser procesado. Por favor, revisa tus datos e intenta nuevamente.")}
+          {t(
+            "nav.subscription-fail-message.desc",
+            "Tu pago no pudo ser procesado. Por favor, revisa tus datos e intenta nuevamente.",
+          )}
         </p>
         <p className="text-base text-error-500 mb-10 text-center">
-          {t("nav.subscription-fail-message.help", "Si el problema persiste, contacta a soporte")}
-          {" "}
+          {t(
+            "nav.subscription-fail-message.help",
+            "Si el problema persiste, contacta a soporte",
+          )}{" "}
           <span>
-            {t("nav.subscription-fail-message.orContact", "o contacta soporte ")}
+            {t(
+              "nav.subscription-fail-message.orContact",
+              "o contacta soporte ",
+            )}
             <a
               href="/help"
               className="text-blue-700 underline hover:text-blue-900"
               style={{ marginLeft: 2 }}
             >
               {t("nav.subscription-fail-message.here", "aquí")}
-            </a>.
+            </a>
+            .
           </span>
         </p>
       </div>
@@ -56,7 +70,10 @@ export default function SubscriptionFailPage() {
           color="primary"
           className="px-8 py-3 text-lg font-semibold shadow-md bg-blue-600 hover:bg-blue-700 text-white border-none"
           onPress={() => navigate("/dashboard")}
-          aria-label={t("nav.subscription-fail-message.goToDashboard", "Ir al dashboard")}
+          aria-label={t(
+            "nav.subscription-fail-message.goToDashboard",
+            "Ir al dashboard",
+          )}
         >
           {t("nav.subscription-fail-message.goToDashboard", "Ir al dashboard")}
         </Button>
@@ -64,7 +81,10 @@ export default function SubscriptionFailPage() {
           color="primary"
           className="px-8 py-3 text-lg font-semibold shadow-md bg-error-500 hover:bg-error-700 text-black border-none"
           onPress={handleRetry}
-          aria-label={t("nav.subscription-fail-message.retry", "Reintentar pago")}
+          aria-label={t(
+            "nav.subscription-fail-message.retry",
+            "Reintentar pago",
+          )}
           isDisabled={retrying}
         >
           {retrying
