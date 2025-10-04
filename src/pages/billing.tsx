@@ -17,13 +17,20 @@ import {
   SignalIcon,
   ClockIcon,
 } from "@heroicons/react/24/outline";
-import { getSubscriptionStatus } from "../services/subscriptionService";
+import {
+  getSubscriptionStatus,
+  getManualSubscription,
+} from "../services/subscriptionService";
 import {
   GetSubscriptionResponse,
   SubscriptionStatus,
   PricingInfo,
+  ManualSubscriptionResponse,
+  ManualSubscriptionStatus,
 } from "../types/subscription";
 import { useNavigate } from "react-router-dom";
+import InvoiceUpload from "../components/payments/InvoiceUpload";
+import { getBusinessIdFromToken } from "../hooks/auth/useAuth";
 
 const getStatusColor = (status: SubscriptionStatus) => {
   switch (status) {
@@ -39,6 +46,21 @@ const getStatusColor = (status: SubscriptionStatus) => {
       return "danger";
     case "paused":
       return "default";
+    default:
+      return "default";
+  }
+};
+
+const getManualStatusColor = (status: ManualSubscriptionStatus) => {
+  switch (status) {
+    case "active":
+      return "success";
+    case "pending_approval":
+      return "warning";
+    case "payment_due":
+      return "default";
+    case "blocked":
+      return "danger";
     default:
       return "default";
   }
@@ -99,27 +121,46 @@ const InfoRow = ({ icon: Icon, label, value, helper }: InfoRowProps) => (
 export default function BillingPage() {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
+  const businessId = getBusinessIdFromToken();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [subscription, setSubscription] =
     useState<GetSubscriptionResponse | null>(null);
+  const [manualSubscription, setManualSubscription] =
+    useState<ManualSubscriptionResponse | null>(null);
+
+  const fetchData = async () => {
+    if (!businessId) return;
+
+    try {
+      setLoading(true);
+      setError(null);
+
+      // Try to fetch manual subscription first
+      try {
+        const manualData = await getManualSubscription(Number(businessId));
+        setManualSubscription(manualData);
+        setSubscription(null); // Manual subscription takes precedence
+      } catch (manualErr: any) {
+        // If no manual subscription (404), try Stripe
+        if (manualErr?.response?.status === 404) {
+          const stripeData = await getSubscriptionStatus();
+          setSubscription(stripeData);
+          setManualSubscription(null);
+        } else {
+          throw manualErr;
+        }
+      }
+    } catch (err: any) {
+      setError(err?.response?.data?.message || t("billing.errorLoading"));
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchSubscription = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const data = await getSubscriptionStatus();
-        setSubscription(data);
-      } catch (err: any) {
-        setError(err?.response?.data?.message || t("billing.errorLoading"));
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchSubscription();
-  }, [t]);
+    fetchData();
+  }, [t, businessId]);
 
   const currencyFormatter = useMemo(
     () =>
@@ -163,6 +204,122 @@ export default function BillingPage() {
         <Button color="primary" onPress={() => window.location.reload()}>
           {t("billing.retry")}
         </Button>
+      </div>
+    );
+  }
+
+  // Render manual subscription view
+  if (manualSubscription && businessId) {
+    const formatDate = (dateString: string | null) => {
+      if (!dateString) return t("billing.notAvailable");
+      const date = new Date(dateString);
+      if (Number.isNaN(date.getTime())) return t("billing.notAvailable");
+      return dateFormatter.format(date);
+    };
+
+    const statusValue = t(`billing.manualStatus.${manualSubscription.status}`);
+    const formattedAmount = currencyFormatter.format(
+      manualSubscription.priceAmount,
+    );
+
+    return (
+      <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-6 sm:px-6 lg:px-0">
+        <div className="space-y-2">
+          <h1 className="text-3xl font-bold">{t("billing.title")}</h1>
+          <p className="text-base text-gray-500">
+            {t("billing.manualSubscriptionSubtitle")}
+          </p>
+        </div>
+
+        {manualSubscription.status === "blocked" && (
+          <Card className="border-2 border-danger-400/70 bg-danger-50 shadow-sm">
+            <CardBody className="p-6">
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold text-danger-700">
+                  {t("billing.blockedWarning.title")}
+                </h3>
+                <p className="mt-2 text-sm text-danger-700">
+                  {t("billing.blockedWarning.description")}
+                </p>
+              </div>
+            </CardBody>
+          </Card>
+        )}
+
+        {manualSubscription.status === "payment_due" && (
+          <Card className="border-2 border-warning-400/70 bg-warning-50 shadow-sm">
+            <CardBody className="p-6">
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold text-warning-700">
+                  {t("billing.paymentDueWarning.title")}
+                </h3>
+                <p className="mt-2 text-sm text-warning-700">
+                  {t("billing.paymentDueWarning.description")}
+                </p>
+              </div>
+            </CardBody>
+          </Card>
+        )}
+
+        <Card className="overflow-hidden border border-primary-100 shadow-none">
+          <CardBody className="p-6 md:p-8">
+            <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+              <div className="space-y-4">
+                <div className="flex flex-wrap items-center gap-2">
+                  <Chip
+                    color={getManualStatusColor(manualSubscription.status)}
+                    variant="flat"
+                  >
+                    {statusValue}
+                  </Chip>
+                  <Chip color="primary" variant="flat">
+                    {t("billing.manualAgreement")}
+                  </Chip>
+                </div>
+                <div className="space-y-2">
+                  <p className="text-xs uppercase tracking-[0.3em] text-primary-600">
+                    {t("billing.summaryTitle")}
+                  </p>
+                  <h2 className="text-2xl font-semibold text-gray-900">
+                    {t("billing.manualSummarySubtitle")}
+                  </h2>
+                  <p className="text-sm text-gray-500">
+                    {t("billing.manualSummaryDescription")}
+                  </p>
+                </div>
+              </div>
+              <div className="flex flex-col items-start gap-2 md:items-end">
+                <span className="text-sm text-gray-500">
+                  {t("billing.summary.amountLabel")}
+                </span>
+                <span className="text-3xl font-bold text-foreground">
+                  {formattedAmount}
+                </span>
+                <p className="text-xs text-gray-500">{t("billing.preTax")}</p>
+              </div>
+            </div>
+
+            <div className="mt-6 grid gap-4 md:grid-cols-2">
+              <InfoRow
+                icon={CalendarDaysIcon}
+                label={t("billing.manual.nextPaymentDate")}
+                value={formatDate(manualSubscription.nextExpirationDate)}
+              />
+              <InfoRow
+                icon={ShieldCheckIcon}
+                label={t("billing.summary.statusLabel")}
+                value={statusValue}
+              />
+            </div>
+          </CardBody>
+        </Card>
+
+        <InvoiceUpload
+          businessId={Number(businessId)}
+          currentInvoiceFileName={manualSubscription.invoiceFileName}
+          currentInvoiceUploadedAt={manualSubscription.invoiceUploadedAt}
+          onUploadSuccess={fetchData}
+        />
       </div>
     );
   }

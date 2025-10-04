@@ -45,3 +45,25 @@ export interface NoSubscriptionResponse {
 export type GetSubscriptionResponse =
   | SubscriptionStatusResponse
   | NoSubscriptionResponse;
+
+// Manual subscription statuses
+export type ManualSubscriptionStatus =
+  | "payment_due" // Default - awaiting payment/invoice
+  | "pending_approval" // Invoice uploaded, awaiting approval
+  | "active" // Approved and active
+  | "blocked"; // Blocked/suspended by admin
+
+export interface ManualSubscriptionResponse {
+  id: number;
+  businessId: number;
+  priceAmount: number;
+  status: ManualSubscriptionStatus;
+  nextExpirationDate: string | null;
+  invoiceFileName: string | null;
+  invoiceMimeType: string | null;
+  invoiceUploadedAt: string | null;
+  invoiceApprovedAt: string | null;
+  invoiceApprovedBy: number | null;
+  createdAt: string;
+  updatedAt: string;
+}

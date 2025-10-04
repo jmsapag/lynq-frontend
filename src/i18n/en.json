@@ -101,7 +101,41 @@
       "per_unit": "Per unit",
       "graduated": "Graduated pricing"
     },
-    "pricingEmpty": "No tier information is available yet."
+    "pricingEmpty": "No tier information is available yet.",
+    "manualSubscriptionSubtitle": "Manage your custom payment agreement",
+    "manualAgreement": "Manual Agreement",
+    "manualSummarySubtitle": "Custom Payment Agreement",
+    "manualSummaryDescription": "Your subscription is managed through a custom agreement",
+    "manualStatus": {
+      "payment_due": "Payment Due",
+      "pending_approval": "Pending Approval",
+      "active": "Active",
+      "blocked": "Blocked"
+    },
+    "manual": {
+      "nextPaymentDate": "Next Payment Date"
+    },
+    "blockedWarning": {
+      "title": "Account Blocked",
+      "description": "Your account has been suspended. Please contact support for assistance."
+    },
+    "paymentDueWarning": {
+      "title": "Payment Due",
+      "description": "Please upload your invoice to maintain active status."
+    },
+    "invoice": {
+      "title": "Invoice Upload",
+      "description": "Upload your payment invoice (PDF only, max 10MB)",
+      "selectFile": "Select PDF file",
+      "fileRequirements": "PDF only, max 10MB",
+      "upload": "Upload",
+      "download": "Download",
+      "uploadedAt": "Uploaded on {{date}}",
+      "invalidFileType": "Only PDF files are allowed",
+      "fileTooLarge": "File size must be less than 10MB",
+      "uploadError": "Failed to upload invoice",
+      "downloadError": "Failed to download invoice"
+    }
   },
   "days": {
     "sunday": "Sunday",
@@ -200,7 +234,8 @@
     "exportAsPng": "Export as PNG",
     "exportAsPdf": "Export as PDF",
     "exportAsCSV": "Export as CSV",
-    "sendByEmail": "Send by Email"
+    "sendByEmail": "Send by Email",
+    "locale": "en-US"
   },
   "dashboard": {
     "percentage": "Percentage (%)",
