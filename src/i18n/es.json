@@ -100,7 +100,41 @@
       "per_unit": "Por unidad",
       "graduated": "Precio graduado"
     },
-    "pricingEmpty": "Aún no hay información de niveles disponible."
+    "pricingEmpty": "Aún no hay información de niveles disponible.",
+    "manualSubscriptionSubtitle": "Administra tu acuerdo de pago personalizado",
+    "manualAgreement": "Acuerdo Manual",
+    "manualSummarySubtitle": "Acuerdo de Pago Personalizado",
+    "manualSummaryDescription": "Tu suscripción se gestiona mediante un acuerdo personalizado",
+    "manualStatus": {
+      "payment_due": "Pago Pendiente",
+      "pending_approval": "Pendiente de Aprobación",
+      "active": "Activa",
+      "blocked": "Bloqueada"
+    },
+    "manual": {
+      "nextPaymentDate": "Próxima Fecha de Pago"
+    },
+    "blockedWarning": {
+      "title": "Cuenta Bloqueada",
+      "description": "Tu cuenta ha sido suspendida. Por favor, contacta a soporte para recibir asistencia."
+    },
+    "paymentDueWarning": {
+      "title": "Pago Pendiente",
+      "description": "Por favor, sube tu factura para mantener el estado activo."
+    },
+    "invoice": {
+      "title": "Subir Factura",
+      "description": "Sube tu factura de pago (solo PDF, máximo 10MB)",
+      "selectFile": "Seleccionar archivo PDF",
+      "fileRequirements": "Solo PDF, máximo 10MB",
+      "upload": "Subir",
+      "download": "Descargar",
+      "uploadedAt": "Subida el {{date}}",
+      "invalidFileType": "Solo se permiten archivos PDF",
+      "fileTooLarge": "El tamaño del archivo debe ser menor a 10MB",
+      "uploadError": "Error al subir la factura",
+      "downloadError": "Error al descargar la factura"
+    }
   },
   "subscription": {
     "subscription-success-message": {
@@ -216,7 +250,8 @@
     "exportAsPng": "Exportar como PNG",
     "exportAsPdf": "Exportar como PDF",
     "exportAsCSV": "Exportar como CSV",
-    "sendByEmail": "Enviar por correo"
+    "sendByEmail": "Enviar por correo",
+    "locale": "es-ES"
   },
   "dashboard": {
     "percentage": "Porcentaje (%)",
