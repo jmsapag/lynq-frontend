@@ -35,6 +35,7 @@ import { useCompanySubscription } from "./hooks/payments/useCompanySubscription"
 import { useNavigate } from "react-router-dom";
 import CustomizedPlan from "./pages/customized-plan.tsx";
 import BillingPage from "./pages/billing";
+import NewPaymentMethodPage from "./pages/new-payment-method.tsx";
 
 function AppLayoutWithState() {
   const {
@@ -115,6 +116,10 @@ function App() {
               <Route
                 path="/subscriptions/customize"
                 element={<CustomizedPlan />}
+              />
+              <Route
+                path="/new-payment-method"
+                element={<NewPaymentMethodPage />}
               />
 
               {/* LYNQ_TEAM only routes */}
