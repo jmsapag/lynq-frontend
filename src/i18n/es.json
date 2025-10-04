@@ -29,7 +29,8 @@
     "plans": "Planes de Subscripción",
     "subscriptions/customize": "Personalizar Subscripción",
     "subscription": "Suscripción",
-    "billing": "Facturación"
+    "billing": "Facturación",
+    "new-payment-method": "Nuevo Método de Pago"
   },
   "billing": {
     "title": "Facturación",
@@ -50,6 +51,7 @@
     "calculatedPrice": "Precio calculado",
     "calculatedPriceHint": "Calculado dinámicamente según la configuración de niveles antes de impuestos.",
     "preTax": "(antes de impuestos)",
+    "addPaymentMethod": "Agregar Método de Pago",
     "sensorQuantity": "Cantidad de sensores",
     "currentPeriodStart": "Inicio del período actual",
     "currentPeriodEnd": "Fin del período actual",
@@ -924,5 +926,27 @@
       "backToPlans": "Volver a Planes",
       "newRequest": "Nueva Solicitud"
     }
+  },
+  "payment": {
+    "addNewCard": "Agregar Nueva Tarjeta",
+    "addNewCardSubtitle": "Agrega un nuevo método de pago a tu cuenta de forma segura",
+    "cardDetails": "Detalles de la Tarjeta",
+    "cardDetailsDescription": "Toda la información de tu tarjeta se procesa de forma segura mediante Stripe",
+    "cardholderName": "Nombre del Titular",
+    "cardholderNamePlaceholder": "Juan Pérez",
+    "cardholderNameRequired": "El nombre del titular es obligatorio",
+    "cardNumber": "Número de Tarjeta",
+    "expiryDate": "Fecha de Vencimiento",
+    "cvc": "CVC",
+    "addCard": "Agregar Tarjeta",
+    "processing": "Procesando...",
+    "securePayment": "Pago Seguro",
+    "securePaymentDescription": "Tu información de pago se procesa de forma segura y encriptada. Nunca almacenamos los datos completos de tu tarjeta.",
+    "stripeNotLoaded": "Stripe no se ha cargado correctamente",
+    "setupIntentFailed": "No se pudo crear la intención de configuración",
+    "cardElementNotFound": "No se encontró el elemento de tarjeta",
+    "cardSetupFailed": "Fallo al configurar la tarjeta",
+    "unexpectedStatus": "Estado inesperado al procesar la tarjeta",
+    "genericError": "Ocurrió un error. Por favor, inténtalo de nuevo."
   }
 }

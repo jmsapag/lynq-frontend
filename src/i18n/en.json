@@ -30,7 +30,8 @@
     "subscription/success": "Subscription Successful",
     "subscriptions/customize": "Customized Plan",
     "subscription": "Subscription",
-    "billing": "Billing"
+    "billing": "Billing",
+    "new-payment-method": "Add Payment Method"
   },
   "billing": {
     "title": "Billing",
@@ -52,6 +53,7 @@
     "calculatedPriceHint": "Dynamically calculated from your tier configuration before tax.",
     "preTax": "(before tax)",
     "sensorQuantity": "Sensor quantity",
+    "addPaymentMethod": "Add Payment Method",
     "currentPeriodStart": "Current period start",
     "currentPeriodEnd": "Current period end",
     "cancelAtPeriodEnd": "Cancel at period end",
@@ -934,5 +936,28 @@
     "redirecting": "Redirecting...",
     "subscribe": "Subscribe",
     "checkoutError": "Error initiating checkout: {{error}}"
+  },
+  "payment": {
+    "addNewCard": "Add New Payment Method",
+    "addNewCardSubtitle": "Add a new credit or debit card to your account",
+    "cardDetails": "Card Details",
+    "cardDetailsDescription": "Enter your card information securely",
+    "cardholderName": "Cardholder Name",
+    "cardholderNamePlaceholder": "John Doe",
+    "cardholderNameRequired": "Cardholder name is required",
+    "cardNumber": "Card Number",
+    "expiryDate": "Expiry Date",
+    "cvc": "CVC",
+    "addCard": "Add Card",
+    "processing": "Processing...",
+    "securePayment": "Secure Payment",
+    "securePaymentDescription": "Your card details are encrypted and secure. We never store your full card number.",
+    "cardAddedSuccessfully": "Card added successfully!",
+    "stripeNotLoaded": "Payment system is not ready. Please refresh the page.",
+    "setupIntentFailed": "Failed to initialize payment setup",
+    "cardElementNotFound": "Card form is not ready",
+    "cardSetupFailed": "Failed to setup card",
+    "unexpectedStatus": "Unexpected payment status",
+    "genericError": "An error occurred while adding your card"
   }
 }

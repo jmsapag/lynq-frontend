@@ -16,6 +16,7 @@ import {
   ShieldExclamationIcon,
   SignalIcon,
   ClockIcon,
+  CreditCardIcon,
 } from "@heroicons/react/24/outline";
 import {
   getSubscriptionStatus,
@@ -296,6 +297,23 @@ export default function BillingPage() {
                   {formattedAmount}
                 </span>
                 <p className="text-xs text-gray-500">{t("billing.preTax")}</p>
+                <div className="flex flex-wrap gap-2">
+                  <Button
+                    color="primary"
+                    variant="solid"
+                    onPress={handleCreateSubscription}
+                  >
+                    {t("billing.manageSubscription")}
+                  </Button>
+                  <Button
+                    color="primary"
+                    variant="bordered"
+                    onPress={() => navigate("/new-payment-method")}
+                    startContent={<CreditCardIcon className="h-5 w-5" />}
+                  >
+                    {t("billing.addPaymentMethod")}
+                  </Button>
+                </div>
               </div>
             </div>
 
@@ -524,6 +542,13 @@ export default function BillingPage() {
                 onPress={handleCreateSubscription}
               >
                 {manageButtonLabel}
+              </Button>
+              <Button
+                color="primary"
+                variant="bordered"
+                onPress={() => navigate("/new-payment-method")}
+              >
+                {t("billing.addPaymentMethod")}
               </Button>
             </div>
           </div>
