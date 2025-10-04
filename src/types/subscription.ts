@@ -30,8 +30,8 @@ export interface SubscriptionStatusResponse {
   "sensor-qty": number | null;
   currentPeriodStart: string | null;
   currentPeriodEnd: string | null;
-  trialPeriodStart: string | null;
-  trialPeriodEnd: string | null;
+  trialStart: string | null;
+  trialEnd: string | null;
   cancelAtPeriodEnd: boolean | null;
   defaultPaymentMethodId: string | null;
   pricing: PricingInfo | null;
