@@ -16,9 +16,15 @@ export interface PricingTier {
 
 export interface PricingInfo {
   id: string;
-  unitAmount?: number;
-  billingScheme: "tiered" | "per_unit" | "graduated";
+  unitAmount?: number | null;
+  billingScheme: "tiered" | "per_unit";
+  currency: string;
+  tiersMode?: "graduated" | "volume" | null;
   tiers?: PricingTier[];
+  active?: boolean;
+  nickname?: string | null;
+  product?: string;
+  sensorCount?: number | null;
   [key: string]: unknown;
 }
 

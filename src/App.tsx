@@ -1,4 +1,12 @@
-import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Outlet,
+  useLocation,
+  Navigate,
+} from "react-router-dom";
+import { useEffect } from "react";
 import Dashboard from "./pages/dashboard";
 import { SidebarWithState } from "./components/navigation/sidebar/sidebar-with-state.tsx";
 import Header from "./components/navigation/header/header.tsx";
@@ -30,12 +38,11 @@ import SubscriptionFeed from "./pages/subscription-feed.tsx";
 import SubscriptionPage from "./pages/subscription";
 import SubscriptionSuccessPage from "./pages/subscription-success";
 import SubscriptionFailPage from "./pages/subscription-fail";
-import { TrialBanner } from "./components/trial/TrialBanner";
-import { useCompanySubscription } from "./hooks/payments/useCompanySubscription";
 import { useNavigate } from "react-router-dom";
 import CustomizedPlan from "./pages/customized-plan.tsx";
 import BillingPage from "./pages/billing";
 import NewPaymentMethodPage from "./pages/new-payment-method.tsx";
+import { useBillingBlock } from "./hooks/payments/useBillingBlock";
 
 function AppLayoutWithState() {
   const {
@@ -46,12 +53,15 @@ function AppLayoutWithState() {
     handleToggleCollapse,
   } = useSidebar();
 
-  const { isTrialActive, trialDaysLeft } = useCompanySubscription();
   const navigate = useNavigate();
+  const location = useLocation();
+  const { blocked } = useBillingBlock();
 
-  const handleUpgrade = () => {
-    navigate("/plans", { state: { fromTrial: true } });
-  };
+  useEffect(() => {
+    if (blocked && !location.pathname.startsWith("/billing")) {
+      navigate("/billing/subscription", { replace: true });
+    }
+  }, [blocked, location.pathname, navigate]);
 
   return (
     <div className="flex h-screen bg-white text-black">
@@ -67,12 +77,6 @@ function AppLayoutWithState() {
           className="flex-1 overflow-y-auto p-4 md:p-6"
           onClick={() => isOpen && handleClose()}
         >
-          {isTrialActive && (
-            <TrialBanner
-              trialDaysLeft={trialDaysLeft}
-              onUpgrade={handleUpgrade}
-            />
-          )}
           <Outlet />
         </main>
         <Footer />
@@ -138,14 +142,33 @@ function App() {
                 <Route path="user-management" element={<UserManagement />} />
                 <Route path="locations" element={<Locations />} />
                 <Route path="/billing" element={<BillingPage />} />
-                <Route path="/subscription" element={<SubscriptionPage />} />
                 <Route
-                  path="/subscription/success"
+                  path="/billing/subscription"
+                  element={<SubscriptionPage />}
+                />
+                <Route
+                  path="/subscription"
+                  element={<Navigate to="/billing/subscription" replace />}
+                />
+                <Route
+                  path="/billing/subscription/success"
                   element={<SubscriptionSuccessPage />}
                 />
                 <Route
-                  path="/subscription/cancel"
+                  path="/billing/subscription/cancel"
                   element={<SubscriptionFailPage />}
+                />
+                <Route
+                  path="/subscription/success"
+                  element={
+                    <Navigate to="/billing/subscription/success" replace />
+                  }
+                />
+                <Route
+                  path="/subscription/cancel"
+                  element={
+                    <Navigate to="/billing/subscription/cancel" replace />
+                  }
                 />
               </Route>
             </Route>

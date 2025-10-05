@@ -31,6 +31,7 @@
     "subscriptions/customize": "Customized Plan",
     "subscription": "Subscription",
     "billing": "Billing",
+    "billing/subscription": "Subscription",
     "new-payment-method": "Add Payment Method"
   },
   "billing": {
@@ -920,6 +921,11 @@
       "newRequest": "New Request"
     }
   },
+  "subscriptionPage": {
+    "title": "Billing & subscription",
+    "subtitle": "Review your plan, resolve billing issues, and keep your analytics online.",
+    "errorGeneric": "We couldn't load your subscription details. Please try again."
+  },
   "subscription": {
     "subscription/success": "Subscription Successful",
     "subscription-success-message": {
@@ -935,7 +941,102 @@
     "totalMonthly": "Total Monthly",
     "redirecting": "Redirecting...",
     "subscribe": "Subscribe",
-    "checkoutError": "Error initiating checkout: {{error}}"
+    "checkoutError": "Error initiating checkout: {{error}}",
+    "card": {
+      "title": "LYNQ subscription plan",
+      "subtitle": "Stay on top of pedestrian analytics with always-on insights."
+    },
+    "labels": {
+      "pricePerSensor": "Price per sensor",
+      "pricePerSensorHelper": "Pre-tax pricing for each active sensor",
+      "estimatedMonthly": "Estimated monthly total",
+      "estimatedTotalHelper": "Calculated before tax based on your current sensors",
+      "sensorSummary": "{{count}} active sensors"
+    },
+    "badges": {
+      "trialing": "Trial ends in {{count}} days",
+      "trialActive": "Trial in progress",
+      "freeTrial": "30-day free trial"
+    },
+    "features": {
+      "analytics": {
+        "title": "Advanced analytics",
+        "description": "Dashboards and comparisons built for foot traffic intelligence."
+      },
+      "realTime": {
+        "title": "Real-time insights",
+        "description": "See live visitor trends and respond quickly to changes."
+      },
+      "security": {
+        "title": "Secure data retention",
+        "description": "Enterprise-grade security with compliant retention policies."
+      },
+      "support": {
+        "title": "Dedicated support",
+        "description": "Direct access to our success team whenever you need help."
+      }
+    },
+    "actions": {
+      "subscribe": "Subscribe",
+      "startPaidPlan": "Start paid plan",
+      "manageBilling": "Manage billing",
+      "updatePayment": "Update payment methods",
+      "contactSupport": "Contact support",
+      "reactivate": "Reactivate subscription",
+      "resume": "Resume subscription",
+      "retry": "Try again"
+    },
+    "notice": {
+      "active": {
+        "title": "Your subscription is active",
+        "description": "Everything looks good. You can manage billing details or payment methods anytime."
+      },
+      "trialing": {
+        "title": "Your trial ends in {{count}} days",
+        "description": "Lock in uninterrupted insights by choosing a plan before the trial finishes.",
+        "helper": "Complete your subscription now to avoid losing access."
+      },
+      "pastDue": {
+        "title": "We couldn't process your latest payment",
+        "description": "Update your payment method to bring your workspace back into good standing."
+      },
+      "reactivate": {
+        "title": "Your subscription needs attention",
+        "description": "Reactivate your plan to restore full access for your team."
+      },
+      "paused": {
+        "title": "Your subscription is paused",
+        "description": "Resume billing to restart pedestrian analytics for your locations."
+      },
+      "none": {
+        "title": "Activate your LYNQ subscription",
+        "description": "Choose a plan to unlock advanced pedestrian analytics features."
+      }
+    },
+    "statusLabel": {
+      "active": "Active",
+      "trialing": "Trialing",
+      "past_due": "Past due",
+      "unpaid": "Unpaid",
+      "canceled": "Canceled",
+      "incomplete": "Incomplete",
+      "incomplete_expired": "Expired",
+      "paused": "Paused",
+      "none": "No subscription"
+    },
+    "placeholders": {
+      "notAvailable": "Not available"
+    },
+    "toasts": {
+      "noBusinessId": {
+        "title": "We couldn't find your business",
+        "description": "Please sign in again or contact support so we can link your subscription."
+      },
+      "checkoutError": {
+        "title": "Checkout failed",
+        "description": "We couldn't start the checkout flow. Try again or reach out to support."
+      }
+    }
   },
   "payment": {
     "addNewCard": "Add New Payment Method",

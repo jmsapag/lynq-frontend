@@ -1,5 +1,19 @@
 import axios from "axios";
 import Cookies from "js-cookie";
+import { setBillingBlocked } from "../stores/billingBlockStore";
+import type { SubscriptionStatus } from "../types/subscription";
+
+const KNOWN_SUBSCRIPTION_STATUSES = new Set<SubscriptionStatus | "none">([
+  "active",
+  "trialing",
+  "past_due",
+  "unpaid",
+  "canceled",
+  "incomplete",
+  "incomplete_expired",
+  "paused",
+  "none",
+]);
 
 const BACKEND_URL = "/api";
 
@@ -38,6 +52,23 @@ axiosPrivate.interceptors.request.use(
 axiosPrivate.interceptors.response.use(
   (response) => response,
   (error) => {
+    if (error.response?.status === 402) {
+      const statusFromServer = error.response?.data?.status;
+      const messageFromServer = error.response?.data?.message;
+      const typedStatus =
+        typeof statusFromServer === "string" &&
+        KNOWN_SUBSCRIPTION_STATUSES.has(
+          statusFromServer as SubscriptionStatus | "none",
+        )
+          ? (statusFromServer as SubscriptionStatus | "none")
+          : undefined;
+
+      setBillingBlocked(typedStatus, messageFromServer ?? null);
+
+      if (window.location.pathname !== "/billing/subscription") {
+        window.location.href = "/billing/subscription";
+      }
+    }
     if (error.response?.status === 401) {
       // console.log("Unauthorized, redirecting to login");
       // Clear the token cookie since it's invalid

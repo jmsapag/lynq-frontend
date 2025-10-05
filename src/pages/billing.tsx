@@ -187,7 +187,7 @@ export default function BillingPage() {
   );
 
   const handleCreateSubscription = () => {
-    navigate("/subscription");
+    navigate("/billing/subscription");
   };
 
   if (loading) {

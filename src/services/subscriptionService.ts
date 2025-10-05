@@ -2,6 +2,7 @@ import { axiosPrivate } from "./axiosClient";
 import {
   GetSubscriptionResponse,
   ManualSubscriptionResponse,
+  PricingInfo,
 } from "../types/subscription";
 
 export const getSubscriptionStatus =
@@ -11,6 +12,15 @@ export const getSubscriptionStatus =
     );
     return response.data;
   };
+
+export const getStripePricing = async (): Promise<
+  PricingInfo[] | PricingInfo
+> => {
+  const response = await axiosPrivate.get<PricingInfo[] | PricingInfo>(
+    "/stripe/pricing",
+  );
+  return response.data;
+};
 
 // Manual subscription services
 export const getManualSubscription = async (
