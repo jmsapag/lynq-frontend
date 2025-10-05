@@ -1,6 +1,6 @@
-import { SubscriptionStatus } from "../types/subscription";
+import { SubscriptionStatus, SubscriptionState } from "../types/subscription";
 
-type BillingStatus = SubscriptionStatus | "none" | null;
+type BillingStatus = SubscriptionStatus | SubscriptionState | "none" | null;
 
 export interface BillingBlockState {
   blocked: boolean;

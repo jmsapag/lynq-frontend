@@ -139,6 +139,37 @@
       "downloadError": "Error al descargar la factura"
     }
   },
+  "subscriptionBanner": {
+    "manualPending": {
+      "title": "Factura en Revisión",
+      "description": "Tu factura ha sido subida y está esperando aprobación de nuestro equipo. Puedes continuar usando la plataforma normalmente.",
+      "chip": "Pendiente de Aprobación"
+    },
+    "manualPaymentDue": {
+      "title": "Pago Pendiente",
+      "description": "Tu próximo pago está vencido. Por favor, sube tu factura para mantener el estado activo.",
+      "chip": "Acción Requerida",
+      "action": "Subir Factura"
+    },
+    "manualBlocked": {
+      "title": "Cuenta Suspendida",
+      "description": "Tu cuenta ha sido suspendida. Por favor, contacta a nuestro equipo de soporte para resolver este problema y restaurar el acceso.",
+      "chip": "Bloqueada",
+      "action": "Contactar Soporte"
+    },
+    "pastDue": {
+      "title": "Pago Atrasado",
+      "description": "Tu pago está atrasado. Por favor, actualiza tu método de pago para evitar la interrupción del servicio.",
+      "chip": "Pago Atrasado",
+      "action": "Actualizar Pago"
+    },
+    "unpaid": {
+      "title": "Acceso Restringido",
+      "description": "Tu suscripción no está pagada. Por favor, actualiza tu método de pago inmediatamente para restaurar el acceso completo.",
+      "chip": "Acción Requerida",
+      "action": "Actualizar Pago"
+    }
+  },
   "subscriptionPage": {
     "title": "Facturación y suscripción",
     "subtitle": "Revisa tu plan, resuelve incidencias de pago y mantén tus analíticas en línea.",
@@ -244,6 +275,15 @@
     },
     "placeholders": {
       "notAvailable": "No disponible"
+    },
+    "manualBilling": {
+      "title": "Facturación Manual Habilitada",
+      "description": "Tu empresa utiliza acuerdos de facturación personalizados. No puedes suscribirte a través del sistema de pago regular. Por favor, visita la página de facturación para administrar tu suscripción manual.",
+      "statusLabel": "Acuerdo Manual",
+      "action": "Ir a Facturación",
+      "blockedTitle": "Cuenta Suspendida",
+      "blockedDescription": "Tu cuenta ha sido suspendida por nuestro equipo. Por favor, contacta a soporte inmediatamente para resolver este problema y restaurar el acceso a tu cuenta.",
+      "contactSupport": "Contactar Soporte"
     },
     "toasts": {
       "noBusinessId": {

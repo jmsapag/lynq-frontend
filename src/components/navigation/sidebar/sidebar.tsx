@@ -16,6 +16,7 @@ import logoImage from "../../../assets/logo.png";
 import Cookies from "js-cookie";
 import { useSelfUserProfile } from "../../../hooks/users/useSelfUserProfile";
 import { useBillingBlock } from "../../../hooks/payments/useBillingBlock";
+import { clearBillingBlock } from "../../../stores/billingBlockStore";
 import { CurrencyDollarIcon } from "@heroicons/react/24/outline";
 
 interface SidebarProps {
@@ -66,7 +67,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
   }, [user, blocked]);
 
   const handleLogout = () => {
+    // Clear billing block state on logout
+    clearBillingBlock();
+    // Clear both access token and refresh token
     Cookies.remove("token");
+    Cookies.remove("refreshToken");
     navigate("/login", { replace: true });
   };
 

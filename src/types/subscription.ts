@@ -9,6 +9,14 @@ export type SubscriptionStatus =
   | "paused"
   | "none";
 
+// JWT subscription states including manual subscription states
+export type SubscriptionState =
+  | SubscriptionStatus
+  | "manually_managed_active"
+  | "manually_managed_pending"
+  | "manually_managed_payment_due"
+  | "manually_managed_blocked";
+
 export interface PricingTier {
   up_to: number | null;
   unit_amount: number;

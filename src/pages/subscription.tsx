@@ -15,8 +15,11 @@ import {
   getStripePricing,
 } from "../services/subscriptionService";
 import { createStripeCheckoutSession } from "../services/stripeCheckoutService";
-import { getBusinessIdFromToken } from "../hooks/auth/useAuth";
-import { useBillingBlock } from "../hooks/payments/useBillingBlock";
+import {
+  getBusinessIdFromToken,
+  getIsManuallyManagedFromToken,
+  getSubscriptionStateFromToken,
+} from "../hooks/auth/useAuth";
 import { useNavigate } from "react-router-dom";
 import type {
   GetSubscriptionResponse,
@@ -30,17 +33,6 @@ import {
   LifebuoyIcon,
   BoltIcon,
 } from "@heroicons/react/24/outline";
-
-const BLOCKING_STATUSES = new Set<
-  SubscriptionStatus | "none" | "incomplete" | "incomplete_expired"
->([
-  "none",
-  "past_due",
-  "unpaid",
-  "canceled",
-  "incomplete",
-  "incomplete_expired",
-]);
 
 const isStripeSubscription = (
   value: GetSubscriptionResponse | null,
@@ -236,9 +228,8 @@ const SubscriptionPage = () => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const businessId = getBusinessIdFromToken();
-
-  const { setBillingBlockFlag, setBillingBlockStatus, setBillingBlockReason } =
-    useBillingBlock();
+  const isManuallyManaged = getIsManuallyManagedFromToken();
+  const subscriptionState = getSubscriptionStateFromToken();
 
   const [subscription, setSubscription] =
     useState<GetSubscriptionResponse | null>(null);
@@ -259,23 +250,15 @@ const SubscriptionPage = () => {
       setSubscription(subscriptionResponse);
       setPricing(selectActivePricing(pricingResponse));
 
-      const status = getEffectiveStatus(subscriptionResponse);
-      const shouldBlock = BLOCKING_STATUSES.has(status);
-      const reason =
-        shouldBlock && !isStripeSubscription(subscriptionResponse)
-          ? (subscriptionResponse?.message ?? null)
-          : null;
-
-      setBillingBlockStatus(status);
-      setBillingBlockFlag(shouldBlock);
-      setBillingBlockReason(reason);
+      // Note: We don't set billing block state here anymore
+      // The JWT subscription state and PrivateRoute handle access control
     } catch (err) {
       const fallback = t("subscriptionPage.errorGeneric");
       setError(formatErrorMessage(err, fallback));
     } finally {
       setLoading(false);
     }
-  }, [setBillingBlockFlag, setBillingBlockReason, setBillingBlockStatus, t]);
+  }, [t]);
 
   useEffect(() => {
     fetchData();
@@ -670,6 +653,47 @@ const SubscriptionPage = () => {
         <Button color="primary" onPress={fetchData}>
           {t("subscription.actions.retry")}
         </Button>
+      </div>
+    );
+  }
+
+  // Show manual subscription notice if user has manual billing
+  if (isManuallyManaged) {
+    const isBlocked = subscriptionState === "manually_managed_blocked";
+    const tone: NoticeTone = isBlocked ? "danger" : "info";
+    const title = isBlocked
+      ? t("subscription.manualBilling.blockedTitle")
+      : t("subscription.manualBilling.title");
+    const description = isBlocked
+      ? t("subscription.manualBilling.blockedDescription")
+      : t("subscription.manualBilling.description");
+
+    return (
+      <div className="mx-auto flex min-h-full w-full max-w-4xl flex-col gap-8 px-4 py-8 md:px-6">
+        <header className="space-y-2">
+          <h1 className="text-3xl font-bold text-gray-900">
+            {t("subscriptionPage.title")}
+          </h1>
+          <p className="text-base text-gray-500">
+            {t("subscriptionPage.subtitle")}
+          </p>
+        </header>
+
+        <SubscriptionStateNotice
+          tone={tone}
+          title={title}
+          description={description}
+          statusLabel={t("subscription.manualBilling.statusLabel")}
+          actions={[
+            {
+              label: isBlocked
+                ? t("subscription.manualBilling.contactSupport")
+                : t("subscription.manualBilling.action"),
+              onPress: () => navigate(isBlocked ? "/help" : "/billing"),
+              color: isBlocked ? "danger" : "primary",
+            },
+          ]}
+        />
       </div>
     );
   }
