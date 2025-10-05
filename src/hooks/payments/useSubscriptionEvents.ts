@@ -66,3 +66,38 @@ export const useManualSubscriptions = (filters: SubscriptionFilters = {}) => {
     refetch: fetchSubscriptions,
   };
 };
+
+export const useUpdateManualSubscription = () => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const updateSubscription = async (
+    businessId: number,
+    data: {
+      priceAmount: number;
+      status: string;
+      nextExpirationDate: string;
+    },
+  ): Promise<ManualSubscription> => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await axiosPrivate.patch(
+        `/manual-subscriptions/${businessId}`,
+        data,
+      );
+      return response.data;
+    } catch (err) {
+      setError("Error al actualizar la suscripción");
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return {
+    updateSubscription,
+    loading,
+    error,
+  };
+};

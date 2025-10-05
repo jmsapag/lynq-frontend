@@ -269,7 +269,8 @@
     "exportAsPdf": "Export as PDF",
     "exportAsCSV": "Export as CSV",
     "sendByEmail": "Send by Email",
-    "locale": "en-US"
+    "locale": "en-US",
+    "success": "Success"
   },
   "dashboard": {
     "percentage": "Percentage (%)",
