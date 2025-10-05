@@ -1100,5 +1100,15 @@
     "cardSetupFailed": "Failed to setup card",
     "unexpectedStatus": "Unexpected payment status",
     "genericError": "An error occurred while adding your card"
+  },
+  "wallet": {
+    "title": "Wallet",
+    "subtitle": "Manage your saved cards",
+    "methods": "Payment Methods",
+    "methodsSubtitle": "Cards saved to your account",
+    "empty": "No cards saved yet.",
+    "expires": "Expires",
+    "default": "Default",
+    "goto": "Wallet"
   }
 }
