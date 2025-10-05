@@ -1,67 +1,68 @@
 import { useState, useEffect } from "react";
 import { axiosPrivate } from "../../services/axiosClient";
 
-export interface SubscriptionEvent {
-  id: string;
-  companyId: string;
-  type: string;
-  source: string;
+export interface ManualSubscription {
+  id: number;
+  businessId: number;
+  priceAmount: number;
+  status: string;
+  nextExpirationDate: string;
+  invoiceFileName: string;
+  invoiceMimeType: string;
+  invoiceUploadedAt: string;
+  invoiceApprovedAt: string | null;
+  invoiceApprovedBy: number | null;
   createdAt: string;
-  payload: Record<string, any>;
+  updatedAt: string;
 }
 
-export interface EventFilters {
-  companyId?: string;
-  type?: string;
-  from?: string;
-  to?: string;
+export interface SubscriptionFilters {
+  businessId?: number;
+  status?: string;
 }
 
-// Service function
-const getSubscriptionEvents = async (
-  filters: EventFilters,
-): Promise<SubscriptionEvent[]> => {
+const getManualSubscriptions = async (
+  filters: SubscriptionFilters,
+): Promise<ManualSubscription[]> => {
   const params = new URLSearchParams();
 
-  if (filters.companyId) params.append("companyId", filters.companyId);
-  if (filters.type) params.append("type", filters.type);
-  if (filters.from) params.append("from", filters.from);
-  if (filters.to) params.append("to", filters.to);
+  if (filters.businessId)
+    params.append("businessId", filters.businessId.toString());
+  if (filters.status) params.append("status", filters.status);
 
   const response = await axiosPrivate.get(
-    `/subscription-events?${params.toString()}`,
+    `/manual-subscriptions?${params.toString()}`,
   );
   return response.data;
 };
 
-// Hook
-export const useSubscriptionEvents = (filters: EventFilters = {}) => {
-  const [events, setEvents] = useState<SubscriptionEvent[]>([]);
+export const useManualSubscriptions = (filters: SubscriptionFilters = {}) => {
+  const [subscriptions, setSubscriptions] = useState<ManualSubscription[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchEvents = async () => {
+  const fetchSubscriptions = async () => {
     try {
       setLoading(true);
       setError(null);
-      const data = await getSubscriptionEvents(filters);
-      setEvents(data);
+      const data = await getManualSubscriptions(filters);
+      setSubscriptions(data);
     } catch (err) {
-      setError("Error al cargar los eventos de suscripción");
-      console.error("Error fetching subscription events:", err);
+      setError("Error al cargar las suscripciones manuales");
+      console.error("Error fetching manual subscriptions:", err);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchEvents();
-  }, [filters.companyId, filters.type, filters.from, filters.to]);
+    fetchSubscriptions();
+  }, [filters.businessId, filters.status]);
 
   return {
-    events,
+    subscriptions,
     loading,
     error,
-    refetch: fetchEvents,
+    refetch: fetchSubscriptions,
   };
 };

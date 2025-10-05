@@ -970,25 +970,18 @@
   },
   "subscriptions": {
     "events": {
-      "title": "Eventos de Suscripción",
-      "companyIdFilter": "Filtrar por ID de empresa",
-      "typeFilter": "Filtrar por tipo",
+      "title": "Suscripciones Manuales",
+      "businessIdFilter": "Filtrar por ID de empresa",
+      "statusFilter": "Filtrar por estado",
       "searchPlaceholder": "Buscar",
       "clearFilters": "Limpiar Filtros",
-      "fromDate": "Desde fecha",
-      "toDate": "Hasta fecha",
-      "allTypes": "Todos los tipos",
-      "subscriptionCreated": "Suscripción Creada",
-      "subscriptionUpdated": "Suscripción Actualizada",
-      "subscriptionCancelled": "Suscripción Cancelada",
-      "paymentSuccessful": "Pago Exitoso",
-      "paymentFailed": "Pago Fallido",
-      "invoiceCreated": "Factura Creada",
-      "invoicePaid": "Factura Pagada",
-      "loadingError": "Error al cargar eventos de suscripción",
-      "eventsLoadError": "Error al cargar eventos",
-      "noEventsFiltered": "No se encontraron eventos con los filtros aplicados",
-      "noEventsAvailable": "No hay eventos de suscripción disponibles"
+      "allStatuses": "Todos los Estados",
+      "active": "Activo",
+      "expired": "Expirado",
+      "pending": "Pendiente",
+      "loadingError": "Error al cargar suscripciones manuales",
+      "noEventsFiltered": "No se encontraron suscripciones con los filtros aplicados",
+      "noEventsAvailable": "No hay suscripciones disponibles"
     }
   },
   "planWizard": {

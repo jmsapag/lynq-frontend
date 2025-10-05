@@ -28,7 +28,7 @@ export const superAdminNavItems = [
   { title: "devices", href: "/devices", icon: DeviceTabletIcon },
   { title: "users", href: "/manage/users", icon: UserGroupIcon },
   // { title: "plans", href: "/plans", icon: ClipboardDocumentListIcon },
-  // { title: "subscriptions", href: "/subscriptions", icon: CurrencyDollarIcon },
+  { title: "subscriptions", href: "/subscriptions", icon: CurrencyDollarIcon },
 ];
 
 export const adminNavItems = [
