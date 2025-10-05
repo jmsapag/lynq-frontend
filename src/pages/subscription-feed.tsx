@@ -23,9 +23,9 @@ import {
 } from "@heroui/react";
 import { useTranslation } from "react-i18next";
 import {
-  useManualSubscriptions,
+  useAllSubscriptions,
   useUpdateManualSubscription,
-  ManualSubscription,
+  UnifiedSubscription,
 } from "../hooks/payments/useSubscriptionEvents";
 import { getUserRoleFromToken } from "../hooks/auth/useAuth.ts";
 import { PencilIcon } from "@heroicons/react/24/outline";
@@ -42,7 +42,7 @@ const SubscriptionEventsFeed = () => {
   });
 
   const [selectedSubscription, setSelectedSubscription] =
-    useState<ManualSubscription | null>(null);
+    useState<UnifiedSubscription | null>(null);
   const [editForm, setEditForm] = useState({
     priceAmount: "",
     status: "",
@@ -50,7 +50,7 @@ const SubscriptionEventsFeed = () => {
   });
 
   const { subscriptions, loading, error, refetch } =
-    useManualSubscriptions(filters);
+    useAllSubscriptions(filters);
   const { updateSubscription, loading: updateLoading } =
     useUpdateManualSubscription();
 
@@ -67,10 +67,13 @@ const SubscriptionEventsFeed = () => {
 
   const statusOptions = [
     { key: "", label: t("subscriptions.events.allStatuses") },
-    { key: "Active", label: t("subscriptions.events.active") },
-    { key: "Payment Due", label: "Payment Due" },
-    { key: "Pending Approval", label: "Pending Approval" },
-    { key: "Blocked", label: "Blocked" },
+    { key: "active", label: t("subscriptions.events.active") },
+    { key: "payment_due", label: "Payment Due" },
+    { key: "pending_approval", label: "Pending Approval" },
+    { key: "blocked", label: "Blocked" },
+    { key: "canceled", label: "Canceled" },
+    { key: "incomplete", label: "Incomplete" },
+    { key: "trialing", label: "Trialing" },
   ];
 
   const editStatusOptions = [
@@ -86,8 +89,15 @@ const SubscriptionEventsFeed = () => {
       payment_due: "warning",
       pending_approval: "primary",
       blocked: "danger",
+      canceled: "default",
+      incomplete: "warning",
+      trialing: "primary",
     };
     return colorMap[status] || "default";
+  };
+
+  const getTypeColor = (type: string) => {
+    return type === "manual" ? "secondary" : "primary";
   };
 
   const formatDate = (dateString: string | null) => {
@@ -118,7 +128,9 @@ const SubscriptionEventsFeed = () => {
     setFilters({ businessId: undefined, status: "" });
   };
 
-  const handleEdit = (subscription: ManualSubscription) => {
+  const handleEdit = (subscription: UnifiedSubscription) => {
+    if (subscription.type !== "manual") return;
+
     setSelectedSubscription(subscription);
     setEditForm({
       priceAmount: (subscription.priceAmount / 100).toString(),
@@ -129,7 +141,12 @@ const SubscriptionEventsFeed = () => {
   };
 
   const handleSaveEdit = async () => {
-    if (!selectedSubscription) return;
+    if (
+      !selectedSubscription ||
+      selectedSubscription.type !== "manual" ||
+      !selectedSubscription.businessId
+    )
+      return;
 
     try {
       const updateData = {
@@ -160,10 +177,15 @@ const SubscriptionEventsFeed = () => {
   };
 
   const sortedSubscriptions = Array.isArray(subscriptions)
-    ? subscriptions.sort(
-        (a, b) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-      )
+    ? subscriptions.sort((a, b) => {
+        const dateA = new Date(
+          a.createdAt || a.currentPeriodStart || 0,
+        ).getTime();
+        const dateB = new Date(
+          b.createdAt || b.currentPeriodStart || 0,
+        ).getTime();
+        return dateB - dateA;
+      })
     : [];
 
   const hasActiveFilters =
@@ -214,21 +236,35 @@ const SubscriptionEventsFeed = () => {
             </CardBody>
           </Card>
         ) : sortedSubscriptions.length > 0 ? (
-          <Table aria-label="Manual subscriptions table">
+          <Table aria-label="All subscriptions table">
             <TableHeader>
               <TableColumn>ID</TableColumn>
+              <TableColumn>Type</TableColumn>
               <TableColumn>Business ID</TableColumn>
               <TableColumn>Status</TableColumn>
               <TableColumn>Amount</TableColumn>
               <TableColumn>Next Expiration</TableColumn>
-              <TableColumn>Created At</TableColumn>
+              <TableColumn>Sensors</TableColumn>
               <TableColumn>Actions</TableColumn>
             </TableHeader>
             <TableBody>
               {sortedSubscriptions.map((subscription) => (
-                <TableRow key={subscription.id}>
-                  <TableCell>{subscription.id}</TableCell>
-                  <TableCell>{subscription.businessId}</TableCell>
+                <TableRow key={`${subscription.type}-${subscription.id}`}>
+                  <TableCell>
+                    {subscription.type === "manual"
+                      ? subscription.id
+                      : subscription.stripeSubscriptionId?.slice(-8)}
+                  </TableCell>
+                  <TableCell>
+                    <Chip
+                      color={getTypeColor(subscription.type)}
+                      variant="flat"
+                      size="sm"
+                    >
+                      {subscription.type.toUpperCase()}
+                    </Chip>
+                  </TableCell>
+                  <TableCell>{subscription.businessId || "N/A"}</TableCell>
                   <TableCell>
                     <Chip
                       color={getStatusColor(subscription.status)}
@@ -244,16 +280,20 @@ const SubscriptionEventsFeed = () => {
                   <TableCell>
                     {formatDate(subscription.nextExpirationDate)}
                   </TableCell>
-                  <TableCell>{formatDate(subscription.createdAt)}</TableCell>
+                  <TableCell>{subscription.sensorQty || "N/A"}</TableCell>
                   <TableCell>
-                    <Button
-                      isIconOnly
-                      size="sm"
-                      variant="light"
-                      onPress={() => handleEdit(subscription)}
-                    >
-                      <PencilIcon className="h-4 w-4" />
-                    </Button>
+                    {subscription.type === "manual" ? (
+                      <Button
+                        isIconOnly
+                        size="sm"
+                        variant="light"
+                        onPress={() => handleEdit(subscription)}
+                      >
+                        <PencilIcon className="h-4 w-4" />
+                      </Button>
+                    ) : (
+                      <span className="text-gray-400 text-sm">Read-only</span>
+                    )}
                   </TableCell>
                 </TableRow>
               ))}
@@ -281,7 +321,7 @@ const SubscriptionEventsFeed = () => {
 
       <Modal isOpen={isOpen} onClose={onClose} size="md">
         <ModalContent>
-          <ModalHeader>Edit Subscription</ModalHeader>
+          <ModalHeader>Edit Manual Subscription</ModalHeader>
           <ModalBody className="space-y-4">
             <Input
               label="Price Amount (€)"
