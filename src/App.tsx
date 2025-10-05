@@ -43,6 +43,7 @@ import CustomizedPlan from "./pages/customized-plan.tsx";
 import BillingPage from "./pages/billing";
 import NewPaymentMethodPage from "./pages/new-payment-method.tsx";
 import { useBillingBlock } from "./hooks/payments/useBillingBlock";
+import { SubscriptionStateBanner } from "./components/payments/SubscriptionStateBanner";
 
 function AppLayoutWithState() {
   const {
@@ -77,6 +78,7 @@ function AppLayoutWithState() {
           className="flex-1 overflow-y-auto p-4 md:p-6"
           onClick={() => isOpen && handleClose()}
         >
+          <SubscriptionStateBanner />
           <Outlet />
         </main>
         <Footer />

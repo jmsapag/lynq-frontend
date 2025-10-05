@@ -140,6 +140,37 @@
       "downloadError": "Failed to download invoice"
     }
   },
+  "subscriptionBanner": {
+    "manualPending": {
+      "title": "Invoice Under Review",
+      "description": "Your invoice has been uploaded and is awaiting approval from our team. You can continue using the platform normally.",
+      "chip": "Pending Approval"
+    },
+    "manualPaymentDue": {
+      "title": "Payment Due",
+      "description": "Your next payment is due. Please upload your invoice to maintain active status.",
+      "chip": "Action Required",
+      "action": "Upload Invoice"
+    },
+    "manualBlocked": {
+      "title": "Account Suspended",
+      "description": "Your account has been suspended. Please contact our support team to resolve this issue and restore access.",
+      "chip": "Blocked",
+      "action": "Contact Support"
+    },
+    "pastDue": {
+      "title": "Payment Overdue",
+      "description": "Your payment is past due. Please update your payment method to avoid service interruption.",
+      "chip": "Past Due",
+      "action": "Update Payment"
+    },
+    "unpaid": {
+      "title": "Access Restricted",
+      "description": "Your subscription is unpaid. Please update your payment method immediately to restore full access.",
+      "chip": "Action Required",
+      "action": "Update Payment"
+    }
+  },
   "days": {
     "sunday": "Sunday",
     "monday": "Monday",
@@ -1026,6 +1057,15 @@
     },
     "placeholders": {
       "notAvailable": "Not available"
+    },
+    "manualBilling": {
+      "title": "Manual Billing Enabled",
+      "description": "Your business uses custom billing arrangements. You cannot subscribe through the regular payment system. Please visit the billing page to manage your manual subscription.",
+      "statusLabel": "Manual Agreement",
+      "action": "Go to Billing",
+      "blockedTitle": "Account Suspended",
+      "blockedDescription": "Your account has been suspended by our team. Please contact support immediately to resolve this issue and restore access to your account.",
+      "contactSupport": "Contact Support"
     },
     "toasts": {
       "noBusinessId": {
