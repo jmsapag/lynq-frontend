@@ -1,11 +1,18 @@
+import { useEffect } from "react";
 import { CheckCircleIcon } from "@heroicons/react/24/solid";
 import { Button } from "@heroui/react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { clearBillingBlock } from "../stores/billingBlockStore";
 
 export default function SubscriptionSuccessPage() {
   const navigate = useNavigate();
   const { t } = useTranslation();
+
+  useEffect(() => {
+    clearBillingBlock();
+  }, []);
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-success-50 via-success-100 to-successs-200 px-4">
       <CheckCircleIcon className="w-20 h-20 text-success-500 mb-6" />

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   XMarkIcon,
@@ -15,6 +15,8 @@ import { ProfileMenu } from "./profile-menu.tsx";
 import logoImage from "../../../assets/logo.png";
 import Cookies from "js-cookie";
 import { useSelfUserProfile } from "../../../hooks/users/useSelfUserProfile";
+import { useBillingBlock } from "../../../hooks/payments/useBillingBlock";
+import { CurrencyDollarIcon } from "@heroicons/react/24/outline";
 
 interface SidebarProps {
   isOpen?: boolean;
@@ -31,6 +33,37 @@ export const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const navigate = useNavigate();
   const { user, loading } = useSelfUserProfile();
+  const { blocked } = useBillingBlock();
+
+  const availableNavItems = useMemo(() => {
+    if (!user) {
+      return [] as typeof navItems;
+    }
+
+    if (blocked) {
+      if (user.role === "LYNQ_TEAM") {
+        return [] as typeof navItems;
+      }
+
+      return [
+        {
+          title: "billing",
+          href: "/billing/subscription",
+          icon: CurrencyDollarIcon,
+        },
+      ];
+    }
+
+    if (user.role === "LYNQ_TEAM") {
+      return superAdminNavItems;
+    }
+
+    if (user.role === "ADMIN") {
+      return adminNavItems;
+    }
+
+    return navItems;
+  }, [user, blocked]);
 
   const handleLogout = () => {
     Cookies.remove("token");
@@ -86,12 +119,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <div className="text-xs text-gray-400 px-2 py-3"></div>
           ) : (
             <nav className={`grid gap-1 py-2 ${isCollapsed ? "px-2" : "px-3"}`}>
-              {(user.role === "LYNQ_TEAM"
-                ? superAdminNavItems
-                : user.role === "ADMIN"
-                  ? adminNavItems
-                  : navItems
-              ).map((item) => (
+              {availableNavItems.map((item) => (
                 <NavItem key={item.href} {...item} isCollapsed={isCollapsed} />
               ))}
             </nav>

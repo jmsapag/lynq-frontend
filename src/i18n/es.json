@@ -30,6 +30,7 @@
     "subscriptions/customize": "Personalizar Subscripción",
     "subscription": "Suscripción",
     "billing": "Facturación",
+    "billing/subscription": "Suscripción",
     "new-payment-method": "Nuevo Método de Pago"
   },
   "billing": {
@@ -138,6 +139,11 @@
       "downloadError": "Error al descargar la factura"
     }
   },
+  "subscriptionPage": {
+    "title": "Facturación y suscripción",
+    "subtitle": "Revisa tu plan, resuelve incidencias de pago y mantén tus analíticas en línea.",
+    "errorGeneric": "No pudimos cargar los detalles de tu suscripción. Intenta nuevamente."
+  },
   "subscription": {
     "subscription-success-message": {
       "desc": "Tu pago fue procesado correctamente y tu suscripción está activa.",
@@ -149,11 +155,106 @@
     "pricePerSensor": "Precio por sensor",
     "includesTax": "Incluye impuestos",
     "sensorCount": "Cantidad de sensores",
-    "sensorCountError": "Debe ser entre 1 y {{max}}",
+    "sensorCountError": "Debe estar entre 1 y {{max}}",
     "totalMonthly": "Total mensual",
     "redirecting": "Redirigiendo...",
-    "subscribe": "Suscribirme",
-    "checkoutError": "Error al iniciar checkout: {{error}}"
+    "subscribe": "Suscribirse",
+    "checkoutError": "Error al iniciar checkout: {{error}}",
+    "card": {
+      "title": "Plan de suscripción de LYNQ",
+      "subtitle": "Mantén el control de tus analíticas peatonales con información permanente."
+    },
+    "labels": {
+      "pricePerSensor": "Precio por sensor",
+      "pricePerSensorHelper": "Precio antes de impuestos por cada sensor activo",
+      "estimatedMonthly": "Total mensual estimado",
+      "estimatedTotalHelper": "Calculado antes de impuestos según tus sensores actuales",
+      "sensorSummary": "{{count}} sensores activos"
+    },
+    "badges": {
+      "trialing": "La prueba finaliza en {{count}} días",
+      "trialActive": "Prueba en curso",
+      "freeTrial": "Prueba gratis de 30 días"
+    },
+    "features": {
+      "analytics": {
+        "title": "Analíticas avanzadas",
+        "description": "Tableros y comparaciones diseñados para inteligencia de tráfico peatonal."
+      },
+      "realTime": {
+        "title": "Información en tiempo real",
+        "description": "Observa las tendencias de visitantes y responde al instante."
+      },
+      "security": {
+        "title": "Retención de datos segura",
+        "description": "Seguridad de nivel empresarial con políticas de retención compatibles."
+      },
+      "support": {
+        "title": "Soporte dedicado",
+        "description": "Acceso directo a nuestro equipo de éxito cuando lo necesites."
+      }
+    },
+    "actions": {
+      "subscribe": "Suscribirse",
+      "startPaidPlan": "Iniciar plan pago",
+      "manageBilling": "Administrar facturación",
+      "updatePayment": "Actualizar métodos de pago",
+      "contactSupport": "Contactar soporte",
+      "reactivate": "Reactivar suscripción",
+      "resume": "Reanudar suscripción",
+      "retry": "Intentar nuevamente"
+    },
+    "notice": {
+      "active": {
+        "title": "Tu suscripción está activa",
+        "description": "Todo está en orden. Puedes administrar la facturación o los métodos de pago cuando quieras."
+      },
+      "trialing": {
+        "title": "Tu prueba termina en {{count}} días",
+        "description": "Elige un plan antes de que finalice la prueba para no interrumpir tus analíticas.",
+        "helper": "Completa la suscripción ahora para evitar perder el acceso."
+      },
+      "pastDue": {
+        "title": "No pudimos procesar tu último pago",
+        "description": "Actualiza tu método de pago para regularizar tu espacio de trabajo."
+      },
+      "reactivate": {
+        "title": "Tu suscripción necesita atención",
+        "description": "Reactiva tu plan para recuperar el acceso completo para tu equipo."
+      },
+      "paused": {
+        "title": "Tu suscripción está en pausa",
+        "description": "Reanuda la facturación para volver a activar las analíticas peatonales."
+      },
+      "none": {
+        "title": "Activa tu suscripción de LYNQ",
+        "description": "Elige un plan para desbloquear funciones avanzadas de analíticas peatonales."
+      }
+    },
+    "statusLabel": {
+      "active": "Activa",
+      "trialing": "En prueba",
+      "past_due": "Pago pendiente",
+      "unpaid": "Impaga",
+      "canceled": "Cancelada",
+      "incomplete": "Incompleta",
+      "incomplete_expired": "Vencida",
+      "paused": "Pausada",
+      "none": "Sin suscripción"
+    },
+    "placeholders": {
+      "notAvailable": "No disponible"
+    },
+    "toasts": {
+      "noBusinessId": {
+        "title": "No encontramos tu negocio",
+        "description": "Vuelve a iniciar sesión o contacta soporte para vincular tu suscripción."
+      },
+      "checkoutError": {
+        "title": "No se pudo iniciar el checkout",
+        "description": "No pudimos iniciar el flujo de pago. Intenta nuevamente o contacta soporte."
+      }
+    }
   },
   "days": {
     "sunday": "Domingo",

@@ -187,7 +187,7 @@ export default function BillingPage() {
   );
 
   const handleCreateSubscription = () => {
-    navigate("/subscription");
+    navigate("/billing/subscription");
   };
 
   if (loading) {
@@ -402,14 +402,14 @@ export default function BillingPage() {
 
   const periodStart = subscription.currentPeriodStart
     ? formatDate(subscription.currentPeriodStart)
-    : subscription.trialPeriodStart
-      ? formatDate(subscription.trialPeriodStart)
+    : subscription.trialStart
+      ? formatDate(subscription.trialStart)
       : t("billing.notAvailable");
 
   const periodEnd = subscription.currentPeriodEnd
     ? formatDate(subscription.currentPeriodEnd)
-    : subscription.trialPeriodEnd
-      ? formatDate(subscription.trialPeriodEnd)
+    : subscription.trialEnd
+      ? formatDate(subscription.trialEnd)
       : t("billing.notAvailable");
 
   const summaryNextHelper = subscription.currentPeriodEnd

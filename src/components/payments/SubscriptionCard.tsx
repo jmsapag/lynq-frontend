@@ -1,157 +1,151 @@
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
-import { Card, CardBody, Button } from "@heroui/react";
-import { createStripeCheckoutSession } from "../../services/stripeCheckoutService";
+import type React from "react";
+import { Card, CardBody, Button, Chip } from "@heroui/react";
+import type { SVGProps } from "react";
+
+export interface SubscriptionFeature {
+  icon: React.ComponentType<SVGProps<SVGSVGElement>>;
+  title: string;
+  description?: string;
+}
+
+export interface SubscriptionCardAction {
+  label: string;
+  onPress: () => void;
+  isLoading?: boolean;
+  isDisabled?: boolean;
+  variant?: "solid" | "bordered" | "light";
+  color?:
+    | "primary"
+    | "secondary"
+    | "default"
+    | "success"
+    | "warning"
+    | "danger";
+}
+
+interface SubscriptionValueBlock {
+  label: string;
+  value: string;
+  helper?: string;
+}
 
 interface SubscriptionCardProps {
-  businessId: string;
-  basePriceCents: number;
-  fareTax: number;
-  currency: string;
-  maxSensors?: number;
+  title: string;
+  subtitle?: string;
+  pricePerSensor: SubscriptionValueBlock;
+  estimatedTotal: SubscriptionValueBlock;
+  sensorSummary: string;
+  trialBadge?: string;
+  features: SubscriptionFeature[];
+  primaryAction: SubscriptionCardAction;
+  secondaryAction?: SubscriptionCardAction;
 }
 
 export const SubscriptionCard = ({
-  businessId,
-  basePriceCents,
-  fareTax,
-  currency,
-  maxSensors = 100,
+  title,
+  subtitle,
+  pricePerSensor,
+  estimatedTotal,
+  sensorSummary,
+  trialBadge,
+  features,
+  primaryAction,
+  secondaryAction,
 }: SubscriptionCardProps) => {
-  const [sensorCount, setSensorCount] = useState(1);
-  const [inputValue, setInputValue] = useState("1");
-  const [inputError, setInputError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [checkoutError, setCheckoutError] = useState<string | null>(null);
-  const pricePerSensor = basePriceCents * (1 + fareTax);
-  const totalPrice = pricePerSensor * sensorCount;
-  const { t } = useTranslation();
-
   return (
-    <Card className="w-full max-w-sm shadow-lg border border-primary-200 rounded-xl bg-white flex flex-col justify-between">
-      <CardBody className="p-6 flex flex-col gap-4">
-        <div className="mb-2">
-          <span className="block text-3xl font-extrabold text-primary-700 tracking-tight mb-1">
-            {t("subscription.cardTitle")}
-          </span>
-        </div>
-        <div className="flex flex-col gap-1">
-          <span className="text-sm text-gray-500">
-            {t("subscription.pricePerSensor")}
-          </span>
-          <span className="text-2xl font-bold text-primary-700">
-            {(pricePerSensor / 100).toFixed(2)} {currency}
-          </span>
-          <span className="text-xs text-gray-400">
-            {t("subscription.includesTax")}
-          </span>
-        </div>
-        <div className="flex items-center gap-3 mt-4">
-          <span className="text-sm text-gray-600">
-            {t("subscription.sensorCount")}
-          </span>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="bordered"
-              size="sm"
-              className="px-2 py-1"
-              onPress={() => {
-                const newVal = Math.max(1, sensorCount - 1);
-                setSensorCount(newVal);
-                setInputValue(String(newVal));
-                setInputError(null);
-              }}
-              disabled={sensorCount <= 1}
-            >
-              -
-            </Button>
-            <div className="relative flex flex-col items-center justify-center w-14">
-              <input
-                type="text"
-                inputMode="numeric"
-                pattern="[0-9]*"
-                min={1}
-                max={maxSensors}
-                value={inputValue}
-                onChange={(e) => {
-                  const val = e.target.value.replace(/[^0-9]/g, "");
-                  setInputValue(val);
-                  if (val === "") {
-                    setInputError(null);
-                  } else {
-                    const num = Number(val);
-                    if (num < 1 || num > maxSensors) {
-                      setInputError(
-                        t("subscription.sensorCountError", { max: maxSensors }),
-                      );
-                    } else {
-                      setInputError(null);
-                    }
-                    setSensorCount(Math.max(1, Math.min(maxSensors, num)));
-                  }
-                }}
-                className={`w-full text-center text-lg font-semibold text-primary-700 bg-primary-50 rounded-md border py-1 focus:outline-none focus:ring-2 focus:ring-primary-300 appearance-none ${inputError ? "border-danger-500 ring-danger-300" : "border-primary-200"}`}
-                style={{ MozAppearance: "textfield" }}
-              />
-              <span
-                className="block text-xs text-danger-600 h-4 mt-1 pointer-events-none select-none absolute left-0 right-0 top-full"
-                style={{ minHeight: "1rem", height: "1rem" }}
-              >
-                {inputError ? inputError : ""}
-              </span>
+    <Card className="w-full max-w-4xl border border-primary-100 bg-white/90 backdrop-blur shadow-xl transition-transform duration-300 hover:scale-[1.02] hover:shadow-2xl">
+      <CardBody className="space-y-8 p-8">
+        <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+          <div className="space-y-3">
+            {trialBadge ? (
+              <Chip color="primary" size="sm" variant="flat">
+                {trialBadge}
+              </Chip>
+            ) : null}
+            <div className="space-y-2">
+              <h2 className="text-3xl font-bold text-gray-900">{title}</h2>
+              {subtitle ? (
+                <p className="text-base text-gray-500">{subtitle}</p>
+              ) : null}
             </div>
-            <Button
-              variant="bordered"
-              size="sm"
-              className="px-2 py-1"
-              onPress={() => {
-                const newVal = Math.min(maxSensors, sensorCount + 1);
-                setSensorCount(newVal);
-                setInputValue(String(newVal));
-                setInputError(null);
-              }}
-              disabled={sensorCount >= maxSensors}
+          </div>
+
+          <div className="grid gap-4 text-right sm:grid-cols-2 md:text-right">
+            <div className="rounded-xl border border-primary-100 bg-primary-50/60 px-6 py-4 shadow-sm">
+              <p className="text-xs uppercase tracking-[0.3em] text-primary-500">
+                {pricePerSensor.label}
+              </p>
+              <p className="text-3xl font-extrabold text-primary-600">
+                {pricePerSensor.value}
+              </p>
+              {pricePerSensor.helper ? (
+                <p className="mt-1 text-xs text-primary-500/80">
+                  {pricePerSensor.helper}
+                </p>
+              ) : null}
+            </div>
+            <div className="rounded-xl border border-gray-200 bg-white px-6 py-4 shadow-sm">
+              <p className="text-xs uppercase tracking-[0.3em] text-gray-500">
+                {estimatedTotal.label}
+              </p>
+              <p className="text-3xl font-extrabold text-gray-900">
+                {estimatedTotal.value}
+              </p>
+              {estimatedTotal.helper ? (
+                <p className="mt-1 text-xs text-gray-500">
+                  {estimatedTotal.helper}
+                </p>
+              ) : null}
+            </div>
+          </div>
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          {features.map(({ icon: Icon, title: featureTitle, description }) => (
+            <div
+              key={featureTitle}
+              className="flex items-start gap-3 rounded-lg border border-gray-200 bg-white/60 p-4 shadow-sm"
             >
-              +
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-100 text-primary-600">
+                <Icon className="h-5 w-5" aria-hidden="true" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-gray-900">
+                  {featureTitle}
+                </p>
+                {description ? (
+                  <p className="text-sm text-gray-500">{description}</p>
+                ) : null}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-sm text-gray-500">{sensorSummary}</p>
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
+            {secondaryAction ? (
+              <Button
+                color={secondaryAction.color ?? "default"}
+                variant={secondaryAction.variant ?? "bordered"}
+                onPress={secondaryAction.onPress}
+                isDisabled={secondaryAction.isDisabled}
+              >
+                {secondaryAction.label}
+              </Button>
+            ) : null}
+            <Button
+              color={primaryAction.color ?? "primary"}
+              onPress={primaryAction.onPress}
+              isLoading={primaryAction.isLoading}
+              isDisabled={primaryAction.isDisabled}
+              variant={primaryAction.variant ?? "solid"}
+              className="px-8 shadow-md"
+            >
+              {primaryAction.label}
             </Button>
           </div>
         </div>
-        <div className="flex flex-col gap-1 mt-2">
-          <span className="text-sm text-gray-500">
-            {t("subscription.totalMonthly")}
-          </span>
-          <span className="text-3xl font-extrabold text-primary-600">
-            {(totalPrice / 100).toFixed(2)} {currency}
-          </span>
-        </div>
-        <Button
-          color="primary"
-          className="w-full mt-4 py-3 text-base font-bold rounded-lg shadow-sm hover:bg-primary-700 transition"
-          disabled={!!inputError || loading}
-          onPress={async () => {
-            setLoading(true);
-            setCheckoutError(null);
-            try {
-              const res = await createStripeCheckoutSession(businessId);
-              window.location.href = res.url;
-            } catch (e: any) {
-              setCheckoutError(
-                e?.response?.data?.message || "Error al iniciar checkout",
-              );
-            } finally {
-              setLoading(false);
-            }
-          }}
-        >
-          {loading
-            ? t("subscription.redirecting")
-            : t("subscription.subscribe")}
-        </Button>
-        {checkoutError && (
-          <div className="text-danger-600 text-sm mt-2 text-center">
-            {t("subscription.checkoutError", { error: checkoutError })}
-          </div>
-        )}
       </CardBody>
     </Card>
   );
