@@ -177,28 +177,6 @@ const SubscriptionEventsFeed = () => {
     try {
       setDownloadingInvoice((prev) => new Set(prev).add(businessId));
 
-      // Try direct download approach first
-      const token = localStorage.getItem("token");
-      if (token) {
-        const url = `/api/manual-subscriptions/${businessId}/invoice`;
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = fileName;
-        link.style.display = "none";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-
-        addToast({
-          title: t("common.success"),
-          description: "Invoice downloaded successfully",
-          severity: "success",
-          color: "success",
-        });
-        return;
-      }
-
-      // Fallback to blob approach
       const blob = await downloadInvoice(businessId);
 
       // Create download link

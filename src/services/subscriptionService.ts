@@ -55,9 +55,6 @@ export const downloadInvoice = async (businessId: number): Promise<Blob> => {
     `/manual-subscriptions/${businessId}/invoice`,
     {
       responseType: "blob",
-      headers: {
-        Accept: "application/pdf, application/octet-stream, */*",
-      },
     },
   );
   return response.data;
