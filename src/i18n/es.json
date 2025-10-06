@@ -31,7 +31,12 @@
     "subscription": "Suscripción",
     "billing": "Facturación",
     "billing/subscription": "Suscripción",
-    "new-payment-method": "Nuevo Método de Pago"
+    "new-payment-method": "Nuevo Método de Pago",
+    "reports/compact": "Reporte Compacto",
+    "reports/default": "Reporte Default",
+    "reports/analytics-focused": "Reporte Enfoque Analítico",
+    "reports/metrics-grid": "Reporte Grilla De Métricas",
+    "reports/create": "Crear Reporte"
   },
   "billing": {
     "title": "Facturación",
@@ -395,7 +400,10 @@
     "exportAsCSV": "Exportar como CSV",
     "sendByEmail": "Enviar por correo",
     "locale": "es-ES",
-    "success": "Éxito"
+    "success": "Éxito",
+    "active": "Activo",
+    "inactive": "Inactivo",
+    "placements": "Ubicaciones"
   },
   "dashboard": {
     "percentage": "Porcentaje (%)",
@@ -935,6 +943,44 @@
     "dragDropDescription": "Diseñe el diseño de su reporte arrastrando y soltando widgets.",
     "configure": "Configurar",
     "modalTitle": "Configurar Reporte",
+    "configs": {
+      "title": "Configuraciones de Reportes",
+      "subtitle": "Navegue, inspeccione y administre sus diseños de reportes guardados.",
+      "createCta": "Crear Reporte",
+      "widgets": "Widgets",
+      "lastModified": "Última modificación",
+      "viewDetails": "Ver Detalles",
+      "empty": "No se encontraron configuraciones. Cree su primer reporte.",
+      "fetchError": "Error al obtener las configuraciones de reportes"
+    },
+    "unified": {
+      "activeSchedule": "Programación activa",
+      "noScheduleConfigured": "Aún no se ha configurado una programación.",
+      "scheduleButNoLayouts": "Tiene una programación de entrega configurada pero aún no hay diseños guardados.",
+      "noLayoutsNoSchedule": "Cree un diseño y configure la programación para automatizar la entrega de reportes.",
+      "scheduleOnly": "Tiene una programación pero aún no hay widgets de diseño."
+    },
+    "detail": {
+      "layoutTitle": "Diseño:",
+      "scheduleOnlyTitle": "Solo Programación",
+      "scheduleOnlyHint": "Ha configurado la programación pero aún no hay un diseño de widgets.",
+      "scheduleType": "Tipo de Programación",
+      "scheduleDetails": "Detalles de Programación",
+      "timezone": "Zona Horaria",
+      "executionTime": "Hora de Ejecución",
+      "days": "Días",
+      "dataDays": "Días de Rango de Datos",
+      "dataTimeRange": "Rango de Tiempo de Datos",
+      "locations": "Ubicaciones",
+      "noLocations": "(ninguna)",
+      "noWidgets": "No hay widgets asignados en este diseño.",
+      "enabled": "Habilitado",
+      "language": "Idioma",
+      "slot": "Ranura",
+      "widget": "Widget",
+      "back": "Volver a Reportes",
+      "createNew": "Crear Nuevo Reporte"
+    },
     "form": {
       "type": "Tipo de Reporte",
       "locations": "Ubicaciones",

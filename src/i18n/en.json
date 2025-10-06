@@ -32,7 +32,12 @@
     "subscription": "Subscription",
     "billing": "Billing",
     "billing/subscription": "Subscription",
-    "new-payment-method": "Add Payment Method"
+    "new-payment-method": "Add Payment Method",
+    "reports/compact": "Compact Report",
+    "reports/default": "Default Report",
+    "reports/analytics-focused": "Analytics Focused Report",
+    "reports/metrics-grid": "Metric Grid Report",
+    "reports/create": "Create Report"
   },
   "billing": {
     "title": "Billing",
@@ -270,7 +275,10 @@
     "exportAsCSV": "Export as CSV",
     "sendByEmail": "Send by Email",
     "locale": "en-US",
-    "success": "Success"
+    "success": "Success",
+    "active": "Active",
+    "inactive": "Inactive",
+    "placements": "Placements"
   },
   "dashboard": {
     "percentage": "Percentage (%)",
@@ -835,7 +843,29 @@
       "activeSchedule": "Active schedule",
       "noScheduleConfigured": "No schedule configured yet.",
       "scheduleButNoLayouts": "You have a delivery schedule configured but no layouts saved yet.",
-      "noLayoutsNoSchedule": "Create a layout and configure scheduling to automate report delivery."
+      "noLayoutsNoSchedule": "Create a layout and configure scheduling to automate report delivery.",
+      "scheduleOnly": "You have a schedule but no layout widgets yet."
+    },
+    "detail": {
+      "layoutTitle": "Layout:",
+      "scheduleOnlyTitle": "Schedule Only",
+      "scheduleOnlyHint": "You have configured scheduling but no widget layout yet.",
+      "scheduleType": "Schedule Type",
+      "scheduleDetails": "Schedule Details",
+      "timezone": "Timezone",
+      "executionTime": "Execution Time",
+      "days": "Days",
+      "dataDays": "Data Range Days",
+      "dataTimeRange": "Data Time Range",
+      "locations": "Locations",
+      "noLocations": "(none)",
+      "noWidgets": "No widgets assigned in this layout.",
+      "enabled": "Enabled",
+      "language": "Language",
+      "slot": "Slot",
+      "widget": "Widget",
+      "back": "Back to Reports",
+      "createNew": "Create New Report"
     },
     "form": {
       "type": "Report Type",

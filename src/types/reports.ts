@@ -53,14 +53,20 @@ export interface ReportScheduleConfig {
   language?: string;
 }
 
-// New unified /reports response (Option C backend)
-export interface UnifiedReportsResponse {
+// Final /reports entry (each layout fused with schedule). If there is only schedule and no layouts
+// backend returns a virtual entry with id/layoutId 'schedule-only' and empty widgetPlacements.
+export interface ReportEntry extends ReportLayoutConfiguration {
+  id: string; // mirrors layoutId or 'schedule-only'
+  schedule?: ReportScheduleConfig; // may be shared across entries
+}
+
+// Final /reports response
+export interface ReportsResponse {
   statusCode: number;
   message: string;
-  layouts: ReportLayoutConfiguration[];
-  totalLayouts: number;
+  total: number; // number of reports entries
   lastSync: string;
-  schedule: ReportScheduleConfig | null;
+  reports: ReportEntry[];
 }
 
 // Generic Report (business/report schedule entity) expected by list & detail UI
