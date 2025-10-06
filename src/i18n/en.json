@@ -269,7 +269,8 @@
     "exportAsPdf": "Export as PDF",
     "exportAsCSV": "Export as CSV",
     "sendByEmail": "Send by Email",
-    "locale": "en-US"
+    "locale": "en-US",
+    "success": "Success"
   },
   "dashboard": {
     "percentage": "Percentage (%)",
@@ -850,25 +851,18 @@
   },
   "subscriptions": {
     "events": {
-      "title": "Subscription Events",
-      "companyIdFilter": "Filter by company ID",
-      "typeFilter": "Filter by type",
+      "title": "Manual Subscriptions",
+      "businessIdFilter": "Filter by business ID",
+      "statusFilter": "Filter by status",
       "searchPlaceholder": "Search",
       "clearFilters": "Clear Filters",
-      "fromDate": "From date",
-      "toDate": "To date",
-      "allTypes": "All types",
-      "subscriptionCreated": "Subscription Created",
-      "subscriptionUpdated": "Subscription Updated",
-      "subscriptionCancelled": "Subscription Cancelled",
-      "paymentSuccessful": "Payment Successful",
-      "paymentFailed": "Payment Failed",
-      "invoiceCreated": "Invoice Created",
-      "invoicePaid": "Invoice Paid",
-      "loadingError": "Error loading subscription events",
-      "eventsLoadError": "Error loading events",
-      "noEventsFiltered": "No events found with applied filters",
-      "noEventsAvailable": "No subscription events available"
+      "allStatuses": "All Statuses",
+      "active": "Active",
+      "expired": "Expired",
+      "pending": "Pending",
+      "loadingError": "Error loading manual subscriptions",
+      "noEventsFiltered": "No subscriptions found with applied filters",
+      "noEventsAvailable": "No subscriptions available"
     }
   },
   "planWizard": {
