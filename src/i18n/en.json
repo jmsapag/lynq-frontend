@@ -1,5 +1,6 @@
 {
   "nav": {
+    "wallet": "Wallet",
     "subscription/cancel": "Payment Failed",
     "billing/subscription/success": "Subscription Successful",
     "billing/subscription/cancel": "Subscription Canceled",

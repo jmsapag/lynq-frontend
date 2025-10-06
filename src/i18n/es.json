@@ -1,5 +1,6 @@
 {
   "nav": {
+    "wallet": "Billetera",
     "subscription/cancel": "Pago fallido",
     "billing/subscription/success": "Suscripción exitosa",
     "billing/subscription/cancel": "Suscripción cancelada",
