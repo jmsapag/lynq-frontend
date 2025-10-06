@@ -4,6 +4,7 @@ import {
   PredefinedPeriod,
 } from "../components/dashboard/filter.tsx";
 import { useEffect, useState, useMemo } from "react";
+import { event as gaEvent } from "../lib/ga";
 import { useSensorData } from "../hooks/useSensorData.ts";
 import { useSensorRecords } from "../hooks/useSensorRecords.ts";
 import { useGroupLocations } from "../hooks/useGroupLocations";
@@ -194,6 +195,8 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
+    // Emit a simple event to validate GA custom events and debug wiring
+    gaEvent("dashboard_view");
     // Store lastUpdated for future reference if needed
     const storedLastUpdated = localStorage.getItem("lastUpdated");
     if (!storedLastUpdated) {

@@ -3,6 +3,7 @@ import Cookies from "js-cookie";
 import { axiosClient } from "../../services/axiosClient.ts";
 import type { SubscriptionState } from "../../types/subscription.ts";
 import { clearBillingBlock } from "../../stores/billingBlockStore.ts";
+import { setUserId } from "../../lib/ga";
 
 export function getUserRoleFromToken() {
   const token = Cookies.get("token");
@@ -128,6 +129,11 @@ export function useLogin() {
         secure: true,
         sameSite: "strict",
       });
+      // Set GA user_id using a stable, non-PII identifier from token payload if present
+      try {
+        const payload = JSON.parse(atob(data.token.split(".")[1]));
+        if (payload?.userId) setUserId(String(payload.userId));
+      } catch {}
       return data;
     } catch (err: any) {
       setError(err.response?.data?.message || "Login failed");
