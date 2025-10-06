@@ -6,17 +6,13 @@ import {
 } from "@heroicons/react/24/outline";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import {
-  getSubscriptionStateFromToken,
-  getIsManuallyManagedFromToken,
-} from "../../hooks/auth/useAuth";
+import { useAuthState } from "../../hooks/auth/useAuthState";
 import type { SubscriptionState } from "../../types/subscription";
 
 export const SubscriptionStateBanner = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const subscriptionState = getSubscriptionStateFromToken();
-  const isManuallyManaged = getIsManuallyManagedFromToken();
+  const { subscriptionState, isManuallyManaged } = useAuthState();
 
   // Don't show banner if subscription is active or if there's no state
   if (

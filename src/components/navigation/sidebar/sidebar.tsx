@@ -4,6 +4,7 @@ import {
   XMarkIcon,
   ChevronDoubleLeftIcon,
   ChevronDoubleRightIcon,
+  MapPinIcon,
 } from "@heroicons/react/24/outline";
 import {
   navItems,
@@ -15,8 +16,7 @@ import { ProfileMenu } from "./profile-menu.tsx";
 import logoImage from "../../../assets/logo.png";
 import Cookies from "js-cookie";
 import { useSelfUserProfile } from "../../../hooks/users/useSelfUserProfile";
-import { useBillingBlock } from "../../../hooks/payments/useBillingBlock";
-import { clearBillingBlock } from "../../../stores/billingBlockStore";
+import { useAuthState } from "../../../hooks/auth/useAuthState";
 import { CurrencyDollarIcon } from "@heroicons/react/24/outline";
 
 interface SidebarProps {
@@ -34,19 +34,27 @@ export const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const navigate = useNavigate();
   const { user, loading } = useSelfUserProfile();
-  const { blocked } = useBillingBlock();
+
+  // Use the new reactive auth state hook - single source of truth!
+  const { isBlocked } = useAuthState();
 
   const availableNavItems = useMemo(() => {
     if (!user) {
       return [] as typeof navItems;
     }
 
-    if (blocked) {
+    if (isBlocked) {
       if (user.role === "LYNQ_TEAM") {
         return [] as typeof navItems;
       }
 
+      // When blocked, allow access to billing and locations
       return [
+        {
+          title: "locations",
+          href: "/locations",
+          icon: MapPinIcon,
+        },
         {
           title: "billing",
           href: "/billing/subscription",
@@ -64,11 +72,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
     }
 
     return navItems;
-  }, [user, blocked]);
+  }, [user, isBlocked]);
 
   const handleLogout = () => {
-    // Clear billing block state on logout
-    clearBillingBlock();
     // Clear both access token and refresh token
     Cookies.remove("token");
     Cookies.remove("refreshToken");

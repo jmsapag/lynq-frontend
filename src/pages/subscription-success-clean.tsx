@@ -59,17 +59,16 @@ export default function SubscriptionSuccessPage() {
           "/auth/refresh",
           {
             refreshToken: refreshTokenValue,
-            _timestamp: timestamp, // Add timestamp to body
-            _attempt: attempt, // Add attempt number
+            _timestamp: timestamp,
+            _attempt: attempt,
           },
           {
             headers: {
               "Cache-Control": "no-cache, no-store, must-revalidate",
               Pragma: "no-cache",
               Expires: "0",
-              "X-Request-ID": `refresh-${timestamp}-${attempt}`, // Unique request ID
+              "X-Request-ID": `refresh-${timestamp}-${attempt}`,
             },
-            // Add timestamp to URL to prevent caching
             params: {
               _t: timestamp,
               _a: attempt,
@@ -77,67 +76,27 @@ export default function SubscriptionSuccessPage() {
           },
         );
 
-        console.log("📦 Response received:", {
-          status: response.status,
-          requestId: `refresh-${timestamp}-${attempt}`,
-        });
-
-        console.log("📦 Response received:", { status: response.status });
-
-        // Decode and check new token
         const newPayload = JSON.parse(atob(response.data.token.split(".")[1]));
-        console.log("� NEW token payload:", newPayload);
-        console.log("📋 NEW subscriptionState:", newPayload.subscriptionState);
 
-        // Check if subscription state is now active or trialing
         const isSubscriptionActive =
           newPayload.subscriptionState === "active" ||
           newPayload.subscriptionState === "trialing" ||
           newPayload.subscriptionState === "manually_managed_active";
 
         if (isSubscriptionActive) {
-          // Success! Store the new token
           Cookies.set("token", response.data.token, {
             secure: true,
             sameSite: "strict",
           });
-          console.log(
-            "✅ Token refreshed successfully with active subscription!",
-          );
-          console.log("✅ New token stored in cookies");
-
-          // Notify all components
           refreshAuthState();
-          console.log("✅ Auth state refreshed - all components notified");
-
           setSubscriptionActivated(true);
 
           setTimeout(() => {
             setIsRefreshing(false);
-            console.log("🏁 Refresh process completed successfully");
           }, 500);
-          return; // Exit successfully
+          return;
         } else {
-          console.warn(
-            `⚠️ Token still has blocked state: ${newPayload.subscriptionState}`,
-          );
-
-          if (attempt < maxRetries) {
-            console.log(
-              `🔄 Will retry... (${maxRetries - attempt} attempts remaining)`,
-            );
-            console.log(
-              "💡 Waiting for Stripe webhook to update subscription in backend...",
-            );
-          } else {
-            console.error(
-              "❌ Max retries reached. Subscription state not updated.",
-            );
-            console.log(
-              "💡 User can try clicking 'Go to Dashboard' - it may work after webhook completes",
-            );
-
-            // Store the token anyway - user might be able to access after webhook
+          if (attempt >= maxRetries) {
             Cookies.set("token", response.data.token, {
               secure: true,
               sameSite: "strict",
@@ -148,15 +107,7 @@ export default function SubscriptionSuccessPage() {
           }
         }
       } catch (error: any) {
-        console.error(`❌ Error on attempt ${attempt}:`, error);
-        console.error("❌ Error details:", {
-          message: error.message,
-          response: error.response?.data,
-          status: error.response?.status,
-        });
-
         if (attempt === maxRetries) {
-          console.error("❌ All refresh attempts failed");
           setIsRefreshing(false);
           return;
         }
@@ -165,24 +116,19 @@ export default function SubscriptionSuccessPage() {
   };
 
   useEffect(() => {
-    // Check if user has a token, if not redirect to login
     const token = Cookies.get("token");
     if (!token) {
-      console.log("⚠️ No token found, redirecting to login");
       navigate("/login", { replace: true });
       return;
     }
 
-    // Prevent running twice in StrictMode or on re-renders
     if (hasRefreshed.current) {
-      console.log("⚠️ Already refreshed, skipping...");
       return;
     }
 
     hasRefreshed.current = true;
-
     triggerTokenRefresh();
-  }, []); // Empty array - run once on mount
+  }, []);
 
   const handleManualRetry = () => {
     setIsRefreshing(true);

@@ -1,6 +1,8 @@
 {
   "nav": {
     "subscription/cancel": "Pago fallido",
+    "billing/subscription/success": "Suscripción exitosa",
+    "billing/subscription/cancel": "Suscripción cancelada",
     "subscription-fail-message": {
       "desc": "Tu pago no pudo ser procesado. Por favor, revisa tus datos e intenta nuevamente.",
       "help": "Si el problema persiste, contacta a soporte",
