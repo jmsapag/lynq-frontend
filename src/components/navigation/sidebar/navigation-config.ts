@@ -5,6 +5,7 @@ import {
   MapPinIcon,
   HomeIcon,
   DocumentChartBarIcon,
+  CurrencyDollarIcon,
 } from "@heroicons/react/24/outline";
 import {
   ArrowsRightLeftIcon,
@@ -27,7 +28,7 @@ export const superAdminNavItems = [
   { title: "devices", href: "/devices", icon: DeviceTabletIcon },
   { title: "users", href: "/manage/users", icon: UserGroupIcon },
   // { title: "plans", href: "/plans", icon: ClipboardDocumentListIcon },
-  // { title: "subscriptions", href: "/subscriptions", icon: CurrencyDollarIcon },
+  { title: "subscriptions", href: "/subscriptions", icon: CurrencyDollarIcon },
 ];
 
 export const adminNavItems = [
@@ -35,6 +36,7 @@ export const adminNavItems = [
   { title: "dashboard", href: "/dashboard", icon: ChartBarIcon },
   { title: "comparison", href: "/comparison", icon: ArrowsRightLeftIcon },
   { title: "reports", href: "/reports", icon: DocumentChartBarIcon },
+  { title: "billing", href: "/billing", icon: CurrencyDollarIcon },
   { title: "user-management", href: "/user-management", icon: UserGroupIcon },
   { title: "locations", href: "/locations", icon: MapPinIcon },
   // { title: "subscriptions", href: "/subscriptions", icon: CurrencyDollarIcon },

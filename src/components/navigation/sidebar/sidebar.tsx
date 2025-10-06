@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   XMarkIcon,
   ChevronDoubleLeftIcon,
   ChevronDoubleRightIcon,
+  MapPinIcon,
 } from "@heroicons/react/24/outline";
 import {
   navItems,
@@ -15,6 +16,8 @@ import { ProfileMenu } from "./profile-menu.tsx";
 import logoImage from "../../../assets/logo.png";
 import Cookies from "js-cookie";
 import { useSelfUserProfile } from "../../../hooks/users/useSelfUserProfile";
+import { useAuthState } from "../../../hooks/auth/useAuthState";
+import { CurrencyDollarIcon } from "@heroicons/react/24/outline";
 
 interface SidebarProps {
   isOpen?: boolean;
@@ -32,8 +35,49 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const navigate = useNavigate();
   const { user, loading } = useSelfUserProfile();
 
+  // Use the new reactive auth state hook - single source of truth!
+  const { isBlocked } = useAuthState();
+
+  const availableNavItems = useMemo(() => {
+    if (!user) {
+      return [] as typeof navItems;
+    }
+
+    if (isBlocked) {
+      if (user.role === "LYNQ_TEAM") {
+        return [] as typeof navItems;
+      }
+
+      // When blocked, allow access to billing and locations
+      return [
+        {
+          title: "locations",
+          href: "/locations",
+          icon: MapPinIcon,
+        },
+        {
+          title: "billing",
+          href: "/billing/subscription",
+          icon: CurrencyDollarIcon,
+        },
+      ];
+    }
+
+    if (user.role === "LYNQ_TEAM") {
+      return superAdminNavItems;
+    }
+
+    if (user.role === "ADMIN") {
+      return adminNavItems;
+    }
+
+    return navItems;
+  }, [user, isBlocked]);
+
   const handleLogout = () => {
+    // Clear both access token and refresh token
     Cookies.remove("token");
+    Cookies.remove("refreshToken");
     navigate("/login", { replace: true });
   };
 
@@ -86,12 +130,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <div className="text-xs text-gray-400 px-2 py-3"></div>
           ) : (
             <nav className={`grid gap-1 py-2 ${isCollapsed ? "px-2" : "px-3"}`}>
-              {(user.role === "LYNQ_TEAM"
-                ? superAdminNavItems
-                : user.role === "ADMIN"
-                  ? adminNavItems
-                  : navItems
-              ).map((item) => (
+              {availableNavItems.map((item) => (
                 <NavItem key={item.href} {...item} isCollapsed={isCollapsed} />
               ))}
             </nav>

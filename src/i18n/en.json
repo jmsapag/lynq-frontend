@@ -1,5 +1,18 @@
 {
   "nav": {
+    "subscription/cancel": "Payment Failed",
+    "billing/subscription/success": "Subscription Successful",
+    "billing/subscription/cancel": "Subscription Canceled",
+    "subscription-fail-message": {
+      "desc": "Your payment could not be processed. Please check your details and try again.",
+      "help": "If the problem persists, contact support",
+      "goToDashboard": "Go to Dashboard",
+      "retry": "Retry Payment",
+      "retrying": "Retrying...",
+      "retryError": "Could not retry payment. Please try again later.",
+      "here": "here",
+      "orContact": "or open a ticket "
+    },
     "dashboard": "Dashboard",
     "comparison": "Comparison",
     "users": "Users",
@@ -15,7 +28,150 @@
     "reports": "Reports",
     "faq": "FAQs",
     "subscriptions": "Subscriptions",
-    "plans": "Subscription Plans"
+    "plans": "Subscription Plans",
+    "subscription/success": "Subscription Successful",
+    "subscriptions/customize": "Customized Plan",
+    "subscription": "Subscription",
+    "billing": "Billing",
+    "billing/subscription": "Subscription",
+    "new-payment-method": "Add Payment Method"
+  },
+  "billing": {
+    "title": "Billing",
+    "subtitle": "Track your payment status, pricing, and sensor usage in one place.",
+    "summaryTitle": "Billing overview",
+    "summarySubtitle": "Stay on top of your plan and upcoming invoices.",
+    "summaryDescription": "Review the current cycle, sensor usage, and what you'll pay next.",
+    "errorLoading": "We couldn't load your subscription details right now.",
+    "retry": "Try again",
+    "noSubscription": "You don't have an active subscription yet.",
+    "createSubscription": "Create subscription",
+    "manageSubscription": "Update payment details",
+    "subscriptionDetails": "Subscription details",
+    "detailsDescription": "Key information about your current subscription and billing cycle.",
+    "subscriptionId": "Subscription ID",
+    "monthlyAmount": "Monthly amount",
+    "monthlyAmountHint": "Baseline amount returned by Stripe.",
+    "calculatedPrice": "Calculated price",
+    "calculatedPriceHint": "Dynamically calculated from your tier configuration before tax.",
+    "preTax": "(before tax)",
+    "sensorQuantity": "Sensor quantity",
+    "addPaymentMethod": "Add Payment Method",
+    "currentPeriodStart": "Current period start",
+    "currentPeriodEnd": "Current period end",
+    "cancelAtPeriodEnd": "Cancel at period end",
+    "cancelAtPeriodEndHelper": "This subscription is scheduled to end at the close of the current period.",
+    "cancelAtPeriodEndActive": "This subscription will renew automatically.",
+    "yes": "Yes",
+    "no": "No",
+    "notAvailable": "Not available",
+    "pastDueWarning": {
+      "title": "Payment overdue",
+      "description": "We couldn't collect this month's payment. You're still fully active, but please update your billing information now to avoid losing access next month."
+    },
+    "unpaidWarning": {
+      "title": "Account access limited",
+      "description": "Your subscription is unpaid and access is restricted. Update your payment method to restore access. If no action is taken, the subscription will be canceled and your data will be removed."
+    },
+    "reactivateSubscription": "Reactivate subscription",
+    "reactivateDescription": "Your previous plan was canceled. Start a new subscription to regain full access before your data is removed permanently.",
+    "createNewSubscription": "Create subscription",
+    "status": {
+      "active": "Active",
+      "past_due": "Past due",
+      "unpaid": "Unpaid",
+      "canceled": "Canceled",
+      "incomplete": "Incomplete",
+      "incomplete_expired": "Incomplete (expired)",
+      "trialing": "Trialing",
+      "paused": "Paused",
+      "none": "No subscription"
+    },
+    "summary": {
+      "amountLabel": "Estimated monthly total",
+      "sensorsLabel": "Sensors in plan",
+      "nextBilling": "Current cycle ends",
+      "nextBillingHelper": "We'll attempt the next charge on this date.",
+      "sensorHelper": "{{count}} sensors counted in this estimate.",
+      "statusLabel": "Status"
+    },
+    "pricingModel": "Pricing model",
+    "pricingHint": "Charges adjust automatically as sensors move between tiers.",
+    "tierRange": "{{from}} to {{to}} sensors",
+    "tierUnlimited": "{{from}}+ sensors",
+    "tierLabel": "Tier {{index}}",
+    "perSensor": "/sensor",
+    "schemeLabel": {
+      "tiered": "Tiered pricing",
+      "per_unit": "Per unit",
+      "graduated": "Graduated pricing"
+    },
+    "pricingEmpty": "No tier information is available yet.",
+    "manualSubscriptionSubtitle": "Manage your custom payment agreement",
+    "manualAgreement": "Manual Agreement",
+    "manualSummarySubtitle": "Custom Payment Agreement",
+    "manualSummaryDescription": "Your subscription is managed through a custom agreement",
+    "manualStatus": {
+      "payment_due": "Payment Due",
+      "pending_approval": "Pending Approval",
+      "active": "Active",
+      "blocked": "Blocked"
+    },
+    "manual": {
+      "nextPaymentDate": "Next Payment Date"
+    },
+    "blockedWarning": {
+      "title": "Account Blocked",
+      "description": "Your account has been suspended. Please contact support for assistance."
+    },
+    "paymentDueWarning": {
+      "title": "Payment Due",
+      "description": "Please upload your invoice to maintain active status."
+    },
+    "invoice": {
+      "title": "Invoice Upload",
+      "description": "Upload your payment invoice (PDF only, max 10MB)",
+      "selectFile": "Select PDF file",
+      "fileRequirements": "PDF only, max 10MB",
+      "upload": "Upload",
+      "download": "Download",
+      "uploadedAt": "Uploaded on {{date}}",
+      "invalidFileType": "Only PDF files are allowed",
+      "fileTooLarge": "File size must be less than 10MB",
+      "uploadError": "Failed to upload invoice",
+      "downloadError": "Failed to download invoice"
+    }
+  },
+  "subscriptionBanner": {
+    "manualPending": {
+      "title": "Invoice Under Review",
+      "description": "Your invoice has been uploaded and is awaiting approval from our team. You can continue using the platform normally.",
+      "chip": "Pending Approval"
+    },
+    "manualPaymentDue": {
+      "title": "Payment Due",
+      "description": "Your next payment is due. Please upload your invoice to maintain active status.",
+      "chip": "Action Required",
+      "action": "Upload Invoice"
+    },
+    "manualBlocked": {
+      "title": "Account Suspended",
+      "description": "Your account has been suspended. Please contact our support team to resolve this issue and restore access.",
+      "chip": "Blocked",
+      "action": "Contact Support"
+    },
+    "pastDue": {
+      "title": "Payment Overdue",
+      "description": "Your payment is past due. Please update your payment method to avoid service interruption.",
+      "chip": "Past Due",
+      "action": "Update Payment"
+    },
+    "unpaid": {
+      "title": "Access Restricted",
+      "description": "Your subscription is unpaid. Please update your payment method immediately to restore full access.",
+      "chip": "Action Required",
+      "action": "Update Payment"
+    }
   },
   "days": {
     "sunday": "Sunday",
@@ -114,7 +270,9 @@
     "exportAsPng": "Export as PNG",
     "exportAsPdf": "Export as PDF",
     "exportAsCSV": "Export as CSV",
-    "sendByEmail": "Send by Email"
+    "sendByEmail": "Send by Email",
+    "locale": "en-US",
+    "success": "Success"
   },
   "dashboard": {
     "percentage": "Percentage (%)",
@@ -695,25 +853,18 @@
   },
   "subscriptions": {
     "events": {
-      "title": "Subscription Events",
-      "companyIdFilter": "Filter by company ID",
-      "typeFilter": "Filter by type",
+      "title": "Manual Subscriptions",
+      "businessIdFilter": "Filter by business ID",
+      "statusFilter": "Filter by status",
       "searchPlaceholder": "Search",
       "clearFilters": "Clear Filters",
-      "fromDate": "From date",
-      "toDate": "To date",
-      "allTypes": "All types",
-      "subscriptionCreated": "Subscription Created",
-      "subscriptionUpdated": "Subscription Updated",
-      "subscriptionCancelled": "Subscription Cancelled",
-      "paymentSuccessful": "Payment Successful",
-      "paymentFailed": "Payment Failed",
-      "invoiceCreated": "Invoice Created",
-      "invoicePaid": "Invoice Paid",
-      "loadingError": "Error loading subscription events",
-      "eventsLoadError": "Error loading events",
-      "noEventsFiltered": "No events found with applied filters",
-      "noEventsAvailable": "No subscription events available"
+      "allStatuses": "All Statuses",
+      "active": "Active",
+      "expired": "Expired",
+      "pending": "Pending",
+      "loadingError": "Error loading manual subscriptions",
+      "noEventsFiltered": "No subscriptions found with applied filters",
+      "noEventsAvailable": "No subscriptions available"
     }
   },
   "planWizard": {
@@ -773,5 +924,187 @@
       "skip": "Skip",
       "close": "Close"
     }
+  },
+  "customizedPlan": {
+    "title": "Request Customized Plan",
+    "subtitle": "Tell us about your specific needs and we'll help you create a tailored solution for your business.",
+    "form": {
+      "companyLabel": "Company Name",
+      "companyPlaceholder": "Enter your company name",
+      "companyRequired": "Company name is required",
+      "emailLabel": "Contact Email",
+      "emailPlaceholder": "example@company.com",
+      "emailRequired": "Contact email is required",
+      "emailInvalid": "Please enter a valid email address",
+      "messageLabel": "Message (Optional)",
+      "messagePlaceholder": "Describe your specific needs, number of locations, expected traffic volume, required special features, etc.",
+      "submit": "Send Request",
+      "submitting": "Sending..."
+    },
+    "success": {
+      "title": "Request Sent Successfully!",
+      "description": "We have received your customized plan request. Our team will contact you within the next 24-48 hours to discuss your specific needs.",
+      "backToPlans": "Back to Plans",
+      "newRequest": "New Request"
+    }
+  },
+  "subscriptionPage": {
+    "title": "Billing & subscription",
+    "subtitle": "Review your plan, resolve billing issues, and keep your analytics online.",
+    "errorGeneric": "We couldn't load your subscription details. Please try again."
+  },
+  "subscription": {
+    "subscription/success": "Subscription Successful",
+    "subscription-success-message": {
+      "desc": "Your payment has been processed successfully and your subscription is active.",
+      "thanks": "Thank you for trusting LYNQ!",
+      "goToDashboard": "Go to Dashboard"
+    },
+    "cardTitle": "Choose Your Plan",
+    "pricePerSensor": "Price per Sensor",
+    "includesTax": "Includes Tax",
+    "sensorCount": "Number of Sensors",
+    "sensorCountError": "Must be between 1 and {{max}}",
+    "totalMonthly": "Total Monthly",
+    "redirecting": "Redirecting...",
+    "subscribe": "Subscribe",
+    "checkoutError": "Error initiating checkout: {{error}}",
+    "card": {
+      "title": "LYNQ subscription plan",
+      "subtitle": "Stay on top of pedestrian analytics with always-on insights."
+    },
+    "labels": {
+      "pricePerSensor": "Price per sensor",
+      "pricePerSensorHelper": "Pre-tax pricing for each active sensor",
+      "estimatedMonthly": "Estimated monthly total",
+      "estimatedTotalHelper": "Calculated before tax based on your current sensors",
+      "sensorSummary": "{{count}} active sensors"
+    },
+    "badges": {
+      "trialing": "Trial ends in {{count}} days",
+      "trialActive": "Trial in progress",
+      "freeTrial": "30-day free trial"
+    },
+    "features": {
+      "analytics": {
+        "title": "Advanced analytics",
+        "description": "Dashboards and comparisons built for foot traffic intelligence."
+      },
+      "realTime": {
+        "title": "Real-time insights",
+        "description": "See live visitor trends and respond quickly to changes."
+      },
+      "security": {
+        "title": "Secure data retention",
+        "description": "Enterprise-grade security with compliant retention policies."
+      },
+      "support": {
+        "title": "Dedicated support",
+        "description": "Direct access to our success team whenever you need help."
+      }
+    },
+    "actions": {
+      "subscribe": "Subscribe",
+      "startPaidPlan": "Start paid plan",
+      "manageBilling": "Manage billing",
+      "updatePayment": "Update payment methods",
+      "contactSupport": "Contact support",
+      "reactivate": "Reactivate subscription",
+      "resume": "Resume subscription",
+      "retry": "Try again"
+    },
+    "notice": {
+      "active": {
+        "title": "Your subscription is active",
+        "description": "Everything looks good. You can manage billing details or payment methods anytime."
+      },
+      "trialing": {
+        "title": "Your trial ends in {{count}} days",
+        "description": "Lock in uninterrupted insights by choosing a plan before the trial finishes.",
+        "helper": "Complete your subscription now to avoid losing access."
+      },
+      "pastDue": {
+        "title": "We couldn't process your latest payment",
+        "description": "Update your payment method to bring your workspace back into good standing."
+      },
+      "reactivate": {
+        "title": "Your subscription needs attention",
+        "description": "Reactivate your plan to restore full access for your team."
+      },
+      "paused": {
+        "title": "Your subscription is paused",
+        "description": "Resume billing to restart pedestrian analytics for your locations."
+      },
+      "none": {
+        "title": "Activate your LYNQ subscription",
+        "description": "Choose a plan to unlock advanced pedestrian analytics features."
+      }
+    },
+    "statusLabel": {
+      "active": "Active",
+      "trialing": "Trialing",
+      "past_due": "Past due",
+      "unpaid": "Unpaid",
+      "canceled": "Canceled",
+      "incomplete": "Incomplete",
+      "incomplete_expired": "Expired",
+      "paused": "Paused",
+      "none": "No subscription"
+    },
+    "placeholders": {
+      "notAvailable": "Not available"
+    },
+    "manualBilling": {
+      "title": "Manual Billing Enabled",
+      "description": "Your business uses custom billing arrangements. You cannot subscribe through the regular payment system. Please visit the billing page to manage your manual subscription.",
+      "statusLabel": "Manual Agreement",
+      "action": "Go to Billing",
+      "blockedTitle": "Account Suspended",
+      "blockedDescription": "Your account has been suspended by our team. Please contact support immediately to resolve this issue and restore access to your account.",
+      "contactSupport": "Contact Support"
+    },
+    "toasts": {
+      "noBusinessId": {
+        "title": "We couldn't find your business",
+        "description": "Please sign in again or contact support so we can link your subscription."
+      },
+      "checkoutError": {
+        "title": "Checkout failed",
+        "description": "We couldn't start the checkout flow. Try again or reach out to support."
+      }
+    }
+  },
+  "payment": {
+    "addNewCard": "Add New Payment Method",
+    "addNewCardSubtitle": "Add a new credit or debit card to your account",
+    "cardDetails": "Card Details",
+    "cardDetailsDescription": "Enter your card information securely",
+    "cardholderName": "Cardholder Name",
+    "cardholderNamePlaceholder": "John Doe",
+    "cardholderNameRequired": "Cardholder name is required",
+    "cardNumber": "Card Number",
+    "expiryDate": "Expiry Date",
+    "cvc": "CVC",
+    "addCard": "Add Card",
+    "processing": "Processing...",
+    "securePayment": "Secure Payment",
+    "securePaymentDescription": "Your card details are encrypted and secure. We never store your full card number.",
+    "cardAddedSuccessfully": "Card added successfully!",
+    "stripeNotLoaded": "Payment system is not ready. Please refresh the page.",
+    "setupIntentFailed": "Failed to initialize payment setup",
+    "cardElementNotFound": "Card form is not ready",
+    "cardSetupFailed": "Failed to setup card",
+    "unexpectedStatus": "Unexpected payment status",
+    "genericError": "An error occurred while adding your card"
+  },
+  "wallet": {
+    "title": "Wallet",
+    "subtitle": "Manage your saved cards",
+    "methods": "Payment Methods",
+    "methodsSubtitle": "Cards saved to your account",
+    "empty": "No cards saved yet.",
+    "expires": "Expires",
+    "default": "Default",
+    "goto": "Wallet"
   }
 }
