@@ -221,7 +221,7 @@ export default function BillingPage() {
 
     const statusValue = t(`billing.manualStatus.${manualSubscription.status}`);
     const formattedAmount = currencyFormatter.format(
-      manualSubscription.priceAmount,
+      manualSubscription.priceAmount / 100,
     );
 
     return (
