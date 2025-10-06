@@ -91,6 +91,22 @@ export function hasSubscriptionAccess(currentPath?: string): boolean {
   return !blockedStates.includes(subscriptionState);
 }
 
+// Check if user is currently blocked based on JWT subscription state
+export function isUserBlocked(): boolean {
+  const subscriptionState = getSubscriptionStateFromToken();
+
+  if (!subscriptionState) return false;
+
+  const blockedStates: SubscriptionState[] = [
+    "manually_managed_blocked",
+    "unpaid",
+    "canceled",
+    "incomplete_expired",
+  ];
+
+  return blockedStates.includes(subscriptionState);
+}
+
 export function useLogin() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

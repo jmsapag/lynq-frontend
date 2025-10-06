@@ -1,6 +1,8 @@
 {
   "nav": {
     "subscription/cancel": "Pago fallido",
+    "billing/subscription/success": "Suscripción exitosa",
+    "billing/subscription/cancel": "Suscripción cancelada",
     "subscription-fail-message": {
       "desc": "Tu pago no pudo ser procesado. Por favor, revisa tus datos e intenta nuevamente.",
       "help": "Si el problema persiste, contacta a soporte",
@@ -1129,5 +1131,15 @@
     "cardSetupFailed": "Fallo al configurar la tarjeta",
     "unexpectedStatus": "Estado inesperado al procesar la tarjeta",
     "genericError": "Ocurrió un error. Por favor, inténtalo de nuevo."
+  },
+  "wallet": {
+    "title": "Wallet",
+    "subtitle": "Administra tus tarjetas guardadas",
+    "methods": "Métodos de pago",
+    "methodsSubtitle": "Tarjetas guardadas en tu cuenta",
+    "empty": "Aún no tienes tarjetas guardadas.",
+    "expires": "Vence",
+    "default": "Predeterminada",
+    "goto": "Wallet"
   }
 }
