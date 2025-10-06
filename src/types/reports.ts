@@ -31,10 +31,36 @@ export interface ReportLayoutConfiguration {
   version: string;
 }
 
-export interface ReportConfigurationsResponse {
-  configurations: ReportLayoutConfiguration[];
-  total: number;
-  lastSync: string; // ISO date string
+// Schedule configuration unified in /reports response
+export interface ReportScheduleConfig {
+  type: string; // e.g. weekly
+  dataFilter: {
+    locationIds: number[];
+    daysOfWeek: number[];
+    timeRange: {
+      startHour: number;
+      startMinute: number;
+      endHour: number;
+      endMinute: number;
+    };
+  };
+  schedule: {
+    daysOfWeek: number[];
+    executionTime: { hour: number; minute: number };
+  };
+  timezone: string;
+  enabled: boolean;
+  language?: string;
+}
+
+// New unified /reports response (Option C backend)
+export interface UnifiedReportsResponse {
+  statusCode: number;
+  message: string;
+  layouts: ReportLayoutConfiguration[];
+  totalLayouts: number;
+  lastSync: string;
+  schedule: ReportScheduleConfig | null;
 }
 
 // Generic Report (business/report schedule entity) expected by list & detail UI

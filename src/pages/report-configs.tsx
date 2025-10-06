@@ -2,27 +2,27 @@ import { useEffect, useState } from "react";
 import { Button, Card, CardBody, Spinner } from "@heroui/react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
-import { getReportConfigurations } from "../services/reportsService.ts";
+import { getUnifiedReports } from "../services/reportsService.ts";
 import {
   ReportLayoutConfiguration,
-  ReportConfigurationsResponse,
+  UnifiedReportsResponse,
 } from "../types/reports.ts";
 
 const ReportConfigsPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [data, setData] = useState<ReportConfigurationsResponse | null>(null);
+  const [data, setData] = useState<UnifiedReportsResponse | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let isMounted = true;
     setLoading(true);
-    getReportConfigurations()
-      .then((res) => {
+    getUnifiedReports()
+      .then((res: UnifiedReportsResponse) => {
         if (isMounted) setData(res);
       })
-      .catch((e) => {
+      .catch((e: any) => {
         if (isMounted)
           setError(
             e?.response?.data?.message || t("reports.configs.fetchError"),
@@ -68,7 +68,7 @@ const ReportConfigsPage = () => {
 
       {!loading && !error && data && (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {data.configurations.map((cfg) => (
+          {data.layouts.map((cfg: ReportLayoutConfiguration) => (
             <Card
               key={cfg.layoutId}
               isPressable
@@ -98,7 +98,7 @@ const ReportConfigsPage = () => {
               </CardBody>
             </Card>
           ))}
-          {data.configurations.length === 0 && (
+          {data.layouts.length === 0 && (
             <div className="col-span-full text-center py-10 text-gray-500">
               {t(
                 "reports.configs.empty",

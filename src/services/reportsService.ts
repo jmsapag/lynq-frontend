@@ -1,16 +1,15 @@
 import { axiosPrivate } from "./axiosClient";
 import {
   ReportConfig,
-  ReportConfigurationsResponse,
+  UnifiedReportsResponse,
   ReportLayoutConfiguration,
 } from "../types/reports";
 
 // Fetch list of saved report layout configurations
-export const getReportConfigurations =
-  async (): Promise<ReportConfigurationsResponse> => {
-    const res = await axiosPrivate.get(`/reports`);
-    return res.data;
-  };
+export const getUnifiedReports = async (): Promise<UnifiedReportsResponse> => {
+  const res = await axiosPrivate.get(`/reports`);
+  return res.data;
+};
 
 // Fetch a single configuration by layout/report id
 export const getReportConfigurationById = async (

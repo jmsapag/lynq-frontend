@@ -831,6 +831,12 @@
       "empty": "No configurations found. Create your first report.",
       "fetchError": "Error fetching report configurations"
     },
+    "unified": {
+      "activeSchedule": "Active schedule",
+      "noScheduleConfigured": "No schedule configured yet.",
+      "scheduleButNoLayouts": "You have a delivery schedule configured but no layouts saved yet.",
+      "noLayoutsNoSchedule": "Create a layout and configure scheduling to automate report delivery."
+    },
     "form": {
       "type": "Report Type",
       "locations": "Locations",

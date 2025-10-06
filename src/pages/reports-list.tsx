@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Card, CardBody, Spinner } from "@heroui/react";
 import { useTranslation } from "react-i18next";
-import { getReportConfigurations } from "../services/reportsService";
+import { getUnifiedReports } from "../services/reportsService";
 import { adaptLayoutConfigToReport } from "../utils/reportAdapters";
 import { Report } from "../types/reports";
 
@@ -11,15 +11,32 @@ export default function ReportsBusinessList() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [reports, setReports] = useState<Report[]>([]);
+  const [hasSchedule, setHasSchedule] = useState(false);
+  const [scheduleSummary, setScheduleSummary] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     setLoading(true);
-    getReportConfigurations()
+    getUnifiedReports()
       .then((res) => {
-        const adapted = res.configurations.map(adaptLayoutConfigToReport);
+        const adapted = res.layouts.map(adaptLayoutConfigToReport);
         setReports(adapted);
+        if (res.schedule) {
+          setHasSchedule(true);
+          const s = res.schedule;
+          // Build a short human-readable summary
+          const time = `${s.schedule.executionTime.hour.toString().padStart(2, "0")}:${s.schedule.executionTime.minute
+            .toString()
+            .padStart(2, "0")}`;
+          const days = s.schedule.daysOfWeek.join(",");
+          setScheduleSummary(
+            `${s.type} @ ${time} (days: ${days}) ${s.enabled ? "" : "[disabled]"}`,
+          );
+        } else {
+          setHasSchedule(false);
+          setScheduleSummary(null);
+        }
       })
       .catch((err) => {
         setError(
@@ -38,12 +55,29 @@ export default function ReportsBusinessList() {
       );
     if (error)
       return <div className="text-danger-500 text-sm py-4">{error}</div>;
-    if (reports.length === 0)
+    if (reports.length === 0) {
       return (
-        <div className="text-gray-500 py-10 text-center">
-          {t("reports.configs.empty")}
+        <div className="text-gray-500 py-10 text-center space-y-2">
+          <div>{t("reports.configs.empty")}</div>
+          {hasSchedule && (
+            <div className="text-xs text-gray-400">
+              {t(
+                "reports.unified.scheduleButNoLayouts",
+                "You have a delivery schedule configured but no layouts saved yet.",
+              )}
+            </div>
+          )}
+          {!hasSchedule && (
+            <div className="text-xs text-gray-400">
+              {t(
+                "reports.unified.noLayoutsNoSchedule",
+                "Create a layout and configure scheduling to automate report delivery.",
+              )}
+            </div>
+          )}
         </div>
       );
+    }
 
     return (
       <div className="space-y-3">
@@ -112,6 +146,20 @@ export default function ReportsBusinessList() {
               "Configure and generate reports for your business.",
             )}
           </p>
+          {scheduleSummary && (
+            <p className="text-xs text-gray-500 mt-2">
+              {t("reports.unified.activeSchedule", "Active schedule")}:{" "}
+              <span className="font-mono">{scheduleSummary}</span>
+            </p>
+          )}
+          {!scheduleSummary && (
+            <p className="text-xs text-amber-600 mt-2">
+              {t(
+                "reports.unified.noScheduleConfigured",
+                "No schedule configured yet.",
+              )}
+            </p>
+          )}
         </div>
         <Button color="primary" onPress={() => navigate("/reports/create")}>
           {t("reports.configs.createCta", "Create Report")}
