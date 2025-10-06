@@ -8,6 +8,7 @@ import type {
   SubscriptionStatus,
   SubscriptionState,
 } from "../types/subscription";
+import { refreshAuthState } from "../hooks/auth/useAuthState";
 
 // Extend Axios config to support retry flag
 declare module "axios" {
@@ -120,7 +121,21 @@ axiosPrivate.interceptors.response.use(
 
       setBillingBlocked(typedStatus, messageFromServer ?? null);
 
-      if (window.location.pathname !== "/billing/subscription") {
+      // Don't redirect if on success/cancel pages (user just paid, needs time to refresh token)
+      const allowedPaths = [
+        "/billing/subscription/success",
+        "/billing/subscription/cancel",
+        "/subscription/success",
+        "/subscription/cancel",
+      ];
+      const isOnSuccessPage = allowedPaths.some(
+        (path) => window.location.pathname === path,
+      );
+
+      if (
+        !isOnSuccessPage &&
+        window.location.pathname !== "/billing/subscription"
+      ) {
         window.location.href = "/billing/subscription";
       }
       return Promise.reject(error);
@@ -170,6 +185,9 @@ axiosPrivate.interceptors.response.use(
 
         // Store new access token
         Cookies.set("token", data.token, { secure: true, sameSite: "strict" });
+
+        // Notify all components using useAuthState that token has changed
+        refreshAuthState();
 
         // Process queued requests
         processQueue(null, data.token);

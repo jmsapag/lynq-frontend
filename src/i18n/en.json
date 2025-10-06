@@ -1,6 +1,8 @@
 {
   "nav": {
     "subscription/cancel": "Payment Failed",
+    "billing/subscription/success": "Subscription Successful",
+    "billing/subscription/cancel": "Subscription Canceled",
     "subscription-fail-message": {
       "desc": "Your payment could not be processed. Please check your details and try again.",
       "help": "If the problem persists, contact support",

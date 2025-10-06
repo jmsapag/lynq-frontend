@@ -43,7 +43,7 @@ import CustomizedPlan from "./pages/customized-plan.tsx";
 import BillingPage from "./pages/billing";
 import WalletPage from "./pages/wallet.tsx";
 import NewPaymentMethodPage from "./pages/new-payment-method.tsx";
-import { useBillingBlock } from "./hooks/payments/useBillingBlock";
+import { useAuthState } from "./hooks/auth/useAuthState";
 import { SubscriptionStateBanner } from "./components/payments/SubscriptionStateBanner";
 
 function AppLayoutWithState() {
@@ -57,13 +57,23 @@ function AppLayoutWithState() {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const { blocked } = useBillingBlock();
+  const { isBlocked } = useAuthState();
 
   useEffect(() => {
-    if (blocked && !location.pathname.startsWith("/billing")) {
+    // Don't redirect if already on a billing-related page or locations
+    if (
+      location.pathname.startsWith("/billing") ||
+      location.pathname.startsWith("/subscription") ||
+      location.pathname.startsWith("/locations")
+    ) {
+      return;
+    }
+
+    // Only redirect if blocked and not on allowed pages
+    if (isBlocked) {
       navigate("/billing/subscription", { replace: true });
     }
-  }, [blocked, location.pathname, navigate]);
+  }, [isBlocked, location.pathname, navigate]);
 
   return (
     <div className="flex h-screen bg-white text-black">
@@ -109,6 +119,24 @@ function App() {
           />
           <Route path="/free-trial" element={<FreeTrialWrapper />} />
 
+          {/* Subscription success/cancel - public pages that refresh token and redirect */}
+          <Route
+            path="/billing/subscription/success"
+            element={<SubscriptionSuccessPage />}
+          />
+          <Route
+            path="/billing/subscription/cancel"
+            element={<SubscriptionFailPage />}
+          />
+          <Route
+            path="/subscription/success"
+            element={<Navigate to="/billing/subscription/success" replace />}
+          />
+          <Route
+            path="/subscription/cancel"
+            element={<Navigate to="/billing/subscription/cancel" replace />}
+          />
+
           <Route element={<PrivateRoute />}>
             <Route path="/home" element={<RoleRedirect />} />
             <Route element={<AppLayoutWithState />}>
@@ -153,26 +181,6 @@ function App() {
                 <Route
                   path="/subscription"
                   element={<Navigate to="/billing/subscription" replace />}
-                />
-                <Route
-                  path="/billing/subscription/success"
-                  element={<SubscriptionSuccessPage />}
-                />
-                <Route
-                  path="/billing/subscription/cancel"
-                  element={<SubscriptionFailPage />}
-                />
-                <Route
-                  path="/subscription/success"
-                  element={
-                    <Navigate to="/billing/subscription/success" replace />
-                  }
-                />
-                <Route
-                  path="/subscription/cancel"
-                  element={
-                    <Navigate to="/billing/subscription/cancel" replace />
-                  }
                 />
               </Route>
             </Route>
