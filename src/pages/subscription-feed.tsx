@@ -122,7 +122,7 @@ const SubscriptionEventsFeed = () => {
     const colorMap: Record<string, any> = {
       active: "success",
       payment_due: "warning",
-      pending_approval: "primary",
+      pending_approval: "warning", // Yellow color for pending approval
       blocked: "danger",
       canceled: "default",
       incomplete: "warning",
@@ -155,7 +155,11 @@ const SubscriptionEventsFeed = () => {
 
   const formatStatus = (status: string) => {
     if (!status) return "N/A";
-    return status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
+    return status
+      .replace(/_/g, " ")
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(" ");
   };
 
   const toggleExpandedRow = (rowId: string) => {
