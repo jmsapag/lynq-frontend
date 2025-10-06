@@ -7,6 +7,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import { useEffect } from "react";
+import GAListener from "./analytics/GAListener";
 import Dashboard from "./pages/dashboard";
 import { SidebarWithState } from "./components/navigation/sidebar/sidebar-with-state.tsx";
 import Header from "./components/navigation/header/header.tsx";
@@ -105,6 +106,7 @@ function App() {
     <HeroUIProvider>
       <ToastProvider placement="bottom-right" />
       <BrowserRouter basename={basename}>
+        <GAListener />
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/" element={<Landing />} />
