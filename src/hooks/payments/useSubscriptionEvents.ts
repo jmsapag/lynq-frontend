@@ -70,6 +70,10 @@ export interface UnifiedSubscription {
   trialStart?: string | null;
   trialEnd?: string | null;
   sensorQty?: number;
+  // Manual subscription invoice fields
+  invoiceFileName?: string;
+  invoiceMimeType?: string;
+  invoiceUploadedAt?: string;
   pricing?: {
     id: string;
     unitAmount: number | null;
@@ -184,6 +188,9 @@ const unifySubscriptions = (
       nextExpirationDate: sub.nextExpirationDate,
       createdAt: sub.createdAt,
       sensorQty: sub["sensor-qty"],
+      invoiceFileName: sub.invoiceFileName,
+      invoiceMimeType: sub.invoiceMimeType,
+      invoiceUploadedAt: sub.invoiceUploadedAt,
     });
   });
 

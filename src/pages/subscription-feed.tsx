@@ -30,7 +30,13 @@ import {
 } from "../hooks/payments/useSubscriptionEvents";
 import { getUserRoleFromToken } from "../hooks/auth/useAuth.ts";
 import { useBusinesses } from "../hooks/business/useBusiness";
-import { PencilIcon, PlusIcon } from "@heroicons/react/24/outline";
+import { downloadInvoice } from "../services/subscriptionService";
+import {
+  PencilIcon,
+  PlusIcon,
+  DocumentTextIcon,
+  DocumentArrowDownIcon,
+} from "@heroicons/react/24/outline";
 
 const SubscriptionEventsFeed = () => {
   const { t } = useTranslation();
@@ -61,6 +67,11 @@ const SubscriptionEventsFeed = () => {
     onOpen: onCreateOpen,
     onClose: onCreateClose,
   } = useDisclosure();
+
+  const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
+  const [downloadingInvoice, setDownloadingInvoice] = useState<Set<number>>(
+    new Set(),
+  );
 
   const {
     subscriptions,
@@ -145,6 +156,81 @@ const SubscriptionEventsFeed = () => {
   const formatStatus = (status: string) => {
     if (!status) return "N/A";
     return status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
+  };
+
+  const toggleExpandedRow = (rowId: string) => {
+    setExpandedRows((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(rowId)) {
+        newSet.delete(rowId);
+      } else {
+        newSet.add(rowId);
+      }
+      return newSet;
+    });
+  };
+
+  const handleDownloadInvoice = async (
+    businessId: number,
+    fileName: string,
+  ) => {
+    try {
+      setDownloadingInvoice((prev) => new Set(prev).add(businessId));
+
+      // Try direct download approach first
+      const token = localStorage.getItem("token");
+      if (token) {
+        const url = `/api/manual-subscriptions/${businessId}/invoice`;
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = fileName;
+        link.style.display = "none";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        addToast({
+          title: t("common.success"),
+          description: "Invoice downloaded successfully",
+          severity: "success",
+          color: "success",
+        });
+        return;
+      }
+
+      // Fallback to blob approach
+      const blob = await downloadInvoice(businessId);
+
+      // Create download link
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      addToast({
+        title: t("common.success"),
+        description: "Invoice downloaded successfully",
+        severity: "success",
+        color: "success",
+      });
+    } catch (err) {
+      addToast({
+        title: t("common.error"),
+        description: "Error downloading invoice",
+        severity: "danger",
+        color: "danger",
+      });
+    } finally {
+      setDownloadingInvoice((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(businessId);
+        return newSet;
+      });
+    }
   };
 
   const handleFilterChange = (key: string, value: string) => {
@@ -340,50 +426,134 @@ const SubscriptionEventsFeed = () => {
               <TableColumn>Actions</TableColumn>
             </TableHeader>
             <TableBody>
-              {sortedSubscriptions.map((subscription) => (
-                <TableRow key={`${subscription.type}-${subscription.id}`}>
-                  <TableCell>{subscription.businessName || "N/A"}</TableCell>
-                  <TableCell>
-                    <Chip
-                      color={getTypeColor(subscription.type)}
-                      variant="flat"
-                      size="sm"
-                    >
-                      {subscription.type.toUpperCase()}
-                    </Chip>
-                  </TableCell>
-                  <TableCell>
-                    <Chip
-                      color={getStatusColor(subscription.status)}
-                      variant="flat"
-                      size="sm"
-                    >
-                      {formatStatus(subscription.status)}
-                    </Chip>
-                  </TableCell>
-                  <TableCell>
-                    {formatAmount(subscription.priceAmount)}
-                  </TableCell>
-                  <TableCell>
-                    {formatDate(subscription.nextExpirationDate)}
-                  </TableCell>
-                  <TableCell>{subscription.sensorQty || "N/A"}</TableCell>
-                  <TableCell>
-                    {subscription.type === "manual" ? (
-                      <Button
-                        isIconOnly
-                        size="sm"
-                        variant="light"
-                        onPress={() => handleEdit(subscription)}
-                      >
-                        <PencilIcon className="h-4 w-4" />
-                      </Button>
-                    ) : (
-                      <span className="text-gray-400 text-sm">Read-only</span>
+              {sortedSubscriptions.map((subscription) => {
+                const rowId = `${subscription.type}-${subscription.id}`;
+                const isExpanded = expandedRows.has(rowId);
+                const hasInvoice =
+                  subscription.type === "manual" &&
+                  subscription.invoiceFileName;
+
+                return (
+                  <React.Fragment key={rowId}>
+                    <TableRow>
+                      <TableCell>
+                        {subscription.businessName || "N/A"}
+                      </TableCell>
+                      <TableCell>
+                        <Chip
+                          color={getTypeColor(subscription.type)}
+                          variant="flat"
+                          size="sm"
+                        >
+                          {subscription.type.toUpperCase()}
+                        </Chip>
+                      </TableCell>
+                      <TableCell>
+                        <Chip
+                          color={getStatusColor(subscription.status)}
+                          variant="flat"
+                          size="sm"
+                        >
+                          {formatStatus(subscription.status)}
+                        </Chip>
+                      </TableCell>
+                      <TableCell>
+                        {formatAmount(subscription.priceAmount)}
+                      </TableCell>
+                      <TableCell>
+                        {formatDate(subscription.nextExpirationDate)}
+                      </TableCell>
+                      <TableCell>{subscription.sensorQty || "N/A"}</TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          {subscription.type === "manual" ? (
+                            <>
+                              <Button
+                                isIconOnly
+                                size="sm"
+                                variant="light"
+                                onPress={() => handleEdit(subscription)}
+                              >
+                                <PencilIcon className="h-4 w-4" />
+                              </Button>
+                              {hasInvoice && (
+                                <Button
+                                  isIconOnly
+                                  size="sm"
+                                  variant="light"
+                                  onPress={() => toggleExpandedRow(rowId)}
+                                  title={
+                                    isExpanded
+                                      ? "Hide invoice details"
+                                      : "Show invoice details"
+                                  }
+                                >
+                                  <DocumentTextIcon className="h-4 w-4" />
+                                </Button>
+                              )}
+                            </>
+                          ) : (
+                            <span className="text-gray-400 text-sm">
+                              Read-only
+                            </span>
+                          )}
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                    {hasInvoice && isExpanded && (
+                      <TableRow>
+                        <TableCell colSpan={7} className="bg-gray-50">
+                          <div className="p-4">
+                            <div className="flex justify-between items-center gap-4">
+                              <div className="flex-1">
+                                <div>
+                                  <label className="text-sm font-medium text-gray-600">
+                                    File Name
+                                  </label>
+                                  <p className="text-sm text-gray-900 break-all">
+                                    {subscription.invoiceFileName}
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-4">
+                                <div>
+                                  <label className="text-sm font-medium text-gray-600 pr-7">
+                                    Uploaded Date
+                                  </label>
+                                  <p className="text-sm text-gray-900">
+                                    {formatDate(subscription.invoiceUploadedAt)}
+                                  </p>
+                                </div>
+                                <Button
+                                  color="primary"
+                                  variant="flat"
+                                  size="sm"
+                                  startContent={
+                                    <DocumentArrowDownIcon className="h-4 w-4" />
+                                  }
+                                  isLoading={downloadingInvoice.has(
+                                    subscription.businessId || 0,
+                                  )}
+                                  onPress={() =>
+                                    subscription.businessId &&
+                                    subscription.invoiceFileName &&
+                                    handleDownloadInvoice(
+                                      subscription.businessId,
+                                      subscription.invoiceFileName,
+                                    )
+                                  }
+                                >
+                                  Download Invoice
+                                </Button>
+                              </div>
+                            </div>
+                          </div>
+                        </TableCell>
+                      </TableRow>
                     )}
-                  </TableCell>
-                </TableRow>
-              ))}
+                  </React.Fragment>
+                );
+              })}
               {businessesWithoutSubscriptions.map((business) => (
                 <TableRow key={`no-subscription-${business.id}`}>
                   <TableCell>{business.name}</TableCell>
