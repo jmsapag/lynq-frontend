@@ -41,6 +41,7 @@ import SubscriptionFailPage from "./pages/subscription-fail";
 import { useNavigate } from "react-router-dom";
 import CustomizedPlan from "./pages/customized-plan.tsx";
 import BillingPage from "./pages/billing";
+import WalletPage from "./pages/wallet.tsx";
 import NewPaymentMethodPage from "./pages/new-payment-method.tsx";
 import { useBillingBlock } from "./hooks/payments/useBillingBlock";
 import { SubscriptionStateBanner } from "./components/payments/SubscriptionStateBanner";
@@ -144,6 +145,7 @@ function App() {
                 <Route path="user-management" element={<UserManagement />} />
                 <Route path="locations" element={<Locations />} />
                 <Route path="/billing" element={<BillingPage />} />
+                <Route path="/wallet" element={<WalletPage />} />
                 <Route
                   path="/billing/subscription"
                   element={<SubscriptionPage />}

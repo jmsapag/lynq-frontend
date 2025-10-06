@@ -535,9 +535,9 @@ export default function BillingPage() {
               <Button
                 color="primary"
                 variant="bordered"
-                onPress={() => navigate("/new-payment-method")}
+                onPress={() => navigate("/wallet")}
               >
-                {t("billing.addPaymentMethod")}
+                {t("wallet.goto", { defaultValue: "Wallet" })}
               </Button>
             </div>
           </div>
