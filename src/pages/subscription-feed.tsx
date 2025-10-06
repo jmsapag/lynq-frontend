@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Card,
   CardBody,
@@ -25,10 +25,12 @@ import { useTranslation } from "react-i18next";
 import {
   useAllSubscriptions,
   useUpdateManualSubscription,
+  useCreateManualSubscription,
   UnifiedSubscription,
 } from "../hooks/payments/useSubscriptionEvents";
 import { getUserRoleFromToken } from "../hooks/auth/useAuth.ts";
-import { PencilIcon } from "@heroicons/react/24/outline";
+import { useBusinesses } from "../hooks/business/useBusiness";
+import { PencilIcon, PlusIcon } from "@heroicons/react/24/outline";
 
 const SubscriptionEventsFeed = () => {
   const { t } = useTranslation();
@@ -37,7 +39,7 @@ const SubscriptionEventsFeed = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [filters, setFilters] = useState({
-    businessId: undefined as number | undefined,
+    businessName: "",
     status: "",
   });
 
@@ -48,11 +50,33 @@ const SubscriptionEventsFeed = () => {
     status: "",
     nextExpirationDate: "",
   });
+  const [createForm, setCreateForm] = useState({
+    businessId: 0,
+    priceAmount: "",
+    status: "pending",
+    nextExpirationDate: "",
+  });
+  const {
+    isOpen: isCreateOpen,
+    onOpen: onCreateOpen,
+    onClose: onCreateClose,
+  } = useDisclosure();
 
-  const { subscriptions, loading, error, refetch } =
-    useAllSubscriptions(filters);
+  const {
+    subscriptions,
+    loading: subscriptionsLoading,
+    error,
+    refetch,
+  } = useAllSubscriptions(filters);
   const { updateSubscription, loading: updateLoading } =
     useUpdateManualSubscription();
+  const { createSubscription, loading: createLoading } =
+    useCreateManualSubscription();
+  const { businesses: allBusinesses, loading: businessesLoading } =
+    useBusinesses(1, 1000);
+
+  // Combined loading state - wait for both requests
+  const loading = subscriptionsLoading || businessesLoading;
 
   useEffect(() => {
     if (error) {
@@ -102,7 +126,12 @@ const SubscriptionEventsFeed = () => {
 
   const formatDate = (dateString: string | null) => {
     if (!dateString) return "N/A";
-    return new Date(dateString).toLocaleDateString();
+    const date = new Date(dateString);
+    if (Number.isNaN(date.getTime())) return "N/A";
+    return new Intl.DateTimeFormat("en-US", {
+      dateStyle: "medium",
+      timeZone: "UTC",
+    }).format(date);
   };
 
   const formatAmount = (amountCents: number) => {
@@ -113,19 +142,17 @@ const SubscriptionEventsFeed = () => {
     return new Date(dateString).toISOString().split("T")[0];
   };
 
+  const formatStatus = (status: string) => {
+    if (!status) return "N/A";
+    return status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
+  };
+
   const handleFilterChange = (key: string, value: string) => {
-    if (key === "businessId") {
-      setFilters((prev) => ({
-        ...prev,
-        businessId: value ? parseInt(value, 10) : undefined,
-      }));
-    } else {
-      setFilters((prev) => ({ ...prev, [key]: value }));
-    }
+    setFilters((prev) => ({ ...prev, [key]: value }));
   };
 
   const clearFilters = () => {
-    setFilters({ businessId: undefined, status: "" });
+    setFilters({ businessName: "", status: "" });
   };
 
   const handleEdit = (subscription: UnifiedSubscription) => {
@@ -176,6 +203,51 @@ const SubscriptionEventsFeed = () => {
     }
   };
 
+  const handleCreate = (businessId: number) => {
+    setCreateForm({
+      businessId,
+      priceAmount: "",
+      status: "pending",
+      nextExpirationDate: "",
+    });
+    onCreateOpen();
+  };
+
+  const handleSaveCreate = async () => {
+    if (!createForm.businessId || !createForm.priceAmount || !createForm.status)
+      return;
+
+    try {
+      const createData = {
+        businessId: createForm.businessId,
+        priceAmount: parseFloat(createForm.priceAmount) * 100, // Convert to cents
+        status: createForm.status,
+        nextExpirationDate: createForm.nextExpirationDate
+          ? new Date(createForm.nextExpirationDate).toISOString()
+          : undefined,
+      };
+
+      await createSubscription(createData);
+
+      addToast({
+        title: t("common.success"),
+        description: "Subscription created successfully",
+        severity: "success",
+        color: "success",
+      });
+
+      onCreateClose();
+      refetch();
+    } catch (err) {
+      addToast({
+        title: t("common.error"),
+        description: "Error creating subscription",
+        severity: "danger",
+        color: "danger",
+      });
+    }
+  };
+
   const sortedSubscriptions = Array.isArray(subscriptions)
     ? subscriptions.sort((a, b) => {
         const dateA = new Date(
@@ -188,8 +260,29 @@ const SubscriptionEventsFeed = () => {
       })
     : [];
 
+  // Get businesses without subscriptions - only filter when both requests are complete
+  const businessesWithoutSubscriptions = React.useMemo(() => {
+    // Don't filter if still loading or data not ready
+    if (
+      loading ||
+      !Array.isArray(allBusinesses) ||
+      !Array.isArray(subscriptions)
+    ) {
+      return [];
+    }
+
+    // Filter businesses that don't have any subscription
+    return allBusinesses.filter((business) => {
+      // Check if this business has any subscription (manual or stripe)
+      const hasSubscription = subscriptions.some((sub) => {
+        return sub.businessId === business.id;
+      });
+      return !hasSubscription;
+    });
+  }, [loading, allBusinesses, subscriptions]);
+
   const hasActiveFilters =
-    filters.businessId !== undefined ||
+    (filters.businessName && filters.businessName !== "") ||
     (filters.status && filters.status !== "");
 
   return (
@@ -197,12 +290,11 @@ const SubscriptionEventsFeed = () => {
       <div className="flex justify-end items-center mb-4 gap-4">
         {isLynqTeam && (
           <Input
-            placeholder={t("subscriptions.events.businessIdFilter")}
-            value={filters.businessId?.toString() || ""}
-            onChange={(e) => handleFilterChange("businessId", e.target.value)}
+            placeholder="Filter by Business Name"
+            value={filters.businessName}
+            onChange={(e) => handleFilterChange("businessName", e.target.value)}
             size="sm"
             className="w-48"
-            type="number"
           />
         )}
 
@@ -235,12 +327,12 @@ const SubscriptionEventsFeed = () => {
               <p className="text-gray-500">{t("common.loading")}</p>
             </CardBody>
           </Card>
-        ) : sortedSubscriptions.length > 0 ? (
+        ) : sortedSubscriptions.length > 0 ||
+          businessesWithoutSubscriptions.length > 0 ? (
           <Table aria-label="All subscriptions table">
             <TableHeader>
-              <TableColumn>ID</TableColumn>
+              <TableColumn>Business Name</TableColumn>
               <TableColumn>Type</TableColumn>
-              <TableColumn>Business ID</TableColumn>
               <TableColumn>Status</TableColumn>
               <TableColumn>Amount</TableColumn>
               <TableColumn>Next Expiration</TableColumn>
@@ -250,11 +342,7 @@ const SubscriptionEventsFeed = () => {
             <TableBody>
               {sortedSubscriptions.map((subscription) => (
                 <TableRow key={`${subscription.type}-${subscription.id}`}>
-                  <TableCell>
-                    {subscription.type === "manual"
-                      ? subscription.id
-                      : subscription.stripeSubscriptionId?.slice(-8)}
-                  </TableCell>
+                  <TableCell>{subscription.businessName || "N/A"}</TableCell>
                   <TableCell>
                     <Chip
                       color={getTypeColor(subscription.type)}
@@ -264,14 +352,13 @@ const SubscriptionEventsFeed = () => {
                       {subscription.type.toUpperCase()}
                     </Chip>
                   </TableCell>
-                  <TableCell>{subscription.businessId || "N/A"}</TableCell>
                   <TableCell>
                     <Chip
                       color={getStatusColor(subscription.status)}
                       variant="flat"
                       size="sm"
                     >
-                      {subscription.status}
+                      {formatStatus(subscription.status)}
                     </Chip>
                   </TableCell>
                   <TableCell>
@@ -294,6 +381,35 @@ const SubscriptionEventsFeed = () => {
                     ) : (
                       <span className="text-gray-400 text-sm">Read-only</span>
                     )}
+                  </TableCell>
+                </TableRow>
+              ))}
+              {businessesWithoutSubscriptions.map((business) => (
+                <TableRow key={`no-subscription-${business.id}`}>
+                  <TableCell>{business.name}</TableCell>
+                  <TableCell>
+                    <Chip color="default" variant="flat" size="sm">
+                      NO SUBSCRIPTION
+                    </Chip>
+                  </TableCell>
+                  <TableCell>
+                    <Chip color="default" variant="flat" size="sm">
+                      N/A
+                    </Chip>
+                  </TableCell>
+                  <TableCell>N/A</TableCell>
+                  <TableCell>N/A</TableCell>
+                  <TableCell>N/A</TableCell>
+                  <TableCell>
+                    <Button
+                      isIconOnly
+                      size="sm"
+                      color="primary"
+                      variant="light"
+                      onPress={() => handleCreate(business.id)}
+                    >
+                      <PlusIcon className="h-4 w-4" />
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
@@ -371,6 +487,63 @@ const SubscriptionEventsFeed = () => {
               isLoading={updateLoading}
             >
               Save Changes
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+      <Modal isOpen={isCreateOpen} onClose={onCreateClose} size="md">
+        <ModalContent>
+          <ModalHeader>Create Manual Subscription</ModalHeader>
+          <ModalBody className="space-y-4">
+            <Input
+              label="Price Amount (€)"
+              type="number"
+              step="0.01"
+              value={createForm.priceAmount}
+              onChange={(e) =>
+                setCreateForm((prev) => ({
+                  ...prev,
+                  priceAmount: e.target.value,
+                }))
+              }
+            />
+
+            <Select
+              label="Status"
+              selectedKeys={createForm.status ? [createForm.status] : []}
+              onSelectionChange={(keys) => {
+                const selectedKey = Array.from(keys)[0] as string;
+                setCreateForm((prev) => ({ ...prev, status: selectedKey }));
+              }}
+            >
+              {editStatusOptions.map((option) => (
+                <SelectItem key={option.key}>{option.label}</SelectItem>
+              ))}
+            </Select>
+
+            <Input
+              label="Next Expiration Date"
+              type="date"
+              value={createForm.nextExpirationDate}
+              onChange={(e) =>
+                setCreateForm((prev) => ({
+                  ...prev,
+                  nextExpirationDate: e.target.value,
+                }))
+              }
+            />
+          </ModalBody>
+          <ModalFooter>
+            <Button variant="light" onPress={onCreateClose}>
+              Cancel
+            </Button>
+            <Button
+              color="primary"
+              onPress={handleSaveCreate}
+              isLoading={createLoading}
+            >
+              Create Subscription
             </Button>
           </ModalFooter>
         </ModalContent>
