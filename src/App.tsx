@@ -32,12 +32,13 @@ import { RoleRoute } from "./components/auth/roleRoute.tsx";
 import ConnectionsPageWrapper from "./pages/connections-wrapper.tsx";
 import Overview from "./pages/overview.tsx";
 import ReportsPage from "./pages/reports.tsx";
+import ReportDetail from "./pages/report-detail.tsx";
 import FaqPage from "./pages/faq.tsx";
 import FreeTrialWrapper from "./pages/free-trial.tsx";
 import SubscriptionFeed from "./pages/subscription-feed.tsx";
-import SubscriptionPage from "./pages/subscription";
-import SubscriptionSuccessPage from "./pages/subscription-success";
-import SubscriptionFailPage from "./pages/subscription-fail";
+import SubscriptionPage from "./pages/subscription.tsx";
+import SubscriptionSuccessPage from "./pages/subscription-success.tsx";
+import SubscriptionFailPage from "./pages/subscription-fail.tsx";
 import { useNavigate } from "react-router-dom";
 import CustomizedPlan from "./pages/customized-plan.tsx";
 import BillingPage from "./pages/billing";
@@ -115,6 +116,7 @@ function App() {
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/comparison" element={<Comparison />} />
               <Route path="reports" element={<ReportsPage />} />
+              <Route path="reports/:reportId" element={<ReportDetail />} />
               <Route path="/profile" element={<UsersPage />} />
               <Route path="help" element={<HelpPage />} />
               <Route path="/faq" element={<FaqPage />} />
