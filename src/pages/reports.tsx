@@ -1,5 +1,6 @@
 import { Button } from "@heroui/react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 import ReportConfigModal from "../components/reports/ReportsConfigModal.tsx";
 import { useReportConfig } from "../hooks/reports/useReportsConfigs.ts";
@@ -8,6 +9,7 @@ import { Time } from "@internationalized/date";
 
 const ReportsPage = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { isModalOpen, openModal, closeModal, saveConfig, isLoading } =
     useReportConfig();
 
@@ -84,6 +86,13 @@ const ReportsPage = () => {
     <>
       <div className="flex justify-between items-center mb-6">
         <div>
+          <Button
+            color="primary"
+            onPress={() => navigate("/reports")}
+            className="mb-2"
+          >
+            ← {t("reports.detail.back", "Back to Reports")}
+          </Button>
           <p className="text-gray-600 mt-1">
             {t("reports.dragDropDescription")}
           </p>
