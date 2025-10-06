@@ -1,17 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import {
-  Card,
-  CardBody,
-  Table,
-  TableHeader,
-  TableRow,
-  TableCell,
-  TableBody,
-  Spinner,
-  Button,
-} from "@heroui/react";
-import { getReportById } from "../services/reportsService";
+import { Card, CardBody, Spinner, Button, Chip } from "@heroui/react";
+import { getReportConfigurationById } from "../services/reportsService";
 
 export default function ReportDetail() {
   const { reportId } = useParams();
@@ -23,7 +13,7 @@ export default function ReportDetail() {
 
   useEffect(() => {
     setLoading(true);
-    getReportById(reportId)
+    getReportConfigurationById(reportId)
       .then((res) => {
         if (!res) {
           setNotFound(true);
@@ -45,51 +35,64 @@ export default function ReportDetail() {
   if (error)
     return <div className="text-red-500 text-center mt-10">{error}</div>;
 
+  // New detail layout for layout configuration
   return (
-    <Card className="max-w-2xl mx-auto mt-8">
-      <CardBody>
-        <h2 className="text-xl font-bold mb-2">
-          {report.title || report.name}
-        </h2>
-        <div className="mb-2 text-gray-600">ID: {report.id}</div>
-        <div className="mb-2">
-          Created At:{" "}
-          {report.createdAt ? new Date(report.createdAt).toLocaleString() : "-"}
-        </div>
-        {report.updatedAt && (
-          <div className="mb-2">
-            Updated At: {new Date(report.updatedAt).toLocaleString()}
+    <Card className="max-w-3xl mx-auto mt-8">
+      <CardBody className="space-y-6">
+        <div>
+          <h2 className="text-2xl font-bold mb-1">Layout: {report.layoutId}</h2>
+          <div className="text-gray-500 text-sm">
+            Version: <Chip size="sm">v{report.version}</Chip>
           </div>
-        )}
-        {report.lastRunAt && (
-          <div className="mb-2">
-            Last Run: {new Date(report.lastRunAt).toLocaleString()}
-          </div>
-        )}
-        <div className="mb-2">
-          Status/Schedule: {report.status || report.schedule || "-"}
         </div>
-        <h3 className="mt-6 mb-2 font-semibold">Variables</h3>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableCell>Key</TableCell>
-              <TableCell>Value</TableCell>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {report.variables &&
-              Object.entries(report.variables).map(([key, value]) => (
-                <TableRow key={key}>
-                  <TableCell>{key}</TableCell>
-                  <TableCell>{String(value)}</TableCell>
-                </TableRow>
-              ))}
-          </TableBody>
-        </Table>
-        <Button className="mt-6" onClick={() => navigate("/reports")}>
-          Volver
-        </Button>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <h3 className="font-semibold mb-2">Metadata</h3>
+            <ul className="text-sm space-y-1">
+              <li>
+                <span className="font-medium">Last Modified:</span>{" "}
+                {new Date(report.lastModified).toLocaleString()}
+              </li>
+              <li>
+                <span className="font-medium">Widgets:</span>{" "}
+                {Object.keys(report.widgetPlacements || {}).length}
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 className="font-semibold mb-2">Widget Placements</h3>
+            <div className="border rounded-md p-3 max-h-64 overflow-auto bg-gray-50 text-xs">
+              <table className="w-full">
+                <thead>
+                  <tr className="text-left text-gray-600">
+                    <th className="py-1 pr-4">Slot</th>
+                    <th className="py-1">Widget</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {Object.entries(report.widgetPlacements || {}).map(
+                    ([slot, widget]) => (
+                      <tr key={slot} className="border-t border-gray-200">
+                        <td className="py-1 pr-4 font-medium">{slot}</td>
+                        <td className="py-1">{widget}</td>
+                      </tr>
+                    ),
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex gap-3">
+          <Button color="primary" onClick={() => navigate(`/reports`)}>
+            Back to Reports
+          </Button>
+          <Button variant="flat" onClick={() => navigate(`/reports/create`)}>
+            Create New Report
+          </Button>
+        </div>
       </CardBody>
     </Card>
   );

@@ -821,6 +821,16 @@
     "dragDropDescription": "Design your report layout by dragging and dropping widgets.",
     "configure": "Configure",
     "modalTitle": "Configure Report",
+    "configs": {
+      "title": "Report Configurations",
+      "subtitle": "Browse, inspect and manage your saved report layouts.",
+      "createCta": "Create Report",
+      "widgets": "Widgets",
+      "lastModified": "Last modified",
+      "viewDetails": "View Details",
+      "empty": "No configurations found. Create your first report.",
+      "fetchError": "Error fetching report configurations"
+    },
     "form": {
       "type": "Report Type",
       "locations": "Locations",

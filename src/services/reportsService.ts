@@ -1,14 +1,22 @@
 import { axiosPrivate } from "./axiosClient";
-import { ReportConfig } from "../types/reports";
-export const getReports = async (page: number = 1) => {
-  // Ajusta la URL según el endpoint real
-  const res = await axiosPrivate.get(`/reports?page=${page}`);
-  return res.data;
-};
+import {
+  ReportConfig,
+  ReportConfigurationsResponse,
+  ReportLayoutConfiguration,
+} from "../types/reports";
 
-export const getReportById = async (reportId: string | undefined) => {
+// Fetch list of saved report layout configurations
+export const getReportConfigurations =
+  async (): Promise<ReportConfigurationsResponse> => {
+    const res = await axiosPrivate.get(`/reports`);
+    return res.data;
+  };
+
+// Fetch a single configuration by layout/report id
+export const getReportConfigurationById = async (
+  reportId: string | undefined,
+): Promise<ReportLayoutConfiguration | null> => {
   if (!reportId) return null;
-  // Ajusta la URL según el endpoint real
   const res = await axiosPrivate.get(`/reports/${reportId}`);
   return res.data;
 };

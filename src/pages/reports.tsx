@@ -1,81 +1,122 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import {
-  Card,
-  CardBody,
-  Table,
-  TableHeader,
-  TableRow,
-  TableCell,
-  TableBody,
-  Spinner,
-  Pagination,
-} from "@heroui/react";
-import { getReports } from "../services/reportsService";
+import { Button } from "@heroui/react";
+import { useTranslation } from "react-i18next";
+
+import ReportConfigModal from "../components/reports/ReportsConfigModal.tsx";
+import { useReportConfig } from "../hooks/reports/useReportsConfigs.ts";
+import { ReportDragDropInterface } from "../components/reports/ReportDragDropInterface";
+import { Time } from "@internationalized/date";
 
 const ReportsPage = () => {
-  const [reports, setReports] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const navigate = useNavigate();
+  const { t } = useTranslation();
+  const { isModalOpen, openModal, closeModal, saveConfig, isLoading } =
+    useReportConfig();
 
-  useEffect(() => {
-    setLoading(true);
-    getReports(page)
-      .then((res) => {
-        setReports(res.data);
-        setTotalPages(res.totalPages || 1);
-        setError(null);
-      })
-      .catch(() => setError("Error loading reports"))
-      .finally(() => setLoading(false));
-  }, [page]);
+  // Mock data for the drag & drop interface
+  const mockMetrics = {
+    totalIn: 1250,
+    totalOut: 1180,
+    dailyAverageIn: 178.6,
+    dailyAverageOut: 168.6,
+    mostCrowdedDay: { date: new Date(), value: 250 },
+    leastCrowdedDay: { date: new Date(), value: 95 },
+    entryRate: 5.6,
+    percentageChange: 12.5,
+    returningCustomers: 85,
+    avgVisitDuration: 45.2,
+    affluence: 78,
+  };
 
-  if (loading) return <Spinner className="mx-auto mt-10" />;
-  if (error)
-    return <div className="text-red-500 text-center mt-10">{error}</div>;
+  const mockChartData = {
+    categories: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+    values: [
+      { in: 120, out: 110 },
+      { in: 150, out: 140 },
+      { in: 180, out: 170 },
+      { in: 200, out: 190 },
+      { in: 250, out: 240 },
+      { in: 220, out: 210 },
+      { in: 130, out: 120 },
+    ],
+  };
+
+  // Mock sensor records form data with proper structure
+  const mockSensorRecordsFormData = {
+    sensorIds: [1, 2, 3],
+    fetchedDateRange: {
+      start: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+      end: new Date(),
+    },
+    dateRange: {
+      start: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+      end: new Date(),
+    },
+    hourRange: {
+      start: new Time(0, 0),
+      end: new Time(23, 59),
+    },
+    rawData: [],
+    groupBy: "hour" as const,
+    aggregationType: "sum" as const,
+    needToFetch: false,
+  };
+
+  // Handle saving report configuration
+  const handleSaveConfiguration = (reportConfig: any, layoutConfig: any) => {
+    console.log("Report configuration saved:", {
+      reportConfig,
+      layoutConfig,
+      note: "Configuration now includes complete widget placements per layout",
+      example:
+        "The saved structure now looks like: { default: { metric-1: 'total-in', metric-2: 'total-out', chart-1: 'people-flow-chart' }, 'metrics-grid': { metric-1: 'entry-rate', ... }, ... }",
+    });
+
+    // The system now automatically handles:
+    // 1. Saving complete layout configurations (report config + widget placements) to API
+    // 2. Auto-loading configurations when layouts are selected
+    // 3. Falling back to localStorage if API fails
+    // 4. No need for "Load Saved" button - configurations auto-load
+
+    // Each layout type maintains its own widget placement configuration
+    // When user switches layouts, their saved widget arrangements are automatically restored
+  };
 
   return (
-    <Card className="max-w-4xl mx-auto mt-8">
-      <CardBody>
-        <h2 className="text-xl font-bold mb-4">Reports</h2>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>Title</TableCell>
-              <TableCell>Created At</TableCell>
-              <TableCell>Status/Schedule</TableCell>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {reports.map((r: any) => (
-              <TableRow
-                key={r.id}
-                className="cursor-pointer hover:bg-gray-100"
-                onClick={() => navigate(`/reports/${r.id}`)}
-              >
-                <TableCell>{r.id}</TableCell>
-                <TableCell>{r.title || r.name}</TableCell>
-                <TableCell>
-                  {r.createdAt ? new Date(r.createdAt).toLocaleString() : "-"}
-                </TableCell>
-                <TableCell>{r.status || r.schedule || "-"}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-        <div className="flex justify-center mt-4">
-          <Pagination
-            currentPage={page}
-            totalPages={totalPages}
-            onPageChange={setPage}
-          />
+    <>
+      <div className="flex justify-between items-center mb-6">
+        <div>
+          <p className="text-gray-600 mt-1">
+            {t("reports.dragDropDescription")}
+          </p>
         </div>
-      </CardBody>
-    </Card>
+
+        <div className="flex items-center gap-4">
+          <Button onPress={openModal} color="primary">
+            {t("reports.configure")}
+          </Button>
+        </div>
+      </div>
+
+      <div className="h-[calc(100vh-200px)]">
+        <ReportDragDropInterface
+          metrics={mockMetrics}
+          chartData={mockChartData}
+          sensorRecordsFormData={mockSensorRecordsFormData}
+          dateRange={{
+            start: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+            end: new Date(),
+          }}
+          sensorIdsList="1,2,3"
+          onSaveConfiguration={handleSaveConfiguration}
+        />
+      </div>
+
+      <ReportConfigModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        onSave={saveConfig}
+        isLoading={isLoading}
+      />
+    </>
   );
 };
 

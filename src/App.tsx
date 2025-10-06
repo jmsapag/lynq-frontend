@@ -31,7 +31,8 @@ import RoleRedirect from "./components/auth/roleRedirect.tsx";
 import { RoleRoute } from "./components/auth/roleRoute.tsx";
 import ConnectionsPageWrapper from "./pages/connections-wrapper.tsx";
 import Overview from "./pages/overview.tsx";
-import ReportsPage from "./pages/reports.tsx";
+import ReportsPage from "./pages/reports.tsx"; // creation / drag interface
+import ReportsBusinessList from "./pages/reports-list.tsx"; // business list view
 import ReportDetail from "./pages/report-detail.tsx";
 import FaqPage from "./pages/faq.tsx";
 import FreeTrialWrapper from "./pages/free-trial.tsx";
@@ -115,7 +116,8 @@ function App() {
               <Route path="/overview" element={<Overview />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/comparison" element={<Comparison />} />
-              <Route path="reports" element={<ReportsPage />} />
+              <Route path="reports" element={<ReportsBusinessList />} />
+              <Route path="reports/create" element={<ReportsPage />} />
               <Route path="reports/:reportId" element={<ReportDetail />} />
               <Route path="/profile" element={<UsersPage />} />
               <Route path="help" element={<HelpPage />} />
