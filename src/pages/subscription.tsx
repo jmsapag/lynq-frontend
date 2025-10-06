@@ -33,6 +33,7 @@ import {
   LifebuoyIcon,
   BoltIcon,
 } from "@heroicons/react/24/outline";
+import { axiosPrivate } from "../services/axiosClient.ts";
 
 const isStripeSubscription = (
   value: GetSubscriptionResponse | null,
@@ -240,9 +241,13 @@ const SubscriptionPage = () => {
 
   const fetchData = useCallback(async () => {
     try {
+      const _tryReq = await axiosPrivate.get("/devices");
+    } catch (e) {
+      console.log(e);
+    }
+    try {
       setLoading(true);
       setError(null);
-
       const pricingPromise = getStripePricing().catch(() => null);
       const subscriptionResponse = await getSubscriptionStatus();
       const pricingResponse = await pricingPromise;

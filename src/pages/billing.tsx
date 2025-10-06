@@ -31,6 +31,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import InvoiceUpload from "../components/payments/InvoiceUpload";
 import { getBusinessIdFromToken } from "../hooks/auth/useAuth";
+import { axiosPrivate } from "../services/axiosClient";
 
 const getStatusColor = (status: SubscriptionStatus) => {
   switch (status) {
@@ -138,6 +139,7 @@ export default function BillingPage() {
 
       // Try to fetch manual subscription first
       try {
+        const _tryReq = await axiosPrivate.get("/devices");
         const manualData = await getManualSubscription(Number(businessId));
         setManualSubscription(manualData);
         setSubscription(null); // Manual subscription takes precedence
