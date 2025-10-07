@@ -780,7 +780,7 @@
     "profileUpdateErrorTitle": "Error al actualizar",
     "profileUpdateErrorDescription": "No se pudo actualizar tu perfil. Inténtalo de nuevo.",
     "createFailedTitle": "Error al crear",
-    "createFailedDescription": "No se pudo crear la empresa.",
+    "createFailedDescription": "No se pudo crear.",
     "editFailedTitle": "Error al editar",
     "editFailedDescription": "No se pudo editar la empresa.",
     "deleteFailedTitle": "Error al borrar",
@@ -792,7 +792,9 @@
     "changePasswordSuccessTitle": "Contraseña Cambiada",
     "changePasswordSuccessDescription": "Tu contraseña se cambió correctamente. Ya puedes iniciar sesión.",
     "changePasswordErrorTitle": "Error",
-    "changePasswordErrorDescription": "No se pudo cambiar la contraseña. El enlace puede ser inválido o haber expirado."
+    "changePasswordErrorDescription": "No se pudo cambiar la contraseña. El enlace puede ser inválido o haber expirado.",
+    "createSuccessTitle": "Éxito",
+    "createSuccessDescription": "¡Creado exitosamente!"
   },
   "businesses": {
     "management": "Gestión de Empresas",
@@ -977,6 +979,7 @@
       "title": "Suscripciones Manuales",
       "businessIdFilter": "Filtrar por ID de empresa",
       "statusFilter": "Filtrar por estado",
+      "typeFilter": "Filtrar por tipo",
       "searchPlaceholder": "Buscar",
       "clearFilters": "Limpiar Filtros",
       "allStatuses": "Todos los Estados",
@@ -985,7 +988,8 @@
       "pending": "Pendiente",
       "loadingError": "Error al cargar suscripciones manuales",
       "noEventsFiltered": "No se encontraron suscripciones con los filtros aplicados",
-      "noEventsAvailable": "No hay suscripciones disponibles"
+      "noEventsAvailable": "No hay suscripciones disponibles",
+      "allTypes": "Todos los Tipos"
     }
   },
   "planWizard": {
