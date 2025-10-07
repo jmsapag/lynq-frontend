@@ -665,7 +665,7 @@
     "profileUpdateErrorTitle": "Update Failed",
     "profileUpdateErrorDescription": "Could not update your profile. Please try again.",
     "createFailedTitle": "Creation Failed",
-    "createFailedDescription": "Failed to create business.",
+    "createFailedDescription": "Failed to create.",
     "editFailedTitle": "Edit Failed",
     "editFailedDescription": "Failed to edit business.",
     "deleteFailedTitle": "Delete Failed",
@@ -677,7 +677,9 @@
     "changePasswordSuccessTitle": "Password Changed",
     "changePasswordSuccessDescription": "Your password has been changed successfully. You can now log in.",
     "changePasswordErrorTitle": "Error",
-    "changePasswordErrorDescription": "Failed to change password. The link may be invalid or expired."
+    "changePasswordErrorDescription": "Failed to change password. The link may be invalid or expired.",
+    "createSuccessTitle": "Success",
+    "createSuccessDescription": "Created successfully."
   },
   "businesses": {
     "management": "Business Management",
@@ -857,6 +859,7 @@
       "title": "Manual Subscriptions",
       "businessIdFilter": "Filter by business ID",
       "statusFilter": "Filter by status",
+      "typeFilter": "Filter by type",
       "searchPlaceholder": "Search",
       "clearFilters": "Clear Filters",
       "allStatuses": "All Statuses",
@@ -865,7 +868,8 @@
       "pending": "Pending",
       "loadingError": "Error loading manual subscriptions",
       "noEventsFiltered": "No subscriptions found with applied filters",
-      "noEventsAvailable": "No subscriptions available"
+      "noEventsAvailable": "No subscriptions available",
+      "allTypes": "All Types"
     }
   },
   "planWizard": {
