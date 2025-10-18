@@ -829,7 +829,19 @@
     "errorDescription": "No se pudieron crear los tokens de registro.",
     "copiedTitle": "Copiado",
     "copiedDescription": "Todos los enlaces de registro copiados al portapapeles.",
-    "noTokens": "No se recibieron tokens."
+    "noTokens": "No se recibieron tokens.",
+    "invitationMethod": "Método de Invitación",
+    "inviteByLink": "Generar enlaces de invitación",
+    "inviteByEmail": "Enviar invitaciones por correo",
+    "emails": "Direcciones de Correo",
+    "emailsPlaceholder": "usuario1@ejemplo.com\nusuario2@ejemplo.com",
+    "emailsDescription": "Ingresa un correo por línea, o sepáralos con comas o punto y coma",
+    "emailsRequired": "Por favor ingresa al menos una dirección de correo",
+    "language": "Idioma del Correo",
+    "sendInvitations": "Enviar Invitaciones",
+    "invitationsSentTitle": "Invitaciones Enviadas",
+    "invitationsSentDescription": "Se enviaron {{count}} invitación(es) exitosamente",
+    "invitationsErrorDescription": "Error al enviar las invitaciones"
   },
   "devices": {
     "management": "Gestión de Dispositivos",

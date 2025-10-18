@@ -714,7 +714,19 @@
     "errorDescription": "Failed to create registration tokens.",
     "copiedTitle": "Copied",
     "copiedDescription": "All registration links copied to clipboard.",
-    "noTokens": "No tokens received."
+    "noTokens": "No tokens received.",
+    "invitationMethod": "Invitation Method",
+    "inviteByLink": "Generate invitation links",
+    "inviteByEmail": "Send email invitations",
+    "emails": "Email Addresses",
+    "emailsPlaceholder": "user1@example.com\nuser2@example.com",
+    "emailsDescription": "Enter one email per line, or separate with commas or semicolons",
+    "emailsRequired": "Please enter at least one email address",
+    "language": "Email Language",
+    "sendInvitations": "Send Invitations",
+    "invitationsSentTitle": "Invitations Sent",
+    "invitationsSentDescription": "Successfully sent {{count}} invitation(s)",
+    "invitationsErrorDescription": "Failed to send invitations"
   },
   "devices": {
     "management": "Device Management",
