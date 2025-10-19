@@ -45,6 +45,7 @@ import WalletPage from "./pages/wallet.tsx";
 import NewPaymentMethodPage from "./pages/new-payment-method.tsx";
 import { useAuthState } from "./hooks/auth/useAuthState";
 import { SubscriptionStateBanner } from "./components/payments/SubscriptionStateBanner";
+import { AlertFeed } from "./pages/alert-feed.tsx";
 
 function AppLayoutWithState() {
   const {
@@ -148,6 +149,7 @@ function App() {
               <Route path="help" element={<HelpPage />} />
               <Route path="/faq" element={<FaqPage />} />
               <Route path="/subscriptions" element={<SubscriptionFeed />} />
+              <Route path="/alerts" element={<AlertFeed />} />
               <Route
                 path="/subscriptions/customize"
                 element={<CustomizedPlan />}

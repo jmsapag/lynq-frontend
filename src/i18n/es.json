@@ -34,7 +34,8 @@
     "subscription": "Suscripción",
     "billing": "Facturación",
     "billing/subscription": "Suscripción",
-    "new-payment-method": "Nuevo Método de Pago"
+    "new-payment-method": "Nuevo Método de Pago",
+    "alerts": "Alertas"
   },
   "billing": {
     "title": "Facturación",
@@ -1112,5 +1113,21 @@
     "expires": "Vence",
     "default": "Predeterminada",
     "goto": "Wallet"
+  },
+  "alerts": {
+    "title": "Feed de Alertas",
+    "description": "Monitorea tus alertas y notificaciones en tiempo real.",
+    "noAlerts": "No se encontraron alertas",
+    "markAsRead": "Marcar como Leído",
+    "markAllAsRead": "Marcar Todo como Leído",
+    "filterByType": "Filtrar por Tipo",
+    "filterByStatus": "Filtrar por Estado",
+    "allTypes": "Todos los Tipos",
+    "readStatus": "Leído",
+    "unreadStatus": "No Leído",
+    "all": "Todas",
+    "errors": "Error",
+    "warnings": "Advertencias",
+    "info": "Información"
   }
 }
