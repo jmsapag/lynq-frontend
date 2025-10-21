@@ -1,4 +1,12 @@
-import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Outlet,
+  useLocation,
+  Navigate,
+} from "react-router-dom";
+import { useEffect } from "react";
 import Dashboard from "./pages/dashboard";
 import { SidebarWithState } from "./components/navigation/sidebar/sidebar-with-state.tsx";
 import Header from "./components/navigation/header/header.tsx";
@@ -7,8 +15,7 @@ import UsersPage from "./pages/profile.tsx";
 import DevicesPage from "./pages/devices";
 import { Footer } from "./components/navigation/footer/footer.tsx";
 import HelpPage from "./pages/help.tsx";
-import { HeroUIProvider } from "@heroui/react";
-import { ToastProvider } from "@heroui/toast";
+import { HeroUIProvider, ToastProvider } from "@heroui/react";
 import Comparison from "./pages/comparison.tsx";
 import { PrivateRoute } from "./components/auth/privateRoutes.tsx";
 import Landing from "./pages/landing.tsx";
@@ -28,36 +35,61 @@ import ReportsPage from "./pages/reports.tsx";
 import FaqPage from "./pages/faq.tsx";
 import FreeTrialWrapper from "./pages/free-trial.tsx";
 import SubscriptionFeed from "./pages/subscription-feed.tsx";
-import PlanCreate from "./pages/plans.tsx";
-import { TrialBanner } from "./components/trial/TrialBanner";
-import { useCompanySubscription } from "./hooks/payments/useCompanySubscription";
+import SubscriptionPage from "./pages/subscription";
+import SubscriptionSuccessPage from "./pages/subscription-success";
+import SubscriptionFailPage from "./pages/subscription-fail";
 import { useNavigate } from "react-router-dom";
+import CustomizedPlan from "./pages/customized-plan.tsx";
+import BillingPage from "./pages/billing";
+import WalletPage from "./pages/wallet.tsx";
+import NewPaymentMethodPage from "./pages/new-payment-method.tsx";
+import { useAuthState } from "./hooks/auth/useAuthState";
+import { SubscriptionStateBanner } from "./components/payments/SubscriptionStateBanner";
 
 function AppLayoutWithState() {
-  const { isOpen, handleToggle, handleClose } = useSidebar();
+  const {
+    isOpen,
+    isCollapsed,
+    handleToggle,
+    handleClose,
+    handleToggleCollapse,
+  } = useSidebar();
 
-  const { isTrialActive, trialDaysLeft } = useCompanySubscription();
   const navigate = useNavigate();
+  const location = useLocation();
+  const { isBlocked } = useAuthState();
 
-  const handleUpgrade = () => {
-    navigate("/plans", { state: { fromTrial: true } });
-  };
+  useEffect(() => {
+    // Don't redirect if already on a billing-related page or locations
+    if (
+      location.pathname.startsWith("/billing") ||
+      location.pathname.startsWith("/subscription") ||
+      location.pathname.startsWith("/locations")
+    ) {
+      return;
+    }
+
+    // Only redirect if blocked and not on allowed pages
+    if (isBlocked) {
+      navigate("/billing/subscription", { replace: true });
+    }
+  }, [isBlocked, location.pathname, navigate]);
 
   return (
     <div className="flex h-screen bg-white text-black">
-      <SidebarWithState isOpen={isOpen} onClose={handleClose} />
+      <SidebarWithState
+        isOpen={isOpen}
+        isCollapsed={isCollapsed}
+        onClose={handleClose}
+        onToggleCollapse={handleToggleCollapse}
+      />
       <div className="flex flex-1 flex-col overflow-hidden">
         <Header onMobileToggleClick={handleToggle} />
         <main
           className="flex-1 overflow-y-auto p-4 md:p-6"
           onClick={() => isOpen && handleClose()}
         >
-          {isTrialActive && (
-            <TrialBanner
-              trialDaysLeft={trialDaysLeft}
-              onUpgrade={handleUpgrade}
-            />
-          )}
+          <SubscriptionStateBanner />
           <Outlet />
         </main>
         <Footer />
@@ -71,6 +103,7 @@ function App() {
 
   return (
     <HeroUIProvider>
+      <ToastProvider placement="bottom-right" />
       <BrowserRouter basename={basename}>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
@@ -86,6 +119,24 @@ function App() {
           />
           <Route path="/free-trial" element={<FreeTrialWrapper />} />
 
+          {/* Subscription success/cancel - public pages that refresh token and redirect */}
+          <Route
+            path="/billing/subscription/success"
+            element={<SubscriptionSuccessPage />}
+          />
+          <Route
+            path="/billing/subscription/cancel"
+            element={<SubscriptionFailPage />}
+          />
+          <Route
+            path="/subscription/success"
+            element={<Navigate to="/billing/subscription/success" replace />}
+          />
+          <Route
+            path="/subscription/cancel"
+            element={<Navigate to="/billing/subscription/cancel" replace />}
+          />
+
           <Route element={<PrivateRoute />}>
             <Route path="/home" element={<RoleRedirect />} />
             <Route element={<AppLayoutWithState />}>
@@ -97,6 +148,14 @@ function App() {
               <Route path="help" element={<HelpPage />} />
               <Route path="/faq" element={<FaqPage />} />
               <Route path="/subscriptions" element={<SubscriptionFeed />} />
+              <Route
+                path="/subscriptions/customize"
+                element={<CustomizedPlan />}
+              />
+              <Route
+                path="/new-payment-method"
+                element={<NewPaymentMethodPage />}
+              />
 
               {/* LYNQ_TEAM only routes */}
               <Route element={<RoleRoute allowedRoles="LYNQ_TEAM" />}>
@@ -107,19 +166,27 @@ function App() {
                   element={<ConnectionsPageWrapper />}
                 />
                 <Route path="manage/users" element={<ManageUsersPage />} />
-                <Route path="plans" element={<PlanCreate />} />
               </Route>
 
               {/* ADMIN only routes */}
               <Route element={<RoleRoute allowedRoles="ADMIN" />}>
                 <Route path="user-management" element={<UserManagement />} />
                 <Route path="locations" element={<Locations />} />
+                <Route path="/billing" element={<BillingPage />} />
+                <Route path="/wallet" element={<WalletPage />} />
+                <Route
+                  path="/billing/subscription"
+                  element={<SubscriptionPage />}
+                />
+                <Route
+                  path="/subscription"
+                  element={<Navigate to="/billing/subscription" replace />}
+                />
               </Route>
             </Route>
           </Route>
         </Routes>
       </BrowserRouter>
-      <ToastProvider />
     </HeroUIProvider>
   );
 }

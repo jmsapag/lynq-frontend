@@ -1,5 +1,20 @@
 {
   "nav": {
+    "wallet": "Billetera",
+    "subscription/cancel": "Pago fallido",
+    "billing/subscription/success": "Suscripción exitosa",
+    "billing/subscription/cancel": "Suscripción cancelada",
+    "subscription-fail-message": {
+      "desc": "Tu pago no pudo ser procesado. Por favor, revisa tus datos e intenta nuevamente.",
+      "help": "Si el problema persiste, contacta a soporte",
+      "goToDashboard": "Ir al Tablero",
+      "retry": "Reintentar pago",
+      "retrying": "Reintentando...",
+      "retryError": "No se pudo reintentar el pago. Intenta nuevamente más tarde.",
+      "here": "aquí",
+      "orContact": "o abre un ticket "
+    },
+    "subscription/success": "Suscripción exitosa",
     "dashboard": "Tablero",
     "users": "Usuarios",
     "comparison": "Comparación",
@@ -14,7 +29,275 @@
     "reports": "Reportes",
     "faq": "FAQs",
     "subscriptions": "Suscripciones",
-    "plans": "Planes de Subscripcion"
+    "plans": "Planes de Subscripción",
+    "subscriptions/customize": "Personalizar Subscripción",
+    "subscription": "Suscripción",
+    "billing": "Facturación",
+    "billing/subscription": "Suscripción",
+    "new-payment-method": "Nuevo Método de Pago"
+  },
+  "billing": {
+    "title": "Facturación",
+    "subtitle": "Controla el estado de pago, la tarifa y el uso de sensores desde un solo lugar.",
+    "summaryTitle": "Resumen de facturación",
+    "summarySubtitle": "Mantén tus pagos y próximos cobros bajo control.",
+    "summaryDescription": "Revisa el ciclo actual, el uso de sensores y el próximo monto a pagar.",
+    "errorLoading": "No pudimos cargar los detalles de tu suscripción en este momento.",
+    "retry": "Intentar nuevamente",
+    "noSubscription": "Aún no tienes una suscripción activa.",
+    "createSubscription": "Crear suscripción",
+    "manageSubscription": "Actualizar datos de pago",
+    "subscriptionDetails": "Detalles de la suscripción",
+    "detailsDescription": "Información clave de tu suscripción y del período de facturación actual.",
+    "subscriptionId": "ID de suscripción",
+    "monthlyAmount": "Monto mensual",
+    "monthlyAmountHint": "Monto base devuelto por Stripe.",
+    "calculatedPrice": "Precio calculado",
+    "calculatedPriceHint": "Calculado dinámicamente según la configuración de niveles antes de impuestos.",
+    "preTax": "(antes de impuestos)",
+    "addPaymentMethod": "Agregar Método de Pago",
+    "sensorQuantity": "Cantidad de sensores",
+    "currentPeriodStart": "Inicio del período actual",
+    "currentPeriodEnd": "Fin del período actual",
+    "cancelAtPeriodEnd": "Cancelar al final del período",
+    "cancelAtPeriodEndHelper": "Esta suscripción finalizará al cierre del período actual.",
+    "cancelAtPeriodEndActive": "La suscripción se renovará automáticamente.",
+    "yes": "Sí",
+    "no": "No",
+    "notAvailable": "No disponible",
+    "pastDueWarning": {
+      "title": "Pago vencido",
+      "description": "No pudimos cobrar el pago de este mes. Todavía tienes acceso completo, pero actualiza tus datos de facturación ahora para evitar perder acceso el próximo mes."
+    },
+    "unpaidWarning": {
+      "title": "Acceso limitado",
+      "description": "Tu suscripción está impaga y el acceso está restringido. Actualiza tu método de pago para restablecerlo. Si no tomas acción, la suscripción se cancelará y tus datos se eliminarán."
+    },
+    "reactivateSubscription": "Reactivar suscripción",
+    "reactivateDescription": "Tu plan anterior fue cancelado. Inicia una nueva suscripción para recuperar el acceso antes de que tus datos se eliminen de forma permanente.",
+    "createNewSubscription": "Crear nueva suscripción",
+    "status": {
+      "active": "Activa",
+      "past_due": "Pago vencido",
+      "unpaid": "Impaga",
+      "canceled": "Cancelada",
+      "incomplete": "Incompleta",
+      "incomplete_expired": "Incompleta (expirada)",
+      "trialing": "Período de prueba",
+      "paused": "Pausada",
+      "none": "Sin suscripción"
+    },
+    "summary": {
+      "amountLabel": "Total mensual estimado",
+      "sensorsLabel": "Sensores en el plan",
+      "nextBilling": "El ciclo actual finaliza",
+      "nextBillingHelper": "Intentaremos el próximo cobro en esta fecha.",
+      "sensorHelper": "{{count}} sensores considerados en esta estimación.",
+      "statusLabel": "Estado"
+    },
+    "pricingModel": "Modelo de precios",
+    "pricingHint": "Los cargos se ajustan automáticamente a medida que los sensores cambian de nivel.",
+    "tierRange": "{{from}} a {{to}} sensores",
+    "tierUnlimited": "{{from}}+ sensores",
+    "tierLabel": "Nivel {{index}}",
+    "perSensor": "/sensor",
+    "schemeLabel": {
+      "tiered": "Precio por niveles",
+      "per_unit": "Por unidad",
+      "graduated": "Precio graduado"
+    },
+    "pricingEmpty": "Aún no hay información de niveles disponible.",
+    "manualSubscriptionSubtitle": "Administra tu acuerdo de pago personalizado",
+    "manualAgreement": "Acuerdo Manual",
+    "manualSummarySubtitle": "Acuerdo de Pago Personalizado",
+    "manualSummaryDescription": "Tu suscripción se gestiona mediante un acuerdo personalizado",
+    "manualStatus": {
+      "payment_due": "Pago Pendiente",
+      "pending_approval": "Pendiente de Aprobación",
+      "active": "Activa",
+      "blocked": "Bloqueada"
+    },
+    "manual": {
+      "nextPaymentDate": "Próxima Fecha de Pago"
+    },
+    "blockedWarning": {
+      "title": "Cuenta Bloqueada",
+      "description": "Tu cuenta ha sido suspendida. Por favor, contacta a soporte para recibir asistencia."
+    },
+    "paymentDueWarning": {
+      "title": "Pago Pendiente",
+      "description": "Por favor, sube tu factura para mantener el estado activo."
+    },
+    "invoice": {
+      "title": "Subir Factura",
+      "description": "Sube tu factura de pago (solo PDF, máximo 10MB)",
+      "selectFile": "Seleccionar archivo PDF",
+      "fileRequirements": "Solo PDF, máximo 10MB",
+      "upload": "Subir",
+      "download": "Descargar",
+      "uploadedAt": "Subida el {{date}}",
+      "invalidFileType": "Solo se permiten archivos PDF",
+      "fileTooLarge": "El tamaño del archivo debe ser menor a 10MB",
+      "uploadError": "Error al subir la factura",
+      "downloadError": "Error al descargar la factura"
+    }
+  },
+  "subscriptionBanner": {
+    "manualPending": {
+      "title": "Factura en Revisión",
+      "description": "Tu factura ha sido subida y está esperando aprobación de nuestro equipo. Puedes continuar usando la plataforma normalmente.",
+      "chip": "Pendiente de Aprobación"
+    },
+    "manualPaymentDue": {
+      "title": "Pago Pendiente",
+      "description": "Tu próximo pago está vencido. Por favor, sube tu factura para mantener el estado activo.",
+      "chip": "Acción Requerida",
+      "action": "Subir Factura"
+    },
+    "manualBlocked": {
+      "title": "Cuenta Suspendida",
+      "description": "Tu cuenta ha sido suspendida. Por favor, contacta a nuestro equipo de soporte para resolver este problema y restaurar el acceso.",
+      "chip": "Bloqueada",
+      "action": "Contactar Soporte"
+    },
+    "pastDue": {
+      "title": "Pago Atrasado",
+      "description": "Tu pago está atrasado. Por favor, actualiza tu método de pago para evitar la interrupción del servicio.",
+      "chip": "Pago Atrasado",
+      "action": "Actualizar Pago"
+    },
+    "unpaid": {
+      "title": "Acceso Restringido",
+      "description": "Tu suscripción no está pagada. Por favor, actualiza tu método de pago inmediatamente para restaurar el acceso completo.",
+      "chip": "Acción Requerida",
+      "action": "Actualizar Pago"
+    }
+  },
+  "subscriptionPage": {
+    "title": "Facturación y suscripción",
+    "subtitle": "Revisa tu plan, resuelve incidencias de pago y mantén tus analíticas en línea.",
+    "errorGeneric": "No pudimos cargar los detalles de tu suscripción. Intenta nuevamente."
+  },
+  "subscription": {
+    "subscription-success-message": {
+      "desc": "Tu pago fue procesado correctamente y tu suscripción está activa.",
+      "thanks": "¡Gracias por tu confiar en LYNQ!",
+      "goToDashboard": "Ir al Tablero"
+    },
+    "subscription/success": "Suscripción exitosa",
+    "cardTitle": "Arma tu plan",
+    "pricePerSensor": "Precio por sensor",
+    "includesTax": "Incluye impuestos",
+    "sensorCount": "Cantidad de sensores",
+    "sensorCountError": "Debe estar entre 1 y {{max}}",
+    "totalMonthly": "Total mensual",
+    "redirecting": "Redirigiendo...",
+    "subscribe": "Suscribirse",
+    "checkoutError": "Error al iniciar checkout: {{error}}",
+    "card": {
+      "title": "Plan de suscripción de LYNQ",
+      "subtitle": "Mantén el control de tus analíticas peatonales con información permanente."
+    },
+    "labels": {
+      "pricePerSensor": "Precio por sensor",
+      "pricePerSensorHelper": "Precio antes de impuestos por cada sensor activo",
+      "estimatedMonthly": "Total mensual estimado",
+      "estimatedTotalHelper": "Calculado antes de impuestos según tus sensores actuales",
+      "sensorSummary": "{{count}} sensores activos"
+    },
+    "badges": {
+      "trialing": "La prueba finaliza en {{count}} días",
+      "trialActive": "Prueba en curso",
+      "freeTrial": "Prueba gratis de 30 días"
+    },
+    "features": {
+      "analytics": {
+        "title": "Analíticas avanzadas",
+        "description": "Tableros y comparaciones diseñados para inteligencia de tráfico peatonal."
+      },
+      "realTime": {
+        "title": "Información en tiempo real",
+        "description": "Observa las tendencias de visitantes y responde al instante."
+      },
+      "security": {
+        "title": "Retención de datos segura",
+        "description": "Seguridad de nivel empresarial con políticas de retención compatibles."
+      },
+      "support": {
+        "title": "Soporte dedicado",
+        "description": "Acceso directo a nuestro equipo de éxito cuando lo necesites."
+      }
+    },
+    "actions": {
+      "subscribe": "Suscribirse",
+      "startPaidPlan": "Iniciar plan pago",
+      "manageBilling": "Administrar facturación",
+      "updatePayment": "Actualizar métodos de pago",
+      "contactSupport": "Contactar soporte",
+      "reactivate": "Reactivar suscripción",
+      "resume": "Reanudar suscripción",
+      "retry": "Intentar nuevamente"
+    },
+    "notice": {
+      "active": {
+        "title": "Tu suscripción está activa",
+        "description": "Todo está en orden. Puedes administrar la facturación o los métodos de pago cuando quieras."
+      },
+      "trialing": {
+        "title": "Tu prueba termina en {{count}} días",
+        "description": "Elige un plan antes de que finalice la prueba para no interrumpir tus analíticas.",
+        "helper": "Completa la suscripción ahora para evitar perder el acceso."
+      },
+      "pastDue": {
+        "title": "No pudimos procesar tu último pago",
+        "description": "Actualiza tu método de pago para regularizar tu espacio de trabajo."
+      },
+      "reactivate": {
+        "title": "Tu suscripción necesita atención",
+        "description": "Reactiva tu plan para recuperar el acceso completo para tu equipo."
+      },
+      "paused": {
+        "title": "Tu suscripción está en pausa",
+        "description": "Reanuda la facturación para volver a activar las analíticas peatonales."
+      },
+      "none": {
+        "title": "Activa tu suscripción de LYNQ",
+        "description": "Elige un plan para desbloquear funciones avanzadas de analíticas peatonales."
+      }
+    },
+    "statusLabel": {
+      "active": "Activa",
+      "trialing": "En prueba",
+      "past_due": "Pago pendiente",
+      "unpaid": "Impaga",
+      "canceled": "Cancelada",
+      "incomplete": "Incompleta",
+      "incomplete_expired": "Vencida",
+      "paused": "Pausada",
+      "none": "Sin suscripción"
+    },
+    "placeholders": {
+      "notAvailable": "No disponible"
+    },
+    "manualBilling": {
+      "title": "Facturación Manual Habilitada",
+      "description": "Tu empresa utiliza acuerdos de facturación personalizados. No puedes suscribirte a través del sistema de pago regular. Por favor, visita la página de facturación para administrar tu suscripción manual.",
+      "statusLabel": "Acuerdo Manual",
+      "action": "Ir a Facturación",
+      "blockedTitle": "Cuenta Suspendida",
+      "blockedDescription": "Tu cuenta ha sido suspendida por nuestro equipo. Por favor, contacta a soporte inmediatamente para resolver este problema y restaurar el acceso a tu cuenta.",
+      "contactSupport": "Contactar Soporte"
+    },
+    "toasts": {
+      "noBusinessId": {
+        "title": "No encontramos tu negocio",
+        "description": "Vuelve a iniciar sesión o contacta soporte para vincular tu suscripción."
+      },
+      "checkoutError": {
+        "title": "No se pudo iniciar el checkout",
+        "description": "No pudimos iniciar el flujo de pago. Intenta nuevamente o contacta soporte."
+      }
+    }
   },
   "days": {
     "sunday": "Domingo",
@@ -113,7 +396,9 @@
     "exportAsPng": "Exportar como PNG",
     "exportAsPdf": "Exportar como PDF",
     "exportAsCSV": "Exportar como CSV",
-    "sendByEmail": "Enviar por correo"
+    "sendByEmail": "Enviar por correo",
+    "locale": "es-ES",
+    "success": "Éxito"
   },
   "dashboard": {
     "percentage": "Porcentaje (%)",
@@ -331,17 +616,89 @@
   },
   "landing": {
     "title": "Contador de Personas",
-    "subtitle": "Rastrea, analiza y optimiza el flujo de personas. Información poderosa de sensores precisos y paneles inteligentes, todo en una sola plataforma.",
-    "goToDashboard": "Ir al Tablero",
+    "subtitle": "Rastrea, analiza y optimiza el flujo de personas. Información valiosa de sensores precisos y tableros inteligentes — todo en una plataforma.",
+    "goToDashboard": "Ir al Panel",
+    "tryFreeDemo": "Probar Demo",
     "features": {
-      "trafficAnalytics": "Analítica de Tráfico",
+      "title": "Funcionalidades Poderosas para Decisiones Inteligentes",
+      "subtitle": "Nuestra plataforma integral ofrece análisis detallados y comparaciones entre ubicaciones, todo en un solo lugar.",
+      "trafficAnalytics": "Análisis de Tráfico",
       "trafficAnalyticsDesc": "Monitorea el flujo de personas con visualizaciones completas",
       "advancedComparisons": "Comparaciones Avanzadas",
-      "advancedComparisonsDesc": "Compara métricas entre ubicaciones y periodos de tiempo",
+      "advancedComparisonsDesc": "Compara métricas entre ubicaciones y períodos de tiempo",
       "keyMetrics": "Métricas Clave",
-      "keyMetricsDesc": "Sigue entradas, salidas y tasas de conversión"
+      "keyMetricsDesc": "Rastrea entradas, salidas y tasas de conversión",
+      "customizable": {
+        "title": "Panel Completamente Personalizable",
+        "desc": "Adapta el diseño, los gráficos y las métricas a tus necesidades específicas"
+      },
+      "unified": {
+        "title": "Plataforma Unificada",
+        "desc": "Gestiona todos tus sensores y análisis en un solo lugar"
+      },
+      "updates": {
+        "title": "Actualizaciones de 5 Minutos",
+        "desc": "Datos casi en tiempo real para decisiones oportunas"
+      },
+      "multiLocation": "Multi-Ubicación",
+      "multiLocationDesc": "Gestiona y compara el rendimiento en todas tus ubicaciones",
+      "automaticReports": "Reportes Automáticos",
+      "automaticReportsDesc": "Recibe reportes programados directamente en tu correo",
+      "customization": "Personalización",
+      "customizationDesc": "Adapta gráficos y métricas a tus necesidades",
+      "smartAlerts": {
+        "title": "Alertas Inteligentes",
+        "desc": "Recibe notificaciones proactivas sobre cambios significativos en los datos"
+      },
+      "analytics": {
+        "title": "Análisis Integral",
+        "desc": "Gráficos potentes y vistas personalizables para monitorear tu espacio"
+      },
+      "mobile": {
+        "title": "Optimizado para Móviles",
+        "desc": "Accede a tus datos y análisis desde cualquier dispositivo"
+      },
+      "secure": {
+        "title": "Seguridad Robusta",
+        "desc": "Protección de datos de nivel empresarial y controles de acceso"
+      }
     },
-    "tryFreeDemo": "Prueba la Demo"
+    "analytics": {
+      "title": "Panel de Análisis Integral",
+      "subtitle": "Monitorea tu espacio con gráficos potentes y vistas personalizables. Obtén información actualizada cada 5 minutos con una amplia variedad de opciones de visualización.",
+      "liveUpdates": "Actualizaciones de 5 Min",
+      "interactiveChart": "Gráfico Interactivo",
+      "weeklyTraffic": "Resumen de Tráfico Semanal",
+      "chartTitle": "Patrones de Tráfico por Hora"
+    },
+    "comparison": {
+      "title": "Inteligencia Multi-Ubicación",
+      "subtitle": "Compara el rendimiento en todas tus ubicaciones con análisis lado a lado y reportes unificados.",
+      "feature1": "Todo en Un Solo Lugar",
+      "feature1Desc": "Panel unificado para todas las ubicaciones",
+      "feature2": "Completamente Personalizable",
+      "feature2Desc": "Adapta gráficos y métricas a tus necesidades",
+      "feature3": "Amplia Variedad de Gráficos",
+      "feature3Desc": "Desde mapas de calor hasta análisis de tendencias"
+    },
+    "platform": {
+      "title": "¿Por Qué Elegir Nuestra Plataforma?",
+      "subtitle": "Construida para empresas que necesitan información precisa y accionable de sus análisis de espacios.",
+      "feature1": "Amplia Variedad de Gráficos",
+      "feature1Desc": "Mapas de calor, tendencias, comparaciones y más",
+      "feature2": "Completamente Personalizable",
+      "feature2Desc": "Adapta paneles a tus necesidades específicas",
+      "feature3": "Todo en Un Solo Lugar",
+      "feature3Desc": "Plataforma unificada para todos tus análisis",
+      "feature4": "Actualizaciones de 5 Minutos",
+      "feature4Desc": "Datos casi en tiempo real para decisiones oportunas"
+    },
+    "cta": {
+      "title": "¿Listo para transformar tus espacios de análisis?",
+      "subtitle": "Únete a cientos de empresas que usan nuestra plataforma para optimizar sus operaciones y mejorar la experiencia del cliente.",
+      "startTrial": "Iniciar Prueba Gratuita",
+      "contactSales": "Contactar Ventas"
+    }
   },
   "login": {
     "welcome": "¡Bienvenido de nuevo!",
@@ -425,7 +782,7 @@
     "profileUpdateErrorTitle": "Error al actualizar",
     "profileUpdateErrorDescription": "No se pudo actualizar tu perfil. Inténtalo de nuevo.",
     "createFailedTitle": "Error al crear",
-    "createFailedDescription": "No se pudo crear la empresa.",
+    "createFailedDescription": "No se pudo crear.",
     "editFailedTitle": "Error al editar",
     "editFailedDescription": "No se pudo editar la empresa.",
     "deleteFailedTitle": "Error al borrar",
@@ -437,7 +794,9 @@
     "changePasswordSuccessTitle": "Contraseña Cambiada",
     "changePasswordSuccessDescription": "Tu contraseña se cambió correctamente. Ya puedes iniciar sesión.",
     "changePasswordErrorTitle": "Error",
-    "changePasswordErrorDescription": "No se pudo cambiar la contraseña. El enlace puede ser inválido o haber expirado."
+    "changePasswordErrorDescription": "No se pudo cambiar la contraseña. El enlace puede ser inválido o haber expirado.",
+    "createSuccessTitle": "Éxito",
+    "createSuccessDescription": "¡Creado exitosamente!"
   },
   "businesses": {
     "management": "Gestión de Empresas",
@@ -472,7 +831,19 @@
     "errorDescription": "No se pudieron crear los tokens de registro.",
     "copiedTitle": "Copiado",
     "copiedDescription": "Todos los enlaces de registro copiados al portapapeles.",
-    "noTokens": "No se recibieron tokens."
+    "noTokens": "No se recibieron tokens.",
+    "invitationMethod": "Método de Invitación",
+    "inviteByLink": "Generar enlaces de invitación",
+    "inviteByEmail": "Enviar invitaciones por correo",
+    "emails": "Direcciones de Correo",
+    "emailsPlaceholder": "usuario1@ejemplo.com\nusuario2@ejemplo.com",
+    "emailsDescription": "Ingresa un correo por línea, o sepáralos con comas o punto y coma",
+    "emailsRequired": "Por favor ingresa al menos una dirección de correo",
+    "language": "Idioma del Correo",
+    "sendInvitations": "Enviar Invitaciones",
+    "invitationsSentTitle": "Invitaciones Enviadas",
+    "invitationsSentDescription": "Se enviaron {{count}} invitación(es) exitosamente",
+    "invitationsErrorDescription": "Error al enviar las invitaciones"
   },
   "devices": {
     "management": "Gestión de Dispositivos",
@@ -619,25 +990,20 @@
   },
   "subscriptions": {
     "events": {
-      "title": "Eventos de Suscripción",
-      "companyIdFilter": "Filtrar por ID de empresa",
+      "title": "Suscripciones Manuales",
+      "businessIdFilter": "Filtrar por ID de empresa",
+      "statusFilter": "Filtrar por estado",
       "typeFilter": "Filtrar por tipo",
       "searchPlaceholder": "Buscar",
       "clearFilters": "Limpiar Filtros",
-      "fromDate": "Desde fecha",
-      "toDate": "Hasta fecha",
-      "allTypes": "Todos los tipos",
-      "subscriptionCreated": "Suscripción Creada",
-      "subscriptionUpdated": "Suscripción Actualizada",
-      "subscriptionCancelled": "Suscripción Cancelada",
-      "paymentSuccessful": "Pago Exitoso",
-      "paymentFailed": "Pago Fallido",
-      "invoiceCreated": "Factura Creada",
-      "invoicePaid": "Factura Pagada",
-      "loadingError": "Error al cargar eventos de suscripción",
-      "eventsLoadError": "Error al cargar eventos",
-      "noEventsFiltered": "No se encontraron eventos con los filtros aplicados",
-      "noEventsAvailable": "No hay eventos de suscripción disponibles"
+      "allStatuses": "Todos los Estados",
+      "active": "Activo",
+      "expired": "Expirado",
+      "pending": "Pendiente",
+      "loadingError": "Error al cargar suscripciones manuales",
+      "noEventsFiltered": "No se encontraron suscripciones con los filtros aplicados",
+      "noEventsAvailable": "No hay suscripciones disponibles",
+      "allTypes": "Todos los Tipos"
     }
   },
   "planWizard": {
@@ -658,5 +1024,95 @@
     "successTitle": "Éxito",
     "successDesc": "¡Plan creado exitosamente!",
     "errorTitle": "Error"
+  },
+  "tour": {
+    "dashboard": {
+      "welcome": {
+        "title": "¡Bienvenido a tu Tablero!",
+        "content": "Aquí puedes ver y analizar los datos de tus sensores en tiempo real."
+      },
+      "filters": {
+        "title": "Filtros de Datos",
+        "content": "Usa estos filtros para seleccionar rangos de fechas, sensores específicos y personalizar tu vista de datos según tus necesidades."
+      },
+      "metrics": {
+        "title": "Métricas Clave",
+        "content": "Estas tarjetas muestran métricas importantes como entradas totales, salidas y promedios diarios para el período seleccionado."
+      },
+      "charts": {
+        "title": "Gráficos y Visualizaciones",
+        "content": "Esta área muestra gráficos interactivos y widgets de datos. Puedes personalizar qué gráficos ver y cómo se organizan."
+      },
+      "editLayout": {
+        "title": "Personalizar Diseño",
+        "content": "Haz clic aquí para entrar en modo edición. Podrás arrastrar y soltar widgets para reorganizar tu tablero según tus preferencias."
+      },
+      "layoutSelector": {
+        "title": "Selector de Diseño",
+        "content": "Cambia entre diferentes diseños predefinidos para tu tablero. Cada diseño ofrece una organización diferente de los widgets."
+      }
+    },
+    "buttons": {
+      "back": "Atrás",
+      "close": "Cerrar",
+      "finish": "Finalizar",
+      "next": "Siguiente",
+      "skip": "Saltar tour"
+    }
+  },
+  "customizedPlan": {
+    "title": "Solicitar Plan Personalizado",
+    "subtitle": "Cuéntanos sobre tus necesidades específicas y te ayudaremos a crear una solución a medida para tu empresa.",
+    "form": {
+      "companyLabel": "Nombre de la Empresa",
+      "companyPlaceholder": "Ingresa el nombre de tu empresa",
+      "companyRequired": "El nombre de la empresa es requerido",
+      "emailLabel": "Email de Contacto",
+      "emailPlaceholder": "ejemplo@empresa.com",
+      "emailRequired": "El email de contacto es requerido",
+      "emailInvalid": "El email no tiene un formato válido",
+      "messageLabel": "Mensaje (Opcional)",
+      "messagePlaceholder": "Describe tus necesidades específicas, número de ubicaciones, volumen de tráfico esperado, funcionalidades especiales requeridas, etc.",
+      "submit": "Enviar Solicitud",
+      "submitting": "Enviando..."
+    },
+    "success": {
+      "title": "¡Solicitud Enviada Exitosamente!",
+      "description": "Hemos recibido tu solicitud de plan personalizado. Nuestro equipo se pondrá en contacto contigo en las próximas 24-48 horas para discutir tus necesidades específicas.",
+      "backToPlans": "Volver a Planes",
+      "newRequest": "Nueva Solicitud"
+    }
+  },
+  "payment": {
+    "addNewCard": "Agregar Nueva Tarjeta",
+    "addNewCardSubtitle": "Agrega un nuevo método de pago a tu cuenta de forma segura",
+    "cardDetails": "Detalles de la Tarjeta",
+    "cardDetailsDescription": "Toda la información de tu tarjeta se procesa de forma segura mediante Stripe",
+    "cardholderName": "Nombre del Titular",
+    "cardholderNamePlaceholder": "Juan Pérez",
+    "cardholderNameRequired": "El nombre del titular es obligatorio",
+    "cardNumber": "Número de Tarjeta",
+    "expiryDate": "Fecha de Vencimiento",
+    "cvc": "CVC",
+    "addCard": "Agregar Tarjeta",
+    "processing": "Procesando...",
+    "securePayment": "Pago Seguro",
+    "securePaymentDescription": "Tu información de pago se procesa de forma segura y encriptada. Nunca almacenamos los datos completos de tu tarjeta.",
+    "stripeNotLoaded": "Stripe no se ha cargado correctamente",
+    "setupIntentFailed": "No se pudo crear la intención de configuración",
+    "cardElementNotFound": "No se encontró el elemento de tarjeta",
+    "cardSetupFailed": "Fallo al configurar la tarjeta",
+    "unexpectedStatus": "Estado inesperado al procesar la tarjeta",
+    "genericError": "Ocurrió un error. Por favor, inténtalo de nuevo."
+  },
+  "wallet": {
+    "title": "Wallet",
+    "subtitle": "Administra tus tarjetas guardadas",
+    "methods": "Métodos de pago",
+    "methodsSubtitle": "Tarjetas guardadas en tu cuenta",
+    "empty": "Aún no tienes tarjetas guardadas.",
+    "expires": "Vence",
+    "default": "Predeterminada",
+    "goto": "Wallet"
   }
 }

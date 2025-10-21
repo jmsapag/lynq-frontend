@@ -179,8 +179,10 @@ export default function UserManagement() {
         isOpen={isCreateUserModalOpen}
         onClose={() => setIsCreateUserModalOpen(false)}
         onSuccess={(createdTokens) => {
-          setTokens(createdTokens);
-          setIsTokensModalOpen(true);
+          if (createdTokens && createdTokens.length > 0) {
+            setTokens(createdTokens);
+            setIsTokensModalOpen(true);
+          }
         }}
       />
     </div>
