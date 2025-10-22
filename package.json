@@ -22,6 +22,9 @@
     "@headlessui/react": "^2.2.2",
     "@heroicons/react": "^2.2.0",
     "@heroui/react": "^2.7.8",
+    "@stripe/react-stripe-js": "^5.0.0",
+    "@stripe/stripe-js": "^8.0.0",
+    "@types/react-joyride": "^2.0.5",
     "axios": "^1.9.0",
     "date-fns": "^4.1.0",
     "date-fns-tz": "^3.2.0",
@@ -36,6 +39,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-i18next": "^15.5.1",
+    "react-joyride": "^2.9.3",
     "react-router-dom": "^6.21.1",
     "react-tailwindcss-datepicker": "^2.0.0"
   },

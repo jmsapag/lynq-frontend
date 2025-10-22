@@ -1,7 +1,7 @@
 import React from "react";
 import { DashboardWidget } from "../DashboardWidget";
 import { WidgetDropZone } from "../WidgetDropZone";
-import { DashboardWidgetType, WidgetConfig } from "../widgets/types";
+import { DashboardWidgetType, WidgetConfig } from "../widgets";
 import { DashboardLayout, DropZone } from "../layouts";
 
 interface LayoutRendererProps {
@@ -19,6 +19,36 @@ export const LayoutRenderer: React.FC<LayoutRendererProps> = ({
   availableWidgets,
   draggedWidget,
 }) => {
+  // Helper function to determine tour data attributes
+  const getTourAttribute = (
+    zone: DropZone,
+    placedWidget: DashboardWidgetType | null,
+  ) => {
+    if (!placedWidget) return {};
+
+    const widget = availableWidgets.find((w) => w.type === placedWidget);
+
+    // Check for metric widgets
+    if (
+      widget?.category === "metric" ||
+      zone.type === "metric" ||
+      zone.id.includes("metric")
+    ) {
+      return { "data-tour": "metrics-overview" };
+    }
+
+    // Check for chart widgets
+    if (
+      widget?.category === "chart" ||
+      zone.type === "chart" ||
+      zone.id.includes("chart")
+    ) {
+      return { "data-tour": "chart-widgets" };
+    }
+
+    return {};
+  };
+
   const renderWidget = (widgetType: DashboardWidgetType) => {
     const widget = availableWidgets.find((w) => w.type === widgetType);
     if (!widget) return null;
@@ -47,6 +77,9 @@ export const LayoutRenderer: React.FC<LayoutRendererProps> = ({
       ? availableWidgets.find((w) => w.type === placedWidget)
       : null;
 
+    // Get tour attributes for this zone
+    const tourAttributes = getTourAttribute(zone, placedWidget);
+
     return (
       <WidgetDropZone
         key={zone.id}
@@ -54,6 +87,7 @@ export const LayoutRenderer: React.FC<LayoutRendererProps> = ({
         acceptedTypes={zone.type === "any" ? ["metric", "chart"] : [zone.type]}
         isEmpty={!placedWidget}
         className={zone.className}
+        {...tourAttributes}
       >
         {placedWidget && widget ? renderWidget(placedWidget) : null}
       </WidgetDropZone>
@@ -74,10 +108,15 @@ export const LayoutRenderer: React.FC<LayoutRendererProps> = ({
             <div key={section.id} className={section.className}>
               {section.zones.map((zone) => {
                 const placedWidget = widgetPlacements[zone.id];
+
+                // Get tour attributes for view mode
+                const tourAttributes = getTourAttribute(zone, placedWidget);
+
                 return placedWidget ? (
                   <div
                     key={zone.id}
                     className={`relative overflow-hidden ${zone.className || ""}`}
+                    {...tourAttributes}
                   >
                     {renderWidget(placedWidget)}
                   </div>
