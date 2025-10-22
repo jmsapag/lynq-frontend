@@ -201,12 +201,13 @@ export const useOverviewMetrics = (
   const returningCustomersWeightedAvg = useMemo(() => {
     if (!sensorData?.returningCustomers || !sensorData?.in) return 0;
 
-    const validityFlags = sensorData.returningCustomers.map((value, index) =>
-      isValidReturningCustomerValue(
-        value,
-        index > 0 ? sensorData.returningCustomers[index - 1] : null,
-        index,
-      ),
+    const validityFlags = sensorData.returningCustomers.map(
+      (value: number, index: number) =>
+        isValidReturningCustomerValue(
+          value,
+          index > 0 ? sensorData.returningCustomers[index - 1] : null,
+          index,
+        ),
     );
 
     return calculateWeightedAveragePercentage(
@@ -326,13 +327,17 @@ export const useOverviewMetrics = (
 
     // Use the pre-calculated returning customers weighted average
 
+    // Average visit duration: simple mean of non-zero durations to match chart/card logic
     const totalAvgVisitDuration = sensorData.avgVisitDuration
-      ? Math.round(
-          sensorData.avgVisitDuration.reduce(
-            (sum: number, value: number) => sum + value,
-            0,
-          ) / sensorData.avgVisitDuration.length,
-        )
+      ? (() => {
+          const valid = sensorData.avgVisitDuration.filter(
+            (v: number) => (v || 0) > 0,
+          );
+          if (valid.length === 0) return 0;
+          const avg =
+            valid.reduce((sum: number, v: number) => sum + v, 0) / valid.length;
+          return Math.round(avg);
+        })()
       : 0;
 
     const totalAffluence = sensorData.affluence

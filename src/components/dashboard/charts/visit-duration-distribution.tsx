@@ -38,11 +38,9 @@ interface VisitDurationDistributionProps {
   className?: string;
 }
 
-export const VisitDurationDistribution: React.FC<VisitDurationDistributionProps> = ({
-  data,
-  comparisonData = null,
-  className,
-}) => {
+export const VisitDurationDistribution: React.FC<
+  VisitDurationDistributionProps
+> = ({ data, comparisonData = null, className }) => {
   const { t } = useTranslation();
 
   const { bins, totalVisits, avgSeconds, changePct } = useMemo(() => {
@@ -53,17 +51,26 @@ export const VisitDurationDistribution: React.FC<VisitDurationDistributionProps>
     const binCounts = DEFAULT_BINS.map(() => 0);
     let total = 0;
     let weightedDurationSum = 0;
+    // For simple average (unweighted), accumulate durations regardless of visit counts
+    let simpleDurationSum = 0;
+    let simpleDurationCount = 0;
 
     for (let i = 0; i < length; i++) {
       const v = visits[i] || 0;
       const secs = durations[i] || 0;
-      if (v <= 0 || secs <= 0) continue;
-      total += v;
-      weightedDurationSum += v * secs;
+      if (secs <= 0) continue;
+      // Track totals for distribution (visit-weighted bins)
+      if (v > 0) {
+        total += v;
+        weightedDurationSum += v * secs;
+      }
+      // Track for simple average (unweighted)
+      simpleDurationSum += secs;
+      simpleDurationCount += 1;
       const binIndex = DEFAULT_BINS.findIndex(
         (b) => secs >= b.min && secs < b.max,
       );
-      if (binIndex >= 0) binCounts[binIndex] += v;
+      if (binIndex >= 0) binCounts[binIndex] += Math.max(v, 0);
     }
 
     // Comparison change
@@ -72,30 +79,34 @@ export const VisitDurationDistribution: React.FC<VisitDurationDistributionProps>
       const cVisits = comparisonData.in || [];
       const cDurations = comparisonData.avgVisitDuration || [];
       const clen = Math.min(cVisits.length, cDurations.length);
-      let cTotal = 0;
-      let cWeighted = 0;
+      let cSimpleSum = 0;
+      let cSimpleCount = 0;
       for (let i = 0; i < clen; i++) {
-        const v = cVisits[i] || 0;
         const secs = cDurations[i] || 0;
-        if (v <= 0 || secs <= 0) continue;
-        cTotal += v;
-        cWeighted += v * secs;
+        if (secs <= 0) continue;
+        cSimpleSum += secs;
+        cSimpleCount += 1;
       }
-      const currentAvg = total > 0 ? weightedDurationSum / total : 0;
-      const prevAvg = cTotal > 0 ? cWeighted / cTotal : 0;
+      const currentAvg =
+        simpleDurationCount > 0 ? simpleDurationSum / simpleDurationCount : 0;
+      const prevAvg = cSimpleCount > 0 ? cSimpleSum / cSimpleCount : 0;
       change = prevAvg > 0 ? ((currentAvg - prevAvg) / prevAvg) * 100 : 0;
     }
 
     return {
       bins: binCounts,
       totalVisits: total,
-      avgSeconds: total > 0 ? weightedDurationSum / total : 0,
+      // Use simple average (unweighted) to match card
+      avgSeconds:
+        simpleDurationCount > 0 ? simpleDurationSum / simpleDurationCount : 0,
       changePct: change,
     };
   }, [data, comparisonData]);
 
   const categories = DEFAULT_BINS.map((b) => b.key);
-  const percentages = bins.map((count) => (totalVisits > 0 ? (count / totalVisits) * 100 : 0));
+  const percentages = bins.map((count) =>
+    totalVisits > 0 ? (count / totalVisits) * 100 : 0,
+  );
 
   const option: EChartsOption = {
     tooltip: {
@@ -110,7 +121,11 @@ export const VisitDurationDistribution: React.FC<VisitDurationDistributionProps>
       },
     },
     grid: { left: 8, right: 8, top: 12, bottom: 8, containLabel: true },
-    xAxis: { type: "value", max: 100, axisLabel: { formatter: (v: number) => `${v}%` } },
+    xAxis: {
+      type: "value",
+      max: 100,
+      axisLabel: { formatter: (v: number) => `${v}%` },
+    },
     yAxis: { type: "category", data: categories },
     series: [
       {
@@ -126,12 +141,19 @@ export const VisitDurationDistribution: React.FC<VisitDurationDistributionProps>
 
   const avgLabel = formatSecondsToMmSs(avgSeconds);
   const changeUp = changePct > 0;
-  const changeColor = changePct === 0 ? "text-gray-500" : changeUp ? "text-green-600" : "text-red-600";
+  const changeColor =
+    changePct === 0
+      ? "text-gray-500"
+      : changeUp
+        ? "text-green-600"
+        : "text-red-600";
 
   return (
     <div className={`w-full h-full flex flex-col ${className || ""}`}>
       <div className="flex items-center justify-between mb-3">
-        <div className="text-sm text-gray-600">{t("dashboard.metrics.avgVisitDuration")}</div>
+        <div className="text-sm text-gray-600">
+          {t("dashboard.metrics.avgVisitDuration")}
+        </div>
         <div className="flex items-center gap-3">
           <div className="text-lg font-semibold text-gray-900">{avgLabel}</div>
           {comparisonData && (
@@ -148,31 +170,6 @@ export const VisitDurationDistribution: React.FC<VisitDurationDistributionProps>
       <div className="relative flex-1 min-h-[220px]">
         <BaseChart option={option} className="" />
       </div>
-
-      <div className="mt-4">
-        <div className="grid grid-cols-3 gap-2 text-xs font-medium text-gray-500 px-1">
-          <div>{t("dashboard.charts.timeRange") || "Time Range"}</div>
-          <div className="text-right col-span-2">{t("dashboard.percentage")}</div>
-        </div>
-        <div className="divide-y border rounded-md mt-1">
-          {categories.map((label, idx) => (
-            <div key={label} className="grid grid-cols-3 gap-2 items-center px-2 py-1.5">
-              <div className="text-sm text-gray-700">{label}</div>
-              <div className="col-span-2">
-                <div className="w-full bg-gray-100 h-2 rounded">
-                  <div
-                    className="h-2 rounded bg-blue-400"
-                    style={{ width: `${percentages[idx].toFixed(1)}%` }}
-                    title={`${bins[idx].toLocaleString()} • ${percentages[idx].toFixed(1)}%`}
-                  />
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
     </div>
   );
 };
-
-
