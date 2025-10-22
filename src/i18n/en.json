@@ -385,8 +385,7 @@
       "saveLayout": "Save Layout",
       "editLayout": "Edit Layout",
       "hiddenCards": "Hidden Cards"
-    }
-    ,
+    },
     "turnIn": {
       "newCustomer": "New Customer",
       "returningCustomer": "Returning Customer"

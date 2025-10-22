@@ -65,7 +65,7 @@ export interface WidgetFactoryParams {
     dailyAverageOut?: import("../../../../utils/comparisonUtils").MetricComparison;
     returningCustomers?: import("../../../../utils/comparisonUtils").MetricComparison;
     avgVisitDuration?: import("../../../../utils/comparisonUtils").MetricComparison;
-      // removed: affluence
+    // removed: affluence
   };
   comparisonPeriod?: { start: Date; end: Date };
 }

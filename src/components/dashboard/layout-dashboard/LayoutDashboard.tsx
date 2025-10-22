@@ -322,7 +322,10 @@ export const LayoutDashboard: React.FC<LayoutDashboardProps> = ({
         translationKey: "dashboard.metrics.turnInRatio",
         category: "chart",
         component: (
-          <ChartCard title="Turn-in Ratio" translationKey="dashboard.metrics.turnInRatio">
+          <ChartCard
+            title="Turn-in Ratio"
+            translationKey="dashboard.metrics.turnInRatio"
+          >
             {!sensorData?.in || sensorData.in.length === 0 ? (
               <div className="flex items-center justify-center h-64 text-gray-500">
                 No data available.
