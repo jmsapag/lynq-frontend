@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { ChartBarIcon } from "@heroicons/react/24/outline";
 import { useTranslation } from "react-i18next";
-import { SensorDataCard } from "../layout-dashboard/layout-dashboard/SensorDataCard";
+import { SensorDataCard } from "../charts/card.tsx";
 
 interface TurnInRatioCardProps {
   data: {
@@ -34,13 +34,15 @@ export const TurnInRatioCard: React.FC<TurnInRatioCardProps> = ({
       const e = entries[i] || 0;
       let r = returning[i] ?? 0; // decimal (0..1) or percent (0..100)
       if (r > 1) r = r / 100; // normalize percent to decimal
+      r = Math.max(0, Math.min(1, r)); // clamp to [0,1]
       totalEntries += e;
       weightedSum += r * e;
     }
 
     const returningAbs = Math.round(weightedSum);
     const newAbs = Math.max(0, totalEntries - returningAbs);
-    const returningPct = totalEntries > 0 ? Math.round((returningAbs / totalEntries) * 100) : 0;
+    const returningPct =
+      totalEntries > 0 ? Math.round((returningAbs / totalEntries) * 100) : 0;
 
     return {
       percentage: returningPct,
@@ -52,7 +54,7 @@ export const TurnInRatioCard: React.FC<TurnInRatioCardProps> = ({
 
   return (
     <SensorDataCard
-      title={t("dashboard.metrics.turnInRatio")} 
+      title={t("dashboard.metrics.turnInRatio")}
       value={hasData ? `${percentage}%` : "N/A"}
       unit=""
       icon={<ChartBarIcon className="w-6 h-6 text-amber-600" />}
@@ -69,5 +71,3 @@ export const TurnInRatioCard: React.FC<TurnInRatioCardProps> = ({
     />
   );
 };
-
-

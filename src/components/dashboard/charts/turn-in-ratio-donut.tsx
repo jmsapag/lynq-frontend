@@ -11,7 +11,10 @@ interface TurnInRatioDonutProps {
   className?: string;
 }
 
-export const TurnInRatioDonut: React.FC<TurnInRatioDonutProps> = ({ data, className }) => {
+export const TurnInRatioDonut: React.FC<TurnInRatioDonutProps> = ({
+  data,
+  className,
+}) => {
   const { t } = useTranslation();
 
   const { newCount, returningCount, total } = useMemo(() => {
@@ -23,17 +26,23 @@ export const TurnInRatioDonut: React.FC<TurnInRatioDonutProps> = ({ data, classN
     for (let i = 0; i < Math.min(entries.length, returning.length); i++) {
       const e = entries[i] || 0;
       let r = returning[i] ?? 0;
-      // Normalize if provided as percentage (e.g., 14 means 14%)
+      // Normalize if provided as percentage (e.g., 14 means 14%) and clamp to [0,1]
       if (r > 1) {
         r = r / 100;
       }
+      // Clamp to [0,1] to avoid invalid >100% values due to upstream data issues
+      r = Math.max(0, Math.min(1, r));
       totalEntries += e;
       weightedReturning += r * e;
     }
 
     const returningAbs = weightedReturning; // keep decimal for more accurate split
     const newAbs = Math.max(0, totalEntries - returningAbs);
-    return { newCount: newAbs, returningCount: returningAbs, total: totalEntries };
+    return {
+      newCount: newAbs,
+      returningCount: returningAbs,
+      total: totalEntries,
+    };
   }, [data.in, data.returningCustomers]);
 
   const option: EChartsOption = {
@@ -68,21 +77,32 @@ export const TurnInRatioDonut: React.FC<TurnInRatioDonutProps> = ({ data, classN
         },
         labelLine: { show: false },
         data: [
-          { value: newCount, name: t("dashboard.turnIn.newCustomer"), itemStyle: { color: "#60A5FA" } },
-          { value: returningCount, name: t("dashboard.turnIn.returningCustomer"), itemStyle: { color: "#34D399" } },
+          {
+            value: newCount,
+            name: t("dashboard.turnIn.newCustomer"),
+            itemStyle: { color: "#60A5FA" },
+          },
+          {
+            value: returningCount,
+            name: t("dashboard.turnIn.returningCustomer"),
+            itemStyle: { color: "#34D399" },
+          },
         ],
       },
     ],
-    graphic: total === 0 ? {
-      type: "text",
-      left: "center",
-      top: "middle",
-      style: {
-        text: t("dashboard.errors.noDataAvailable"),
-        fontSize: 16,
-        fill: "#6B7280",
-      },
-    } : undefined,
+    graphic:
+      total === 0
+        ? {
+            type: "text",
+            left: "center",
+            top: "middle",
+            style: {
+              text: t("dashboard.errors.noDataAvailable"),
+              fontSize: 16,
+              fill: "#6B7280",
+            },
+          }
+        : undefined,
   };
 
   return (
@@ -94,5 +114,3 @@ export const TurnInRatioDonut: React.FC<TurnInRatioDonutProps> = ({ data, classN
     </div>
   );
 };
-
-
