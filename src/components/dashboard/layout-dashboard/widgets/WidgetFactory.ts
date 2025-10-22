@@ -25,7 +25,7 @@ export const createWidgetConfig = (
     ChartWidgets.createEntryRateChartWidget(params),
     ChartWidgets.createReturningCustomersChartWidget(params),
     ChartWidgets.createAvgVisitDurationChartWidget(params),
-    ChartWidgets.createAffluenceChartWidget(params),
+    ChartWidgets.createVisitDurationDistributionWidget(params),
     ChartWidgets.createLocationComparisonWidget(params),
     ChartWidgets.createTopStoresChartWidget(params),
   ];

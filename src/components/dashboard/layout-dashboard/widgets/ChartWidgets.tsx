@@ -12,6 +12,7 @@ import { TopStoresChartCard } from "../../charts/top-stores-chart-card";
 import { WidgetConfig, WidgetFactoryParams } from "./types";
 import { useTranslation } from "react-i18next";
 import React from "react";
+import { VisitDurationDistribution } from "../../charts/visit-duration-distribution";
 
 const NoDataMessage = () => {
   const { t } = useTranslation();
@@ -271,6 +272,36 @@ export const ChartWidgets = {
               values: params.sensorData.avgVisitDuration || [],
             }}
             groupBy={params.sensorRecordsFormData.groupBy}
+          />
+        )}
+      </ChartCard>
+    ),
+  }),
+
+  createVisitDurationDistributionWidget: (
+    params: WidgetFactoryParams,
+  ): WidgetConfig => ({
+    id: "visit-duration-distribution",
+    type: "visit-duration-distribution",
+    title: "Time in Store Distribution",
+    translationKey: "dashboard.charts.timeInStoreDistribution",
+    category: "chart",
+    component: (
+      <ChartCard
+        title="Time in Store Distribution"
+        translationKey="dashboard.charts.timeInStoreDistribution"
+        data={{}}
+      >
+        {!params.sensorData?.avgVisitDuration ||
+        params.sensorData.avgVisitDuration.length === 0 ? (
+          <VisitDurationNoDataMessage />
+        ) : (
+          <VisitDurationDistribution
+            data={{
+              avgVisitDuration: params.sensorData.avgVisitDuration,
+              in: params.sensorData.in,
+            }}
+            comparisonData={null}
           />
         )}
       </ChartCard>

@@ -316,6 +316,7 @@
       "locationComparison": "Location Comparison",
       "entryRateOverTime": "Entry Rate Over Time",
       "peopleInStore": "People in Store (Cumulative)",
+      "timeInStoreDistribution": "Time in Store Distribution",
       "returningCustomersChart": "Returning Rate Over Time",
       "avgVisitDurationChart": "Average Visit Duration Over Time",
       "affluenceChart": "Affluence Over Time",
@@ -384,7 +385,8 @@
       "resetLayout": "Reset Layout",
       "saveLayout": "Save Layout",
       "editLayout": "Edit Layout",
-      "hiddenCards": "Hidden Cards"
+      "hiddenCards": "Hidden Cards",
+      "timeRange": "Time Range"
     }
   },
   "users": {

@@ -439,6 +439,7 @@
       "locationComparison": "Comparación de Ubicaciones",
       "entryRateOverTime": "Tasa de Entrada a lo Largo del Tiempo",
       "peopleInStore": "Personas en Tienda (Acumulativo)",
+      "timeInStoreDistribution": "Distribución de Tiempo en Tienda",
       "returningCustomersChart": "Tasa de Retorno a lo Largo del Tiempo",
       "avgVisitDurationChart": "Tiempo Promedio de Visita a lo Largo del Tiempo",
       "affluenceChart": "Afluencia a lo Largo del Tiempo",
@@ -500,7 +501,8 @@
       "resetLayout": "Restablecer Diseño",
       "saveLayout": "Guardar Diseño",
       "editLayout": "Editar Diseño",
-      "hiddenCards": "Tarjetas Ocultas"
+      "hiddenCards": "Tarjetas Ocultas",
+      "timeRange": "Rango de Tiempo"
     }
   },
   "users": {
