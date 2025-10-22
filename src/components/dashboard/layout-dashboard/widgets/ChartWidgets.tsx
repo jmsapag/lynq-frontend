@@ -13,6 +13,7 @@ import { TopStoresChartCard } from "../../charts/top-stores-chart-card";
 import { WidgetConfig, WidgetFactoryParams } from "./types";
 import { useTranslation } from "react-i18next";
 import React from "react";
+import { VisitDurationDistribution } from "../../charts/visit-duration-distribution";
 
 const NoDataMessage = () => {
   const { t } = useTranslation();
@@ -273,6 +274,59 @@ export const ChartWidgets = {
             }}
             groupBy={params.sensorRecordsFormData.groupBy}
           />
+        )}
+      </ChartCard>
+    ),
+  }),
+
+  createVisitDurationDistributionWidget: (
+    params: WidgetFactoryParams,
+  ): WidgetConfig => ({
+    id: "visit-duration-distribution",
+    type: "visit-duration-distribution",
+    title: "Time in Store Distribution",
+    translationKey: "dashboard.charts.timeInStoreDistribution",
+    category: "chart",
+    component: (
+      <ChartCard
+        title="Time in Store Distribution"
+        translationKey="dashboard.charts.timeInStoreDistribution"
+        data={{}}
+      >
+        {!params.sensorData?.avgVisitDuration ||
+        params.sensorData.avgVisitDuration.length === 0 ? (
+          <VisitDurationNoDataMessage />
+        ) : (
+          <VisitDurationDistribution
+            data={{
+              avgVisitDuration: params.sensorData.avgVisitDuration,
+              in: params.sensorData.in,
+            }}
+            comparisonData={null}
+          />
+        )}
+      </ChartCard>
+    ),
+  }),
+
+  createTurnInRatioDonutWidget: (
+    params: WidgetFactoryParams,
+  ): WidgetConfig => ({
+    id: "turn-in-ratio-donut",
+    type: "turn-in-ratio-donut",
+    title: "Turn-in Ratio",
+    translationKey: "dashboard.metrics.turnInRatio",
+    category: "chart",
+    component: (
+      <ChartCard
+        title="Turn-in Ratio"
+        translationKey="dashboard.metrics.turnInRatio"
+        data={[]}
+      >
+        {!params.sensorData?.in || params.sensorData.in.length === 0 ? (
+          <TurnInNoDataMessage />
+        ) : (
+          <TurnInRatioDonut data={params.sensorData} />
         )}
       </ChartCard>
     ),
