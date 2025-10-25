@@ -161,7 +161,6 @@ function App() {
 
               {/* LYNQ_TEAM only routes */}
               <Route element={<RoleRoute allowedRoles="LYNQ_TEAM" />}>
-                <Route path="devices" element={<DevicesPage />} />
                 <Route path="businesses" element={<BusinessesPage />} />
                 <Route
                   path="business/:businessId/connections"
@@ -173,6 +172,7 @@ function App() {
               {/* ADMIN only routes */}
               <Route element={<RoleRoute allowedRoles="ADMIN" />}>
                 <Route path="user-management" element={<UserManagement />} />
+                <Route path="devices" element={<DevicesPage />} />
                 <Route path="locations" element={<Locations />} />
                 <Route path="/billing" element={<BillingPage />} />
                 <Route path="/wallet" element={<WalletPage />} />

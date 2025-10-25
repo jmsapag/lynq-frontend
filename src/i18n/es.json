@@ -871,7 +871,10 @@
     "formErrorDesc": "Por favor, completa todos los campos requeridos.",
     "businessName": "Nombre de la Empresa",
     "allProviders": "Todos los Proveedores",
-    "filterProvider": "Filtrar por Proveedor"
+    "filterProvider": "Filtrar por Proveedor",
+    "status": "Estado",
+    "active": "Activo",
+    "inactive": "Inactivo"
   },
   "locations": {
     "management": "Gestión de Ubicaciones",

@@ -36,6 +36,7 @@ export const adminNavItems = [
   { title: "dashboard", href: "/dashboard", icon: ChartBarIcon },
   { title: "comparison", href: "/comparison", icon: ArrowsRightLeftIcon },
   { title: "reports", href: "/reports", icon: DocumentChartBarIcon },
+  { title: "devices", href: "/devices", icon: DeviceTabletIcon },
   { title: "billing", href: "/billing", icon: CurrencyDollarIcon },
   { title: "user-management", href: "/user-management", icon: UserGroupIcon },
   { title: "locations", href: "/locations", icon: MapPinIcon },
