@@ -1,9 +1,20 @@
 import React, { useState } from "react";
-import { Button, Spinner, Tabs, Tab, Pagination } from "@heroui/react";
+import {
+  Button,
+  Spinner,
+  Tabs,
+  Tab,
+  Pagination,
+  useDisclosure,
+} from "@heroui/react";
 import { useTranslation } from "react-i18next";
 import { AlertCard } from "../components/alerts/alert-card";
 import { useAlerts } from "../hooks/alerts/useAlerts";
+import { useCreateAlertConfig } from "../hooks/alerts/useCreateAlertConfig";
+import { useLocations } from "../hooks/locations/useLocations";
+import { CreateAlertForm } from "../components/alerts/create-alert-form";
 import { AlertSeverity, Alert } from "../types/alert";
+import { CreateAlertConfigDto } from "../types/alert-config";
 
 export const AlertFeed: React.FC = () => {
   const { t } = useTranslation();
@@ -21,7 +32,16 @@ export const AlertFeed: React.FC = () => {
     pagination,
     changePage,
     setFilter,
+    refetch,
   } = useAlerts();
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    createAlert,
+    loading: createLoading,
+    error: createError,
+  } = useCreateAlertConfig();
+  const { allLocations } = useLocations();
 
   const handleSeverityChange = (key: string | number) => {
     const severity = key as AlertSeverity | "ALL";
@@ -39,6 +59,18 @@ export const AlertFeed: React.FC = () => {
           });
           break;
       }
+    }
+  };
+
+  const handleCreateAlert = async (
+    locationId: number,
+    alertData: CreateAlertConfigDto,
+  ) => {
+    const result = await createAlert(locationId, alertData);
+    if (result) {
+      onClose();
+      // Optionally refetch alerts to show any new configurations
+      refetch();
     }
   };
 
@@ -77,18 +109,38 @@ export const AlertFeed: React.FC = () => {
             </p>
           )}
         </div>
-        {unreadCount > 0 && (
+        <div className="flex gap-2">
           <Button
             color="primary"
-            variant="flat"
+            variant="solid"
             size="sm"
-            onClick={markAllAsRead}
+            onClick={onOpen}
             className="text-xs sm:text-sm"
           >
-            {t("alerts.markAllAsRead", "Mark all as read")}
+            {t("alerts.createNew", "Create Alert")}
           </Button>
-        )}
+          {unreadCount > 0 && (
+            <Button
+              color="primary"
+              variant="flat"
+              size="sm"
+              onClick={markAllAsRead}
+              className="text-xs sm:text-sm"
+            >
+              {t("alerts.markAllAsRead", "Mark all as read")}
+            </Button>
+          )}
+        </div>
       </div>
+
+      {/* Show create error if any */}
+      {createError && (
+        <div className="mb-4 px-2">
+          <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+            <p className="text-red-600 text-sm">{createError}</p>
+          </div>
+        </div>
+      )}
 
       {/* Tabs - full width with minimal padding */}
       <div className="mb-4 px-2">
@@ -139,6 +191,15 @@ export const AlertFeed: React.FC = () => {
           />
         </div>
       )}
+
+      {/* Create Alert Modal */}
+      <CreateAlertForm
+        isOpen={isOpen}
+        onClose={onClose}
+        onSubmit={handleCreateAlert}
+        locations={allLocations}
+        loading={createLoading}
+      />
     </div>
   );
 };
