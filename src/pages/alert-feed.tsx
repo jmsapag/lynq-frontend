@@ -1,24 +1,48 @@
 import React, { useState } from "react";
-import { Button, Spinner, Tabs, Tab } from "@heroui/react";
+import { Button, Spinner, Tabs, Tab, Pagination } from "@heroui/react";
 import { useTranslation } from "react-i18next";
 import { AlertCard } from "../components/alerts/alert-card";
 import { useAlerts } from "../hooks/alerts/useAlerts";
-import type { AlertSeverity, Alert } from "../types/alert";
+import { AlertSeverity, Alert } from "../types/alert";
 
 export const AlertFeed: React.FC = () => {
   const { t } = useTranslation();
-  const { alerts, loading, error, unreadCount, markAsRead, markAllAsRead } =
-    useAlerts();
   const [filterSeverity, setFilterSeverity] = useState<AlertSeverity | "ALL">(
     "ALL",
   );
 
-  const filteredAlerts = alerts.filter((alert: Alert) => {
-    if (filterSeverity === "ALL") return true;
-    return alert.severity === filterSeverity;
-  });
+  const {
+    alerts,
+    loading,
+    error,
+    unreadCount,
+    markAsRead,
+    markAllAsRead,
+    pagination,
+    changePage,
+    setFilter,
+  } = useAlerts();
 
-  if (loading) {
+  const handleSeverityChange = (key: string | number) => {
+    const severity = key as AlertSeverity | "ALL";
+    setFilterSeverity(severity);
+
+    if (severity === "ALL") {
+      setFilter({ type: undefined });
+    } else {
+      switch (severity) {
+        case AlertSeverity.ERROR:
+        case AlertSeverity.WARN:
+        case AlertSeverity.INFO:
+          setFilter({
+            title: severity,
+          });
+          break;
+      }
+    }
+  };
+
+  if (loading && pagination.page === 1) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <Spinner size="lg" label="Loading alerts..." />
@@ -40,14 +64,15 @@ export const AlertFeed: React.FC = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-4xl">
-      <div className="flex items-center justify-between mb-6">
+    <div className="w-full max-w-6xl mx-auto px-2 sm:px-4 py-4">
+      {/* Header - more compact */}
+      <div className="flex items-center justify-between mb-4 px-2">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
             {t("alerts.title", "Alerts")}
           </h1>
           {unreadCount > 0 && (
-            <p className="text-sm text-gray-600 mt-1">
+            <p className="text-xs sm:text-sm text-gray-600">
               {unreadCount} {t("alerts.unreadStatus", "unread alert(s)")}
             </p>
           )}
@@ -58,38 +83,62 @@ export const AlertFeed: React.FC = () => {
             variant="flat"
             size="sm"
             onClick={markAllAsRead}
+            className="text-xs sm:text-sm"
           >
             {t("alerts.markAllAsRead", "Mark all as read")}
           </Button>
         )}
       </div>
 
-      <Tabs
-        selectedKey={filterSeverity}
-        onSelectionChange={(key) =>
-          setFilterSeverity(key as AlertSeverity | "ALL")
-        }
-        className="mb-6"
-      >
-        <Tab key="ALL" title={t("alerts.all", "All")} />
-        <Tab key="ERROR" title={t("alerts.errors", "Errors")} />
-        <Tab key="WARN" title={t("alerts.warnings", "Warnings")} />
-        <Tab key="INFO" title={t("alerts.info", "Info")} />
-      </Tabs>
+      {/* Tabs - full width with minimal padding */}
+      <div className="mb-4 px-2">
+        <Tabs
+          selectedKey={filterSeverity}
+          onSelectionChange={handleSeverityChange}
+          className="w-full"
+          classNames={{
+            tabList: "w-full",
+            tab: "flex-1",
+          }}
+        >
+          <Tab key="ALL" title={t("alerts.all", "All")} />
+          <Tab key="ERROR" title={t("alerts.errors", "Errors")} />
+          <Tab key="WARN" title={t("alerts.warnings", "Warnings")} />
+          <Tab key="INFO" title={t("alerts.info", "Info")} />
+        </Tabs>
+      </div>
 
-      <div className="space-y-4">
-        {filteredAlerts.length === 0 ? (
+      {/* Alerts list - minimal horizontal padding */}
+      <div className="space-y-3 px-2">
+        {loading ? (
+          <div className="flex justify-center py-8">
+            <Spinner size="md" />
+          </div>
+        ) : alerts.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-gray-500">
               {t("alerts.noAlerts", "No alerts to display")}
             </p>
           </div>
         ) : (
-          filteredAlerts.map((alert: Alert) => (
+          alerts.map((alert: Alert) => (
             <AlertCard key={alert.id} alert={alert} onMarkAsRead={markAsRead} />
           ))
         )}
       </div>
+
+      {/* Pagination - centered with minimal top margin */}
+      {pagination.totalPages > 1 && (
+        <div className="mt-4 flex justify-center px-2">
+          <Pagination
+            total={pagination.totalPages}
+            initialPage={pagination.page}
+            onChange={changePage}
+            size="sm"
+            showControls
+          />
+        </div>
+      )}
     </div>
   );
 };

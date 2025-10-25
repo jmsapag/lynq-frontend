@@ -1,78 +1,80 @@
-import { useState, useEffect } from "react";
-import {
-  Alert,
-  AlertSeverity,
-  AlertType,
-  AlertStatus,
-} from "../../types/alert";
+import { useState, useEffect, useCallback } from "react";
+import { axiosPrivate } from "../../services/axiosClient";
+import { Alert, AlertStatus, AlertType } from "../../types/alert";
 
-// Mock data for development with proper enum values
-const mockAlerts: Alert[] = [
-  {
-    id: 1,
-    title: "High Traffic Alert",
-    message: "Traffic levels exceeded threshold by 25% at Main Entrance",
-    severity: AlertSeverity.WARN,
-    locationId: 1,
-    alertType: AlertType.PERSONALIZED,
-    metadata: { threshold: 100, current: 125, difference: 25 },
-    createdAt: new Date(Date.now() - 3600000).toISOString(),
-    status: AlertStatus.UNREAD,
-    locationName: "Main Entrance",
-  },
-  {
-    id: 2,
-    title: "Sensor Connection Lost",
-    message: "Sensor #42 lost connection and requires attention",
-    severity: AlertSeverity.ERROR,
-    locationId: 2,
-    alertType: AlertType.SENSOR_ERROR,
-    metadata: { sensorId: 42, lastSeen: "2024-01-15T10:30:00Z" },
-    createdAt: new Date(Date.now() - 7200000).toISOString(),
-    status: AlertStatus.UNREAD,
-    locationName: "North Wing",
-  },
-  {
-    id: 3,
-    title: "Daily Report Available",
-    message: "Your daily analytics report is ready for review",
-    severity: AlertSeverity.INFO,
-    locationId: 1,
-    alertType: AlertType.PERSONALIZED,
-    metadata: { reportId: "daily-2024-01-15" },
-    createdAt: new Date(Date.now() - 86400000).toISOString(),
-    status: AlertStatus.READ,
-    locationName: "Main Entrance",
-  },
-];
+interface AlertsParams {
+  page?: number;
+  limit?: number;
+  status?: AlertStatus;
+  locationId?: number;
+  type?: AlertType;
+  title?: string;
+}
 
-export function useAlerts() {
+interface AlertsResponse {
+  data: Alert[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
+export function useAlerts(initialParams?: AlertsParams) {
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [params, setParams] = useState<AlertsParams>({
+    page: 1,
+    limit: 10,
+    ...initialParams,
+  });
+  const [pagination, setPagination] = useState({
+    total: 0,
+    page: 1,
+    limit: 10,
+    totalPages: 1,
+  });
 
-  const fetchAlerts = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      // Mock implementation for development
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      setAlerts(mockAlerts);
-      setUnreadCount(
-        mockAlerts.filter((a) => a.status === AlertStatus.UNREAD).length,
-      );
-    } catch (err: any) {
-      setError(err.response?.data?.message || "Failed to fetch alerts");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const fetchAlerts = useCallback(
+    async (queryParams?: AlertsParams) => {
+      setLoading(true);
+      setError(null);
+      try {
+        const currentParams = queryParams || params;
+        const response = await axiosPrivate.get<AlertsResponse>("/alerts", {
+          params: currentParams,
+        });
+
+        setAlerts(response.data.data);
+        setPagination({
+          total: response.data.total,
+          page: response.data.page,
+          limit: response.data.limit,
+          totalPages: response.data.totalPages,
+        });
+
+        const unreadResponse = await axiosPrivate.get<AlertsResponse>(
+          "/alerts",
+          {
+            params: { status: AlertStatus.UNREAD, limit: 1 },
+          },
+        );
+        setUnreadCount(unreadResponse.data.total);
+      } catch (err: any) {
+        setError(err.response?.data?.message || "Failed to fetch alerts");
+      } finally {
+        setLoading(false);
+      }
+    },
+    [params],
+  );
 
   const markAsRead = async (alertId: number) => {
     try {
-      // Mock implementation for development
-      await new Promise((resolve) => setTimeout(resolve, 200));
+      await axiosPrivate.put(`/alerts/${alertId}/status`, {
+        status: AlertStatus.READ,
+      });
 
       setAlerts((prev) =>
         prev.map((alert) =>
@@ -87,8 +89,9 @@ export function useAlerts() {
 
   const markAllAsRead = async () => {
     try {
-      // Mock implementation for development
-      await new Promise((resolve) => setTimeout(resolve, 300));
+      await axiosPrivate.put("/alerts/all/status", {
+        status: AlertStatus.READ,
+      });
 
       setAlerts((prev) =>
         prev.map((alert) => ({ ...alert, status: AlertStatus.READ })),
@@ -101,9 +104,17 @@ export function useAlerts() {
     }
   };
 
+  const changePage = (page: number) => {
+    setParams((prev) => ({ ...prev, page }));
+  };
+
+  const setFilter = (filterParams: Partial<AlertsParams>) => {
+    setParams((prev) => ({ ...prev, ...filterParams, page: 1 }));
+  };
+
   useEffect(() => {
     fetchAlerts();
-  }, []);
+  }, [fetchAlerts, params]);
 
   return {
     alerts,
@@ -112,6 +123,9 @@ export function useAlerts() {
     unreadCount,
     markAsRead,
     markAllAsRead,
-    refetch: fetchAlerts,
+    refetch: () => fetchAlerts(),
+    pagination,
+    changePage,
+    setFilter,
   };
 }

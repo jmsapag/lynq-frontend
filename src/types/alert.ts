@@ -19,15 +19,19 @@ export interface Alert {
   title: string;
   message: string;
   severity: AlertSeverity;
-  locationId: number;
   alertType: AlertType;
+  status: AlertStatus;
+  locationId: number;
+  locationName: string;
   metadata?: Record<string, any>;
   createdAt: string;
-  status: AlertStatus;
-  locationName?: string;
+  updatedAt: string;
 }
 
-export interface AlertResponse {
+export interface AlertsResponse {
   data: Alert[];
   total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
 }
