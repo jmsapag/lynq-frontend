@@ -756,7 +756,10 @@
     "formErrorDesc": "Please fill in all required fields.",
     "businessName": "Business Name",
     "allProviders": "All Providers",
-    "filterProvider": "Filter by Provider"
+    "filterProvider": "Filter by Provider",
+    "status": "Status",
+    "active": "Active",
+    "inactive": "Inactive"
   },
   "locations": {
     "management": "Location Management",
