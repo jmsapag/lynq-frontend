@@ -13,6 +13,7 @@ import { WidgetConfig, WidgetFactoryParams } from "./types";
 import { useTranslation } from "react-i18next";
 import React from "react";
 import { VisitDurationDistribution } from "../../charts/visit-duration-distribution";
+import { parse } from "date-fns";
 
 const NoDataMessage = () => {
   const { t } = useTranslation();
@@ -371,7 +372,12 @@ export const ChartWidgets = {
               }
               return acc;
             }, [] as string[])
-            .sort();
+            .sort((a: string, b: string) => {
+              // Parse timestamps in format "MMM dd, HH:mm" and sort chronologically
+              const dateA = parse(a, "MMM dd, HH:mm", new Date());
+              const dateB = parse(b, "MMM dd, HH:mm", new Date());
+              return dateA.getTime() - dateB.getTime();
+            });
 
           // Filter locations that have valid data
           const validLocations = params.sensorDataByLocation.filter(
