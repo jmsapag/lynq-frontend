@@ -14,7 +14,7 @@ export const AvgVisitDurationCard: React.FC<AvgVisitDurationCardProps> = ({
   dateRange,
   className = "",
 }) => {
-  // Calculate average visit duration
+  // Calculate average visit duration (simple mean of non-zero durations)
   const avgVisitDuration = useMemo(() => {
     const validDurations = data.avgVisitDuration.filter((val) => val > 0);
     return validDurations.length > 0

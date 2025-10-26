@@ -34,7 +34,8 @@
     "subscription": "Suscripción",
     "billing": "Facturación",
     "billing/subscription": "Suscripción",
-    "new-payment-method": "Nuevo Método de Pago"
+    "new-payment-method": "Nuevo Método de Pago",
+    "alerts": "Alertas"
   },
   "billing": {
     "title": "Facturación",
@@ -439,6 +440,7 @@
       "locationComparison": "Comparación de Ubicaciones",
       "entryRateOverTime": "Tasa de Entrada a lo Largo del Tiempo",
       "peopleInStore": "Personas en Tienda (Acumulativo)",
+      "timeInStoreDistribution": "Distribución de Tiempo en Tienda",
       "returningCustomersChart": "Tasa de Retorno a lo Largo del Tiempo",
       "avgVisitDurationChart": "Tiempo Promedio de Visita a lo Largo del Tiempo",
       "affluenceChart": "Afluencia a lo Largo del Tiempo",
@@ -500,7 +502,8 @@
       "resetLayout": "Restablecer Diseño",
       "saveLayout": "Guardar Diseño",
       "editLayout": "Editar Diseño",
-      "hiddenCards": "Tarjetas Ocultas"
+      "hiddenCards": "Tarjetas Ocultas",
+      "timeRange": "Rango de Tiempo"
     }
   },
   "users": {
@@ -780,7 +783,7 @@
     "profileUpdateErrorTitle": "Error al actualizar",
     "profileUpdateErrorDescription": "No se pudo actualizar tu perfil. Inténtalo de nuevo.",
     "createFailedTitle": "Error al crear",
-    "createFailedDescription": "No se pudo crear la empresa.",
+    "createFailedDescription": "No se pudo crear.",
     "editFailedTitle": "Error al editar",
     "editFailedDescription": "No se pudo editar la empresa.",
     "deleteFailedTitle": "Error al borrar",
@@ -792,7 +795,9 @@
     "changePasswordSuccessTitle": "Contraseña Cambiada",
     "changePasswordSuccessDescription": "Tu contraseña se cambió correctamente. Ya puedes iniciar sesión.",
     "changePasswordErrorTitle": "Error",
-    "changePasswordErrorDescription": "No se pudo cambiar la contraseña. El enlace puede ser inválido o haber expirado."
+    "changePasswordErrorDescription": "No se pudo cambiar la contraseña. El enlace puede ser inválido o haber expirado.",
+    "createSuccessTitle": "Éxito",
+    "createSuccessDescription": "¡Creado exitosamente!"
   },
   "businesses": {
     "management": "Gestión de Empresas",
@@ -827,7 +832,19 @@
     "errorDescription": "No se pudieron crear los tokens de registro.",
     "copiedTitle": "Copiado",
     "copiedDescription": "Todos los enlaces de registro copiados al portapapeles.",
-    "noTokens": "No se recibieron tokens."
+    "noTokens": "No se recibieron tokens.",
+    "invitationMethod": "Método de Invitación",
+    "inviteByLink": "Generar enlaces de invitación",
+    "inviteByEmail": "Enviar invitaciones por correo",
+    "emails": "Direcciones de Correo",
+    "emailsPlaceholder": "usuario1@ejemplo.com\nusuario2@ejemplo.com",
+    "emailsDescription": "Ingresa un correo por línea, o sepáralos con comas o punto y coma",
+    "emailsRequired": "Por favor ingresa al menos una dirección de correo",
+    "language": "Idioma del Correo",
+    "sendInvitations": "Enviar Invitaciones",
+    "invitationsSentTitle": "Invitaciones Enviadas",
+    "invitationsSentDescription": "Se enviaron {{count}} invitación(es) exitosamente",
+    "invitationsErrorDescription": "Error al enviar las invitaciones"
   },
   "devices": {
     "management": "Gestión de Dispositivos",
@@ -854,7 +871,10 @@
     "formErrorDesc": "Por favor, completa todos los campos requeridos.",
     "businessName": "Nombre de la Empresa",
     "allProviders": "Todos los Proveedores",
-    "filterProvider": "Filtrar por Proveedor"
+    "filterProvider": "Filtrar por Proveedor",
+    "status": "Estado",
+    "active": "Activo",
+    "inactive": "Inactivo"
   },
   "locations": {
     "management": "Gestión de Ubicaciones",
@@ -977,6 +997,7 @@
       "title": "Suscripciones Manuales",
       "businessIdFilter": "Filtrar por ID de empresa",
       "statusFilter": "Filtrar por estado",
+      "typeFilter": "Filtrar por tipo",
       "searchPlaceholder": "Buscar",
       "clearFilters": "Limpiar Filtros",
       "allStatuses": "Todos los Estados",
@@ -985,7 +1006,8 @@
       "pending": "Pendiente",
       "loadingError": "Error al cargar suscripciones manuales",
       "noEventsFiltered": "No se encontraron suscripciones con los filtros aplicados",
-      "noEventsAvailable": "No hay suscripciones disponibles"
+      "noEventsAvailable": "No hay suscripciones disponibles",
+      "allTypes": "Todos los Tipos"
     }
   },
   "planWizard": {
@@ -1096,5 +1118,21 @@
     "expires": "Vence",
     "default": "Predeterminada",
     "goto": "Wallet"
+  },
+  "alerts": {
+    "title": "Feed de Alertas",
+    "description": "Monitorea tus alertas y notificaciones en tiempo real.",
+    "noAlerts": "No se encontraron alertas",
+    "markAsRead": "Marcar como Leído",
+    "markAllAsRead": "Marcar Todo como Leído",
+    "filterByType": "Filtrar por Tipo",
+    "filterByStatus": "Filtrar por Estado",
+    "allTypes": "Todos los Tipos",
+    "readStatus": "Leído",
+    "unreadStatus": "No Leído",
+    "all": "Todas",
+    "errors": "Error",
+    "warnings": "Advertencias",
+    "info": "Información"
   }
 }

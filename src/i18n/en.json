@@ -35,7 +35,8 @@
     "subscription": "Subscription",
     "billing": "Billing",
     "billing/subscription": "Subscription",
-    "new-payment-method": "Add Payment Method"
+    "new-payment-method": "Add Payment Method",
+    "alerts": "Alerts"
   },
   "billing": {
     "title": "Billing",
@@ -316,6 +317,7 @@
       "locationComparison": "Location Comparison",
       "entryRateOverTime": "Entry Rate Over Time",
       "peopleInStore": "People in Store (Cumulative)",
+      "timeInStoreDistribution": "Time in Store Distribution",
       "returningCustomersChart": "Returning Rate Over Time",
       "avgVisitDurationChart": "Average Visit Duration Over Time",
       "affluenceChart": "Affluence Over Time",
@@ -384,7 +386,8 @@
       "resetLayout": "Reset Layout",
       "saveLayout": "Save Layout",
       "editLayout": "Edit Layout",
-      "hiddenCards": "Hidden Cards"
+      "hiddenCards": "Hidden Cards",
+      "timeRange": "Time Range"
     }
   },
   "users": {
@@ -665,7 +668,7 @@
     "profileUpdateErrorTitle": "Update Failed",
     "profileUpdateErrorDescription": "Could not update your profile. Please try again.",
     "createFailedTitle": "Creation Failed",
-    "createFailedDescription": "Failed to create business.",
+    "createFailedDescription": "Failed to create.",
     "editFailedTitle": "Edit Failed",
     "editFailedDescription": "Failed to edit business.",
     "deleteFailedTitle": "Delete Failed",
@@ -677,7 +680,9 @@
     "changePasswordSuccessTitle": "Password Changed",
     "changePasswordSuccessDescription": "Your password has been changed successfully. You can now log in.",
     "changePasswordErrorTitle": "Error",
-    "changePasswordErrorDescription": "Failed to change password. The link may be invalid or expired."
+    "changePasswordErrorDescription": "Failed to change password. The link may be invalid or expired.",
+    "createSuccessTitle": "Success",
+    "createSuccessDescription": "Created successfully."
   },
   "businesses": {
     "management": "Business Management",
@@ -712,7 +717,19 @@
     "errorDescription": "Failed to create registration tokens.",
     "copiedTitle": "Copied",
     "copiedDescription": "All registration links copied to clipboard.",
-    "noTokens": "No tokens received."
+    "noTokens": "No tokens received.",
+    "invitationMethod": "Invitation Method",
+    "inviteByLink": "Generate invitation links",
+    "inviteByEmail": "Send email invitations",
+    "emails": "Email Addresses",
+    "emailsPlaceholder": "user1@example.com\nuser2@example.com",
+    "emailsDescription": "Enter one email per line, or separate with commas or semicolons",
+    "emailsRequired": "Please enter at least one email address",
+    "language": "Email Language",
+    "sendInvitations": "Send Invitations",
+    "invitationsSentTitle": "Invitations Sent",
+    "invitationsSentDescription": "Successfully sent {{count}} invitation(s)",
+    "invitationsErrorDescription": "Failed to send invitations"
   },
   "devices": {
     "management": "Device Management",
@@ -739,7 +756,10 @@
     "formErrorDesc": "Please fill in all required fields.",
     "businessName": "Business Name",
     "allProviders": "All Providers",
-    "filterProvider": "Filter by Provider"
+    "filterProvider": "Filter by Provider",
+    "status": "Status",
+    "active": "Active",
+    "inactive": "Inactive"
   },
   "locations": {
     "management": "Location Management",
@@ -857,6 +877,7 @@
       "title": "Manual Subscriptions",
       "businessIdFilter": "Filter by business ID",
       "statusFilter": "Filter by status",
+      "typeFilter": "Filter by type",
       "searchPlaceholder": "Search",
       "clearFilters": "Clear Filters",
       "allStatuses": "All Statuses",
@@ -865,7 +886,8 @@
       "pending": "Pending",
       "loadingError": "Error loading manual subscriptions",
       "noEventsFiltered": "No subscriptions found with applied filters",
-      "noEventsAvailable": "No subscriptions available"
+      "noEventsAvailable": "No subscriptions available",
+      "allTypes": "All Types"
     }
   },
   "planWizard": {
@@ -1107,5 +1129,21 @@
     "expires": "Expires",
     "default": "Default",
     "goto": "Wallet"
+  },
+  "alerts": {
+    "title": "Alert Feed",
+    "description": "Monitor your real-time alerts and notifications.",
+    "noAlerts": "No alerts found",
+    "markAsRead": "Mark as Read",
+    "markAllAsRead": "Mark All as Read",
+    "filterByType": "Filter by Type",
+    "filterByStatus": "Filter by Status",
+    "allTypes": "All Types",
+    "readStatus": "Read",
+    "unreadStatus": "Unread",
+    "all": "All",
+    "errors": "Error",
+    "warnings": "Warning",
+    "info": "Info"
   }
 }

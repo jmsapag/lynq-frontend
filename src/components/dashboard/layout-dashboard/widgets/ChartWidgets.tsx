@@ -12,6 +12,8 @@ import { TopStoresChartCard } from "../../charts/top-stores-chart-card";
 import { WidgetConfig, WidgetFactoryParams } from "./types";
 import { useTranslation } from "react-i18next";
 import React from "react";
+import { VisitDurationDistribution } from "../../charts/visit-duration-distribution";
+import { parse } from "date-fns";
 
 const NoDataMessage = () => {
   const { t } = useTranslation();
@@ -277,6 +279,36 @@ export const ChartWidgets = {
     ),
   }),
 
+  createVisitDurationDistributionWidget: (
+    params: WidgetFactoryParams,
+  ): WidgetConfig => ({
+    id: "visit-duration-distribution",
+    type: "visit-duration-distribution",
+    title: "Time in Store Distribution",
+    translationKey: "dashboard.charts.timeInStoreDistribution",
+    category: "chart",
+    component: (
+      <ChartCard
+        title="Time in Store Distribution"
+        translationKey="dashboard.charts.timeInStoreDistribution"
+        data={{}}
+      >
+        {!params.sensorData?.avgVisitDuration ||
+        params.sensorData.avgVisitDuration.length === 0 ? (
+          <VisitDurationNoDataMessage />
+        ) : (
+          <VisitDurationDistribution
+            data={{
+              avgVisitDuration: params.sensorData.avgVisitDuration,
+              in: params.sensorData.in,
+            }}
+            comparisonData={null}
+          />
+        )}
+      </ChartCard>
+    ),
+  }),
+
   createAffluenceChartWidget: (params: WidgetFactoryParams): WidgetConfig => ({
     id: "affluence-chart",
     type: "affluence-chart",
@@ -340,7 +372,12 @@ export const ChartWidgets = {
               }
               return acc;
             }, [] as string[])
-            .sort();
+            .sort((a: string, b: string) => {
+              // Parse timestamps in format "MMM dd, HH:mm" and sort chronologically
+              const dateA = parse(a, "MMM dd, HH:mm", new Date());
+              const dateB = parse(b, "MMM dd, HH:mm", new Date());
+              return dateA.getTime() - dateB.getTime();
+            });
 
           // Filter locations that have valid data
           const validLocations = params.sensorDataByLocation.filter(
