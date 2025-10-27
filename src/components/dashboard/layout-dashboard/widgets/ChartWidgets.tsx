@@ -3,9 +3,7 @@ import IngressMixedChart from "../../charts/ingress-mixed-chart";
 import { CumulativeChart } from "../../charts/cumulative-chart";
 import { EntryRateChart } from "../../charts/entry-rate/entry-rate-chart";
 import { ChartHeatMap } from "../../charts/heat-map/chart-heat-map";
-import { ReturningCustomersChart } from "../../charts/returning-customers-chart";
-import { AvgVisitDurationChart } from "../../charts/avg-visit-duration-chart";
-// Removed affluence chart; replaced with Turn-in Ratio donut
+import { AffluenceChart } from "../../charts/affluence-chart";
 import { TurnInRatioDonut } from "../../charts/turn-in-ratio-donut";
 import { DeviceComparisonChart } from "../../charts/device-comparison.tsx";
 import { TopStoresChartCard } from "../../charts/top-stores-chart-card";
@@ -55,11 +53,11 @@ const LocationComparisonNoDataMessage = () => {
   );
 };
 
-const ReturningCustomersNoDataMessage = () => {
+const AffluenceNoDataMessage = () => {
   const { t } = useTranslation();
   return (
     <div className="flex items-center justify-center h-64 text-gray-500">
-      {t("dashboard.noData.returningCustomers")}
+      {t("dashboard.noData.affluence")}
     </div>
   );
 };
@@ -219,28 +217,26 @@ export const ChartWidgets = {
     ),
   }),
 
-  createReturningCustomersChartWidget: (
-    params: WidgetFactoryParams,
-  ): WidgetConfig => ({
-    id: "returning-customers-chart",
-    type: "returning-customers-chart",
-    title: "Returning Customers Chart",
-    translationKey: "dashboard.charts.returningCustomersChart",
+  createAffluenceChartWidget: (params: WidgetFactoryParams): WidgetConfig => ({
+    id: "affluence-chart",
+    type: "affluence-chart",
+    title: "Affluence Chart",
+    translationKey: "dashboard.charts.affluenceChart",
     category: "chart",
     component: (
       <ChartCard
-        title="Returning Customers Over Time"
-        translationKey="dashboard.charts.returningCustomersChart"
+        title="Affluence Over Time"
+        translationKey="dashboard.charts.affluenceChart"
         data={transformChartDataForExport(params.chartData)}
       >
-        {!params.sensorData?.returningCustomers ||
-        params.sensorData.returningCustomers.length === 0 ? (
-          <ReturningCustomersNoDataMessage />
+        {!params.sensorData?.affluence ||
+        params.sensorData.affluence.length === 0 ? (
+          <AffluenceNoDataMessage />
         ) : (
-          <ReturningCustomersChart
+          <AffluenceChart
             data={{
               categories: params.sensorData.timestamps || [],
-              values: params.sensorData.returningCustomers || [],
+              values: params.sensorData.affluence || [],
             }}
             groupBy={params.sensorRecordsFormData.groupBy}
           />
@@ -274,29 +270,6 @@ export const ChartWidgets = {
             }}
             comparisonData={null}
           />
-        )}
-      </ChartCard>
-    ),
-  }),
-
-  createTurnInRatioDonutWidget: (
-    params: WidgetFactoryParams,
-  ): WidgetConfig => ({
-    id: "turn-in-ratio-donut",
-    type: "turn-in-ratio-donut",
-    title: "Turn-in Ratio",
-    translationKey: "dashboard.metrics.turnInRatio",
-    category: "chart",
-    component: (
-      <ChartCard
-        title="Turn-in Ratio"
-        translationKey="dashboard.metrics.turnInRatio"
-        data={[]}
-      >
-        {!params.sensorData?.in || params.sensorData.in.length === 0 ? (
-          <TurnInNoDataMessage />
-        ) : (
-          <TurnInRatioDonut data={params.sensorData} />
         )}
       </ChartCard>
     ),

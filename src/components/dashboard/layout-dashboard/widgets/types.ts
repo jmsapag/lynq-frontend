@@ -16,8 +16,9 @@ export type DashboardWidgetType =
   | "returning-customers"
   | "avg-visit-duration"
   | "turn-in-ratio"
-  | "returning-customers-chart"
+  | "affluence-chart"
   | "avg-visit-duration-chart"
+  | "visit-duration-distribution"
   | "turn-in-ratio-donut"
   | "location-comparison-chart"
   | "top-stores-chart";

@@ -23,7 +23,7 @@ export const createWidgetConfig = (
     ChartWidgets.createCumulativePeopleChartWidget(params),
     ChartWidgets.createTrafficHeatmapWidget(params),
     ChartWidgets.createEntryRateChartWidget(params),
-    ChartWidgets.createReturningCustomersChartWidget(params),
+    ChartWidgets.createAffluenceChartWidget(params),
     ChartWidgets.createVisitDurationDistributionWidget(params),
     ChartWidgets.createTurnInRatioDonutWidget(params),
     ChartWidgets.createLocationComparisonWidget(params),

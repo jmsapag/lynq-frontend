@@ -25,7 +25,8 @@ import { ChartCard } from "../charts/chart-card";
 import { LineChart } from "../charts/line-chart";
 import { ChartHeatMap } from "../charts/heat-map/chart-heat-map";
 import { EntryRateChart } from "../charts/entry-rate/entry-rate-chart";
-import { ReturningCustomersChart } from "../charts/returning-customers-chart";
+import { AffluenceChart } from "../charts/affluence-chart";
+import { VisitDurationDistribution } from "../charts/visit-duration-distribution";
 import { TurnInRatioDonut } from "../charts/turn-in-ratio-donut";
 
 interface LayoutDashboardProps {
@@ -35,6 +36,7 @@ interface LayoutDashboardProps {
     totalOut: number;
     entryRate: number;
     totalReturningCustomers: number;
+    totalAvgVisitDuration: number;
     totalAffluence: number;
   };
   chartData: {
@@ -63,7 +65,7 @@ export type DashboardWidgetType =
   | "returning-customers"
   | "avg-visit-duration"
   | "turn-in-ratio"
-  | "returning-customers-chart"
+  | "affluence-chart"
   | "avg-visit-duration-chart"
   | "turn-in-ratio-donut";
 
@@ -258,26 +260,25 @@ export const LayoutDashboard: React.FC<LayoutDashboardProps> = ({
       },
       // FootfallCam Chart Cards
       {
-        id: "returning-customers-chart",
-        type: "returning-customers-chart",
-        title: "Returning Customers Chart",
-        translationKey: "dashboard.charts.returningCustomersChart",
+        id: "affluence-chart",
+        type: "affluence-chart",
+        title: "Affluence Chart",
+        translationKey: "dashboard.charts.affluenceChart",
         category: "chart",
         component: (
           <ChartCard
-            title="Returning Customers Over Time"
-            translationKey="dashboard.charts.returningCustomersChart"
+            title="Affluence Over Time"
+            translationKey="dashboard.charts.affluenceChart"
           >
-            {!sensorData?.returningCustomers ||
-            sensorData.returningCustomers.length === 0 ? (
+            {!sensorData?.affluence || sensorData.affluence.length === 0 ? (
               <div className="flex items-center justify-center h-64 text-gray-500">
-                No FootfallCam data available for returning customers.
+                No FootfallCam data available for affluence.
               </div>
             ) : (
-              <ReturningCustomersChart
+              <AffluenceChart
                 data={{
                   categories: sensorData.timestamps || [],
-                  values: sensorData.returningCustomers || [],
+                  values: sensorData.affluence || [],
                 }}
                 groupBy={sensorRecordsFormData.groupBy}
               />
@@ -302,12 +303,12 @@ export const LayoutDashboard: React.FC<LayoutDashboardProps> = ({
                 No FootfallCam data available for visit duration.
               </div>
             ) : (
-              <AvgVisitDurationChart
+              <VisitDurationDistribution
                 data={{
-                  categories: sensorData.timestamps || [],
-                  values: sensorData.avgVisitDuration || [],
+                  avgVisitDuration: sensorData.avgVisitDuration || [],
+                  in: sensorData.in || [],
                 }}
-                groupBy={sensorRecordsFormData.groupBy}
+                comparisonData={null}
               />
             )}
           </ChartCard>
