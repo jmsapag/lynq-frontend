@@ -35,7 +35,8 @@
     "subscription": "Subscription",
     "billing": "Billing",
     "billing/subscription": "Subscription",
-    "new-payment-method": "Add Payment Method"
+    "new-payment-method": "Add Payment Method",
+    "ai": "Summary"
   },
   "billing": {
     "title": "Billing",

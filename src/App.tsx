@@ -45,6 +45,7 @@ import WalletPage from "./pages/wallet.tsx";
 import NewPaymentMethodPage from "./pages/new-payment-method.tsx";
 import { useAuthState } from "./hooks/auth/useAuthState";
 import { SubscriptionStateBanner } from "./components/payments/SubscriptionStateBanner";
+import AIPage from "./pages/ai.tsx";
 
 function AppLayoutWithState() {
   const {
@@ -182,6 +183,7 @@ function App() {
                   path="/subscription"
                   element={<Navigate to="/billing/subscription" replace />}
                 />
+                <Route path="/ai" element={<AIPage />} />
               </Route>
             </Route>
           </Route>
