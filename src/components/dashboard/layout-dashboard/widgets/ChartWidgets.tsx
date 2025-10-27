@@ -1,5 +1,4 @@
 import { ChartCard } from "../../charts/chart-card";
-import { LineChart } from "../../charts/line-chart";
 import IngressMixedChart from "../../charts/ingress-mixed-chart";
 import { CumulativeChart } from "../../charts/cumulative-chart";
 import { EntryRateChart } from "../../charts/entry-rate/entry-rate-chart";
@@ -14,6 +13,7 @@ import { WidgetConfig, WidgetFactoryParams } from "./types";
 import { useTranslation } from "react-i18next";
 import React from "react";
 import { VisitDurationDistribution } from "../../charts/visit-duration-distribution";
+import { parse } from "date-fns";
 
 const NoDataMessage = () => {
   const { t } = useTranslation();
@@ -249,36 +249,6 @@ export const ChartWidgets = {
     ),
   }),
 
-  createAvgVisitDurationChartWidget: (
-    params: WidgetFactoryParams,
-  ): WidgetConfig => ({
-    id: "avg-visit-duration-chart",
-    type: "avg-visit-duration-chart",
-    title: "Avg Visit Duration Chart",
-    translationKey: "dashboard.charts.avgVisitDurationChart",
-    category: "chart",
-    component: (
-      <ChartCard
-        title="Average Visit Duration Over Time"
-        translationKey="dashboard.charts.avgVisitDurationChart"
-        data={transformChartDataForExport(params.chartData)}
-      >
-        {!params.sensorData?.avgVisitDuration ||
-        params.sensorData.avgVisitDuration.length === 0 ? (
-          <VisitDurationNoDataMessage />
-        ) : (
-          <AvgVisitDurationChart
-            data={{
-              categories: params.sensorData.timestamps || [],
-              values: params.sensorData.avgVisitDuration || [],
-            }}
-            groupBy={params.sensorRecordsFormData.groupBy}
-          />
-        )}
-      </ChartCard>
-    ),
-  }),
-
   createVisitDurationDistributionWidget: (
     params: WidgetFactoryParams,
   ): WidgetConfig => ({
@@ -390,7 +360,12 @@ export const ChartWidgets = {
               }
               return acc;
             }, [] as string[])
-            .sort();
+            .sort((a: string, b: string) => {
+              // Parse timestamps in format "MMM dd, HH:mm" and sort chronologically
+              const dateA = parse(a, "MMM dd, HH:mm", new Date());
+              const dateB = parse(b, "MMM dd, HH:mm", new Date());
+              return dateA.getTime() - dateB.getTime();
+            });
 
           // Filter locations that have valid data
           const validLocations = params.sensorDataByLocation.filter(

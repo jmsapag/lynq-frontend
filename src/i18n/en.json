@@ -35,7 +35,8 @@
     "subscription": "Subscription",
     "billing": "Billing",
     "billing/subscription": "Subscription",
-    "new-payment-method": "Add Payment Method"
+    "new-payment-method": "Add Payment Method",
+    "alerts": "Alerts"
   },
   "billing": {
     "title": "Billing",
@@ -318,7 +319,6 @@
       "peopleInStore": "People in Store (Cumulative)",
       "timeInStoreDistribution": "Time in Store Distribution",
       "returningCustomersChart": "Returning Rate Over Time",
-      "avgVisitDurationChart": "Average Visit Duration Over Time",
       "affluenceChart": "Affluence Over Time",
       "entries": "Entries",
       "exits": "Exits",
@@ -759,7 +759,10 @@
     "formErrorDesc": "Please fill in all required fields.",
     "businessName": "Business Name",
     "allProviders": "All Providers",
-    "filterProvider": "Filter by Provider"
+    "filterProvider": "Filter by Provider",
+    "status": "Status",
+    "active": "Active",
+    "inactive": "Inactive"
   },
   "locations": {
     "management": "Location Management",
@@ -1129,5 +1132,21 @@
     "expires": "Expires",
     "default": "Default",
     "goto": "Wallet"
+  },
+  "alerts": {
+    "title": "Alert Feed",
+    "description": "Monitor your real-time alerts and notifications.",
+    "noAlerts": "No alerts found",
+    "markAsRead": "Mark as Read",
+    "markAllAsRead": "Mark All as Read",
+    "filterByType": "Filter by Type",
+    "filterByStatus": "Filter by Status",
+    "allTypes": "All Types",
+    "readStatus": "Read",
+    "unreadStatus": "Unread",
+    "all": "All",
+    "errors": "Error",
+    "warnings": "Warning",
+    "info": "Info"
   }
 }

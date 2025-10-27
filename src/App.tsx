@@ -45,6 +45,7 @@ import WalletPage from "./pages/wallet.tsx";
 import NewPaymentMethodPage from "./pages/new-payment-method.tsx";
 import { useAuthState } from "./hooks/auth/useAuthState";
 import { SubscriptionStateBanner } from "./components/payments/SubscriptionStateBanner";
+import { AlertFeed } from "./pages/alert-feed.tsx";
 
 function AppLayoutWithState() {
   const {
@@ -148,6 +149,7 @@ function App() {
               <Route path="help" element={<HelpPage />} />
               <Route path="/faq" element={<FaqPage />} />
               <Route path="/subscriptions" element={<SubscriptionFeed />} />
+              <Route path="/alerts" element={<AlertFeed />} />
               <Route
                 path="/subscriptions/customize"
                 element={<CustomizedPlan />}
@@ -159,7 +161,6 @@ function App() {
 
               {/* LYNQ_TEAM only routes */}
               <Route element={<RoleRoute allowedRoles="LYNQ_TEAM" />}>
-                <Route path="devices" element={<DevicesPage />} />
                 <Route path="businesses" element={<BusinessesPage />} />
                 <Route
                   path="business/:businessId/connections"
@@ -171,6 +172,7 @@ function App() {
               {/* ADMIN only routes */}
               <Route element={<RoleRoute allowedRoles="ADMIN" />}>
                 <Route path="user-management" element={<UserManagement />} />
+                <Route path="devices" element={<DevicesPage />} />
                 <Route path="locations" element={<Locations />} />
                 <Route path="/billing" element={<BillingPage />} />
                 <Route path="/wallet" element={<WalletPage />} />

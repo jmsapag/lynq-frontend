@@ -26,7 +26,6 @@ import { LineChart } from "../charts/line-chart";
 import { ChartHeatMap } from "../charts/heat-map/chart-heat-map";
 import { EntryRateChart } from "../charts/entry-rate/entry-rate-chart";
 import { ReturningCustomersChart } from "../charts/returning-customers-chart";
-import { AvgVisitDurationChart } from "../charts/avg-visit-duration-chart";
 import { TurnInRatioDonut } from "../charts/turn-in-ratio-donut";
 
 interface LayoutDashboardProps {
@@ -36,7 +35,6 @@ interface LayoutDashboardProps {
     totalOut: number;
     entryRate: number;
     totalReturningCustomers: number;
-    totalAvgVisitDuration: number;
     totalAffluence: number;
   };
   chartData: {

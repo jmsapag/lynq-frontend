@@ -34,7 +34,8 @@
     "subscription": "Suscripción",
     "billing": "Facturación",
     "billing/subscription": "Suscripción",
-    "new-payment-method": "Nuevo Método de Pago"
+    "new-payment-method": "Nuevo Método de Pago",
+    "alerts": "Alertas"
   },
   "billing": {
     "title": "Facturación",
@@ -441,7 +442,6 @@
       "peopleInStore": "Personas en Tienda (Acumulativo)",
       "timeInStoreDistribution": "Distribución de Tiempo en Tienda",
       "returningCustomersChart": "Tasa de Retorno a lo Largo del Tiempo",
-      "avgVisitDurationChart": "Tiempo Promedio de Visita a lo Largo del Tiempo",
       "affluenceChart": "Afluencia a lo Largo del Tiempo",
       "entries": "Entradas",
       "exits": "Salidas",
@@ -460,10 +460,6 @@
       "returningCustomers": {
         "title": "Tasa de Retorno",
         "description": "El porcentaje de visitantes que habían realizado previamente una visita a la misma tienda dentro de los últimos 60 días"
-      },
-      "avgVisitDuration": {
-        "title": "Tiempo Promedio en Local",
-        "description": "Tiempo promedio que los clientes permanecen en el establecimiento"
       },
       "turnIn": {
         "title": "Turn-in Ratio",
@@ -489,8 +485,6 @@
       "leastCrowdedDayDescription": "Día del período seleccionado con menor cantidad de entradas registradas.",
       "returningCustomers": "Tasa de Retorno",
       "returningCustomersDescription": "El porcentaje de visitantes que habían realizado previamente una visita a la misma tienda dentro de los últimos 60 días",
-      "avgVisitDuration": "Tiempo Promedio en Local",
-      "avgVisitDurationDescription": "Tiempo promedio que los clientes permanecen en el establecimiento",
       "turnInRatio": "Turn-in Ratio",
       "turnInRatioDescription": "Proporción de Recurrentes vs Nuevos calculada desde entradas ponderadas",
       "noDataAvailable": "Datos no disponibles para este período",
@@ -502,13 +496,8 @@
       "saveLayout": "Guardar Diseño",
       "editLayout": "Editar Diseño",
       "hiddenCards": "Tarjetas Ocultas",
-      "timeRange": "Rango de Tiempo"
-    }
-  },
-  "dashboard": {
-    "turnIn": {
-      "newCustomer": "Cliente Nuevo",
-      "returningCustomer": "Cliente Recurrente"
+      "timeRange": "Rango de Tiempo",
+      "avgVisitDuration": "Tiempo de visita promedio"
     }
   },
   "users": {
@@ -876,7 +865,10 @@
     "formErrorDesc": "Por favor, completa todos los campos requeridos.",
     "businessName": "Nombre de la Empresa",
     "allProviders": "Todos los Proveedores",
-    "filterProvider": "Filtrar por Proveedor"
+    "filterProvider": "Filtrar por Proveedor",
+    "status": "Estado",
+    "active": "Activo",
+    "inactive": "Inactivo"
   },
   "locations": {
     "management": "Gestión de Ubicaciones",
@@ -1120,5 +1112,21 @@
     "expires": "Vence",
     "default": "Predeterminada",
     "goto": "Wallet"
+  },
+  "alerts": {
+    "title": "Feed de Alertas",
+    "description": "Monitorea tus alertas y notificaciones en tiempo real.",
+    "noAlerts": "No se encontraron alertas",
+    "markAsRead": "Marcar como Leído",
+    "markAllAsRead": "Marcar Todo como Leído",
+    "filterByType": "Filtrar por Tipo",
+    "filterByStatus": "Filtrar por Estado",
+    "allTypes": "Todos los Tipos",
+    "readStatus": "Leído",
+    "unreadStatus": "No Leído",
+    "all": "Todas",
+    "errors": "Error",
+    "warnings": "Advertencias",
+    "info": "Información"
   }
 }
