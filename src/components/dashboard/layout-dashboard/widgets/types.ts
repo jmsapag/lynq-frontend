@@ -14,10 +14,8 @@ export type DashboardWidgetType =
   | "least-crowded-day"
   | "percentage-change"
   | "returning-customers"
-  | "avg-visit-duration"
   | "affluence"
   | "returning-customers-chart"
-  | "avg-visit-duration-chart"
   | "affluence-chart"
   | "location-comparison-chart"
   | "top-stores-chart";
@@ -42,7 +40,6 @@ export interface WidgetFactoryParams {
     entryRate: number;
     percentageChange: number;
     returningCustomers: number;
-    avgVisitDuration: number;
     affluence: number;
   };
   chartData: {
@@ -64,7 +61,6 @@ export interface WidgetFactoryParams {
     dailyAverageIn?: import("../../../../utils/comparisonUtils").MetricComparison;
     dailyAverageOut?: import("../../../../utils/comparisonUtils").MetricComparison;
     returningCustomers?: import("../../../../utils/comparisonUtils").MetricComparison;
-    avgVisitDuration?: import("../../../../utils/comparisonUtils").MetricComparison;
     affluence?: import("../../../../utils/comparisonUtils").MetricComparison;
   };
   comparisonPeriod?: { start: Date; end: Date };

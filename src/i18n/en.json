@@ -319,7 +319,6 @@
       "peopleInStore": "People in Store (Cumulative)",
       "timeInStoreDistribution": "Time in Store Distribution",
       "returningCustomersChart": "Returning Rate Over Time",
-      "avgVisitDurationChart": "Average Visit Duration Over Time",
       "affluenceChart": "Affluence Over Time",
       "entries": "Entries",
       "exits": "Exits",
@@ -338,10 +337,6 @@
       "returningCustomers": {
         "title": "Returning Rate",
         "description": "The percentage of visitors who had previously made a visit to the same store within the past 60 days"
-      },
-      "avgVisitDuration": {
-        "title": "Average Visit Duration",
-        "description": "Average time customers spend in the establishment"
       },
       "affluence": {
         "title": "Affluence",
@@ -374,8 +369,6 @@
       "leastCrowdedDayDescription": "Day with the lowest number of entries within the selected period.",
       "returningCustomers": "Returning Rate",
       "returningCustomersDescription": "The percentage of visitors who had previously made a visit to the same store within the past 60 days",
-      "avgVisitDuration": "Average Visit Duration",
-      "avgVisitDurationDescription": "Average time customers spend in the establishment",
       "affluence": "Affluence",
       "affluenceDescription": "Percentage of entries relative to outside traffic (Entries/Outside traffic)",
       "noDataAvailable": "Data not available for this period",
@@ -387,7 +380,8 @@
       "saveLayout": "Save Layout",
       "editLayout": "Edit Layout",
       "hiddenCards": "Hidden Cards",
-      "timeRange": "Time Range"
+      "timeRange": "Time Range",
+      "avgVisitDuration": "Average Visit Duration"
     }
   },
   "users": {

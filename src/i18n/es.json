@@ -442,7 +442,6 @@
       "peopleInStore": "Personas en Tienda (Acumulativo)",
       "timeInStoreDistribution": "Distribución de Tiempo en Tienda",
       "returningCustomersChart": "Tasa de Retorno a lo Largo del Tiempo",
-      "avgVisitDurationChart": "Tiempo Promedio de Visita a lo Largo del Tiempo",
       "affluenceChart": "Afluencia a lo Largo del Tiempo",
       "entries": "Entradas",
       "exits": "Salidas",
@@ -461,10 +460,6 @@
       "returningCustomers": {
         "title": "Tasa de Retorno",
         "description": "El porcentaje de visitantes que habían realizado previamente una visita a la misma tienda dentro de los últimos 60 días"
-      },
-      "avgVisitDuration": {
-        "title": "Tiempo Promedio en Local",
-        "description": "Tiempo promedio que los clientes permanecen en el establecimiento"
       },
       "affluence": {
         "title": "Afluencia",
@@ -490,8 +485,6 @@
       "leastCrowdedDayDescription": "Día del período seleccionado con menor cantidad de entradas registradas.",
       "returningCustomers": "Tasa de Retorno",
       "returningCustomersDescription": "El porcentaje de visitantes que habían realizado previamente una visita a la misma tienda dentro de los últimos 60 días",
-      "avgVisitDuration": "Tiempo Promedio en Local",
-      "avgVisitDurationDescription": "Tiempo promedio que los clientes permanecen en el establecimiento",
       "affluence": "Afluencia",
       "affluenceDescription": "Porcentaje de entradas respecto al tráfico exterior (Entradas/Tráfico exterior)",
       "noDataAvailable": "Datos no disponibles para este período",
@@ -503,7 +496,8 @@
       "saveLayout": "Guardar Diseño",
       "editLayout": "Editar Diseño",
       "hiddenCards": "Tarjetas Ocultas",
-      "timeRange": "Rango de Tiempo"
+      "timeRange": "Rango de Tiempo",
+      "avgVisitDuration": "Tiempo de visita promedio"
     }
   },
   "users": {

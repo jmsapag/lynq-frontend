@@ -1,7 +1,6 @@
 import React from "react";
 import { NewMetricsCards } from "../charts/new-metrics-cards";
 import { ReturningCustomersChartCard } from "../charts/returning-customers-chart-card";
-import { AvgVisitDurationChartCard } from "../charts/avg-visit-duration-chart-card";
 import { AffluenceChartCard } from "../charts/affluence-chart-card";
 import { FootfallCamDataStatus } from "../charts/footfall-cam-data-status";
 import {
@@ -43,16 +42,9 @@ export const NewMetricsDemo: React.FC<NewMetricsDemoProps> = ({
           <h3 className="text-lg font-semibold text-gray-700 mb-4">
             Gráficos de Métricas
           </h3>
-          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="h-96">
               <ReturningCustomersChartCard
-                data={data}
-                groupBy={groupBy}
-                dateRange={dateRange}
-              />
-            </div>
-            <div className="h-96">
-              <AvgVisitDurationChartCard
                 data={data}
                 groupBy={groupBy}
                 dateRange={dateRange}
@@ -80,12 +72,7 @@ export const NewMetricsDemo: React.FC<NewMetricsDemoProps> = ({
             clientes que han regresado al establecimiento.
           </p>
           <p>
-            <strong>2. Tiempo Promedio en Local:</strong> Calcula el tiempo
-            promedio que los clientes permanecen en el establecimiento (en
-            minutos).
-          </p>
-          <p>
-            <strong>3. Afluencia:</strong> Muestra el porcentaje de entradas
+            <strong>2. Afluencia:</strong> Muestra el porcentaje de entradas
             respecto al tráfico exterior (Entradas/Tráfico exterior × 100).
           </p>
           <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded">

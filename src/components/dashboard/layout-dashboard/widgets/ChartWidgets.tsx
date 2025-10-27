@@ -1,11 +1,9 @@
 import { ChartCard } from "../../charts/chart-card";
-import { LineChart } from "../../charts/line-chart";
 import IngressMixedChart from "../../charts/ingress-mixed-chart";
 import { CumulativeChart } from "../../charts/cumulative-chart";
 import { EntryRateChart } from "../../charts/entry-rate/entry-rate-chart";
 import { ChartHeatMap } from "../../charts/heat-map/chart-heat-map";
 import { ReturningCustomersChart } from "../../charts/returning-customers-chart";
-import { AvgVisitDurationChart } from "../../charts/avg-visit-duration-chart";
 import { AffluenceChart } from "../../charts/affluence-chart";
 import { DeviceComparisonChart } from "../../charts/device-comparison.tsx";
 import { TopStoresChartCard } from "../../charts/top-stores-chart-card";
@@ -241,36 +239,6 @@ export const ChartWidgets = {
             data={{
               categories: params.sensorData.timestamps || [],
               values: params.sensorData.returningCustomers || [],
-            }}
-            groupBy={params.sensorRecordsFormData.groupBy}
-          />
-        )}
-      </ChartCard>
-    ),
-  }),
-
-  createAvgVisitDurationChartWidget: (
-    params: WidgetFactoryParams,
-  ): WidgetConfig => ({
-    id: "avg-visit-duration-chart",
-    type: "avg-visit-duration-chart",
-    title: "Avg Visit Duration Chart",
-    translationKey: "dashboard.charts.avgVisitDurationChart",
-    category: "chart",
-    component: (
-      <ChartCard
-        title="Average Visit Duration Over Time"
-        translationKey="dashboard.charts.avgVisitDurationChart"
-        data={transformChartDataForExport(params.chartData)}
-      >
-        {!params.sensorData?.avgVisitDuration ||
-        params.sensorData.avgVisitDuration.length === 0 ? (
-          <VisitDurationNoDataMessage />
-        ) : (
-          <AvgVisitDurationChart
-            data={{
-              categories: params.sensorData.timestamps || [],
-              values: params.sensorData.avgVisitDuration || [],
             }}
             groupBy={params.sensorRecordsFormData.groupBy}
           />
