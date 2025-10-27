@@ -22,7 +22,7 @@ export const updateAlertConfig = async (
   alertConfig: UpdateAlertConfigDto,
 ): Promise<AlertConfig> => {
   const response = await axiosPrivate.put(
-    `/alerts/${configAlertId}`,
+    `/alerts/configurations/${configAlertId}`,
     alertConfig,
   );
   return response.data;
