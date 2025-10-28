@@ -1,6 +1,6 @@
 # Envío Automático de Reportes
 
-Una vez que has configurado un reporte semanal (ver [Configuración](./01_Configuracion.md) y [Layouts](./02_Layouts_Reporte.md)), LYNQ se encarga de generarlo y enviarlo automáticamente según lo programado.
+Una vez que has configurado un reporte semanal (ver [Configuración](./reportes_configuracion.md) y [Layouts](./reportes_layout.md)), LYNQ se encarga de generarlo y enviarlo automáticamente según lo programado.
 
 ## Proceso de Envío
 
@@ -14,7 +14,7 @@ Una vez que has configurado un reporte semanal (ver [Configuración](./01_Config
   - Confirma que tu dirección de correo electrónico esté correctamente escrita en la lista de destinatarios.
   - Verifica el día y la hora de envío programados.
 - **Revisar Spam:** Revisa la carpeta de correo no deseado (spam) de tu cliente de correo.
-- **Contactar Soporte:** Si todo parece correcto pero sigues sin recibir los reportes, contacta al [Soporte](../06_Soporte/01_Crear_Ticket.md) de LYNQ.
+- **Contactar Soporte:** Si todo parece correcto pero sigues sin recibir los reportes, contacta al [Soporte](./soporte_crear_ticket.md) de LYNQ.
 
 ## Activar/Desactivar Reportes
 

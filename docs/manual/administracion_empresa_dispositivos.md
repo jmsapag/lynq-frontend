@@ -12,7 +12,7 @@ Las acciones típicas en esta sección podrían incluir:
 
 - **Ver Lista de Dispositivos:** Visualizar todos los sensores, su ID, tipo (FootfallCam, Xovis, etc.), estado y a qué ubicación están asociados.
 - **Añadir Nuevo Dispositivo:** Registrar un nuevo sensor físico en la plataforma, proporcionando su ID único y tipo.
-- **Asociar Dispositivo a Ubicación:** Vincular un sensor a una [Ubicación](./01_Gestion_Ubicaciones.md) específica.
+- **Asociar Dispositivo a Ubicación:** Vincular un sensor a una [Ubicación](./administracion_empresa_ubicaciones.md) específica.
 - **Editar Configuración:** Modificar parámetros del sensor (nombre descriptivo, etc.).
 - **Eliminar Dispositivo:** Desregistrar un sensor de la plataforma.
 

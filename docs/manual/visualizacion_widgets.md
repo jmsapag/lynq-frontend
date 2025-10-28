@@ -2,7 +2,7 @@
 
 El dashboard se compone de "Widgets", que son bloques de información visual que te muestran diferentes métricas y gráficos sobre el tráfico peatonal.
 
-Puedes personalizar qué widgets ves y dónde aparecen (ver [Edición del Layout](./03_Edicion_Layout.md)).
+Puedes personalizar qué widgets ves y dónde aparecen (ver [Edición del Layout](./visualizacion_edicion_layout.md)).
 
 ## Tipos de Widgets
 
@@ -32,4 +32,4 @@ A continuación se describen algunas de las métricas que puedes encontrar en lo
   - **Mapa de Calor (Traffic Heatmap):** Representación visual de la afluencia distribuida por día de la semana y hora del día, mostrando los momentos de mayor y menor actividad.
 - **Top Ubicaciones (Top Stores):** Gráfico de barras que compara la afluencia entre diferentes ubicaciones.
 
-Consulta el [Glosario](../Glosario.md) para definiciones más detalladas.
+Consulta el [Glosario](./Glosario.md) para definiciones más detalladas.

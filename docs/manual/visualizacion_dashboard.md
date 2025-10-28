@@ -21,6 +21,6 @@ Una vez aplicados los filtros, los widgets del dashboard se actualizarán autom�
 
 ## Área de Widgets
 
-El cuerpo principal del dashboard está compuesto por **Widgets**. Cada widget muestra una métrica o gráfico específico. Consulta la sección [Widgets y Métricas](./02_Widgets_Metricas.md) para más detalles sobre cada uno.
+El cuerpo principal del dashboard está compuesto por **Widgets**. Cada widget muestra una métrica o gráfico específico. Consulta la sección [Widgets y Métricas](./visualizacion_widgets.md) para más detalles sobre cada uno.
 
-El layout y los widgets mostrados por defecto pueden variar, pero puedes personalizar tu vista. Consulta [Edición del Layout](./03_Edicion_Layout.md) para aprender cómo.
+El layout y los widgets mostrados por defecto pueden variar, pero puedes personalizar tu vista. Consulta [Edición del Layout](./visualizacion_edicion_layout.md) para aprender cómo.

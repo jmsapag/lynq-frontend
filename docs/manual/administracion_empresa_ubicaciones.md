@@ -35,4 +35,4 @@ _¡Precaución!_ Eliminar una ubicación puede tener consecuencias sobre los dat
 
 ## Asignar Usuarios a Ubicaciones
 
-La asignación de permisos de usuario por ubicación se realiza desde la sección [Gestión de Usuarios](./03_Gestion_Usuarios.md).
+La asignación de permisos de usuario por ubicación se realiza desde la sección [Gestión de Usuarios](./administracion_empresa_usuarios.md).

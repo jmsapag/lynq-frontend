@@ -32,4 +32,4 @@ Los usuarios con rol `ADMIN` pueden tener acceso a acciones adicionales dependie
   - **Subir Comprobante:** Cuando la suscripción esté pendiente de pago, aparecerá la opción para cargar el archivo del comprobante de transferencia o depósito.
     - Haz clic en "Seleccionar Archivo".
     - Elige el archivo de tu comprobante (PDF, JPG, PNG). \* Haz clic en "Subir Comprobante".
-  - El equipo de LYNQ revisará el comprobante y activará la suscripción. Consulta [Gestión de Suscripción (ADMIN)](../05_Administracion_Empresa/04_Gestion_Suscripcion.md) para más detalles específicos del rol ADMIN.
+  - El equipo de LYNQ revisará el comprobante y activará la suscripción. Consulta [Gestión de Suscripción (ADMIN)](./administracion_empresa_suscripcion.md) para más detalles específicos del rol ADMIN.

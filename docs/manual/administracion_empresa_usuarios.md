@@ -14,13 +14,13 @@ Como **Administrador (ADMIN)** de tu empresa, puedes gestionar los usuarios que 
 4.  Selecciona el **Rol** que tendrán estos nuevos usuarios (generalmente `STANDARD`). No puedes crear otros `ADMIN` ni `LYNQ_TEAM`.
 5.  Haz clic en **"Generar Invitaciones"** o "Enviar".
 6.  El sistema generará **tokens de registro** únicos.
-7.  Se enviará automáticamente un **correo electrónico de invitación** a cada dirección proporcionada, conteniendo el enlace o token para activar su cuenta (ver [Registro de Usuario](../01_Primeros_Pasos/02_Registro.md)).
+7.  Se enviará automáticamente un **correo electrónico de invitación** a cada dirección proporcionada, conteniendo el enlace o token para activar su cuenta.
     ## Asignar/Desasignar Usuarios a Ubicaciones
 
 Por defecto, un usuario `STANDARD` podría no tener acceso a ninguna ubicación. Debes concederle permiso explícitamente.
 
 1.  En la tabla de usuarios, busca al usuario que deseas gestionar.
-2.  Haz clic en el icono de **"Gestionar Ubicaciones"** o **"Permisos"** asociado a ese usuario. 3. Se abrirá un modal o una sección mostrando la lista de [Ubicaciones](./01_Gestion_Ubicaciones.md) disponibles en tu empresa.
+2.  Haz clic en el icono de **"Gestionar Ubicaciones"** o **"Permisos"** asociado a ese usuario. 3. Se abrirá un modal o una sección mostrando la lista de [Ubicaciones](./administracion_empresa_ubicaciones.md) disponibles en tu empresa.
 3.  **Marca/Desmarca** las casillas correspondientes a las ubicaciones a las que deseas que este usuario tenga acceso.
 4.  Haz clic en **"Guardar Cambios"** (`updateUserLocations`).
 

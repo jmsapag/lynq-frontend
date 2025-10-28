@@ -22,8 +22,8 @@ LYNQ te permite configurar reportes automáticos que se envían por correo elect
 
 4.  **Configuración del Contenido:**
 
-    - Selecciona un **Layout Base** para el reporte (ver [Layouts de Reporte](./02_Layouts_Reporte.md)).
-    - Personaliza los **Widgets** que se incluirán en el reporte usando el sistema drag-and-drop (ver [Layouts de Reporte](./02_Layouts_Reporte.md)).
+    - Selecciona un **Layout Base** para el reporte (ver [Layouts de Reporte](./reportes_layout.md)).
+    - Personaliza los **Widgets** que se incluirán en el reporte usando el sistema drag-and-drop (ver [Layouts de Reporte](./reportes_layout.md)).
 
 5.  **Guardar:** Haz clic en "Guardar" para almacenar la configuración del reporte.
 

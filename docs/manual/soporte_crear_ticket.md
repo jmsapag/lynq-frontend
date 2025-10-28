@@ -26,4 +26,4 @@ Si encuentras algún problema, tienes dudas sobre una funcionalidad o necesitas 
 - Recibirás una confirmación (probablemente por correo electrónico) de que tu ticket ha sido creado, usualmente con un número de referencia.
 - El equipo de soporte se pondrá en contacto contigo por correo electrónico para dar seguimiento a tu solicitud.
 
-Consulta [Ver Tickets](./02_Ver_Tickets.md) para saber si puedes hacer seguimiento desde la plataforma.
+Consulta [Ver Tickets](./soporte_ver_tickets.md) para saber si puedes hacer seguimiento desde la plataforma.

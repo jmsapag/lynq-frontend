@@ -1,6 +1,6 @@
 # (ADMIN) Gestión de Suscripción
 
-Como **Administrador (ADMIN)**, además de [visualizar el estado de la suscripción](../04_Gestion_Cuenta/02_Suscripciones.md), tienes acceso a funcionalidades para gestionar activamente el plan y los pagos de tu empresa. Las opciones exactas dependerán de si tu suscripción se gestiona automáticamente vía **Stripe** o de forma **Manual**.
+Como **Administrador (ADMIN)**, además de [visualizar el estado de la suscripción](./gestion_cuenta_suscripciones.md), tienes acceso a funcionalidades para gestionar activamente el plan y los pagos de tu empresa. Las opciones exactas dependerán de si tu suscripción se gestiona automáticamente vía **Stripe** o de forma **Manual**.
 
 ## Acceder a la Gestión de Suscripción
 
@@ -32,4 +32,4 @@ Si tu suscripción se gestiona manualmente mediante acuerdo con el equipo de LYN
   4.  Adjunta el archivo digital de tu comprobante (PDF, imagen).
   5.  Haz clic en **"Enviar"**.
 - **Activación:** El equipo de LYNQ recibirá una notificación, verificará el pago y actualizará el estado de tu suscripción manualmente en el sistema. Recibirás una notificación o verás el cambio de estado en la plataforma una vez aprobado.
-  Si tienes dudas sobre tu tipo de suscripción o el proceso de pago, contacta al [Soporte](../06_Soporte/01_Crear_Ticket.md) o a tu ejecutivo de cuenta LYNQ.
+  Si tienes dudas sobre tu tipo de suscripción o el proceso de pago, contacta al [Soporte](./soporte_crear_ticket.md) o a tu ejecutivo de cuenta LYNQ.

@@ -8,10 +8,10 @@ Al crear o editar un reporte, probablemente tendrás la opción de elegir una **
 
 ## Personalización con Widgets (Drag-and-Drop)
 
-Similar a la personalización del [Dashboard Principal](../02_Visualizacion_Datos/03_Edicion_Layout.md), puedes usar un sistema de **arrastrar y soltar** para definir el contenido exacto de tu reporte.
+Similar a la personalización del [Dashboard Principal](./visualizacion_edicion_layout.md), puedes usar un sistema de **arrastrar y soltar** para definir el contenido exacto de tu reporte.
 
 1.  **Activar Modo Edición:** Dentro de la configuración del reporte, busca la opción para editar el contenido/layout.
-2.  **Barra Lateral de Widgets:** Aparecerá una barra lateral con todos los [Widgets y Métricas](../02_Visualizacion_Datos/02_Widgets_Metricas.md) disponibles que puedes incluir en el reporte.
+2.  **Barra Lateral de Widgets:** Aparecerá una barra lateral con todos los [Widgets y Métricas](./visualizacion_widgets.md) disponibles que puedes incluir en el reporte.
 3.  **Arrastrar y Soltar:**
     - Selecciona un widget de la barra lateral.
     - Arrastralo a una de las zonas designadas (`Drop Zone`) en la vista previa del reporte.
