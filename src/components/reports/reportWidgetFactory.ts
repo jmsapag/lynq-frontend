@@ -110,13 +110,6 @@ export const getReportWidgetMeta = (): Array<{
       description: "Number of returning customers (FootfallCam data)",
     },
     {
-      id: "report-avg-visit-duration",
-      type: "avg-visit-duration",
-      title: "Average Visit Duration",
-      category: "metric",
-      description: "Average time spent by visitors (FootfallCam data)",
-    },
-    {
       id: "report-affluence",
       type: "affluence",
       title: "Affluence Rate",
@@ -159,13 +152,6 @@ export const getReportWidgetMeta = (): Array<{
       title: "Returning Customers Chart",
       category: "chart",
       description: "Chart showing returning customer trends (FootfallCam)",
-    },
-    {
-      id: "report-avg-visit-duration-chart",
-      type: "avg-visit-duration-chart",
-      title: "Visit Duration Chart",
-      category: "chart",
-      description: "Chart showing average visit duration trends (FootfallCam)",
     },
     {
       id: "report-affluence-chart",

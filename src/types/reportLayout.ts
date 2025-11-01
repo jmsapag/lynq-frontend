@@ -22,10 +22,8 @@ export type ReportWidgetType =
   | "entry-rate-chart"
   | "cumulative-people-chart"
   | "returning-customers"
-  | "avg-visit-duration"
   | "affluence"
   | "returning-customers-chart"
-  | "avg-visit-duration-chart"
   | "affluence-chart"
   | "top-stores-chart";
 

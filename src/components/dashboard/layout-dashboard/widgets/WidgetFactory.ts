@@ -16,7 +16,6 @@ export const createWidgetConfig = (
     MetricWidgets.createLeastCrowdedDayWidget(params),
     MetricWidgets.createPercentageChangeWidget(params),
     MetricWidgets.createReturningCustomersWidget(params),
-    MetricWidgets.createAvgVisitDurationWidget(params),
     MetricWidgets.createAffluenceWidget(params),
     // All chart widgets
     ChartWidgets.createPeopleFlowChartWidget(params),
@@ -24,8 +23,7 @@ export const createWidgetConfig = (
     ChartWidgets.createTrafficHeatmapWidget(params),
     ChartWidgets.createEntryRateChartWidget(params),
     ChartWidgets.createReturningCustomersChartWidget(params),
-    ChartWidgets.createAvgVisitDurationChartWidget(params),
-    ChartWidgets.createAffluenceChartWidget(params),
+    ChartWidgets.createVisitDurationDistributionWidget(params),
     ChartWidgets.createLocationComparisonWidget(params),
     ChartWidgets.createTopStoresChartWidget(params),
   ];
@@ -45,7 +43,6 @@ export const createWidgetConfigOverview = (
     MetricWidgets.createPercentageChangeWidget(params),
     // FootfallCam Metric Widgets
     MetricWidgets.createReturningCustomersWidget(params),
-    MetricWidgets.createAvgVisitDurationWidget(params),
     MetricWidgets.createAffluenceWidget(params),
   ];
 };

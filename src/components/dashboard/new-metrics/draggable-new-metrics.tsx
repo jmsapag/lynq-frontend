@@ -5,10 +5,8 @@ import {
   GroupByTimeAmount,
 } from "../../../types/sensorDataResponse.ts";
 import { ReturningCustomersCard } from "../charts/returning-customers-card.tsx";
-import { AvgVisitDurationCard } from "../charts/avg-visit-duration-card.tsx";
 import { AffluenceCard } from "../charts/affluence-card.tsx";
 import { ReturningCustomersChartCard } from "../charts/returning-customers-chart-card.tsx";
-import { AvgVisitDurationChartCard } from "../charts/avg-visit-duration-chart-card.tsx";
 import { AffluenceChartCard } from "../charts/affluence-chart-card.tsx";
 
 interface DraggableNewMetricsProps {
@@ -23,18 +21,6 @@ export const DraggableReturningCustomersCard: React.FC<
 > = ({ data, dateRange }) => (
   <Draggable id="returning-customers-card" type="card">
     <ReturningCustomersCard
-      data={data}
-      dateRange={dateRange}
-      className="w-full h-full"
-    />
-  </Draggable>
-);
-
-export const DraggableAvgVisitDurationCard: React.FC<
-  DraggableNewMetricsProps
-> = ({ data, dateRange }) => (
-  <Draggable id="avg-visit-duration-card" type="card">
-    <AvgVisitDurationCard
       data={data}
       dateRange={dateRange}
       className="w-full h-full"
@@ -69,19 +55,6 @@ export const DraggableReturningCustomersChartCard: React.FC<
   </Draggable>
 );
 
-export const DraggableAvgVisitDurationChartCard: React.FC<
-  DraggableNewMetricsProps
-> = ({ data, groupBy, dateRange }) => (
-  <Draggable id="avg-visit-duration-chart" type="chart-card">
-    <AvgVisitDurationChartCard
-      data={data}
-      groupBy={groupBy}
-      dateRange={dateRange}
-      className="w-full h-full"
-    />
-  </Draggable>
-);
-
 export const DraggableAffluenceChartCard: React.FC<
   DraggableNewMetricsProps
 > = ({ data, groupBy, dateRange }) => (
@@ -105,15 +78,6 @@ export const DraggableReturningCustomersSmallCard: React.FC = () => (
   </Draggable>
 );
 
-export const DraggableAvgVisitDurationSmallCard: React.FC = () => (
-  <Draggable id="avg-visit-duration" type="small-card">
-    <div className="text-center">
-      <div className="text-2xl mb-2">⏱️</div>
-      <div className="text-sm font-medium">Tiempo Promedio</div>
-    </div>
-  </Draggable>
-);
-
 export const DraggableAffluenceSmallCard: React.FC = () => (
   <Draggable id="affluence" type="small-card">
     <div className="text-center">
@@ -128,15 +92,6 @@ export const DraggableReturningCustomersChartSmallCard: React.FC = () => (
     <div className="text-center">
       <div className="text-2xl mb-2">📈</div>
       <div className="text-sm font-medium">Gráfico Clientes</div>
-    </div>
-  </Draggable>
-);
-
-export const DraggableAvgVisitDurationChartSmallCard: React.FC = () => (
-  <Draggable id="avg-visit-duration-chart-small" type="small-card">
-    <div className="text-center">
-      <div className="text-2xl mb-2">⏰</div>
-      <div className="text-sm font-medium">Gráfico Tiempo</div>
     </div>
   </Draggable>
 );

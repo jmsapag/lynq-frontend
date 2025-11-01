@@ -3,13 +3,11 @@ import { ReportWidgetType } from "../../types/reportLayout";
 
 // Import dashboard widgets to reuse them
 import { SensorDataCard } from "../dashboard/charts/card";
-import { LineChart } from "../dashboard/charts/line-chart";
 import IngressMixedChart from "../dashboard/charts/ingress-mixed-chart";
 import { ChartHeatMap } from "../dashboard/charts/heat-map/chart-heat-map";
 import { EntryRateChart } from "../dashboard/charts/entry-rate/entry-rate-chart";
 import { CumulativeChart } from "../dashboard/charts/cumulative-chart";
 import { ReturningCustomersChart } from "../dashboard/charts/returning-customers-chart";
-import { AvgVisitDurationChart } from "../dashboard/charts/avg-visit-duration-chart";
 import { AffluenceChart } from "../dashboard/charts/affluence-chart";
 import { format } from "date-fns";
 
@@ -32,7 +30,6 @@ interface ReportWidgetFactoryParams {
     mostCrowdedDay: { date: Date; value: number } | null;
     leastCrowdedDay: { date: Date; value: number } | null;
     returningCustomers: number;
-    avgVisitDuration: number;
     affluence: number;
   };
   chartData: {
@@ -260,30 +257,6 @@ export const createReportWidgets = (
       ),
     },
     {
-      id: "avg-visit-duration",
-      type: "avg-visit-duration",
-      title: "Average Visit Duration",
-      category: "metric",
-      component: (
-        <SensorDataCard
-          title="Average Visit Duration"
-          value={
-            params.metrics.avgVisitDuration > 0
-              ? params.metrics.avgVisitDuration.toFixed(2)
-              : "N/A"
-          }
-          translationKey="dashboard.metrics.avgVisitDuration"
-          descriptionTranslationKey="dashboard.metrics.avgVisitDurationDescription"
-          unit={params.metrics.avgVisitDuration > 0 ? "min" : ""}
-          dateRange={params.dateRange}
-          data={{
-            ...commonData,
-            avg_visit_duration: params.metrics.avgVisitDuration,
-          }}
-        />
-      ),
-    },
-    {
       id: "affluence",
       type: "affluence",
       title: "Affluence",
@@ -358,18 +331,6 @@ export const createReportWidgets = (
       category: "chart",
       component: (
         <ReturningCustomersChart
-          data={params.sensorData}
-          groupBy={params.sensorRecordsFormData.groupBy}
-        />
-      ),
-    },
-    {
-      id: "avg-visit-duration-chart",
-      type: "avg-visit-duration-chart",
-      title: "Average Visit Duration Chart",
-      category: "chart",
-      component: (
-        <AvgVisitDurationChart
           data={params.sensorData}
           groupBy={params.sensorRecordsFormData.groupBy}
         />

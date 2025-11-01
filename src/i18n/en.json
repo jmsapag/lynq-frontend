@@ -36,7 +36,8 @@
     "billing": "Billing",
     "billing/subscription": "Subscription",
     "new-payment-method": "Add Payment Method",
-    "ai": "Summary"
+    "ai": "Summary",
+    "alerts": "Alerts"
   },
   "billing": {
     "title": "Billing",
@@ -317,8 +318,8 @@
       "locationComparison": "Location Comparison",
       "entryRateOverTime": "Entry Rate Over Time",
       "peopleInStore": "People in Store (Cumulative)",
+      "timeInStoreDistribution": "Time in Store Distribution",
       "returningCustomersChart": "Returning Rate Over Time",
-      "avgVisitDurationChart": "Average Visit Duration Over Time",
       "affluenceChart": "Affluence Over Time",
       "entries": "Entries",
       "exits": "Exits",
@@ -337,10 +338,6 @@
       "returningCustomers": {
         "title": "Returning Rate",
         "description": "The percentage of visitors who had previously made a visit to the same store within the past 60 days"
-      },
-      "avgVisitDuration": {
-        "title": "Average Visit Duration",
-        "description": "Average time customers spend in the establishment"
       },
       "affluence": {
         "title": "Affluence",
@@ -373,8 +370,6 @@
       "leastCrowdedDayDescription": "Day with the lowest number of entries within the selected period.",
       "returningCustomers": "Returning Rate",
       "returningCustomersDescription": "The percentage of visitors who had previously made a visit to the same store within the past 60 days",
-      "avgVisitDuration": "Average Visit Duration",
-      "avgVisitDurationDescription": "Average time customers spend in the establishment",
       "affluence": "Affluence",
       "affluenceDescription": "Percentage of entries relative to outside traffic (Entries/Outside traffic)",
       "noDataAvailable": "Data not available for this period",
@@ -385,7 +380,9 @@
       "resetLayout": "Reset Layout",
       "saveLayout": "Save Layout",
       "editLayout": "Edit Layout",
-      "hiddenCards": "Hidden Cards"
+      "hiddenCards": "Hidden Cards",
+      "timeRange": "Time Range",
+      "avgVisitDuration": "Average Visit Duration"
     }
   },
   "users": {
@@ -754,7 +751,10 @@
     "formErrorDesc": "Please fill in all required fields.",
     "businessName": "Business Name",
     "allProviders": "All Providers",
-    "filterProvider": "Filter by Provider"
+    "filterProvider": "Filter by Provider",
+    "status": "Status",
+    "active": "Active",
+    "inactive": "Inactive"
   },
   "locations": {
     "management": "Location Management",
@@ -1124,6 +1124,22 @@
     "expires": "Expires",
     "default": "Default",
     "goto": "Wallet"
+  },
+  "alerts": {
+    "title": "Alert Feed",
+    "description": "Monitor your real-time alerts and notifications.",
+    "noAlerts": "No alerts found",
+    "markAsRead": "Mark as Read",
+    "markAllAsRead": "Mark All as Read",
+    "filterByType": "Filter by Type",
+    "filterByStatus": "Filter by Status",
+    "allTypes": "All Types",
+    "readStatus": "Read",
+    "unreadStatus": "Unread",
+    "all": "All",
+    "errors": "Error",
+    "warnings": "Warning",
+    "info": "Info"
   },
   "ai": {
     "title": "AI Summary",
