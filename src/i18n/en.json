@@ -1124,5 +1124,50 @@
     "expires": "Expires",
     "default": "Default",
     "goto": "Wallet"
+  },
+  "ai": {
+    "title": "AI Summary",
+    "subtitle": "AI-powered insights and recommendations based on your traffic data",
+    "loading": "Loading AI insights...",
+    "error": "Failed to load AI insights",
+    "errorDescription": "Please try again later or contact support if the problem persists.",
+    "noDataAvailable": "No data available",
+    "loadingForecasts": "Loading forecasts...",
+    "lastTraining": "Last training",
+    "timePeriodLabel": "Time period",
+    "periods": {
+      "daily": "Daily (30 min)",
+      "weekly": "Weekly (1 hour)",
+      "monthly": "Monthly (6 hours)",
+      "quarterly": "Quarterly (1 day)"
+    },
+    "update": "Update",
+    "searchPlaceholder": "Ask the AI something about your forecasts...",
+    "ask": "Ask",
+    "forecastError": "Forecast Error",
+    "retry": "Retry",
+    "metrics": {
+      "expectedAverage": "Expected Average (P50)",
+      "predictionRange": "Prediction Range",
+      "modelConfidence": "Model Confidence",
+      "visitors": "visitors"
+    },
+    "trafficInsights": {
+      "title": "Traffic Insights",
+      "peakHours": "Peak Hours",
+      "trendAnalysis": "Trend Analysis",
+      "recommendations": "Recommendations"
+    },
+    "performanceSummary": {
+      "title": "Performance Summary",
+      "overallPerformance": "Overall Performance",
+      "keyMetrics": "Key Metrics",
+      "alerts": "Alerts"
+    },
+    "predictiveAnalysis": {
+      "title": "Predictive Analysis",
+      "forecast": "Forecast",
+      "optimization": "Optimization"
+    }
   }
 }
