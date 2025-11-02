@@ -1184,6 +1184,7 @@
       "title": "Predictive Analysis",
       "forecast": "Forecast",
       "optimization": "Optimization"
-    }
+    },
+    "summaryError": "No business summary available."
   }
 }

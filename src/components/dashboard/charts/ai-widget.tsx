@@ -1,9 +1,11 @@
 import React from "react";
 import { Card, CardBody } from "@heroui/react";
 import { AIAnalysisResult } from "../../../types/ai.ts";
+import { AgentSummaryResponse } from "../../../pages/agents.ts";
+import { useTranslation } from "react-i18next";
 
 interface AIAnalysisWidgetProps {
-  data: AIAnalysisResult | null;
+  data: AIAnalysisResult | AgentSummaryResponse | null;
   loading: boolean;
 }
 
@@ -11,9 +13,11 @@ export const AIAnalysisWidget: React.FC<AIAnalysisWidgetProps> = ({
   data,
   loading,
 }) => {
+  const { t } = useTranslation();
+
   if (loading) {
     return (
-      <Card className="w-full">
+      <Card className="w-full shadow-none border-1">
         <CardBody>
           <div className="animate-pulse">
             <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
@@ -27,16 +31,35 @@ export const AIAnalysisWidget: React.FC<AIAnalysisWidgetProps> = ({
 
   if (!data) {
     return (
-      <Card className="w-full">
+      <Card className="w-full shadow-none border-1">
         <CardBody>
-          <p className="text-gray-500">
-            No hay análisis disponibles para este rango de fechas.
-          </p>
+          <p className="text-gray-500">{t("ai.summaryError")}</p>
         </CardBody>
       </Card>
     );
   }
 
+  // Type guard to check if data is AgentSummaryResponse
+  const isAgentSummary = (data: any): data is AgentSummaryResponse => {
+    return "summary_text" in data;
+  };
+
+  // Handle Agent Summary Response
+  if (isAgentSummary(data)) {
+    return (
+      <Card className="w-full shadow-none border-1">
+        <CardBody>
+          <h3 className="text-lg font-semibold mb-2">Resumen de IA</h3>
+          <p className="text-sm text-gray-600 mb-3">
+            {new Date().toLocaleDateString()}
+          </p>
+          <p className="mt-3 whitespace-pre-wrap">{data.summary_text}</p>
+        </CardBody>
+      </Card>
+    );
+  }
+
+  // Handle AIAnalysisResult (existing functionality)
   const title =
     data.analysisType === "FORECAST" ? "Pronóstico" : "Análisis Retrospectivo";
 

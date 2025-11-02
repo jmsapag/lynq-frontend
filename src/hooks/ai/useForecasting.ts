@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { axiosPrivate } from "../../services/axiosClient";
+import { axiosAI } from "../../services/axiosClient";
 import { ForecastResponse, ForecastGranularity } from "../../types/forecasting";
 
 // Enhanced types for model status
@@ -17,14 +17,22 @@ export interface TrainingResponse {
   training_time: string;
 }
 
-// Service functions for API calls
+// Service functions for API calls with extended timeouts
 const checkModelStatus = async (): Promise<ModelStatus> => {
-  const response = await axiosPrivate.get("/forecasting/status");
+  const response = await axiosAI.get("/forecasting/status", {
+    timeout: 30000, // 30 seconds for status check
+  });
   return response.data;
 };
 
 const trainModels = async (): Promise<TrainingResponse> => {
-  const response = await axiosPrivate.post("/forecasting/train");
+  const response = await axiosAI.post(
+    "/forecasting/train",
+    {},
+    {
+      timeout: 180000, // 3 minutes for training
+    },
+  );
   return response.data;
 };
 
@@ -32,11 +40,12 @@ const fetchForecastPredictions = async (
   granularity: ForecastGranularity,
   locationId?: number,
 ): Promise<ForecastResponse> => {
-  const response = await axiosPrivate.get("/forecasting/predict", {
+  const response = await axiosAI.get("/forecasting/predict", {
     params: {
       granularity,
       ...(locationId && { location_id: locationId }),
     },
+    timeout: 120000, // 2 minutes for predictions
   });
   return response.data;
 };
@@ -113,7 +122,11 @@ export function useForecasting(
       console.error("Forecasting flow error:", err);
 
       // Enhanced error handling
-      if (err.response?.status === 404) {
+      if (err.code === "ECONNABORTED" || err.message?.includes("timeout")) {
+        setError(
+          "El análisis está tardando más de lo esperado. Por favor, intenta de nuevo.",
+        );
+      } else if (err.response?.status === 404) {
         setError(
           "No se encontraron datos suficientes para generar pronósticos.",
         );
