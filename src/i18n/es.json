@@ -1173,6 +1173,7 @@
       "title": "Análisis Predictivo",
       "forecast": "Pronóstico",
       "optimization": "Optimización"
-    }
+    },
+    "summaryError": "No hay resumen disponible."
   }
 }

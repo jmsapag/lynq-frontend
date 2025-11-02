@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Button,
   Card,
@@ -11,7 +11,10 @@ import {
 import { useTranslation } from "react-i18next";
 import { AIAnalysisChart } from "../components/dashboard/charts/ai-chart";
 import { SensorDataCard } from "../components/dashboard/charts/card";
+import { AIAnalysisWidget } from "../components/dashboard/charts/ai-widget";
 import { useForecasting } from "../hooks/ai/useForecasting";
+import { useAgentSummary } from "../hooks/ai/useAgentSummary";
+import { useLocations } from "../hooks/locations/useLocations";
 import { ForecastGranularity } from "../types/forecasting";
 import {
   ChartBarIcon,
@@ -33,8 +36,8 @@ const AIPage: React.FC = () => {
   const { t } = useTranslation();
   const [timePeriod, setTimePeriod] = useState<TimePeriod>("weekly");
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [searchLoading, setSearchLoading] = useState<boolean>(false);
 
+  // Existing hooks
   const granularity = granularityMap[timePeriod];
   const {
     forecastData,
@@ -46,20 +49,94 @@ const AIPage: React.FC = () => {
     refetch,
   } = useForecasting(granularity);
 
+  // New hooks for agent summary
+  const { allLocations } = useLocations();
+  const {
+    data: summaryData,
+    loading: summaryLoading,
+    fetchSummary,
+  } = useAgentSummary();
+
   const handleTimePeriodChange = (keys: any) => {
     const selectedKey = Array.from(keys)[0] as TimePeriod;
     setTimePeriod(selectedKey);
   };
 
+  // Calculate date range based on selected period
+  const getDateRange = () => {
+    const now = new Date();
+    const to = now.toISOString().split("T")[0];
+
+    let from: string;
+    switch (timePeriod) {
+      case "daily":
+        from = new Date(now.getTime() - 24 * 60 * 60 * 1000)
+          .toISOString()
+          .split("T")[0];
+        break;
+      case "weekly":
+        from = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
+          .toISOString()
+          .split("T")[0];
+        break;
+      case "monthly":
+        from = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
+          .toISOString()
+          .split("T")[0];
+        break;
+      case "quarterly":
+        from = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000)
+          .toISOString()
+          .split("T")[0];
+        break;
+      default:
+        from = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
+          .toISOString()
+          .split("T")[0];
+    }
+
+    return { from, to };
+  };
+
+  // Generate business summary automatically
+  useEffect(() => {
+    if (allLocations.length > 0) {
+      const { from, to } = getDateRange();
+      const locationIds = allLocations.map((loc) => loc.id.toString());
+
+      const request = {
+        scope: "location" as const,
+        from,
+        to,
+        locations: locationIds,
+        resolution: "daily" as const,
+        userPrompt:
+          "Provide a comprehensive business analysis of pedestrian traffic patterns",
+      };
+
+      fetchSummary(request);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allLocations.length, timePeriod]);
+
   const handleSearch = async () => {
     if (!searchQuery.trim()) return;
 
-    setSearchLoading(true);
-    console.log("AI Search Query:", searchQuery);
+    if (allLocations.length > 0) {
+      const { from, to } = getDateRange();
+      const locationIds = allLocations.map((loc) => loc.id.toString());
 
-    setTimeout(() => {
-      setSearchLoading(false);
-    }, 1000);
+      const request = {
+        scope: "location" as const,
+        from,
+        to,
+        locations: locationIds,
+        resolution: "daily" as const,
+        userPrompt: searchQuery,
+      };
+
+      await fetchSummary(request);
+    }
   };
 
   const handleSearchKeyPress = (e: React.KeyboardEvent) => {
@@ -160,6 +237,9 @@ const AIPage: React.FC = () => {
         </div>
       </div>
 
+      {/* Business Summary Widget */}
+      <AIAnalysisWidget data={summaryData} loading={summaryLoading} />
+
       {/* AI Search Bar */}
       <Card shadow="none" className="border border-gray-200">
         <CardBody className="p-4">
@@ -178,7 +258,6 @@ const AIPage: React.FC = () => {
             <Button
               color="primary"
               onClick={handleSearch}
-              isLoading={searchLoading}
               isDisabled={!searchQuery.trim() || !isReady}
             >
               {t("ai.ask")}
