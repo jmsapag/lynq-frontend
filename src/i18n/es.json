@@ -35,7 +35,8 @@
     "billing": "Facturación",
     "billing/subscription": "Suscripción",
     "new-payment-method": "Nuevo Método de Pago",
-    "alerts": "Alertas"
+    "alerts": "Alertas",
+    "ai": "Resumen"
   },
   "billing": {
     "title": "Facturación",
@@ -1128,5 +1129,50 @@
     "errors": "Error",
     "warnings": "Advertencias",
     "info": "Información"
+  },
+  "ai": {
+    "title": "Resumen IA",
+    "subtitle": "Insights y recomendaciones impulsadas por IA basadas en tus datos de tráfico",
+    "loading": "Cargando insights de IA...",
+    "error": "Error al cargar insights de IA",
+    "errorDescription": "Por favor, inténtalo de nuevo más tarde o contacta soporte si el problema persiste.",
+    "noDataAvailable": "No hay datos disponibles",
+    "loadingForecasts": "Cargando pronósticos...",
+    "lastTraining": "Último entrenamiento",
+    "timePeriodLabel": "Período de tiempo",
+    "periods": {
+      "daily": "Diario (30 min)",
+      "weekly": "Semanal (1 hora)",
+      "monthly": "Mensual (6 horas)",
+      "quarterly": "Trimestral (1 día)"
+    },
+    "update": "Actualizar",
+    "searchPlaceholder": "Pregúntale algo a la IA sobre tus pronósticos...",
+    "ask": "Preguntar",
+    "forecastError": "Error en Pronósticos",
+    "retry": "Reintentar",
+    "metrics": {
+      "expectedAverage": "Promedio Esperado (P50)",
+      "predictionRange": "Rango de Predicción",
+      "modelConfidence": "Confianza del Modelo",
+      "visitors": "visitantes"
+    },
+    "trafficInsights": {
+      "title": "Insights de Tráfico",
+      "peakHours": "Horas Pico",
+      "trendAnalysis": "Análisis de Tendencias",
+      "recommendations": "Recomendaciones"
+    },
+    "performanceSummary": {
+      "title": "Resumen de Rendimiento",
+      "overallPerformance": "Rendimiento General",
+      "keyMetrics": "Métricas Clave",
+      "alerts": "Alertas"
+    },
+    "predictiveAnalysis": {
+      "title": "Análisis Predictivo",
+      "forecast": "Pronóstico",
+      "optimization": "Optimización"
+    }
   }
 }
