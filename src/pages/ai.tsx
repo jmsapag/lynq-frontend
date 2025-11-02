@@ -6,7 +6,6 @@ import {
   Select,
   SelectItem,
   Input,
-  Spinner,
 } from "@heroui/react";
 import { useTranslation } from "react-i18next";
 import { AIAnalysisChart } from "../components/dashboard/charts/ai-chart";
@@ -14,6 +13,7 @@ import { SensorDataCard } from "../components/dashboard/charts/card";
 import { AIAnalysisWidget } from "../components/dashboard/charts/ai-widget";
 import { useForecasting } from "../hooks/ai/useForecasting";
 import { useAgentSummary } from "../hooks/ai/useAgentSummary";
+import { useChat } from "../hooks/ai/useChat";
 import { useLocations } from "../hooks/locations/useLocations";
 import { ForecastGranularity } from "../types/forecasting";
 import {
@@ -37,7 +37,6 @@ const AIPage: React.FC = () => {
   const [timePeriod, setTimePeriod] = useState<TimePeriod>("weekly");
   const [searchQuery, setSearchQuery] = useState<string>("");
 
-  // Existing hooks
   const granularity = granularityMap[timePeriod];
   const {
     forecastData,
@@ -49,13 +48,19 @@ const AIPage: React.FC = () => {
     refetch,
   } = useForecasting(granularity);
 
-  // New hooks for agent summary
   const { allLocations } = useLocations();
   const {
     data: summaryData,
     loading: summaryLoading,
     fetchSummary,
   } = useAgentSummary();
+
+  const {
+    data: chatData,
+    loading: chatLoading,
+    sendMessage,
+    reset: resetChat,
+  } = useChat();
 
   const handleTimePeriodChange = (keys: any) => {
     const selectedKey = Array.from(keys)[0] as TimePeriod;
@@ -98,7 +103,7 @@ const AIPage: React.FC = () => {
     return { from, to };
   };
 
-  // Generate business summary automatically
+  // Generate business summary automatically only once when locations are loaded
   useEffect(() => {
     if (allLocations.length > 0) {
       const { from, to } = getDateRange();
@@ -116,33 +121,24 @@ const AIPage: React.FC = () => {
 
       fetchSummary(request);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allLocations.length, timePeriod]);
+  }, [allLocations.length]);
 
   const handleSearch = async () => {
     if (!searchQuery.trim()) return;
 
-    if (allLocations.length > 0) {
-      const { from, to } = getDateRange();
-      const locationIds = allLocations.map((loc) => loc.id.toString());
+    resetChat();
 
-      const request = {
-        scope: "location" as const,
-        from,
-        to,
-        locations: locationIds,
-        resolution: "daily" as const,
-        userPrompt: searchQuery,
-      };
-
-      await fetchSummary(request);
-    }
+    await sendMessage(searchQuery);
   };
 
   const handleSearchKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
       handleSearch();
     }
+  };
+
+  const handleGenerate = () => {
+    refetch();
   };
 
   const getMetrics = () => {
@@ -182,23 +178,50 @@ const AIPage: React.FC = () => {
         }
       : undefined;
 
-  // Show simple loading state
-  if (loading) {
-    return (
-      <div className="space-y-6">
-        <Card className="w-full">
-          <CardBody className="text-center py-20">
-            <Spinner size="lg" className="mb-4" />
-            <p className="text-lg text-gray-600">{t("ai.loadingForecasts")}</p>
-          </CardBody>
-        </Card>
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-6">
-      {/* Header Controls */}
+      {/* 1. Business Summary Widget */}
+      <AIAnalysisWidget data={summaryData} loading={summaryLoading} />
+
+      {/* 2. AI Chat Input */}
+      <Card shadow="none" className="border border-gray-200">
+        <CardBody className="p-4">
+          <div className="flex gap-2">
+            <Input
+              placeholder={t("ai.searchPlaceholder")}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyPress={handleSearchKeyPress}
+              startContent={
+                <MagnifyingGlassIcon className="w-4 h-4 text-gray-400" />
+              }
+              className="flex-1"
+            />
+            <Button
+              color="primary"
+              onClick={handleSearch}
+              isDisabled={!searchQuery.trim()}
+              isLoading={chatLoading}
+            >
+              {t("ai.ask")}
+            </Button>
+          </div>
+
+          {/* Chat Response Display */}
+          {chatData && (
+            <div className="mt-4 p-4 bg-blue-50 rounded-lg border-l-4 border-blue-400">
+              <div className="flex items-start gap-3">
+                <SparklesIcon className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                <div className="text-gray-800 leading-relaxed">
+                  {chatData.response}
+                </div>
+              </div>
+            </div>
+          )}
+        </CardBody>
+      </Card>
+
+      {/* 3. Controls */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           {modelStatus && isReady && (
@@ -230,43 +253,15 @@ const AIPage: React.FC = () => {
             color="primary"
             size="md"
             startContent={<SparklesIcon className="w-4 h-4" />}
-            onClick={refetch}
+            onClick={handleGenerate}
+            isLoading={loading}
           >
             {t("ai.update")}
           </Button>
         </div>
       </div>
 
-      {/* Business Summary Widget */}
-      <AIAnalysisWidget data={summaryData} loading={summaryLoading} />
-
-      {/* AI Search Bar */}
-      <Card shadow="none" className="border border-gray-200">
-        <CardBody className="p-4">
-          <div className="flex gap-2">
-            <Input
-              placeholder={t("ai.searchPlaceholder")}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyPress={handleSearchKeyPress}
-              startContent={
-                <MagnifyingGlassIcon className="w-4 h-4 text-gray-400" />
-              }
-              className="flex-1"
-              isDisabled={!isReady}
-            />
-            <Button
-              color="primary"
-              onClick={handleSearch}
-              isDisabled={!searchQuery.trim() || !isReady}
-            >
-              {t("ai.ask")}
-            </Button>
-          </div>
-        </CardBody>
-      </Card>
-
-      {/* Error Display */}
+      {/* Error Display for Forecasting */}
       {hasError && error && (
         <Card className="w-full border-red-200 bg-red-50">
           <CardBody className="text-center py-8">
@@ -283,44 +278,41 @@ const AIPage: React.FC = () => {
         </Card>
       )}
 
-      {/* Results Section */}
+      {/* 4. Metrics Cards */}
+      {isReady && metrics && (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <SensorDataCard
+            title={t("ai.metrics.expectedAverage")}
+            value={metrics.averageP50.toLocaleString()}
+            icon={<ChartBarIcon className="w-6 h-6" />}
+            unit={t("ai.metrics.visitors")}
+            dateRange={dateRange}
+            hideExport={true}
+          />
+
+          <SensorDataCard
+            title={t("ai.metrics.predictionRange")}
+            value={metrics.rangeP10P90}
+            icon={<ShieldCheckIcon className="w-6 h-6" />}
+            unit={t("ai.metrics.visitors")}
+            dateRange={dateRange}
+            hideExport={true}
+          />
+
+          <SensorDataCard
+            title={t("ai.metrics.modelConfidence")}
+            value={`${metrics.confidence}%`}
+            icon={<UsersIcon className="w-6 h-6" />}
+            dateRange={dateRange}
+            hideExport={true}
+          />
+        </div>
+      )}
+
+      {/* 5. AI Forecast Chart */}
       {isReady && (
-        <div className="space-y-6">
-          {/* Metrics Cards */}
-          {metrics && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <SensorDataCard
-                title={t("ai.metrics.expectedAverage")}
-                value={metrics.averageP50.toLocaleString()}
-                icon={<ChartBarIcon className="w-6 h-6" />}
-                unit={t("ai.metrics.visitors")}
-                dateRange={dateRange}
-                hideExport={true}
-              />
-
-              <SensorDataCard
-                title={t("ai.metrics.predictionRange")}
-                value={metrics.rangeP10P90}
-                icon={<ShieldCheckIcon className="w-6 h-6" />}
-                unit={t("ai.metrics.visitors")}
-                dateRange={dateRange}
-                hideExport={true}
-              />
-
-              <SensorDataCard
-                title={t("ai.metrics.modelConfidence")}
-                value={`${metrics.confidence}%`}
-                icon={<UsersIcon className="w-6 h-6" />}
-                dateRange={dateRange}
-                hideExport={true}
-              />
-            </div>
-          )}
-
-          {/* Forecast Chart - Full Width */}
-          <div className="w-full">
-            <AIAnalysisChart data={forecastData} loading={false} />
-          </div>
+        <div className="w-full">
+          <AIAnalysisChart data={forecastData} loading={loading} />
         </div>
       )}
     </div>
