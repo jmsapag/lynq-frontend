@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { axiosPrivate } from "../../services/axiosClient";
+import { axiosAI } from "../../services/axiosClient";
 
 interface ChatResponse {
   response: string;
@@ -19,7 +19,7 @@ export function useChat() {
       setState("loading");
       setError(null);
 
-      const response = await axiosPrivate.post<ChatResponse>("/chat", {
+      const response = await axiosAI.post<ChatResponse>("/chat", {
         query: query.trim(),
       });
 
@@ -29,7 +29,11 @@ export function useChat() {
       setState("error");
       console.error("Chat error:", err);
 
-      if (err.response?.status === 400) {
+      if (err.code === "ECONNABORTED" || err.message?.includes("timeout")) {
+        setError(
+          "La consulta está tardando más de lo esperado. Por favor, intenta de nuevo.",
+        );
+      } else if (err.response?.status === 400) {
         setError(
           "Error en la consulta. Por favor, intenta con una pregunta diferente.",
         );

@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { axiosPrivate } from "../../services/axiosClient";
+import { axiosAI } from "../../services/axiosClient";
 import type {
   AgentSummaryRequest,
   AgentSummaryResponse,
@@ -8,7 +8,7 @@ import type {
 const fetchAgentSummaryExplanation = async (
   request: AgentSummaryRequest,
 ): Promise<AgentSummaryResponse> => {
-  const response = await axiosPrivate.post("/agents/summary/explain", request);
+  const response = await axiosAI.post("/agents/summary/explain", request);
   return response.data;
 };
 
@@ -33,7 +33,11 @@ export function useAgentSummary() {
       console.error("Agent summary error:", err);
 
       // Enhanced error handling
-      if (err.response?.status === 400) {
+      if (err.code === "ECONNABORTED" || err.message?.includes("timeout")) {
+        setError(
+          "El análisis está tardando más de lo esperado. Por favor, intenta de nuevo.",
+        );
+      } else if (err.response?.status === 400) {
         setError(
           "Error en los parámetros de solicitud. Verifica la configuración.",
         );
