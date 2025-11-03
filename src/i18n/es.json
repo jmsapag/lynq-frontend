@@ -1174,5 +1174,20 @@
       "forecast": "Pronóstico",
       "optimization": "Optimización"
     }
+  },
+  "assistant": {
+    "title": "Asistente IA",
+    "subtitle": "Pregúntame sobre LYNQ",
+    "placeholder": "Pregunta sobre instalación, configuración, pagos, métricas...",
+    "send": "Enviar",
+    "clear": "Limpiar chat",
+    "thinking": "Pensando...",
+    "welcomeMessage": "¡Hola! Soy tu asistente de LYNQ. ¿Cómo puedo ayudarte hoy?",
+    "errorMessage": "Lo siento, no pude procesar tu solicitud. Inténtalo de nuevo.",
+    "emptyInput": "Por favor ingresa una pregunta",
+    "closeModal": "Cerrar asistente",
+    "closeChat": "Cerrar chat",
+    "fabLabel": "Abrir Asistente IA",
+    "poweredBy": "Impulsado por IA"
   }
 }

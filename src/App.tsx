@@ -47,6 +47,7 @@ import { useAuthState } from "./hooks/auth/useAuthState";
 import { SubscriptionStateBanner } from "./components/payments/SubscriptionStateBanner";
 import AIPage from "./pages/ai.tsx";
 import { AlertFeed } from "./pages/alert-feed.tsx";
+import { AIAssistantFAB } from "./components/ai/AIAssistantFAB";
 
 function AppLayoutWithState() {
   const {
@@ -96,6 +97,8 @@ function AppLayoutWithState() {
         </main>
         <Footer />
       </div>
+      {/* AI Assistant FAB - Available in all authenticated views */}
+      <AIAssistantFAB />
     </div>
   );
 }

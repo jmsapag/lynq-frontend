@@ -47,8 +47,6 @@ const KNOWN_SUBSCRIPTION_STATES = new Set<SubscriptionState>([
 
 const BACKEND_URL = "/api";
 
-// console.log("BACKEND_URL:", BACKEND_URL, "DEV mode:", import.meta.env.DEV);
-
 export const axiosClient = axios.create({
   baseURL: BACKEND_URL,
   timeout: 10000,
@@ -62,6 +60,10 @@ export const axiosClient = axios.create({
 export const axiosPrivate = axios.create({
   baseURL: BACKEND_URL,
   timeout: 10000,
+  headers: {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+  },
 });
 
 // Flag to prevent multiple simultaneous refresh attempts
