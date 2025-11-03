@@ -61,6 +61,10 @@ export const axiosClient = axios.create({
 export const axiosPrivate = axios.create({
   baseURL: BACKEND_URL,
   timeout: 10000,
+  headers: {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+  },
 });
 
 // AI-specific instance with extended timeout

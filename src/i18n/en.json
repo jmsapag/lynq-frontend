@@ -1186,5 +1186,20 @@
       "optimization": "Optimization"
     },
     "summaryError": "No business summary available."
+  },
+  "assistant": {
+    "title": "AI Assistant",
+    "subtitle": "Ask me anything about LYNQ",
+    "placeholder": "Ask about installation, configuration, payments, metrics...",
+    "send": "Send",
+    "clear": "Clear chat",
+    "thinking": "Thinking...",
+    "welcomeMessage": "Hello! I'm your LYNQ assistant. How can I help you today?",
+    "errorMessage": "Sorry, I couldn't process your request. Please try again.",
+    "emptyInput": "Please enter a question",
+    "closeModal": "Close assistant",
+    "closeChat": "Close chat",
+    "fabLabel": "Open AI Assistant",
+    "poweredBy": "Powered by AI"
   }
 }
