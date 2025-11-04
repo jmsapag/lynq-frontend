@@ -357,16 +357,35 @@
     "rights": "© {{year}} LYNQ, People Counter. Todos los derechos reservados."
   },
   "operatingHours": {
-    "title": "Horas operativas",
-    "timezone": "Zona horaria",
-    "openDay": "Abierto este día",
+    "title": "Horarios de Operación",
+    "timezone": "Zona Horaria",
+    "timezoneDescription": "Selecciona la zona horaria para esta ubicación",
+    "daysOpen": "días abierto",
+    "hoursConfigured": "Horarios configurados",
+    "weeklySchedule": "Horario Semanal",
+    "open": "Abierto",
     "start": "Inicio",
-    "end": "Fin",
-    "addRange": "Agregar franja",
-    "exceptions": "Excepciones / Feriados",
-    "exceptionsHint": "Las excepciones podrán configurarse en una próxima actualización.",
-    "noneConfigured": "Sin horas de operación configuradas",
-    "tableHeader": "Horas operativas"
+    "end": "Final",
+    "addTimeRange": "Agregar Horario",
+    "copyToAll": "Copiar a Todos los Días",
+    "noHoursSet": "No hay horarios establecidos para este día",
+    "closedDay": "Cerrado",
+    "quickActions": "Acciones Rápidas",
+    "setWeekdays": "Establecer Días Laborales (9-5)",
+    "set24_7": "Operación 24/7",
+    "clearAll": "Limpiar Todo",
+    "helpTitle": "Consejos:",
+    "helpTip1": "Agrega múltiples rangos de tiempo para turnos divididos (ej. descanso de almuerzo)",
+    "helpTip2": "Usa 'Copiar a Todos los Días' para aplicar rápidamente los mismos horarios",
+    "helpTip3": "Los días de fin de semana están resaltados con un indicador naranja",
+    "helpTip4": "Los días desmarcados serán marcados como cerrados",
+    "openDay": "Abrir este día",
+    "addRange": "Agregar rango de tiempo",
+    "exceptions": "Excepciones / Días Festivos",
+    "exceptionsHint": "Las excepciones pueden configurarse en una futura actualización.",
+    "noneConfigured": "No hay horarios de operación configurados",
+    "tableHeader": "Horarios de Operación",
+    "description": "Configura los horarios de operación para esta ubicación. Estos horarios se usarán para filtrar datos y generar reportes precisos."
   },
   "logout": "Cerrar sesión",
   "profile": "Perfil",
@@ -400,7 +419,8 @@
     "exportAsCSV": "Exportar como CSV",
     "sendByEmail": "Enviar por correo",
     "locale": "es-ES",
-    "success": "Éxito"
+    "success": "Éxito",
+    "weekend": "Fin de semana"
   },
   "dashboard": {
     "percentage": "Porcentaje (%)",
@@ -792,7 +812,15 @@
     "changePasswordErrorTitle": "Error",
     "changePasswordErrorDescription": "No se pudo cambiar la contraseña. El enlace puede ser inválido o haber expirado.",
     "createSuccessTitle": "Éxito",
-    "createSuccessDescription": "¡Creado exitosamente!"
+    "createSuccessDescription": "¡Creado exitosamente!",
+    "locationCreateSuccessTitle": "Ubicación Creada",
+    "locationCreateSuccessDescription": "La ubicación ha sido creada correctamente.",
+    "locationCreateErrorTitle": "Error al Crear",
+    "locationCreateErrorDescription": "No se pudo crear la ubicación. Inténtalo de nuevo.",
+    "locationUpdateSuccessTitle": "Ubicación Actualizada",
+    "locationUpdateSuccessDescription": "La ubicación ha sido actualizada correctamente.",
+    "locationUpdateErrorTitle": "Error al Actualizar",
+    "locationUpdateErrorDescription": "No se pudo actualizar la ubicación. Inténtalo de nuevo."
   },
   "businesses": {
     "management": "Gestión de Empresas",
@@ -900,7 +928,14 @@
     "formErrorDesc": "Por favor, completa todos los campos requeridos.",
     "locationName": "Nombre de la Ubicación",
     "locationAddress": "Dirección",
-    "deleteWarning": "Advertencia: Esta acción eliminará permanentemente la ubicación. Los sensores asociados a esta ubicación también serán eliminados y toda su información ya no será accesible."
+    "deleteWarning": "Advertencia: Esta acción eliminará permanentemente la ubicación. Los sensores asociados a esta ubicación también serán eliminados y toda su información ya no será accesible.",
+    "basicInfo": "Información Básica",
+    "addLocationSubtitle": "Detalles de la ubicación",
+    "locationNamePlaceholder": "Nombre de la Ubicación",
+    "locationAddressPlaceholder": "Dirección de la Ubicación",
+    "createLocation": "Crear Ubicación",
+    "editLocationSubtitle": "Editar detalles de la ubicación",
+    "updateLocation": "Actualizar Ubicación"
   },
   "connections": {
     "title": "Conexiones",
