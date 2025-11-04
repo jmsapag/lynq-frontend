@@ -46,3 +46,41 @@ export const getDashboardTourSteps = (t: TFunction): TourStep[] => [
     placement: "bottom",
   },
 ];
+
+export const getSidebarTourSteps = (t: TFunction): TourStep[] => [
+  {
+    target: '[data-tour="sidebar-menu"]',
+    title: "tour.sidebar.welcome.title",
+    content: "tour.sidebar.welcome.content",
+    placement: "right",
+  },
+  {
+    target: '[data-tour="sidebar-logo"]',
+    title: "tour.sidebar.logo.title",
+    content: "tour.sidebar.logo.content",
+    placement: "right",
+  },
+  {
+    target: '[data-tour="sidebar-collapse"]',
+    title: "tour.sidebar.collapse.title",
+    content: "tour.sidebar.collapse.content",
+    placement: "right",
+  },
+  {
+    target: '[data-tour="sidebar-navigation"]',
+    title: "tour.sidebar.navigation.title",
+    content: "tour.sidebar.navigation.content",
+    placement: "right",
+  },
+  {
+    target: '[data-tour="sidebar-profile"]',
+    title: "tour.sidebar.profile.title",
+    content: "tour.sidebar.profile.content",
+    placement: "right",
+  },
+];
+
+export const getFullAppTourSteps = (t: TFunction): TourStep[] => [
+  ...getSidebarTourSteps(t),
+  ...getDashboardTourSteps(t),
+];
