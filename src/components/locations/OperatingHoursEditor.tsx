@@ -1,5 +1,14 @@
-import React, { useMemo } from "react";
-import { Button, Checkbox, Input, Select, SelectItem } from "@heroui/react";
+import { useMemo } from "react";
+import {
+  Button,
+  Checkbox,
+  Input,
+  Select,
+  SelectItem,
+  Card,
+  CardBody,
+  Chip,
+} from "@heroui/react";
 import { useTranslation } from "react-i18next";
 import {
   DayOperatingHours,
@@ -7,6 +16,12 @@ import {
   TimeRange,
   Weekday,
 } from "../../types/location";
+import {
+  PlusIcon,
+  TrashIcon,
+  GlobeAltIcon,
+  CalendarDaysIcon,
+} from "@heroicons/react/24/outline";
 
 type Props = {
   value: OperatingHours;
@@ -14,14 +29,14 @@ type Props = {
   disabled?: boolean;
 };
 
-const WEEK_DAYS: Weekday[] = [
-  "monday",
-  "tuesday",
-  "wednesday",
-  "thursday",
-  "friday",
-  "saturday",
-  "sunday",
+const WEEK_DAYS: { key: Weekday; isWeekend: boolean }[] = [
+  { key: "monday", isWeekend: false },
+  { key: "tuesday", isWeekend: false },
+  { key: "wednesday", isWeekend: false },
+  { key: "thursday", isWeekend: false },
+  { key: "friday", isWeekend: false },
+  { key: "saturday", isWeekend: true },
+  { key: "sunday", isWeekend: true },
 ];
 
 export default function OperatingHoursEditor({
@@ -33,12 +48,30 @@ export default function OperatingHoursEditor({
 
   const timezones: string[] = useMemo(() => {
     try {
-      // Intl support; fallback minimal list if not available
+      // Get common timezones first
+      const commonTimezones = [
+        "America/New_York",
+        "America/Chicago",
+        "America/Denver",
+        "America/Los_Angeles",
+        "Europe/London",
+        "Europe/Paris",
+        "Asia/Tokyo",
+        "Australia/Sydney",
+        "UTC",
+      ];
+
       // @ts-ignore
-      const names = Intl.supportedValuesOf
+      const allTimezones = Intl.supportedValuesOf
         ? Intl.supportedValuesOf("timeZone")
-        : [];
-      return Array.isArray(names) && names.length ? names : ["UTC"];
+        : commonTimezones;
+
+      return Array.isArray(allTimezones) && allTimezones.length
+        ? [
+            ...commonTimezones,
+            ...allTimezones.filter((tz) => !commonTimezones.includes(tz)),
+          ]
+        : commonTimezones;
     } catch {
       return ["UTC"];
     }
@@ -92,106 +125,224 @@ export default function OperatingHoursEditor({
     setDay(day, { ...d, isOpen: checked });
   };
 
+  const copyToAllDays = (sourceDay: Weekday) => {
+    const sourceData = getDay(sourceDay);
+    WEEK_DAYS.forEach(({ key }) => {
+      if (key !== sourceDay) {
+        setDay(key, { ...sourceData });
+      }
+    });
+  };
+
+  const openDaysCount = WEEK_DAYS.filter(
+    ({ key }) => getDay(key).isOpen,
+  ).length;
+  const hasAnyHours = WEEK_DAYS.some(({ key }) => {
+    const day = getDay(key);
+    return day.isOpen && day.ranges && day.ranges.length > 0;
+  });
+
   return (
     <div className="space-y-6">
-      <div>
-        <label className="block text-sm font-medium mb-1">
-          {t("operatingHours.timezone")}
-        </label>
-        <Select
-          selectedKeys={value?.timezone ? [value.timezone] : []}
-          onSelectionChange={(keys) => {
-            const [tz] = Array.from(keys) as string[];
-            if (tz) updateTimezone(tz);
-          }}
-          isDisabled={disabled}
+      {/* Timezone Selection */}
+      <Card className="bg-default-50">
+        <CardBody className="p-4">
+          <div className="flex items-center gap-3 mb-3">
+            <GlobeAltIcon className="h-5 w-5 text-primary" />
+            <div className="flex-1">
+              <div className="font-medium text-sm">
+                {t("operatingHours.timezone") || "Timezone"}
+              </div>
+              <div className="text-xs text-default-500">
+                {t("operatingHours.timezoneDescription") ||
+                  "Select the timezone for this location"}
+              </div>
+            </div>
+          </div>
+
+          <Select
+            selectedKeys={value?.timezone ? [value.timezone] : []}
+            onSelectionChange={(keys) => {
+              const [tz] = Array.from(keys) as string[];
+              if (tz) updateTimezone(tz);
+            }}
+            isDisabled={disabled}
+            variant="bordered"
+            placeholder="Select timezone"
+            className="max-w-sm"
+          >
+            {timezones.map((tz) => (
+              <SelectItem key={tz} value={tz}>
+                {tz}
+              </SelectItem>
+            ))}
+          </Select>
+        </CardBody>
+      </Card>
+
+      {/* Summary Stats */}
+      <div className="flex gap-2 flex-wrap">
+        <Chip
+          color={openDaysCount > 0 ? "success" : "default"}
+          variant="flat"
+          size="sm"
         >
-          {timezones.map((tz) => (
-            <SelectItem key={tz} value={tz}>
-              {tz}
-            </SelectItem>
-          ))}
-        </Select>
+          {openDaysCount}/7 {t("operatingHours.daysOpen") || "days open"}
+        </Chip>
+        {hasAnyHours && (
+          <Chip color="primary" variant="flat" size="sm">
+            {t("operatingHours.hoursConfigured") || "Hours configured"}
+          </Chip>
+        )}
       </div>
 
+      {/* Days Configuration */}
       <div className="space-y-3">
-        {WEEK_DAYS.map((day) => {
-          const d = getDay(day);
-          return (
-            <div key={day} className="border rounded-md p-3">
-              <div className="flex items-center justify-between mb-2">
-                <div className="font-medium capitalize">{t(`days.${day}`)}</div>
-                <Checkbox
-                  isSelected={!!d.isOpen}
-                  onValueChange={(v) => toggleIsOpen(day, v)}
-                  isDisabled={disabled}
-                >
-                  {t("operatingHours.openDay")}
-                </Checkbox>
-              </div>
+        <div className="flex items-center gap-2 mb-4">
+          <CalendarDaysIcon className="h-5 w-5 text-primary" />
+          <span className="font-medium text-sm">
+            {t("operatingHours.weeklySchedule") || "Weekly Schedule"}
+          </span>
+        </div>
 
-              {d.isOpen && (
-                <div className="space-y-2">
-                  {(d.ranges || []).map((r, idx) => (
-                    <div key={idx} className="space-y-2">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        <div>
-                          <Input
-                            type="time"
-                            label={t("operatingHours.start")}
-                            value={r.start}
-                            onChange={(e) =>
-                              updateRange(day, idx, "start", e.target.value)
-                            }
-                            isDisabled={disabled}
-                          />
-                        </div>
-                        <div>
-                          <Input
-                            type="time"
-                            label={t("operatingHours.end")}
-                            value={r.end}
-                            onChange={(e) =>
-                              updateRange(day, idx, "end", e.target.value)
-                            }
-                            isDisabled={disabled}
-                          />
-                        </div>
+        <div className="grid gap-3">
+          {WEEK_DAYS.map(({ key: day, isWeekend }) => {
+            const d = getDay(day);
+            const hasRanges = d.ranges && d.ranges.length > 0;
+
+            return (
+              <Card
+                key={day}
+                className={`transition-all duration-200 ${
+                  d.isOpen
+                    ? "border-primary-200 bg-primary-50/30 dark:bg-primary-950/30"
+                    : "border-default-200 bg-default-50"
+                } ${isWeekend ? "border-l-4 border-l-warning-300" : ""}`}
+              >
+                <CardBody className="p-4">
+                  {/* Day Header */}
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-3">
+                      <div className="font-semibold capitalize text-medium">
+                        {t(`days.${day}`) || day}
                       </div>
-                      <div>
+                      {isWeekend && (
+                        <Chip size="sm" variant="flat" color="warning">
+                          {t("common.weekend") || "Weekend"}
+                        </Chip>
+                      )}
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <Checkbox
+                        isSelected={!!d.isOpen}
+                        onValueChange={(v) => toggleIsOpen(day, v)}
+                        isDisabled={disabled}
+                        color="primary"
+                        size="sm"
+                      >
+                        <span className="text-sm">
+                          {t("operatingHours.open") || "Open"}
+                        </span>
+                      </Checkbox>
+                    </div>
+                  </div>
+
+                  {/* Time Ranges */}
+                  {d.isOpen && (
+                    <div className="space-y-3 ml-2">
+                      {/* Current Ranges */}
+                      {(d.ranges || []).map((range, idx) => (
+                        <div
+                          key={idx}
+                          className="flex items-end gap-3 p-3 rounded-lg bg-white/60 dark:bg-default-100/60 border border-default-200"
+                        >
+                          <div className="flex-1 grid grid-cols-2 gap-3">
+                            <Input
+                              type="time"
+                              label={t("operatingHours.start") || "Start"}
+                              value={range.start}
+                              onChange={(e) =>
+                                updateRange(day, idx, "start", e.target.value)
+                              }
+                              isDisabled={disabled}
+                              variant="bordered"
+                              size="sm"
+                              labelPlacement="outside"
+                            />
+                            <Input
+                              type="time"
+                              label={t("operatingHours.end") || "End"}
+                              value={range.end}
+                              onChange={(e) =>
+                                updateRange(day, idx, "end", e.target.value)
+                              }
+                              isDisabled={disabled}
+                              variant="bordered"
+                              size="sm"
+                              labelPlacement="outside"
+                            />
+                          </div>
+                          <Button
+                            size="sm"
+                            variant="flat"
+                            color="danger"
+                            onPress={() => removeRange(day, idx)}
+                            isDisabled={disabled}
+                            isIconOnly
+                          >
+                            <TrashIcon className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      ))}
+
+                      {/* Action Buttons */}
+                      <div className="flex gap-2 pt-2">
                         <Button
                           size="sm"
-                          variant="light"
-                          color="danger"
-                          onPress={() => removeRange(day, idx)}
+                          variant="bordered"
+                          color="primary"
+                          onPress={() => addRange(day)}
                           isDisabled={disabled}
+                          startContent={<PlusIcon className="h-4 w-4" />}
                         >
-                          {t("common.delete")}
+                          {t("operatingHours.addTimeRange") || "Add Time Range"}
                         </Button>
+
+                        {hasRanges && (
+                          <Button
+                            size="sm"
+                            variant="flat"
+                            color="secondary"
+                            onPress={() => copyToAllDays(day)}
+                            isDisabled={disabled}
+                          >
+                            {t("operatingHours.copyToAll") ||
+                              "Copy to All Days"}
+                          </Button>
+                        )}
                       </div>
+
+                      {/* No ranges message */}
+                      {(!d.ranges || d.ranges.length === 0) && (
+                        <div className="text-center py-4 text-sm text-default-500 bg-default-100/60 rounded-lg border-2 border-dashed border-default-200">
+                          {t("operatingHours.noHoursSet") ||
+                            "No operating hours set for this day"}
+                        </div>
+                      )}
                     </div>
-                  ))}
+                  )}
 
-                  <Button
-                    size="sm"
-                    variant="bordered"
-                    onPress={() => addRange(day)}
-                    isDisabled={disabled}
-                  >
-                    {t("operatingHours.addRange")}
-                  </Button>
-                </div>
-              )}
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Exceptions simplified input - optional basic support */}
-      <div className="space-y-2">
-        <div className="font-medium">{t("operatingHours.exceptions")}</div>
-        <div className="text-default-500 text-sm">
-          {t("operatingHours.exceptionsHint")}
+                  {/* Closed day message */}
+                  {!d.isOpen && (
+                    <div className="text-center py-2 text-sm text-default-500">
+                      {t("operatingHours.closedDay") || "Closed"}
+                    </div>
+                  )}
+                </CardBody>
+              </Card>
+            );
+          })}
         </div>
       </div>
     </div>
