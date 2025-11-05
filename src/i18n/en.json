@@ -361,9 +361,17 @@
         "title": "Returning Rate",
         "description": "The percentage of visitors who had previously made a visit to the same store within the past 60 days"
       },
+      "avgVisitDuration": {
+        "title": "Average Visit Duration",
+        "description": "Average time customers spend in the establishment"
+      },
+      "turnIn": {
+        "title": "Turn-in Ratio",
+        "description": "Proportion of Returning vs New customers based on weighted entries"
+      },
       "affluence": {
         "title": "Affluence",
-        "description": "Percentage of entries relative to outside traffic (Entries/Outside traffic)"
+        "description": "Percentage of entries relative to outside traffic (Entries/Outside Traffic × 100)"
       },
       "topStores": "Top Stores",
       "topStoresDescription": "Top performing stores based on selected metrics"
@@ -392,8 +400,12 @@
       "leastCrowdedDayDescription": "Day with the lowest number of entries within the selected period.",
       "returningCustomers": "Returning Rate",
       "returningCustomersDescription": "The percentage of visitors who had previously made a visit to the same store within the past 60 days",
+      "avgVisitDuration": "Average Visit Duration",
+      "avgVisitDurationDescription": "Average time customers spend in the establishment",
+      "turnInRatio": "Turn-in Ratio",
+      "turnInRatioDescription": "Share of Returning vs New customers computed from weighted entries",
       "affluence": "Affluence",
-      "affluenceDescription": "Percentage of entries relative to outside traffic (Entries/Outside traffic)",
+      "affluenceDescription": "Percentage of entries relative to outside traffic (Entries/Outside Traffic × 100)",
       "noDataAvailable": "Data not available for this period",
       "footfallcamDataRequired": "Requires FootfallCam analytics data",
       "percentage": "Percentage (%)",
@@ -403,8 +415,11 @@
       "saveLayout": "Save Layout",
       "editLayout": "Edit Layout",
       "hiddenCards": "Hidden Cards",
-      "timeRange": "Time Range",
-      "avgVisitDuration": "Average Visit Duration"
+      "timeRange": "Time Range"
+    },
+    "turnIn": {
+      "newCustomer": "New Customer",
+      "returningCustomer": "Returning Customer"
     }
   },
   "users": {

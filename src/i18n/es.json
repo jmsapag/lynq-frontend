@@ -490,9 +490,13 @@
         "title": "Tasa de Retorno",
         "description": "El porcentaje de visitantes que habían realizado previamente una visita a la misma tienda dentro de los últimos 60 días"
       },
+      "turnIn": {
+        "title": "Turn-in Ratio",
+        "description": "Proporción de clientes Recurrentes vs Nuevos basada en entradas ponderadas"
+      },
       "affluence": {
         "title": "Afluencia",
-        "description": "Porcentaje de entradas respecto al tráfico exterior (Entradas/Tráfico exterior)"
+        "description": "Número total de personas que entraron al área monitoreada contra el número de personas que pasaron pero no entraron durante el período seleccionado."
       }
     },
     "metrics": {
@@ -514,8 +518,10 @@
       "leastCrowdedDayDescription": "Día del período seleccionado con menor cantidad de entradas registradas.",
       "returningCustomers": "Tasa de Retorno",
       "returningCustomersDescription": "El porcentaje de visitantes que habían realizado previamente una visita a la misma tienda dentro de los últimos 60 días",
+      "turnInRatio": "Turn-in Ratio",
+      "turnInRatioDescription": "Proporción de Recurrentes vs Nuevos calculada desde entradas ponderadas",
       "affluence": "Afluencia",
-      "affluenceDescription": "Porcentaje de entradas respecto al tráfico exterior (Entradas/Tráfico exterior)",
+      "affluenceDescription": "Número total de personas que entraron al área monitoreada contra el número de personas que pasaron pero no entraron durante el período seleccionado",
       "noDataAvailable": "Datos no disponibles para este período",
       "footfallcamDataRequired": "Requiere datos de analíticas FootfallCam",
       "percentage": "Porcentaje (%)",

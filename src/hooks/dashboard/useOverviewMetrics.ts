@@ -72,6 +72,9 @@ interface OverviewMetricsComparisons {
   entryRate?: MetricComparison;
   dailyAverageIn?: MetricComparison;
   dailyAverageOut?: MetricComparison;
+  returningCustomers?: MetricComparison;
+  avgVisitDuration?: MetricComparison;
+  affluence?: MetricComparison;
 }
 
 export const useOverviewMetrics = (
@@ -403,6 +406,52 @@ export const useOverviewMetrics = (
         comparisonTotalOut / comparisonDaysDiff,
       );
 
+      // Calculate comparison affluence
+      const comparisonAffluence = comparisonSensorData.affluence
+        ? Math.round(
+            comparisonSensorData.affluence.reduce(
+              (sum: number, value: number) => sum + value,
+              0,
+            ) / comparisonSensorData.affluence.length,
+          )
+        : 0;
+
+      // Calculate comparison returning customers
+      const comparisonReturningCustomersWeightedAvg =
+        comparisonSensorData.returningCustomers &&
+        comparisonSensorData.returningCustomers.length > 0 &&
+        comparisonSensorData.in &&
+        comparisonSensorData.in.length > 0
+          ? (() => {
+              const totalReturningCustomers =
+                comparisonSensorData.returningCustomers.reduce(
+                  (sum: number, val: number) => sum + (val || 0),
+                  0,
+                );
+              const totalEntries = comparisonSensorData.in.reduce(
+                (sum: number, val: number) => sum + (val || 0),
+                0,
+              );
+              return totalEntries > 0
+                ? (totalReturningCustomers / totalEntries) * 100
+                : 0;
+            })()
+          : 0;
+
+      // Calculate comparison avg visit duration
+      const comparisonAvgVisitDuration = comparisonSensorData.avgVisitDuration
+        ? (() => {
+            const valid = comparisonSensorData.avgVisitDuration.filter(
+              (v: number) => (v || 0) > 0,
+            );
+            if (valid.length === 0) return 0;
+            const avg =
+              valid.reduce((sum: number, v: number) => sum + v, 0) /
+              valid.length;
+            return Math.round(avg);
+          })()
+        : 0;
+
       comparisons = {
         totalIn: calculateMetricComparison(totalIn, comparisonTotalIn),
         totalOut: calculateMetricComparison(totalOut, comparisonTotalOut),
@@ -414,6 +463,18 @@ export const useOverviewMetrics = (
         dailyAverageOut: calculateMetricComparison(
           dailyAverageOut,
           comparisonDailyAverageOut,
+        ),
+        returningCustomers: calculateMetricComparison(
+          Math.round(returningCustomersWeightedAvg),
+          Math.round(comparisonReturningCustomersWeightedAvg),
+        ),
+        avgVisitDuration: calculateMetricComparison(
+          totalAvgVisitDuration,
+          comparisonAvgVisitDuration,
+        ),
+        affluence: calculateMetricComparison(
+          totalAffluence,
+          comparisonAffluence,
         ),
       };
     }

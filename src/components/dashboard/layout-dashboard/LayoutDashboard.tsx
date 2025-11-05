@@ -25,8 +25,9 @@ import { ChartCard } from "../charts/chart-card";
 import { LineChart } from "../charts/line-chart";
 import { ChartHeatMap } from "../charts/heat-map/chart-heat-map";
 import { EntryRateChart } from "../charts/entry-rate/entry-rate-chart";
-import { ReturningCustomersChart } from "../charts/returning-customers-chart";
 import { AffluenceChart } from "../charts/affluence-chart";
+import { VisitDurationDistribution } from "../charts/visit-duration-distribution";
+import { TurnInRatioDonut } from "../charts/turn-in-ratio-donut";
 
 interface LayoutDashboardProps {
   // Dashboard data props
@@ -35,6 +36,7 @@ interface LayoutDashboardProps {
     totalOut: number;
     entryRate: number;
     totalReturningCustomers: number;
+    totalAvgVisitDuration: number;
     totalAffluence: number;
   };
   chartData: {
@@ -61,9 +63,11 @@ export type DashboardWidgetType =
   | "least-crowded-day"
   | "percentage-change"
   | "returning-customers"
-  | "affluence"
-  | "returning-customers-chart"
-  | "affluence-chart";
+  | "avg-visit-duration"
+  | "turn-in-ratio"
+  | "affluence-chart"
+  | "avg-visit-duration-chart"
+  | "turn-in-ratio-donut";
 
 interface WidgetConfig {
   id: string;
@@ -225,49 +229,36 @@ export const LayoutDashboard: React.FC<LayoutDashboardProps> = ({
         ),
       },
       {
-        id: "affluence",
-        type: "affluence",
-        title: "Affluence",
-        translationKey: "dashboard.metrics.affluence",
+        id: "avg-visit-duration",
+        type: "avg-visit-duration",
+        title: "Avg Visit Duration",
+        translationKey: "dashboard.metrics.avgVisitDuration",
         category: "metric",
         component: (
           <SensorDataCard
-            title="Affluence"
-            value={metrics.totalAffluence}
-            translationKey="dashboard.metrics.affluence"
-            unit="people"
+            title="Avg Visit Duration"
+            value={metrics.totalAvgVisitDuration}
+            translationKey="dashboard.metrics.avgVisitDuration"
+            unit="secs"
+          />
+        ),
+      },
+      {
+        id: "turn-in-ratio",
+        type: "turn-in-ratio",
+        title: "Turn-in Ratio",
+        translationKey: "dashboard.metrics.turnInRatio",
+        category: "metric",
+        component: (
+          <SensorDataCard
+            title="Turn-in Ratio"
+            value={metrics.totalReturningCustomers}
+            translationKey="dashboard.metrics.turnInRatio"
+            unit="%"
           />
         ),
       },
       // FootfallCam Chart Cards
-      {
-        id: "returning-customers-chart",
-        type: "returning-customers-chart",
-        title: "Returning Customers Chart",
-        translationKey: "dashboard.charts.returningCustomersChart",
-        category: "chart",
-        component: (
-          <ChartCard
-            title="Returning Customers Over Time"
-            translationKey="dashboard.charts.returningCustomersChart"
-          >
-            {!sensorData?.returningCustomers ||
-            sensorData.returningCustomers.length === 0 ? (
-              <div className="flex items-center justify-center h-64 text-gray-500">
-                No FootfallCam data available for returning customers.
-              </div>
-            ) : (
-              <ReturningCustomersChart
-                data={{
-                  categories: sensorData.timestamps || [],
-                  values: sensorData.returningCustomers || [],
-                }}
-                groupBy={sensorRecordsFormData.groupBy}
-              />
-            )}
-          </ChartCard>
-        ),
-      },
       {
         id: "affluence-chart",
         type: "affluence-chart",
@@ -291,6 +282,55 @@ export const LayoutDashboard: React.FC<LayoutDashboardProps> = ({
                 }}
                 groupBy={sensorRecordsFormData.groupBy}
               />
+            )}
+          </ChartCard>
+        ),
+      },
+      {
+        id: "avg-visit-duration-chart",
+        type: "avg-visit-duration-chart",
+        title: "Avg Visit Duration Chart",
+        translationKey: "dashboard.charts.avgVisitDurationChart",
+        category: "chart",
+        component: (
+          <ChartCard
+            title="Average Visit Duration Over Time"
+            translationKey="dashboard.charts.avgVisitDurationChart"
+          >
+            {!sensorData?.avgVisitDuration ||
+            sensorData.avgVisitDuration.length === 0 ? (
+              <div className="flex items-center justify-center h-64 text-gray-500">
+                No FootfallCam data available for visit duration.
+              </div>
+            ) : (
+              <VisitDurationDistribution
+                data={{
+                  avgVisitDuration: sensorData.avgVisitDuration || [],
+                  in: sensorData.in || [],
+                }}
+                comparisonData={null}
+              />
+            )}
+          </ChartCard>
+        ),
+      },
+      {
+        id: "turn-in-ratio-donut",
+        type: "turn-in-ratio-donut",
+        title: "Turn-in Ratio",
+        translationKey: "dashboard.metrics.turnInRatio",
+        category: "chart",
+        component: (
+          <ChartCard
+            title="Turn-in Ratio"
+            translationKey="dashboard.metrics.turnInRatio"
+          >
+            {!sensorData?.in || sensorData.in.length === 0 ? (
+              <div className="flex items-center justify-center h-64 text-gray-500">
+                No data available.
+              </div>
+            ) : (
+              <TurnInRatioDonut data={sensorData} />
             )}
           </ChartCard>
         ),
