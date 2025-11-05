@@ -478,4 +478,37 @@ export const MetricWidgets = {
       ),
     };
   },
+
+  createAffluenceWidget: (params: WidgetFactoryParams): WidgetConfig => ({
+    id: "affluence",
+    type: "affluence",
+    title: "Affluence",
+    translationKey: "dashboard.metrics.affluence",
+    category: "metric",
+    component: (
+      <SensorDataCard
+        title="Affluence"
+        value={
+          params.metrics.affluence > 0
+            ? params.metrics.affluence.toFixed(2)
+            : "N/A"
+        }
+        translationKey="dashboard.metrics.affluence"
+        descriptionTranslationKey="dashboard.metrics.affluenceDescription"
+        unit={params.metrics.affluence > 0 ? "%" : ""}
+        dateRange={params.dateRange}
+        comparison={params.comparisons?.affluence}
+        comparisonPeriod={params.comparisonPeriod}
+        data={{
+          affluence: params.metrics.affluence,
+          date_range_start: params.dateRange
+            ? format(params.dateRange.start, "yyyy-MM-dd")
+            : "",
+          date_range_end: params.dateRange
+            ? format(params.dateRange.end, "yyyy-MM-dd")
+            : "",
+        }}
+      />
+    ),
+  }),
 };

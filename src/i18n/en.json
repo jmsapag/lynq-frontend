@@ -369,6 +369,10 @@
         "title": "Turn-in Ratio",
         "description": "Proportion of Returning vs New customers based on weighted entries"
       },
+      "affluence": {
+        "title": "Affluence",
+        "description": "Percentage of entries relative to outside traffic (Entries/Outside Traffic × 100)"
+      },
       "topStores": "Top Stores",
       "topStoresDescription": "Top performing stores based on selected metrics"
     },
@@ -400,6 +404,8 @@
       "avgVisitDurationDescription": "Average time customers spend in the establishment",
       "turnInRatio": "Turn-in Ratio",
       "turnInRatioDescription": "Share of Returning vs New customers computed from weighted entries",
+      "affluence": "Affluence",
+      "affluenceDescription": "Percentage of entries relative to outside traffic (Entries/Outside Traffic × 100)",
       "noDataAvailable": "Data not available for this period",
       "footfallcamDataRequired": "Requires FootfallCam analytics data",
       "percentage": "Percentage (%)",

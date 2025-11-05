@@ -493,6 +493,10 @@
       "turnIn": {
         "title": "Turn-in Ratio",
         "description": "Proporción de clientes Recurrentes vs Nuevos basada en entradas ponderadas"
+      },
+      "affluence": {
+        "title": "Afluencia",
+        "description": "Número total de personas que entraron al área monitoreada contra el número de personas que pasaron pero no entraron durante el período seleccionado."
       }
     },
     "metrics": {
@@ -516,6 +520,8 @@
       "returningCustomersDescription": "El porcentaje de visitantes que habían realizado previamente una visita a la misma tienda dentro de los últimos 60 días",
       "turnInRatio": "Turn-in Ratio",
       "turnInRatioDescription": "Proporción de Recurrentes vs Nuevos calculada desde entradas ponderadas",
+      "affluence": "Afluencia",
+      "affluenceDescription": "Número total de personas que entraron al área monitoreada contra el número de personas que pasaron pero no entraron durante el período seleccionado",
       "noDataAvailable": "Datos no disponibles para este período",
       "footfallcamDataRequired": "Requiere datos de analíticas FootfallCam",
       "percentage": "Porcentaje (%)",

@@ -16,6 +16,7 @@ export type DashboardWidgetType =
   | "returning-customers"
   | "avg-visit-duration"
   | "turn-in-ratio"
+  | "affluence"
   | "affluence-chart"
   | "avg-visit-duration-chart"
   | "visit-duration-distribution"
@@ -44,7 +45,7 @@ export interface WidgetFactoryParams {
     percentageChange: number;
     returningCustomers: number;
     avgVisitDuration: number;
-    // removed: affluence
+    affluence: number;
   };
   chartData: {
     categories: string[];
@@ -66,7 +67,7 @@ export interface WidgetFactoryParams {
     dailyAverageOut?: import("../../../../utils/comparisonUtils").MetricComparison;
     returningCustomers?: import("../../../../utils/comparisonUtils").MetricComparison;
     avgVisitDuration?: import("../../../../utils/comparisonUtils").MetricComparison;
-    // removed: affluence
+    affluence?: import("../../../../utils/comparisonUtils").MetricComparison;
   };
   comparisonPeriod?: { start: Date; end: Date };
 }

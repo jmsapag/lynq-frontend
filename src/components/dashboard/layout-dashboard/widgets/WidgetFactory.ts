@@ -18,6 +18,7 @@ export const createWidgetConfig = (
     MetricWidgets.createReturningCustomersWidget(params),
     MetricWidgets.createAvgVisitDurationWidget(params),
     MetricWidgets.createTurnInRatioWidget(params),
+    MetricWidgets.createAffluenceWidget(params),
     // All chart widgets
     ChartWidgets.createPeopleFlowChartWidget(params),
     ChartWidgets.createCumulativePeopleChartWidget(params),
@@ -47,5 +48,6 @@ export const createWidgetConfigOverview = (
     MetricWidgets.createReturningCustomersWidget(params),
     MetricWidgets.createAvgVisitDurationWidget(params),
     MetricWidgets.createTurnInRatioWidget(params),
+    MetricWidgets.createAffluenceWidget(params),
   ];
 };
