@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   Card,
   CardBody,
   Button,
   Select,
   SelectItem,
-  Input,
   addToast,
   Table,
   TableHeader,
@@ -20,6 +19,7 @@ import {
   ModalBody,
   ModalFooter,
   useDisclosure,
+  Input,
 } from "@heroui/react";
 import { useTranslation } from "react-i18next";
 import {
@@ -37,6 +37,7 @@ import {
   DocumentTextIcon,
   DocumentArrowDownIcon,
 } from "@heroicons/react/24/outline";
+import SearchBar from "../components/search/SearchBar.tsx";
 
 const SubscriptionEventsFeed = () => {
   const { t } = useTranslation();
@@ -47,6 +48,7 @@ const SubscriptionEventsFeed = () => {
   const [filters, setFilters] = useState({
     businessName: "",
     status: "",
+    type: "",
   });
 
   const [selectedSubscription, setSelectedSubscription] =
@@ -78,7 +80,7 @@ const SubscriptionEventsFeed = () => {
     loading: subscriptionsLoading,
     error,
     refetch,
-  } = useAllSubscriptions(filters);
+  } = useAllSubscriptions();
   const { updateSubscription, loading: updateLoading } =
     useUpdateManualSubscription();
   const { createSubscription, loading: createLoading } =
@@ -118,6 +120,12 @@ const SubscriptionEventsFeed = () => {
     { key: "blocked", label: "Blocked" },
   ];
 
+  const typeOptions = [
+    { key: "", label: t("subscriptions.events.allTypes") || "All Types" },
+    { key: "manual", label: "Manual" },
+    { key: "stripe", label: "Stripe" },
+  ];
+
   const getStatusColor = (status: string) => {
     const colorMap: Record<string, any> = {
       active: "success",
@@ -135,7 +143,7 @@ const SubscriptionEventsFeed = () => {
     return type === "manual" ? "secondary" : "primary";
   };
 
-  const formatDate = (dateString: string | null) => {
+  const formatDate = (dateString: string | null | undefined) => {
     if (!dateString) return "N/A";
     const date = new Date(dateString);
     if (Number.isNaN(date.getTime())) return "N/A";
@@ -328,6 +336,32 @@ const SubscriptionEventsFeed = () => {
       })
     : [];
 
+  const filteredSubscriptions = useMemo(() => {
+    if (!Array.isArray(sortedSubscriptions)) {
+      return [];
+    }
+
+    return sortedSubscriptions.filter((subscription) => {
+      // Business name filter (case-insensitive)
+      const nameMatch =
+        !filters.businessName.trim() ||
+        subscription.businessName
+          ?.toLowerCase()
+          .includes(filters.businessName.toLowerCase());
+
+      // Status filter (case-insensitive)
+      const statusMatch =
+        !filters.status ||
+        subscription.status?.toLowerCase() === filters.status.toLowerCase();
+
+      // Type filter
+      const typeMatch = !filters.type || subscription.type === filters.type;
+
+      // All filters must match
+      return nameMatch && statusMatch && typeMatch;
+    });
+  }, [sortedSubscriptions, filters.businessName, filters.status, filters.type]);
+
   // Get businesses without subscriptions - only filter when both requests are complete
   const businessesWithoutSubscriptions = React.useMemo(() => {
     // Don't filter if still loading or data not ready
@@ -339,7 +373,7 @@ const SubscriptionEventsFeed = () => {
       return [];
     }
 
-    // Filter businesses that don't have any subscription
+    // Filter businesses that don't have any subscription (manual or stripe)
     return allBusinesses.filter((business) => {
       // Check if this business has any subscription (manual or stripe)
       const hasSubscription = subscriptions.some((sub) => {
@@ -357,14 +391,28 @@ const SubscriptionEventsFeed = () => {
     <div className="w-full mx-1">
       <div className="flex justify-end items-center mb-4 gap-4">
         {isLynqTeam && (
-          <Input
-            placeholder="Filter by Business Name"
+          <SearchBar
             value={filters.businessName}
-            onChange={(e) => handleFilterChange("businessName", e.target.value)}
-            size="sm"
-            className="w-48"
+            onChange={(value) => handleFilterChange("businessName", value)}
+            placeholder={t("subscriptions.events.searchPlaceholder")}
+            className="w-64"
           />
         )}
+
+        <Select
+          placeholder={t("subscriptions.events.typeFilter")}
+          selectedKeys={filters.type ? [filters.type] : []}
+          onSelectionChange={(keys) => {
+            const selectedKey = Array.from(keys)[0] as string;
+            handleFilterChange("type", selectedKey || "");
+          }}
+          size="sm"
+          className="w-36"
+        >
+          {typeOptions.map((option) => (
+            <SelectItem key={option.key}>{option.label}</SelectItem>
+          ))}
+        </Select>
 
         <Select
           placeholder={t("subscriptions.events.statusFilter")}
@@ -395,7 +443,7 @@ const SubscriptionEventsFeed = () => {
               <p className="text-gray-500">{t("common.loading")}</p>
             </CardBody>
           </Card>
-        ) : sortedSubscriptions.length > 0 ||
+        ) : filteredSubscriptions.length > 0 ||
           businessesWithoutSubscriptions.length > 0 ? (
           <Table aria-label="All subscriptions table">
             <TableHeader>
@@ -407,8 +455,8 @@ const SubscriptionEventsFeed = () => {
               <TableColumn>Sensors</TableColumn>
               <TableColumn>Actions</TableColumn>
             </TableHeader>
-            <TableBody>
-              {sortedSubscriptions.map((subscription) => {
+            <TableBody emptyContent="No subscriptions available">
+              {filteredSubscriptions.map((subscription) => {
                 const rowId = `${subscription.type}-${subscription.id}`;
                 const isExpanded = expandedRows.has(rowId);
                 const hasInvoice =
@@ -580,10 +628,12 @@ const SubscriptionEventsFeed = () => {
         )}
       </div>
 
-      {sortedSubscriptions.length > 0 && (
+      {filteredSubscriptions.length > 0 && (
         <div className="text-sm text-default-500 text-center mt-4">
-          {sortedSubscriptions.length}{" "}
-          {sortedSubscriptions.length === 1 ? "subscription" : "subscriptions"}
+          {filteredSubscriptions.length}{" "}
+          {filteredSubscriptions.length === 1
+            ? "subscription"
+            : "subscriptions"}
         </div>
       )}
 

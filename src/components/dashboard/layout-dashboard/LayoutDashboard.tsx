@@ -26,7 +26,6 @@ import { LineChart } from "../charts/line-chart";
 import { ChartHeatMap } from "../charts/heat-map/chart-heat-map";
 import { EntryRateChart } from "../charts/entry-rate/entry-rate-chart";
 import { ReturningCustomersChart } from "../charts/returning-customers-chart";
-import { AvgVisitDurationChart } from "../charts/avg-visit-duration-chart";
 import { AffluenceChart } from "../charts/affluence-chart";
 
 interface LayoutDashboardProps {
@@ -36,7 +35,6 @@ interface LayoutDashboardProps {
     totalOut: number;
     entryRate: number;
     totalReturningCustomers: number;
-    totalAvgVisitDuration: number;
     totalAffluence: number;
   };
   chartData: {
@@ -63,10 +61,8 @@ export type DashboardWidgetType =
   | "least-crowded-day"
   | "percentage-change"
   | "returning-customers"
-  | "avg-visit-duration"
   | "affluence"
   | "returning-customers-chart"
-  | "avg-visit-duration-chart"
   | "affluence-chart";
 
 interface WidgetConfig {
@@ -229,21 +225,6 @@ export const LayoutDashboard: React.FC<LayoutDashboardProps> = ({
         ),
       },
       {
-        id: "avg-visit-duration",
-        type: "avg-visit-duration",
-        title: "Avg Visit Duration",
-        translationKey: "dashboard.metrics.avgVisitDuration",
-        category: "metric",
-        component: (
-          <SensorDataCard
-            title="Avg Visit Duration"
-            value={metrics.totalAvgVisitDuration}
-            translationKey="dashboard.metrics.avgVisitDuration"
-            unit="secs"
-          />
-        ),
-      },
-      {
         id: "affluence",
         type: "affluence",
         title: "Affluence",
@@ -280,34 +261,6 @@ export const LayoutDashboard: React.FC<LayoutDashboardProps> = ({
                 data={{
                   categories: sensorData.timestamps || [],
                   values: sensorData.returningCustomers || [],
-                }}
-                groupBy={sensorRecordsFormData.groupBy}
-              />
-            )}
-          </ChartCard>
-        ),
-      },
-      {
-        id: "avg-visit-duration-chart",
-        type: "avg-visit-duration-chart",
-        title: "Avg Visit Duration Chart",
-        translationKey: "dashboard.charts.avgVisitDurationChart",
-        category: "chart",
-        component: (
-          <ChartCard
-            title="Average Visit Duration Over Time"
-            translationKey="dashboard.charts.avgVisitDurationChart"
-          >
-            {!sensorData?.avgVisitDuration ||
-            sensorData.avgVisitDuration.length === 0 ? (
-              <div className="flex items-center justify-center h-64 text-gray-500">
-                No FootfallCam data available for visit duration.
-              </div>
-            ) : (
-              <AvgVisitDurationChart
-                data={{
-                  categories: sensorData.timestamps || [],
-                  values: sensorData.avgVisitDuration || [],
                 }}
                 groupBy={sensorRecordsFormData.groupBy}
               />

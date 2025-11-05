@@ -101,7 +101,7 @@ const PaymentMethodForm = () => {
           severity: "success",
           color: "success",
         });
-        navigate("/billing");
+        navigate("/wallet");
       } else {
         throw new Error(t("payment.unexpectedStatus"));
       }

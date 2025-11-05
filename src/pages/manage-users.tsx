@@ -274,8 +274,10 @@ const ManageUsersPage: React.FC = () => {
         isOpen={showModal}
         onClose={() => setShowModal(false)}
         onSuccess={(createdTokens) => {
-          setTokens(createdTokens);
-          setShowTokensModal(true);
+          if (createdTokens && createdTokens.length > 0) {
+            setTokens(createdTokens);
+            setShowTokensModal(true);
+          }
         }}
       />
 
