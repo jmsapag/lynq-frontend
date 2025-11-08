@@ -951,6 +951,18 @@
       "saveErrorTitle": "Error Saving",
       "saveErrorDesc": "There was an error saving the report configuration.",
       "timezoneErrorTitle": "Invalid Timezone"
+    },
+    "unsubscribe": {
+      "button": "Unsubscribe from emails",
+      "confirmTitle": "Unsubscribe from emails",
+      "confirmMessage": "Are you sure you want to unsubscribe from LYNQ email notifications?",
+      "confirm": "Unsubscribe",
+      "warning": "You will no longer receive email reports, alerts, or other notifications from LYNQ.",
+      "successTitle": "Unsubscribed successfully",
+      "successDescription": "You have been unsubscribed from LYNQ email notifications.",
+      "successMessage": "You have been successfully unsubscribed from LYNQ email notifications. You will no longer receive email reports or notifications.",
+      "errorTitle": "Unsubscribe failed",
+      "errorDescription": "Failed to unsubscribe. Please try again later."
     }
   },
   "freeTrial": {

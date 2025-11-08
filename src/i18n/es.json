@@ -1062,6 +1062,18 @@
       "saveErrorTitle": "Error al Guardar",
       "saveErrorDesc": "Hubo un error al guardar la configuración del reporte.",
       "timezoneErrorTitle": "Zona Horaria Inválida"
+    },
+    "unsubscribe": {
+      "button": "Cancelar suscripción de emails",
+      "confirmTitle": "Cancelar suscripción de emails",
+      "confirmMessage": "¿Estás seguro de que deseas cancelar tu suscripción a las notificaciones por email de LYNQ?",
+      "confirm": "Cancelar suscripción",
+      "warning": "Ya no recibirás reportes por email, alertas u otras notificaciones de LYNQ.",
+      "successTitle": "Suscripción cancelada exitosamente",
+      "successDescription": "Has cancelado tu suscripción a las notificaciones por email de LYNQ.",
+      "successMessage": "Has cancelado exitosamente tu suscripción a las notificaciones por email de LYNQ. Ya no recibirás reportes por email ni notificaciones.",
+      "errorTitle": "Error al cancelar suscripción",
+      "errorDescription": "No se pudo cancelar la suscripción. Por favor, intenta de nuevo más tarde."
     }
   },
   "auth": {

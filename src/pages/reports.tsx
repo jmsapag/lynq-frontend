@@ -1,17 +1,22 @@
 import { Button } from "@heroui/react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 import ReportConfigModal from "../components/reports/ReportsConfigModal.tsx";
 import { useReportConfig } from "../hooks/reports/useReportsConfigs.ts";
 import { ReportDragDropInterface } from "../components/reports/ReportDragDropInterface";
 import { Time } from "@internationalized/date";
+import UnsubscribeEmailButton from "../components/reports/UnsubscribeEmailButton";
 
 const ReportsPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { isModalOpen, openModal, closeModal, saveConfig, isLoading } =
     useReportConfig();
+
+  // Get unsubscribeToken from URL if present (for email links)
+  const unsubscribeToken = searchParams.get("unsubscribeToken") || undefined;
 
   // Mock data for the drag & drop interface
   const mockMetrics = {
@@ -99,6 +104,7 @@ const ReportsPage = () => {
         </div>
 
         <div className="flex items-center gap-4">
+          <UnsubscribeEmailButton unsubscribeToken={unsubscribeToken} />
           <Button onPress={openModal} color="primary">
             {t("reports.configure")}
           </Button>
