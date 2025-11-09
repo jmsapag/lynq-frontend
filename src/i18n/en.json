@@ -1275,7 +1275,10 @@
       "forecast": "Forecast",
       "optimization": "Optimization"
     },
-    "summaryError": "No business summary available."
+    "summaryError": "No business summary available.",
+    "generatingSummary": "Generating summary...",
+    "summaryWaitMessage": "This may take up to a minute. Thank you for your patience.",
+    "keyPoints": "Key Points"
   },
   "assistant": {
     "title": "AI Assistant",

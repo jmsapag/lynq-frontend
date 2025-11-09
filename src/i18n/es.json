@@ -1261,7 +1261,10 @@
       "forecast": "Pronóstico",
       "optimization": "Optimización"
     },
-    "summaryError": "No hay resumen disponible."
+    "summaryError": "No hay resumen disponible.",
+    "generatingSummary": "Generando resumen...",
+    "summaryWaitMessage": "Esto puede tardar hasta un minuto. Gracias por tu paciencia.",
+    "keyPoints": "Puntos Clave"
   },
   "assistant": {
     "title": "Asistente IA",

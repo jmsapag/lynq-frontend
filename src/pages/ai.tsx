@@ -116,7 +116,7 @@ const AIPage: React.FC = () => {
         locations: locationIds,
         resolution: "daily" as const,
         userPrompt:
-          "Provide a comprehensive business analysis of pedestrian traffic patterns",
+          "Proporciona un análisis empresarial completo de los patrones de tráfico peatonal.",
       };
 
       fetchSummary(request);
