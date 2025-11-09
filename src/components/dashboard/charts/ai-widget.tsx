@@ -19,10 +19,13 @@ export const AIAnalysisWidget: React.FC<AIAnalysisWidgetProps> = ({
     return (
       <Card className="w-full shadow-none border-1">
         <CardBody>
-          <div className="animate-pulse">
-            <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-            <div className="h-4 bg-gray-200 rounded w-full mb-2"></div>
-            <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+          <div className="text-center py-8">
+            <p className="text-lg font-semibold text-gray-700">
+              {t("ai.generatingSummary")}
+            </p>
+            <p className="text-sm text-gray-500 mt-2">
+              {t("ai.summaryWaitMessage")}
+            </p>
           </div>
         </CardBody>
       </Card>
@@ -41,19 +44,31 @@ export const AIAnalysisWidget: React.FC<AIAnalysisWidgetProps> = ({
 
   // Type guard to check if data is AgentSummaryResponse
   const isAgentSummary = (data: any): data is AgentSummaryResponse => {
-    return "summary_text" in data;
+    return data && "result" in data && data.result.type === "summary";
   };
 
   // Handle Agent Summary Response
   if (isAgentSummary(data)) {
+    const { title, content, keyPoints } = data.result;
     return (
       <Card className="w-full shadow-none border-1">
         <CardBody>
-          <h3 className="text-lg font-semibold mb-2">Resumen de IA</h3>
-          <p className="text-sm text-gray-600 mb-3">
-            {new Date().toLocaleDateString()}
+          <h3 className="text-lg font-semibold mb-2">{title}</h3>
+          <p className="text-sm text-gray-600 mb-4 whitespace-pre-wrap">
+            {content}
           </p>
-          <p className="mt-3 whitespace-pre-wrap">{data.summary_text}</p>
+          {keyPoints && keyPoints.length > 0 && (
+            <div>
+              <h4 className="font-semibold text-md mb-2">
+                {t("ai.keyPoints")}
+              </h4>
+              <ul className="list-disc list-inside space-y-1 text-sm text-gray-600">
+                {keyPoints.map((point, index) => (
+                  <li key={index}>{point}</li>
+                ))}
+              </ul>
+            </div>
+          )}
         </CardBody>
       </Card>
     );

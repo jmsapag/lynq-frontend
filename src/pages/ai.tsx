@@ -115,8 +115,7 @@ const AIPage: React.FC = () => {
         to,
         locations: locationIds,
         resolution: "daily" as const,
-        userPrompt:
-          "Provide a comprehensive business analysis of pedestrian traffic patterns",
+        userPrompt: t("ai.analysisPrompt"),
       };
 
       fetchSummary(request);

@@ -7,25 +7,22 @@ export interface AgentSummaryRequest {
   userPrompt: string;
 }
 
-export interface AgentSummaryCard {
+export interface AgentSummaryResult {
+  type: "summary";
   title: string;
-  value: string;
-  trend: string;
-}
-
-export interface AgentSummarySeriesData {
-  timestamp: string;
-  actual: number;
-  forecast: number;
-}
-
-export interface AgentSummarySeries {
-  title: string;
-  data: AgentSummarySeriesData[];
+  content: string;
+  keyPoints: string[];
+  confidence: "high" | "medium" | "low";
+  sources?: string[];
 }
 
 export interface AgentSummaryResponse {
-  summary_text: string;
-  cards: AgentSummaryCard[];
-  series: AgentSummarySeries;
+  requestId: string;
+  status: "success" | "error" | "partial";
+  result: AgentSummaryResult;
+  execution: {
+    totalDuration: number;
+    agentsInvoked: string[];
+  };
+  timestamp: string; // ISO 8601
 }
