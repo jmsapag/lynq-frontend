@@ -1264,7 +1264,8 @@
     "summaryError": "No hay resumen disponible.",
     "generatingSummary": "Generando resumen...",
     "summaryWaitMessage": "Esto puede tardar hasta un minuto. Gracias por tu paciencia.",
-    "keyPoints": "Puntos Clave"
+    "keyPoints": "Puntos Clave",
+    "analysisPrompt": "Proporciona un análisis empresarial completo de los patrones de tráfico peatonal."
   },
   "assistant": {
     "title": "Asistente IA",
