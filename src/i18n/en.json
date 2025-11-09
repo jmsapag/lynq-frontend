@@ -224,7 +224,12 @@
     "needHelp": "Have questions? Check our",
     "faqLink": "FAQs",
     "ticketListPlaceholder": "Your support tickets will be displayed here.",
+    "ticketListError": "Error loading tickets",
     "lastUpdated": "Last updated",
+    "tabs": {
+      "support": "Support",
+      "manual": "User Manual"
+    },
     "faq": {
       "title": "Frequently Asked Questions",
       "q1Title": "How do I reset my password?",
@@ -242,6 +247,7 @@
       "submit": "Submit Ticket",
       "cancel": "Cancel",
       "success": "Ticket submitted successfully! Your ticket ID is: {{ticketId}}",
+      "successTitle": "Ticket Submitted",
       "error": "Failed to submit ticket. Please try again."
     },
     "tickets": {
@@ -256,6 +262,63 @@
       "in_progress": "In Progress",
       "resolved": "Resolved",
       "closed": "Closed"
+    }
+  },
+  "manual": {
+    "navigation": {
+      "title": "Navigation"
+    },
+    "sections": {
+      "welcome": {
+        "title": "Welcome",
+        "intro": "Welcome to LYNQ",
+        "gettingStarted": "Getting Started"
+      },
+      "visualization": {
+        "title": "Data Visualization",
+        "dashboard": "Main Dashboard",
+        "widgets": "Widgets and Metrics",
+        "layoutEditing": "Layout Editing",
+        "comparison": "Comparison"
+      },
+      "reports": {
+        "title": "Weekly Reports",
+        "configuration": "Report Configuration",
+        "layout": "Report Layout",
+        "sending": "Sending Reports"
+      },
+      "accountManagement": {
+        "title": "Account Management",
+        "profile": "Profile and Settings",
+        "subscriptions": "Subscriptions"
+      },
+      "companyAdmin": {
+        "title": "Company Administration",
+        "locations": "Location Management",
+        "users": "User Management",
+        "devices": "Device Management",
+        "subscription": "Subscription"
+      },
+      "ai": {
+        "title": "Artificial Intelligence",
+        "assistant": "AI Assistant",
+        "summary": "AI Summaries",
+        "predictions": "AI Predictions"
+      },
+      "support": {
+        "title": "Support",
+        "createTicket": "Create Ticket",
+        "viewTickets": "View Tickets"
+      },
+      "glossary": {
+        "title": "Glossary",
+        "terms": "Terms and Metrics"
+      }
+    },
+    "errors": {
+      "notFound": "Content not found",
+      "notFoundDescription": "Sorry, the requested content is not available.",
+      "loading": "Loading content..."
     }
   },
   "footer": {

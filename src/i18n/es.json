@@ -324,7 +324,12 @@
     "needHelp": "¿Tienes preguntas? Revisa nuestras",
     "faqLink": "FAQs",
     "ticketListPlaceholder": "Tus tickets de soporte se mostrarán aquí.",
+    "ticketListError": "Error al cargar los tickets",
     "lastUpdated": "Última actualización",
+    "tabs": {
+      "support": "Soporte",
+      "manual": "Manual de Usuario"
+    },
     "faq": {
       "title": "Preguntas Frecuentes",
       "q1Title": "¿Cómo restablezco mi contraseña?",
@@ -342,6 +347,7 @@
       "submit": "Enviar Ticket",
       "cancel": "Cancelar",
       "success": "¡Ticket enviado exitosamente! Tu ID de ticket es: {{ticketId}}",
+      "successTitle": "Ticket Enviado",
       "error": "Error al enviar el ticket. Por favor intenta de nuevo."
     },
     "tickets": {
@@ -356,6 +362,63 @@
       "in_progress": "En Progreso",
       "resolved": "Resuelto",
       "closed": "Cerrado"
+    }
+  },
+  "manual": {
+    "navigation": {
+      "title": "Navegación"
+    },
+    "sections": {
+      "welcome": {
+        "title": "Bienvenida",
+        "intro": "Bienvenido a LYNQ",
+        "gettingStarted": "Primeros Pasos"
+      },
+      "visualization": {
+        "title": "Visualización de Datos",
+        "dashboard": "Dashboard Principal",
+        "widgets": "Widgets y Métricas",
+        "layoutEditing": "Edición del Layout",
+        "comparison": "Comparación"
+      },
+      "reports": {
+        "title": "Reportes Semanales",
+        "configuration": "Configuración de Reportes",
+        "layout": "Layout de Reportes",
+        "sending": "Envío de Reportes"
+      },
+      "accountManagement": {
+        "title": "Gestión de Cuenta",
+        "profile": "Perfil y Configuración",
+        "subscriptions": "Suscripciones"
+      },
+      "companyAdmin": {
+        "title": "Administración de Empresa",
+        "locations": "Gestión de Ubicaciones",
+        "users": "Gestión de Usuarios",
+        "devices": "Gestión de Dispositivos",
+        "subscription": "Suscripción"
+      },
+      "ai": {
+        "title": "Inteligencia Artificial",
+        "assistant": "Asistente de IA",
+        "summary": "Resúmenes de IA",
+        "predictions": "Predicciones de IA"
+      },
+      "support": {
+        "title": "Soporte",
+        "createTicket": "Crear Ticket",
+        "viewTickets": "Ver Tickets"
+      },
+      "glossary": {
+        "title": "Glosario",
+        "terms": "Términos y Métricas"
+      }
+    },
+    "errors": {
+      "notFound": "Contenido no encontrado",
+      "notFoundDescription": "Lo sentimos, el contenido solicitado no está disponible.",
+      "loading": "Cargando contenido..."
     }
   },
   "footer": {

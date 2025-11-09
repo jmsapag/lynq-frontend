@@ -44,6 +44,7 @@
     "react-router-dom": "^6.21.1",
     "react-tailwindcss-datepicker": "^2.0.0",
     "rehype-raw": "^7.0.0",
+    "rehype-sanitize": "^6.0.0",
     "remark-gfm": "^4.0.1"
   },
   "devDependencies": {
