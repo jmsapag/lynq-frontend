@@ -242,12 +242,14 @@ export default function DevicesPage() {
             <TableColumn>{t("devices.serialNumber")}</TableColumn>
             <TableColumn>{t("devices.provider")}</TableColumn>
             <TableColumn>{t("devices.position")}</TableColumn>
+            <TableColumn>{t("devices.status")}</TableColumn>
             <TableColumn>{t("devices.location")}</TableColumn>
             <TableColumn>{t("devices.createdAt")}</TableColumn>
             <TableColumn className="text-center">
               {t("devices.actions")}
             </TableColumn>
           </TableHeader>
+
           <TableBody
             emptyContent={loadingDevices ? " " : t("devices.noDevices")}
           >
@@ -257,6 +259,17 @@ export default function DevicesPage() {
                   <TableCell>{d.serial_number}</TableCell>
                   <TableCell>{d.provider}</TableCell>
                   <TableCell>{d.position}</TableCell>
+                  <TableCell>
+                    <span
+                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                        d.active
+                          ? "bg-green-100 text-green-800"
+                          : "bg-red-100 text-red-800"
+                      }`}
+                    >
+                      {d.active ? t("devices.active") : t("devices.inactive")}
+                    </span>
+                  </TableCell>
                   <TableCell>{d.location_name || "-"}</TableCell>
                   <TableCell>
                     {new Date(d.created_at).toLocaleString()}

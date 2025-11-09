@@ -1,18 +1,17 @@
 import { ChartCard } from "../../charts/chart-card";
-import { LineChart } from "../../charts/line-chart";
 import IngressMixedChart from "../../charts/ingress-mixed-chart";
 import { CumulativeChart } from "../../charts/cumulative-chart";
 import { EntryRateChart } from "../../charts/entry-rate/entry-rate-chart";
 import { ChartHeatMap } from "../../charts/heat-map/chart-heat-map";
-import { ReturningCustomersChart } from "../../charts/returning-customers-chart";
-import { AvgVisitDurationChart } from "../../charts/avg-visit-duration-chart";
 import { AffluenceChart } from "../../charts/affluence-chart";
+import { TurnInRatioDonut } from "../../charts/turn-in-ratio-donut";
 import { DeviceComparisonChart } from "../../charts/device-comparison.tsx";
 import { TopStoresChartCard } from "../../charts/top-stores-chart-card";
 import { WidgetConfig, WidgetFactoryParams } from "./types";
 import { useTranslation } from "react-i18next";
 import React from "react";
 import { VisitDurationDistribution } from "../../charts/visit-duration-distribution";
+import { parse } from "date-fns";
 
 const NoDataMessage = () => {
   const { t } = useTranslation();
@@ -54,11 +53,11 @@ const LocationComparisonNoDataMessage = () => {
   );
 };
 
-const ReturningCustomersNoDataMessage = () => {
+const AffluenceNoDataMessage = () => {
   const { t } = useTranslation();
   return (
     <div className="flex items-center justify-center h-64 text-gray-500">
-      {t("dashboard.noData.returningCustomers")}
+      {t("dashboard.noData.affluence")}
     </div>
   );
 };
@@ -72,11 +71,11 @@ const VisitDurationNoDataMessage = () => {
   );
 };
 
-const AffluenceNoDataMessage = () => {
+const TurnInNoDataMessage = () => {
   const { t } = useTranslation();
   return (
     <div className="flex items-center justify-center h-64 text-gray-500">
-      {t("dashboard.noData.affluence")}
+      {t("dashboard.errors.noDataAvailable")}
     </div>
   );
 };
@@ -218,58 +217,26 @@ export const ChartWidgets = {
     ),
   }),
 
-  createReturningCustomersChartWidget: (
-    params: WidgetFactoryParams,
-  ): WidgetConfig => ({
-    id: "returning-customers-chart",
-    type: "returning-customers-chart",
-    title: "Returning Customers Chart",
-    translationKey: "dashboard.charts.returningCustomersChart",
+  createAffluenceChartWidget: (params: WidgetFactoryParams): WidgetConfig => ({
+    id: "affluence-chart",
+    type: "affluence-chart",
+    title: "Affluence Chart",
+    translationKey: "dashboard.charts.affluenceChart",
     category: "chart",
     component: (
       <ChartCard
-        title="Returning Customers Over Time"
-        translationKey="dashboard.charts.returningCustomersChart"
+        title="Affluence Over Time"
+        translationKey="dashboard.charts.affluenceChart"
         data={transformChartDataForExport(params.chartData)}
       >
-        {!params.sensorData?.returningCustomers ||
-        params.sensorData.returningCustomers.length === 0 ? (
-          <ReturningCustomersNoDataMessage />
+        {!params.sensorData?.affluence ||
+        params.sensorData.affluence.length === 0 ? (
+          <AffluenceNoDataMessage />
         ) : (
-          <ReturningCustomersChart
+          <AffluenceChart
             data={{
               categories: params.sensorData.timestamps || [],
-              values: params.sensorData.returningCustomers || [],
-            }}
-            groupBy={params.sensorRecordsFormData.groupBy}
-          />
-        )}
-      </ChartCard>
-    ),
-  }),
-
-  createAvgVisitDurationChartWidget: (
-    params: WidgetFactoryParams,
-  ): WidgetConfig => ({
-    id: "avg-visit-duration-chart",
-    type: "avg-visit-duration-chart",
-    title: "Avg Visit Duration Chart",
-    translationKey: "dashboard.charts.avgVisitDurationChart",
-    category: "chart",
-    component: (
-      <ChartCard
-        title="Average Visit Duration Over Time"
-        translationKey="dashboard.charts.avgVisitDurationChart"
-        data={transformChartDataForExport(params.chartData)}
-      >
-        {!params.sensorData?.avgVisitDuration ||
-        params.sensorData.avgVisitDuration.length === 0 ? (
-          <VisitDurationNoDataMessage />
-        ) : (
-          <AvgVisitDurationChart
-            data={{
-              categories: params.sensorData.timestamps || [],
-              values: params.sensorData.avgVisitDuration || [],
+              values: params.sensorData.affluence || [],
             }}
             groupBy={params.sensorRecordsFormData.groupBy}
           />
@@ -308,29 +275,24 @@ export const ChartWidgets = {
     ),
   }),
 
-  createAffluenceChartWidget: (params: WidgetFactoryParams): WidgetConfig => ({
-    id: "affluence-chart",
-    type: "affluence-chart",
-    title: "Affluence Chart",
-    translationKey: "dashboard.charts.affluenceChart",
+  createTurnInRatioDonutWidget: (
+    params: WidgetFactoryParams,
+  ): WidgetConfig => ({
+    id: "turn-in-ratio-donut",
+    type: "turn-in-ratio-donut",
+    title: "Turn-in Ratio",
+    translationKey: "dashboard.metrics.turnInRatio",
     category: "chart",
     component: (
       <ChartCard
-        title="Affluence Over Time"
-        translationKey="dashboard.charts.affluenceChart"
-        data={transformChartDataForExport(params.chartData)}
+        title="Turn-in Ratio"
+        translationKey="dashboard.metrics.turnInRatio"
+        data={[]}
       >
-        {!params.sensorData?.affluence ||
-        params.sensorData.affluence.length === 0 ? (
-          <AffluenceNoDataMessage />
+        {!params.sensorData?.in || params.sensorData.in.length === 0 ? (
+          <TurnInNoDataMessage />
         ) : (
-          <AffluenceChart
-            data={{
-              categories: params.sensorData.timestamps || [],
-              values: params.sensorData.affluence || [],
-            }}
-            groupBy={params.sensorRecordsFormData.groupBy}
-          />
+          <TurnInRatioDonut data={params.sensorData} />
         )}
       </ChartCard>
     ),
@@ -371,7 +333,12 @@ export const ChartWidgets = {
               }
               return acc;
             }, [] as string[])
-            .sort();
+            .sort((a: string, b: string) => {
+              // Parse timestamps in format "MMM dd, HH:mm" and sort chronologically
+              const dateA = parse(a, "MMM dd, HH:mm", new Date());
+              const dateB = parse(b, "MMM dd, HH:mm", new Date());
+              return dateA.getTime() - dateB.getTime();
+            });
 
           // Filter locations that have valid data
           const validLocations = params.sensorDataByLocation.filter(

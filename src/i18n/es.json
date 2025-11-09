@@ -34,7 +34,14 @@
     "subscription": "Suscripción",
     "billing": "Facturación",
     "billing/subscription": "Suscripción",
-    "new-payment-method": "Nuevo Método de Pago"
+    "new-payment-method": "Nuevo Método de Pago",
+    "reports/compact": "Reporte Compacto",
+    "reports/default": "Reporte Default",
+    "reports/analytics-focused": "Reporte Enfoque Analítico",
+    "reports/metrics-grid": "Reporte Grilla De Métricas",
+    "reports/create": "Crear Reporte",
+    "alerts": "Alertas",
+    "ai": "Resumen"
   },
   "billing": {
     "title": "Facturación",
@@ -392,6 +399,12 @@
         "devices": "Gestión de Dispositivos",
         "subscription": "Suscripción"
       },
+      "ai": {
+        "title": "Inteligencia Artificial",
+        "assistant": "Asistente de IA",
+        "summary": "Resúmenes de IA",
+        "predictions": "Predicciones de IA"
+      },
       "support": {
         "title": "Soporte",
         "createTicket": "Crear Ticket",
@@ -412,16 +425,35 @@
     "rights": "© {{year}} LYNQ, People Counter. Todos los derechos reservados."
   },
   "operatingHours": {
-    "title": "Horas operativas",
-    "timezone": "Zona horaria",
-    "openDay": "Abierto este día",
+    "title": "Horarios de Operación",
+    "timezone": "Zona Horaria",
+    "timezoneDescription": "Selecciona la zona horaria para esta ubicación",
+    "daysOpen": "días abierto",
+    "hoursConfigured": "Horarios configurados",
+    "weeklySchedule": "Horario Semanal",
+    "open": "Abierto",
     "start": "Inicio",
-    "end": "Fin",
-    "addRange": "Agregar franja",
-    "exceptions": "Excepciones / Feriados",
-    "exceptionsHint": "Las excepciones podrán configurarse en una próxima actualización.",
-    "noneConfigured": "Sin horas de operación configuradas",
-    "tableHeader": "Horas operativas"
+    "end": "Final",
+    "addTimeRange": "Agregar Horario",
+    "copyToAll": "Copiar a Todos los Días",
+    "noHoursSet": "No hay horarios establecidos para este día",
+    "closedDay": "Cerrado",
+    "quickActions": "Acciones Rápidas",
+    "setWeekdays": "Establecer Días Laborales (9-5)",
+    "set24_7": "Operación 24/7",
+    "clearAll": "Limpiar Todo",
+    "helpTitle": "Consejos:",
+    "helpTip1": "Agrega múltiples rangos de tiempo para turnos divididos (ej. descanso de almuerzo)",
+    "helpTip2": "Usa 'Copiar a Todos los Días' para aplicar rápidamente los mismos horarios",
+    "helpTip3": "Los días de fin de semana están resaltados con un indicador naranja",
+    "helpTip4": "Los días desmarcados serán marcados como cerrados",
+    "openDay": "Abrir este día",
+    "addRange": "Agregar rango de tiempo",
+    "exceptions": "Excepciones / Días Festivos",
+    "exceptionsHint": "Las excepciones pueden configurarse en una futura actualización.",
+    "noneConfigured": "No hay horarios de operación configurados",
+    "tableHeader": "Horarios de Operación",
+    "description": "Configura los horarios de operación para esta ubicación. Estos horarios se usarán para filtrar datos y generar reportes precisos."
   },
   "logout": "Cerrar sesión",
   "profile": "Perfil",
@@ -455,7 +487,11 @@
     "exportAsCSV": "Exportar como CSV",
     "sendByEmail": "Enviar por correo",
     "locale": "es-ES",
-    "success": "Éxito"
+    "success": "Éxito",
+    "active": "Activo",
+    "inactive": "Inactivo",
+    "placements": "Ubicaciones",
+    "weekend": "Fin de semana"
   },
   "dashboard": {
     "percentage": "Porcentaje (%)",
@@ -498,7 +534,6 @@
       "peopleInStore": "Personas en Tienda (Acumulativo)",
       "timeInStoreDistribution": "Distribución de Tiempo en Tienda",
       "returningCustomersChart": "Tasa de Retorno a lo Largo del Tiempo",
-      "avgVisitDurationChart": "Tiempo Promedio de Visita a lo Largo del Tiempo",
       "affluenceChart": "Afluencia a lo Largo del Tiempo",
       "entries": "Entradas",
       "exits": "Salidas",
@@ -518,13 +553,13 @@
         "title": "Tasa de Retorno",
         "description": "El porcentaje de visitantes que habían realizado previamente una visita a la misma tienda dentro de los últimos 60 días"
       },
-      "avgVisitDuration": {
-        "title": "Tiempo Promedio en Local",
-        "description": "Tiempo promedio que los clientes permanecen en el establecimiento"
+      "turnIn": {
+        "title": "Turn-in Ratio",
+        "description": "Proporción de clientes Recurrentes vs Nuevos basada en entradas ponderadas"
       },
       "affluence": {
         "title": "Afluencia",
-        "description": "Porcentaje de entradas respecto al tráfico exterior (Entradas/Tráfico exterior)"
+        "description": "Número total de personas que entraron al área monitoreada contra el número de personas que pasaron pero no entraron durante el período seleccionado."
       }
     },
     "metrics": {
@@ -546,10 +581,10 @@
       "leastCrowdedDayDescription": "Día del período seleccionado con menor cantidad de entradas registradas.",
       "returningCustomers": "Tasa de Retorno",
       "returningCustomersDescription": "El porcentaje de visitantes que habían realizado previamente una visita a la misma tienda dentro de los últimos 60 días",
-      "avgVisitDuration": "Tiempo Promedio en Local",
-      "avgVisitDurationDescription": "Tiempo promedio que los clientes permanecen en el establecimiento",
+      "turnInRatio": "Turn-in Ratio",
+      "turnInRatioDescription": "Proporción de Recurrentes vs Nuevos calculada desde entradas ponderadas",
       "affluence": "Afluencia",
-      "affluenceDescription": "Porcentaje de entradas respecto al tráfico exterior (Entradas/Tráfico exterior)",
+      "affluenceDescription": "Número total de personas que entraron al área monitoreada contra el número de personas que pasaron pero no entraron durante el período seleccionado",
       "noDataAvailable": "Datos no disponibles para este período",
       "footfallcamDataRequired": "Requiere datos de analíticas FootfallCam",
       "percentage": "Porcentaje (%)",
@@ -559,7 +594,8 @@
       "saveLayout": "Guardar Diseño",
       "editLayout": "Editar Diseño",
       "hiddenCards": "Tarjetas Ocultas",
-      "timeRange": "Rango de Tiempo"
+      "timeRange": "Rango de Tiempo",
+      "avgVisitDuration": "Tiempo de visita promedio"
     }
   },
   "users": {
@@ -853,7 +889,15 @@
     "changePasswordErrorTitle": "Error",
     "changePasswordErrorDescription": "No se pudo cambiar la contraseña. El enlace puede ser inválido o haber expirado.",
     "createSuccessTitle": "Éxito",
-    "createSuccessDescription": "¡Creado exitosamente!"
+    "createSuccessDescription": "¡Creado exitosamente!",
+    "locationCreateSuccessTitle": "Ubicación Creada",
+    "locationCreateSuccessDescription": "La ubicación ha sido creada correctamente.",
+    "locationCreateErrorTitle": "Error al Crear",
+    "locationCreateErrorDescription": "No se pudo crear la ubicación. Inténtalo de nuevo.",
+    "locationUpdateSuccessTitle": "Ubicación Actualizada",
+    "locationUpdateSuccessDescription": "La ubicación ha sido actualizada correctamente.",
+    "locationUpdateErrorTitle": "Error al Actualizar",
+    "locationUpdateErrorDescription": "No se pudo actualizar la ubicación. Inténtalo de nuevo."
   },
   "businesses": {
     "management": "Gestión de Empresas",
@@ -927,7 +971,10 @@
     "formErrorDesc": "Por favor, completa todos los campos requeridos.",
     "businessName": "Nombre de la Empresa",
     "allProviders": "Todos los Proveedores",
-    "filterProvider": "Filtrar por Proveedor"
+    "filterProvider": "Filtrar por Proveedor",
+    "status": "Estado",
+    "active": "Activo",
+    "inactive": "Inactivo"
   },
   "locations": {
     "management": "Gestión de Ubicaciones",
@@ -958,7 +1005,14 @@
     "formErrorDesc": "Por favor, completa todos los campos requeridos.",
     "locationName": "Nombre de la Ubicación",
     "locationAddress": "Dirección",
-    "deleteWarning": "Advertencia: Esta acción eliminará permanentemente la ubicación. Los sensores asociados a esta ubicación también serán eliminados y toda su información ya no será accesible."
+    "deleteWarning": "Advertencia: Esta acción eliminará permanentemente la ubicación. Los sensores asociados a esta ubicación también serán eliminados y toda su información ya no será accesible.",
+    "basicInfo": "Información Básica",
+    "addLocationSubtitle": "Detalles de la ubicación",
+    "locationNamePlaceholder": "Nombre de la Ubicación",
+    "locationAddressPlaceholder": "Dirección de la Ubicación",
+    "createLocation": "Crear Ubicación",
+    "editLocationSubtitle": "Editar detalles de la ubicación",
+    "updateLocation": "Actualizar Ubicación"
   },
   "connections": {
     "title": "Conexiones",
@@ -1011,6 +1065,44 @@
     "dragDropDescription": "Diseñe el diseño de su reporte arrastrando y soltando widgets.",
     "configure": "Configurar",
     "modalTitle": "Configurar Reporte",
+    "configs": {
+      "title": "Configuraciones de Reportes",
+      "subtitle": "Navegue, inspeccione y administre sus diseños de reportes guardados.",
+      "createCta": "Crear Reporte",
+      "widgets": "Widgets",
+      "lastModified": "Última modificación",
+      "viewDetails": "Ver Detalles",
+      "empty": "No se encontraron configuraciones. Cree su primer reporte.",
+      "fetchError": "Error al obtener las configuraciones de reportes"
+    },
+    "unified": {
+      "activeSchedule": "Programación activa",
+      "noScheduleConfigured": "Aún no se ha configurado una programación.",
+      "scheduleButNoLayouts": "Tiene una programación de entrega configurada pero aún no hay diseños guardados.",
+      "noLayoutsNoSchedule": "Cree un diseño y configure la programación para automatizar la entrega de reportes.",
+      "scheduleOnly": "Tiene una programación pero aún no hay widgets de diseño."
+    },
+    "detail": {
+      "layoutTitle": "Diseño:",
+      "scheduleOnlyTitle": "Solo Programación",
+      "scheduleOnlyHint": "Ha configurado la programación pero aún no hay un diseño de widgets.",
+      "scheduleType": "Tipo de Programación",
+      "scheduleDetails": "Detalles de Programación",
+      "timezone": "Zona Horaria",
+      "executionTime": "Hora de Ejecución",
+      "days": "Días",
+      "dataDays": "Días de Rango de Datos",
+      "dataTimeRange": "Rango de Tiempo de Datos",
+      "locations": "Ubicaciones",
+      "noLocations": "(ninguna)",
+      "noWidgets": "No hay widgets asignados en este diseño.",
+      "enabled": "Habilitado",
+      "language": "Idioma",
+      "slot": "Ranura",
+      "widget": "Widget",
+      "back": "Volver a Reportes",
+      "createNew": "Crear Nuevo Reporte"
+    },
     "form": {
       "type": "Tipo de Reporte",
       "locations": "Ubicaciones",
@@ -1171,5 +1263,82 @@
     "expires": "Vence",
     "default": "Predeterminada",
     "goto": "Wallet"
+  },
+  "alerts": {
+    "title": "Feed de Alertas",
+    "description": "Monitorea tus alertas y notificaciones en tiempo real.",
+    "noAlerts": "No se encontraron alertas",
+    "markAsRead": "Marcar como Leído",
+    "markAllAsRead": "Marcar Todo como Leído",
+    "filterByType": "Filtrar por Tipo",
+    "filterByStatus": "Filtrar por Estado",
+    "allTypes": "Todos los Tipos",
+    "readStatus": "Leído",
+    "unreadStatus": "No Leído",
+    "all": "Todas",
+    "errors": "Error",
+    "warnings": "Advertencias",
+    "info": "Información"
+  },
+  "ai": {
+    "title": "Resumen IA",
+    "subtitle": "Insights y recomendaciones impulsadas por IA basadas en tus datos de tráfico",
+    "loading": "Cargando insights de IA...",
+    "error": "Error al cargar insights de IA",
+    "errorDescription": "Por favor, inténtalo de nuevo más tarde o contacta soporte si el problema persiste.",
+    "noDataAvailable": "No hay datos disponibles",
+    "loadingForecasts": "Cargando pronósticos...",
+    "lastTraining": "Último entrenamiento",
+    "timePeriodLabel": "Período de tiempo",
+    "periods": {
+      "daily": "Diario (30 min)",
+      "weekly": "Semanal (1 hora)",
+      "monthly": "Mensual (6 horas)",
+      "quarterly": "Trimestral (1 día)"
+    },
+    "update": "Actualizar",
+    "searchPlaceholder": "Pregúntale algo a la IA sobre tus pronósticos...",
+    "ask": "Preguntar",
+    "forecastError": "Error en Pronósticos",
+    "retry": "Reintentar",
+    "metrics": {
+      "expectedAverage": "Promedio Esperado (P50)",
+      "predictionRange": "Rango de Predicción",
+      "modelConfidence": "Confianza del Modelo",
+      "visitors": "visitantes"
+    },
+    "trafficInsights": {
+      "title": "Insights de Tráfico",
+      "peakHours": "Horas Pico",
+      "trendAnalysis": "Análisis de Tendencias",
+      "recommendations": "Recomendaciones"
+    },
+    "performanceSummary": {
+      "title": "Resumen de Rendimiento",
+      "overallPerformance": "Rendimiento General",
+      "keyMetrics": "Métricas Clave",
+      "alerts": "Alertas"
+    },
+    "predictiveAnalysis": {
+      "title": "Análisis Predictivo",
+      "forecast": "Pronóstico",
+      "optimization": "Optimización"
+    },
+    "summaryError": "No hay resumen disponible."
+  },
+  "assistant": {
+    "title": "Asistente IA",
+    "subtitle": "Pregúntame sobre LYNQ",
+    "placeholder": "Pregunta sobre instalación, configuración, pagos, métricas...",
+    "send": "Enviar",
+    "clear": "Limpiar chat",
+    "thinking": "Pensando...",
+    "welcomeMessage": "¡Hola! Soy tu asistente de LYNQ. ¿Cómo puedo ayudarte hoy?",
+    "errorMessage": "Lo siento, no pude procesar tu solicitud. Inténtalo de nuevo.",
+    "emptyInput": "Por favor ingresa una pregunta",
+    "closeModal": "Cerrar asistente",
+    "closeChat": "Cerrar chat",
+    "fabLabel": "Abrir Asistente IA",
+    "poweredBy": "Impulsado por IA"
   }
 }

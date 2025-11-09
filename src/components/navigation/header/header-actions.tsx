@@ -1,15 +1,24 @@
 import React from "react";
 import { BellIcon, LanguageIcon } from "@heroicons/react/24/outline";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { Badge } from "@heroui/react";
 import { useLanguage } from "../../../hooks/useLanguage.ts";
+import { useAlerts } from "../../../hooks/alerts/useAlerts.ts";
 
 export const HeaderActions: React.FC = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { toggleLanguage, currentLanguage } = useLanguage();
+  const { unreadCount } = useAlerts();
 
   const handleLanguageToggle = (e: React.MouseEvent) => {
     e.stopPropagation();
     toggleLanguage();
+  };
+
+  const handleAlertsClick = () => {
+    navigate("/alerts");
   };
 
   return (
@@ -26,12 +35,20 @@ export const HeaderActions: React.FC = () => {
           </span>
         </div>
       </button>
-      <button
-        className="rounded-full p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-600"
-        aria-label="Notifications"
+      <Badge
+        content={unreadCount > 0 ? unreadCount : null}
+        color="danger"
+        size="sm"
+        isInvisible={unreadCount === 0}
       >
-        <BellIcon className="h-5 w-5" />
-      </button>
+        <button
+          onClick={handleAlertsClick}
+          className="rounded-full p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-600"
+          aria-label={t("alerts.notifications", "Notifications")}
+        >
+          <BellIcon className="h-5 w-5" />
+        </button>
+      </Badge>
     </div>
   );
 };

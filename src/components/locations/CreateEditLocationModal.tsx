@@ -8,6 +8,7 @@ import {
   Input,
   Button,
   addToast,
+  Divider,
 } from "@heroui/react";
 import { useTranslation } from "react-i18next";
 import {
@@ -25,6 +26,7 @@ import {
   useSaveOperatingHours,
 } from "../../hooks/locations/useOperatingHours";
 import { OperatingHours } from "../../types/location";
+import { MapPinIcon, ClockIcon } from "@heroicons/react/24/outline";
 
 interface CreateEditLocationModalProps {
   isOpen: boolean;
@@ -228,52 +230,109 @@ const CreateEditLocationModal: React.FC<CreateEditLocationModalProps> = ({
   };
 
   return (
-    <Modal isOpen={isOpen} onOpenChange={handleModalClose}>
+    <Modal
+      isOpen={isOpen}
+      onOpenChange={handleModalClose}
+      size={isEditing ? "5xl" : "2xl"}
+      classNames={{
+        wrapper: "items-start pt-8 pb-8",
+        base: "max-h-[90vh]",
+        body: "py-6",
+        header: "pb-4",
+        footer: "pt-4",
+      }}
+      scrollBehavior="inside"
+    >
       <ModalContent>
-        <ModalHeader>
-          {isEditing ? t("locations.editLocation") : t("locations.addLocation")}
+        <ModalHeader className="flex flex-col space-y-1">
+          <h2 className="text-xl font-semibold">
+            {isEditing
+              ? t("locations.editLocation")
+              : t("locations.addLocation")}
+          </h2>
+          <p className="text-sm text-default-500 font-normal">
+            {isEditing
+              ? t("locations.editLocationSubtitle") ||
+                "Update location details and operating hours"
+              : t("locations.addLocationSubtitle") ||
+                "Add a new location to your business"}
+          </p>
         </ModalHeader>
-        <ModalBody>
-          <form
-            className="space-y-4"
-            id="location-form"
-            onSubmit={handleSubmit}
-          >
-            <Input
-              label={t("locations.locationName")}
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-              placeholder={t("locations.locationName")}
-            />
-            <Input
-              label={t("locations.locationAddress")}
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              required
-              placeholder={t("locations.locationAddress")}
-            />
-          </form>
-          {isEditing && (
-            <div className="mt-4">
-              <div className="text-sm font-medium mb-2">
-                {t("operatingHours.title")}
-              </div>
-              <OperatingHoursEditor
-                value={operatingHours}
-                onChange={setOperatingHours}
-                disabled={savingOH}
-              />
+
+        <ModalBody className="space-y-6">
+          {/* Location Basic Information */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 text-medium font-medium text-default-700">
+              <MapPinIcon className="h-5 w-5 text-primary" />
+              {t("locations.basicInfo") || "Location Information"}
             </div>
+
+            <form
+              className="grid grid-cols-1 md:grid-cols-2 gap-4"
+              id="location-form"
+              onSubmit={handleSubmit}
+            >
+              <Input
+                label={t("locations.locationName")}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+                placeholder={
+                  t("locations.locationNamePlaceholder") ||
+                  "Enter location name"
+                }
+                variant="bordered"
+                labelPlacement="outside"
+                className="col-span-full md:col-span-1"
+              />
+              <Input
+                label={t("locations.locationAddress")}
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                required
+                placeholder={
+                  t("locations.locationAddressPlaceholder") ||
+                  "Enter full address"
+                }
+                variant="bordered"
+                labelPlacement="outside"
+                className="col-span-full md:col-span-1"
+              />
+            </form>
+          </div>
+
+          {/* Operating Hours Section - Only in Edit Mode */}
+          {isEditing && (
+            <>
+              <Divider />
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 text-medium font-medium text-default-700">
+                  <ClockIcon className="h-5 w-5 text-primary" />
+                  {t("operatingHours.title") || "Operating Hours"}
+                </div>
+                <div className="text-sm text-default-500 mb-4">
+                  {t("operatingHours.description") ||
+                    "Set the hours when this location is open for business"}
+                </div>
+
+                <OperatingHoursEditor
+                  value={operatingHours}
+                  onChange={setOperatingHours}
+                  disabled={savingOH}
+                />
+              </div>
+            </>
           )}
         </ModalBody>
-        <ModalFooter>
+
+        <ModalFooter className="gap-2">
           <Button
             type="button"
             variant="bordered"
-            size="sm"
+            size="md"
             onPress={handleModalClose}
             isDisabled={loading}
+            className="px-6"
           >
             {t("common.cancel")}
           </Button>
@@ -281,13 +340,14 @@ const CreateEditLocationModal: React.FC<CreateEditLocationModalProps> = ({
             type="submit"
             form="location-form"
             variant="solid"
-            size="sm"
+            size="md"
             isLoading={loading || savingOH}
             color="primary"
+            className="px-6"
           >
             {isEditing
-              ? t("locations.editLocation")
-              : t("locations.addLocation")}
+              ? t("locations.updateLocation") || "Update Location"
+              : t("locations.createLocation") || "Create Location"}
           </Button>
         </ModalFooter>
       </ModalContent>

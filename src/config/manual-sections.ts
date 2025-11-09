@@ -123,6 +123,27 @@ export const manualSections: ManualSection[] = [
     ],
   },
   {
+    id: "ai",
+    titleKey: "manual.sections.ai.title",
+    sections: [
+      {
+        id: "ai-assistant",
+        titleKey: "manual.sections.ai.assistant",
+        file: "ia_asistente.md",
+      },
+      {
+        id: "ai-summary",
+        titleKey: "manual.sections.ai.summary",
+        file: "ia_resumen.md",
+      },
+      {
+        id: "ai-predictions",
+        titleKey: "manual.sections.ai.predictions",
+        file: "ia_predicciones.md",
+      },
+    ],
+  },
+  {
     id: "support",
     titleKey: "manual.sections.support.title",
     sections: [

@@ -166,12 +166,10 @@ Todos los archivos originales en `/docs/manual/` se mantienen intactos y se carg
 ## Uso
 
 1. **Acceder al Manual**:
-
    - Navegar a la página de "Ayuda" desde el menú lateral
    - Seleccionar la pestaña "Manual de Usuario"
 
 2. **Navegar por Secciones**:
-
    - Hacer clic en las categorías para expandir/colapsar
    - Hacer clic en cualquier subsección para ver su contenido
    - La sección activa se resalta visualmente

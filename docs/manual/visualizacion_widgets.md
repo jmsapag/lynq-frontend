@@ -9,7 +9,6 @@ Puedes personalizar qué widgets ves y dónde aparecen (ver [Edición del Layout
 Existen principalmente dos tipos de widgets:
 
 1.  **Widgets de KPI (Indicador Clave de Rendimiento):**
-
     - Muestran un valor numérico único y destacado para una métrica específica en el periodo seleccionado.
     - Suelen incluir una comparación porcentual con el periodo anterior.
     - Ejemplos: "Afluencia Total", "Duración Media Visita", "Tasa de Retorno".

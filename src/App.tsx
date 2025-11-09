@@ -31,13 +31,15 @@ import RoleRedirect from "./components/auth/roleRedirect.tsx";
 import { RoleRoute } from "./components/auth/roleRoute.tsx";
 import ConnectionsPageWrapper from "./pages/connections-wrapper.tsx";
 import Overview from "./pages/overview.tsx";
-import ReportsPage from "./pages/reports.tsx";
+import ReportsPage from "./pages/reports.tsx"; // creation / drag interface
+import ReportsBusinessList from "./pages/reports-list.tsx"; // business list view
+import ReportDetail from "./pages/report-detail.tsx";
 import FaqPage from "./pages/faq.tsx";
 import FreeTrialWrapper from "./pages/free-trial.tsx";
 import SubscriptionFeed from "./pages/subscription-feed.tsx";
-import SubscriptionPage from "./pages/subscription";
-import SubscriptionSuccessPage from "./pages/subscription-success";
-import SubscriptionFailPage from "./pages/subscription-fail";
+import SubscriptionPage from "./pages/subscription.tsx";
+import SubscriptionSuccessPage from "./pages/subscription-success.tsx";
+import SubscriptionFailPage from "./pages/subscription-fail.tsx";
 import { useNavigate } from "react-router-dom";
 import CustomizedPlan from "./pages/customized-plan.tsx";
 import BillingPage from "./pages/billing";
@@ -45,6 +47,9 @@ import WalletPage from "./pages/wallet.tsx";
 import NewPaymentMethodPage from "./pages/new-payment-method.tsx";
 import { useAuthState } from "./hooks/auth/useAuthState";
 import { SubscriptionStateBanner } from "./components/payments/SubscriptionStateBanner";
+import AIPage from "./pages/ai.tsx";
+import { AlertFeed } from "./pages/alert-feed.tsx";
+import { AIAssistantFAB } from "./components/ai/AIAssistantFAB";
 
 function AppLayoutWithState() {
   const {
@@ -94,6 +99,8 @@ function AppLayoutWithState() {
         </main>
         <Footer />
       </div>
+      {/* AI Assistant FAB - Available in all authenticated views */}
+      <AIAssistantFAB />
     </div>
   );
 }
@@ -143,11 +150,14 @@ function App() {
               <Route path="/overview" element={<Overview />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/comparison" element={<Comparison />} />
-              <Route path="reports" element={<ReportsPage />} />
+              <Route path="reports" element={<ReportsBusinessList />} />
+              <Route path="reports/create" element={<ReportsPage />} />
+              <Route path="reports/:reportId" element={<ReportDetail />} />
               <Route path="/profile" element={<UsersPage />} />
               <Route path="help" element={<HelpPage />} />
               <Route path="/faq" element={<FaqPage />} />
               <Route path="/subscriptions" element={<SubscriptionFeed />} />
+              <Route path="/alerts" element={<AlertFeed />} />
               <Route
                 path="/subscriptions/customize"
                 element={<CustomizedPlan />}
@@ -159,7 +169,6 @@ function App() {
 
               {/* LYNQ_TEAM only routes */}
               <Route element={<RoleRoute allowedRoles="LYNQ_TEAM" />}>
-                <Route path="devices" element={<DevicesPage />} />
                 <Route path="businesses" element={<BusinessesPage />} />
                 <Route
                   path="business/:businessId/connections"
@@ -171,6 +180,7 @@ function App() {
               {/* ADMIN only routes */}
               <Route element={<RoleRoute allowedRoles="ADMIN" />}>
                 <Route path="user-management" element={<UserManagement />} />
+                <Route path="devices" element={<DevicesPage />} />
                 <Route path="locations" element={<Locations />} />
                 <Route path="/billing" element={<BillingPage />} />
                 <Route path="/wallet" element={<WalletPage />} />
@@ -182,6 +192,7 @@ function App() {
                   path="/subscription"
                   element={<Navigate to="/billing/subscription" replace />}
                 />
+                <Route path="/ai" element={<AIPage />} />
               </Route>
             </Route>
           </Route>

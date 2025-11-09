@@ -10,7 +10,6 @@ Aquí encontrarás definiciones de los términos y métricas más comunes utiliz
 
 - **Duración Media de Visita (Average Visit Duration):**
   El tiempo promedio, usualmente en minutos, que los visitantes permanecen dentro del espacio monitoreado. Se calcula a partir de datos específicos del sensor (si el sensor lo soporta). Ayuda a medir el _engagement_ o interés de los visitantes.
-
   - **Tasa de Retorno (Returning Rate / Returning Customers):**
     El porcentaje de visitantes durante un período que ya habían visitado el mismo lugar anteriormente, dentro de un lapso de tiempo definido (ej., en los últimos 30 días). Mide la recurrencia o lealtad.
   - **Tráfico Exterior (Outside Traffic):**
