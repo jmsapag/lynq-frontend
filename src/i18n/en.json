@@ -1342,7 +1342,7 @@
     "generatingSummary": "Generating summary...",
     "summaryWaitMessage": "This may take up to a minute. Thank you for your patience.",
     "keyPoints": "Key Points",
-    "analysisPrompt": "Provide a comprehensive business analysis of pedestrian traffic patterns."
+    "analysisPrompt": "TASK TYPE: SUMMARY (NOT ANALYSIS). Generate a business summary with key metrics and insights about pedestrian traffic patterns."
   },
   "assistant": {
     "title": "AI Assistant",

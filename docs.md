@@ -110,12 +110,14 @@ Ruta base: `src/`
 Detalles por carpeta clave
 
 - pages/
+
   - Dashboard/: punto central con resumen por business/location.
   - Comparison/: vistas que comparan métricas entre ubicaciones.
   - UserManagement/: administración de usuarios y roles.
   - Cada carpeta puede incluir `index.tsx`, `styles.module.css` (si se usa), y subcomponentes.
 
 - components/
+
   - layout/
     - AppShell, Header, Sidebar, Breadcrumbs, ProtectedLayout.
   - ui/

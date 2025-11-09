@@ -12,6 +12,7 @@ LYNQ te permite configurar reportes automáticos que se envían por correo elect
 1.  Haz clic en **"Crear Nuevo Reporte"** o en el icono de edición de un reporte existente.
 2.  Se abrirá un modal o una página de configuración.
 3.  **Configuración General:**
+
     - **Nombre del Reporte:** Dale un nombre descriptivo (ej. "Resumen Semanal - Tiendas Principales").
     - **Frecuencia:** Selecciona la frecuencia (actualmente parece ser semanal).
       - **Día y Hora de Envío:** Especifica qué día de la semana y a qué hora quieres recibir el reporte. Asegúrate de considerar la zona horaria.
@@ -20,6 +21,7 @@ LYNQ te permite configurar reportes automáticos que se envían por correo elect
     - **Activo/Inactivo:** Un interruptor para habilitar o deshabilitar el envío automático de este reporte.
 
 4.  **Configuración del Contenido:**
+
     - Selecciona un **Layout Base** para el reporte (ver [Layouts de Reporte](./reportes_layout.md)).
     - Personaliza los **Widgets** que se incluirán en el reporte usando el sistema drag-and-drop (ver [Layouts de Reporte](./reportes_layout.md)).
 

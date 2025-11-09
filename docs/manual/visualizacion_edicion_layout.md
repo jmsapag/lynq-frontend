@@ -12,12 +12,14 @@ LYNQ te permite personalizar completamente la disposición de los widgets en tu 
 La personalización se realiza mediante un sistema intuitivo de arrastrar y soltar.
 
 - **Añadir Widgets:**
+
   1.  En la **barra lateral de widgets**, busca el widget que deseas añadir (pueden estar categorizados por tipo: KPI, Gráfico, etc.).
   2.  Haz clic sostenido sobre el widget elegido.
   3.  Arrastra el widget hacia una de las **zonas de destino** (`Drop Zone`) resaltadas en el layout principal.
   4.  Suelta el widget en la zona deseada.
 
 - **Mover Widgets:**
+
   1.  Haz clic sostenido sobre un widget que ya esté en el dashboard.
   2.  Arrastralo a una nueva zona de destino o a una posición diferente dentro de la misma zona.
   3.  Suelta el widget. Los demás widgets se reacomodarán si es necesario.

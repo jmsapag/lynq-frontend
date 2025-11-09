@@ -246,13 +246,16 @@ Puedes ver un ejemplo completo en el archivo `new-metrics-demo.stories.tsx` que 
 ## Archivos Modificados
 
 1. **Tipos**:
+
    - `src/types/sensorDataResponse.ts` - Tipos actualizados
 
 2. **Hooks**:
+
    - `src/hooks/sensor-data/useTransformData.ts` - Transformación de datos
    - `src/hooks/sensor-data/group-data/aggregate-time-series-service.ts` - Agregación
 
 3. **Componentes Nuevos**:
+
    - `src/components/dashboard/charts/returning-customers-chart.tsx`
    - `src/components/dashboard/charts/avg-visit-duration-chart.tsx`
    - `src/components/dashboard/charts/affluence-chart.tsx`
