@@ -13,6 +13,7 @@ import {
   // ClipboardDocumentListIcon,
   // CurrencyDollarIcon,
   DeviceTabletIcon,
+  SparklesIcon,
 } from "@heroicons/react/16/solid";
 
 export const navItems = [
@@ -41,5 +42,6 @@ export const adminNavItems = [
   { title: "user-management", href: "/user-management", icon: UserGroupIcon },
   { title: "locations", href: "/locations", icon: MapPinIcon },
   // { title: "subscriptions", href: "/subscriptions", icon: CurrencyDollarIcon },
+  { title: "ai", href: "/ai", icon: SparklesIcon },
   { title: "help", href: "/help", icon: QuestionMarkCircleIcon },
 ];

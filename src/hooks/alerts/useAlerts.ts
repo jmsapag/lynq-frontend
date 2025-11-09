@@ -1,6 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
 import { axiosPrivate } from "../../services/axiosClient";
-import { Alert, AlertStatus, AlertType } from "../../types/alert";
+import {
+  Alert,
+  AlertStatus,
+  AlertType,
+  AlertSeverity,
+} from "../../types/alert";
 
 interface AlertsParams {
   page?: number;
@@ -8,6 +13,7 @@ interface AlertsParams {
   status?: AlertStatus;
   locationId?: number;
   type?: AlertType;
+  severity?: AlertSeverity;
   title?: string;
 }
 

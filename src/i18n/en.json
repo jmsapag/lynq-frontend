@@ -36,6 +36,12 @@
     "billing": "Billing",
     "billing/subscription": "Subscription",
     "new-payment-method": "Add Payment Method",
+    "reports/compact": "Compact Report",
+    "reports/default": "Default Report",
+    "reports/analytics-focused": "Analytics Focused Report",
+    "reports/metrics-grid": "Metric Grid Report",
+    "reports/create": "Create Report",
+    "ai": "Summary",
     "alerts": "Alerts"
   },
   "billing": {
@@ -187,14 +193,27 @@
   "operatingHours": {
     "title": "Operating Hours",
     "timezone": "Timezone",
-    "openDay": "Open this day",
+    "timezoneDescription": "Select the timezone for this location",
+    "daysOpen": "days open",
+    "hoursConfigured": "Hours configured",
+    "weeklySchedule": "Weekly Schedule",
+    "open": "Open",
     "start": "Start",
     "end": "End",
-    "addRange": "Add time range",
-    "exceptions": "Exceptions / Holidays",
-    "exceptionsHint": "Exceptions can be configured in a future update.",
-    "noneConfigured": "No operating hours configured",
-    "tableHeader": "Operating Hours"
+    "addTimeRange": "Add Time Range",
+    "copyToAll": "Copy to All Days",
+    "noHoursSet": "No operating hours set for this day",
+    "closedDay": "Closed",
+    "quickActions": "Quick Actions",
+    "setWeekdays": "Set Weekdays (9-5)",
+    "set24_7": "24/7 Operation",
+    "clearAll": "Clear All",
+    "helpTitle": "Tips:",
+    "helpTip1": "Add multiple time ranges for split shifts (e.g., lunch break)",
+    "helpTip2": "Use 'Copy to All Days' to quickly apply the same hours",
+    "helpTip3": "Weekend days are highlighted with an orange indicator",
+    "helpTip4": "Unchecked days will be marked as closed",
+    "description": "Define the operating hours for this location to enhance data accuracy and insights."
   },
   "help": {
     "userGuide": "User Guide",
@@ -274,7 +293,11 @@
     "exportAsCSV": "Export as CSV",
     "sendByEmail": "Send by Email",
     "locale": "en-US",
-    "success": "Success"
+    "success": "Success",
+    "active": "Active",
+    "inactive": "Inactive",
+    "placements": "Placements",
+    "weekend": "Weekend"
   },
   "dashboard": {
     "percentage": "Percentage (%)",
@@ -319,7 +342,6 @@
       "peopleInStore": "People in Store (Cumulative)",
       "timeInStoreDistribution": "Time in Store Distribution",
       "returningCustomersChart": "Returning Rate Over Time",
-      "avgVisitDurationChart": "Average Visit Duration Over Time",
       "affluenceChart": "Affluence Over Time",
       "entries": "Entries",
       "exits": "Exits",
@@ -343,9 +365,13 @@
         "title": "Average Visit Duration",
         "description": "Average time customers spend in the establishment"
       },
+      "turnIn": {
+        "title": "Turn-in Ratio",
+        "description": "Proportion of Returning vs New customers based on weighted entries"
+      },
       "affluence": {
         "title": "Affluence",
-        "description": "Percentage of entries relative to outside traffic (Entries/Outside traffic)"
+        "description": "Percentage of entries relative to outside traffic (Entries/Outside Traffic × 100)"
       },
       "topStores": "Top Stores",
       "topStoresDescription": "Top performing stores based on selected metrics"
@@ -376,8 +402,10 @@
       "returningCustomersDescription": "The percentage of visitors who had previously made a visit to the same store within the past 60 days",
       "avgVisitDuration": "Average Visit Duration",
       "avgVisitDurationDescription": "Average time customers spend in the establishment",
+      "turnInRatio": "Turn-in Ratio",
+      "turnInRatioDescription": "Share of Returning vs New customers computed from weighted entries",
       "affluence": "Affluence",
-      "affluenceDescription": "Percentage of entries relative to outside traffic (Entries/Outside traffic)",
+      "affluenceDescription": "Percentage of entries relative to outside traffic (Entries/Outside Traffic × 100)",
       "noDataAvailable": "Data not available for this period",
       "footfallcamDataRequired": "Requires FootfallCam analytics data",
       "percentage": "Percentage (%)",
@@ -388,6 +416,10 @@
       "editLayout": "Edit Layout",
       "hiddenCards": "Hidden Cards",
       "timeRange": "Time Range"
+    },
+    "turnIn": {
+      "newCustomer": "New Customer",
+      "returningCustomer": "Returning Customer"
     }
   },
   "users": {
@@ -682,7 +714,15 @@
     "changePasswordErrorTitle": "Error",
     "changePasswordErrorDescription": "Failed to change password. The link may be invalid or expired.",
     "createSuccessTitle": "Success",
-    "createSuccessDescription": "Created successfully."
+    "createSuccessDescription": "Created successfully.",
+    "locationCreateSuccessTitle": "Location Created",
+    "locationCreateSuccessDescription": "Location has been created successfully.",
+    "locationCreateErrorTitle": "Creation Failed",
+    "locationCreateErrorDescription": "Failed to create location. Please try again.",
+    "locationUpdateSuccessTitle": "Location Updated",
+    "locationUpdateSuccessDescription": "Location has been updated successfully.",
+    "locationUpdateErrorTitle": "Update Failed",
+    "locationUpdateErrorDescription": "Failed to update location. Please try again."
   },
   "businesses": {
     "management": "Business Management",
@@ -790,7 +830,14 @@
     "formErrorDesc": "Please fill in all required fields.",
     "locationName": "Location Name",
     "locationAddress": "Address",
-    "deleteWarning": "Deleting this location will permanently remove it from the system. All sensors and devices associated with this location will also be deleted and their data will no longer be accessible."
+    "deleteWarning": "Deleting this location will permanently remove it from the system. All sensors and devices associated with this location will also be deleted and their data will no longer be accessible.",
+    "basicInfo": "Information",
+    "addLocationSubtitle": "Location's details",
+    "locationNamePlaceholder": "Location Name",
+    "locationAddressPlaceholder": "Location Address",
+    "createLocation": "Create Location",
+    "editLocationSubtitle": "Edit details",
+    "updateLocation": "Update Location"
   },
   "connections": {
     "title": "Connections",
@@ -844,6 +891,44 @@
     "dragDropDescription": "Design your report layout by dragging and dropping widgets.",
     "configure": "Configure",
     "modalTitle": "Configure Report",
+    "configs": {
+      "title": "Report Configurations",
+      "subtitle": "Browse, inspect and manage your saved report layouts.",
+      "createCta": "Create Report",
+      "widgets": "Widgets",
+      "lastModified": "Last modified",
+      "viewDetails": "View Details",
+      "empty": "No configurations found. Create your first report.",
+      "fetchError": "Error fetching report configurations"
+    },
+    "unified": {
+      "activeSchedule": "Active schedule",
+      "noScheduleConfigured": "No schedule configured yet.",
+      "scheduleButNoLayouts": "You have a delivery schedule configured but no layouts saved yet.",
+      "noLayoutsNoSchedule": "Create a layout and configure scheduling to automate report delivery.",
+      "scheduleOnly": "You have a schedule but no layout widgets yet."
+    },
+    "detail": {
+      "layoutTitle": "Layout:",
+      "scheduleOnlyTitle": "Schedule Only",
+      "scheduleOnlyHint": "You have configured scheduling but no widget layout yet.",
+      "scheduleType": "Schedule Type",
+      "scheduleDetails": "Schedule Details",
+      "timezone": "Timezone",
+      "executionTime": "Execution Time",
+      "days": "Days",
+      "dataDays": "Data Range Days",
+      "dataTimeRange": "Data Time Range",
+      "locations": "Locations",
+      "noLocations": "(none)",
+      "noWidgets": "No widgets assigned in this layout.",
+      "enabled": "Enabled",
+      "language": "Language",
+      "slot": "Slot",
+      "widget": "Widget",
+      "back": "Back to Reports",
+      "createNew": "Create New Report"
+    },
     "form": {
       "type": "Report Type",
       "locations": "Locations",
@@ -1145,5 +1230,70 @@
     "errors": "Error",
     "warnings": "Warning",
     "info": "Info"
+  },
+  "ai": {
+    "title": "AI Summary",
+    "subtitle": "AI-powered insights and recommendations based on your traffic data",
+    "loading": "Loading AI insights...",
+    "error": "Failed to load AI insights",
+    "errorDescription": "Please try again later or contact support if the problem persists.",
+    "noDataAvailable": "No data available",
+    "loadingForecasts": "Loading forecasts...",
+    "lastTraining": "Last training",
+    "timePeriodLabel": "Time period",
+    "periods": {
+      "daily": "Daily (30 min)",
+      "weekly": "Weekly (1 hour)",
+      "monthly": "Monthly (6 hours)",
+      "quarterly": "Quarterly (1 day)"
+    },
+    "update": "Update",
+    "searchPlaceholder": "Ask the AI something about your forecasts...",
+    "ask": "Ask",
+    "forecastError": "Forecast Error",
+    "retry": "Retry",
+    "metrics": {
+      "expectedAverage": "Expected Average (P50)",
+      "predictionRange": "Prediction Range",
+      "modelConfidence": "Model Confidence",
+      "visitors": "visitors"
+    },
+    "trafficInsights": {
+      "title": "Traffic Insights",
+      "peakHours": "Peak Hours",
+      "trendAnalysis": "Trend Analysis",
+      "recommendations": "Recommendations"
+    },
+    "performanceSummary": {
+      "title": "Performance Summary",
+      "overallPerformance": "Overall Performance",
+      "keyMetrics": "Key Metrics",
+      "alerts": "Alerts"
+    },
+    "predictiveAnalysis": {
+      "title": "Predictive Analysis",
+      "forecast": "Forecast",
+      "optimization": "Optimization"
+    },
+    "summaryError": "No business summary available.",
+    "generatingSummary": "Generating summary...",
+    "summaryWaitMessage": "This may take up to a minute. Thank you for your patience.",
+    "keyPoints": "Key Points",
+    "analysisPrompt": "Provide a comprehensive business analysis of pedestrian traffic patterns."
+  },
+  "assistant": {
+    "title": "AI Assistant",
+    "subtitle": "Ask me anything about LYNQ",
+    "placeholder": "Ask about installation, configuration, payments, metrics...",
+    "send": "Send",
+    "clear": "Clear chat",
+    "thinking": "Thinking...",
+    "welcomeMessage": "Hello! I'm your LYNQ assistant. How can I help you today?",
+    "errorMessage": "Sorry, I couldn't process your request. Please try again.",
+    "emptyInput": "Please enter a question",
+    "closeModal": "Close assistant",
+    "closeChat": "Close chat",
+    "fabLabel": "Open AI Assistant",
+    "poweredBy": "Powered by AI"
   }
 }

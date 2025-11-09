@@ -453,6 +453,32 @@ export const MetricWidgets = {
     ),
   }),
 
+  // Replaced affluence with Turn-in Ratio card (weighted returning %)
+  createTurnInRatioWidget: (params: WidgetFactoryParams): WidgetConfig => {
+    const result = calculateReturningCustomerPercentage(
+      params.sensorData?.returningCustomers || [],
+      params.sensorData?.in || [],
+    );
+    return {
+      id: "turn-in-ratio",
+      type: "turn-in-ratio",
+      title: "Turn-in Ratio",
+      translationKey: "dashboard.metrics.turnInRatio",
+      category: "metric",
+      component: (
+        <SensorDataCard
+          title="Turn-in Ratio"
+          value={result.hasData ? `${result.percentage}%` : "N/A"}
+          translationKey="dashboard.metrics.turnInRatio"
+          descriptionTranslationKey="dashboard.metrics.turnInRatioDescription"
+          unit=""
+          dateRange={params.dateRange}
+          data={{ returning_percentage: result.percentage }}
+        />
+      ),
+    };
+  },
+
   createAffluenceWidget: (params: WidgetFactoryParams): WidgetConfig => ({
     id: "affluence",
     type: "affluence",
@@ -481,10 +507,6 @@ export const MetricWidgets = {
           date_range_end: params.dateRange
             ? format(params.dateRange.end, "yyyy-MM-dd")
             : "",
-          sensors: params.sensorIdsList || "",
-          sensorDetails: params.getSensorDetails
-            ? params.getSensorDetails()
-            : [],
         }}
       />
     ),
