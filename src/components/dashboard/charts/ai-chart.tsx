@@ -58,14 +58,19 @@ export const AIAnalysisChart: React.FC<AIAnalysisChartProps> = ({
     if (!chartInstance.current || !data?.intervals) return;
 
     // Prepare data for the chart
-    const dates = data.intervals.map((item) =>
-      new Date(item.timestamp).toLocaleString("es-ES", {
+    // Parse timestamp as local time instead of UTC
+    const dates = data.intervals.map((item) => {
+      // If timestamp is in ISO format (e.g., "2025-11-09T14:00:00.000Z"),
+      // we need to parse it as local time
+      const timestamp = item.timestamp.replace("Z", "");
+      const date = new Date(timestamp);
+      return date.toLocaleString("es-ES", {
         month: "short",
         day: "numeric",
         hour: "2-digit",
         minute: "2-digit",
-      }),
-    );
+      });
+    });
 
     const p10Data = data.intervals.map((item) => item.p10);
     const p50Data = data.intervals.map((item) => item.p50);
