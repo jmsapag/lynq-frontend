@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { axiosAI } from "../../services/axiosClient";
+// import { axiosAI } from "../../services/axiosClient"; // Disabled for demo mode
 import { OrchestrationResponse } from "../../types/ai";
 
 export type ChatState = "idle" | "loading" | "ready" | "error";
@@ -16,7 +16,53 @@ export function useChat() {
       setState("loading");
       setError(null);
 
-      // Add instruction to return cards format
+      // DEMO MODE: Return mocked orchestrator response with 4 cards
+      await new Promise((resolve) => setTimeout(resolve, 1500)); // Simulate delay
+
+      const mockedResponse: OrchestrationResponse = {
+        requestId: `demo-chat-${Date.now()}`,
+        status: "complete",
+        result: {
+          type: "cards",
+          cards: [
+            {
+              title: "Entradas Totales",
+              description: "Total de personas que ingresaron al local",
+              value: "8,488",
+              change: -13.9,
+            },
+            {
+              title: "Entradas Promedio Diarias",
+              description: "Promedio de entradas por día",
+              value: "1,214",
+              change: -13.8,
+            },
+            {
+              title: "Afluencia",
+              description: "Tasa de conversión de tráfico exterior",
+              value: "11.96%",
+              change: -1.6,
+            },
+            {
+              title: "Tasa de Retorno",
+              description: "Porcentaje de clientes que regresan",
+              value: "14.87%",
+              change: -2.3,
+            },
+          ],
+        },
+        execution: {
+          totalDuration: 1500,
+          agentsInvoked: ["DataAgent", "MetricsAgent", "CardAgent"],
+          errors: [],
+        },
+        timestamp: new Date().toISOString(),
+      };
+
+      setData(mockedResponse);
+      setState("ready");
+
+      /* ORIGINAL CODE - Commented out for demo mode
       const enhancedQuery = `${query.trim()}. Please provide the response in card format with metrics.`;
 
       const response = await axiosAI.post<OrchestrationResponse>(
@@ -28,6 +74,7 @@ export function useChat() {
 
       setData(response.data);
       setState("ready");
+      */
     } catch (err: any) {
       setState("error");
       console.error("Chat error:", err);
