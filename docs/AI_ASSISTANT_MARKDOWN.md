@@ -273,6 +273,7 @@ import { MarkdownMessage } from "./MarkdownMessage";
 Follow these steps:
 
 1. **Connect the hardware**
+
    - Plug in the sensor cable
    - Ensure power LED is on
 

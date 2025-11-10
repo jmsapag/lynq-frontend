@@ -1,14 +1,11 @@
 import { useState, useCallback } from "react";
 import { axiosAI } from "../../services/axiosClient";
-
-interface ChatResponse {
-  response: string;
-}
+import { OrchestrationResponse } from "../../types/ai";
 
 export type ChatState = "idle" | "loading" | "ready" | "error";
 
 export function useChat() {
-  const [data, setData] = useState<ChatResponse | null>(null);
+  const [data, setData] = useState<OrchestrationResponse | null>(null);
   const [state, setState] = useState<ChatState>("idle");
   const [error, setError] = useState<string | null>(null);
 
@@ -19,9 +16,15 @@ export function useChat() {
       setState("loading");
       setError(null);
 
-      const response = await axiosAI.post<ChatResponse>("/chat", {
-        query: query.trim(),
-      });
+      // Add instruction to return cards format
+      const enhancedQuery = `${query.trim()}. Please provide the response in card format with metrics.`;
+
+      const response = await axiosAI.post<OrchestrationResponse>(
+        "/agents/orchestration/execute-query",
+        {
+          query: enhancedQuery,
+        },
+      );
 
       setData(response.data);
       setState("ready");

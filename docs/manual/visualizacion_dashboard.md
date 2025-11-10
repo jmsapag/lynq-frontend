@@ -7,6 +7,7 @@ El Dashboard Principal (también llamado Overview) es tu centro de comando para 
 En la parte superior del dashboard, encontrarás filtros esenciales para ajustar los datos que se muestran:
 
 1.  **Selector de Fechas:**
+
     - Permite elegir un rango de fechas específico (Desde - Hasta).
     - Ofrece preselecciones comunes (Hoy, Ayer, Últimos 7 días, Últimos 30 días, Mes actual, Mes anterior, etc.).
     - - Los datos de todos los widgets se actualizarán para reflejar el periodo seleccionado.

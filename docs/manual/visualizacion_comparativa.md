@@ -6,10 +6,12 @@
 La interfaz de comparación te permitirá configurar qué quieres contrastar:
 
 1.  **Seleccionar Métrica:** Elige la métrica principal que deseas comparar (ej. Afluencia, Duración Media Visita). 2. **Modo de Comparación:** Generalmente tendrás dos opciones:
+
     - **Comparar Ubicaciones:** Selecciona dos o más ubicaciones y un **único rango de fechas**. Los gráficos mostrarán la evolución de la métrica seleccionada para cada ubicación en ese periodo.
     - **Comparar Periodos:** Selecciona una **única ubicación** y **dos o más rangos de fechas**. Los gráficos mostrarán la evolución de la métrica para esa ubicación en cada uno de los periodos seleccionados.
 
 2.  **Seleccionar Elementos:**
+
     - Si comparas ubicaciones, usa el selector para elegir los locales deseados.
     - Si comparas periodos, usa los selectores de fecha para definir cada rango.
 
