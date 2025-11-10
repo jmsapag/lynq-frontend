@@ -16,44 +16,78 @@ export function useChat() {
       setState("loading");
       setError(null);
 
-      // DEMO MODE: Return mocked orchestrator response with 4 cards
+      // DEMO MODE: Return mocked orchestrator response
       await new Promise((resolve) => setTimeout(resolve, 1500)); // Simulate delay
+
+      // Detect if query contains '=' to determine if user is an analyst (technical) or business owner (non-technical)
+      const isAnalyst = query.includes("=");
 
       const mockedResponse: OrchestrationResponse = {
         requestId: `demo-chat-${Date.now()}`,
         status: "complete",
         result: {
           type: "cards",
-          cards: [
-            {
-              title: "Entradas Totales",
-              description: "Total de personas que ingresaron al local",
-              value: "8,488",
-              change: -13.9,
-            },
-            {
-              title: "Entradas Promedio Diarias",
-              description: "Promedio de entradas por día",
-              value: "1,214",
-              change: -13.8,
-            },
-            {
-              title: "Afluencia",
-              description: "Tasa de conversión de tráfico exterior",
-              value: "11.96%",
-              change: -1.6,
-            },
-            {
-              title: "Tasa de Retorno",
-              description: "Porcentaje de clientes que regresan",
-              value: "14.87%",
-              change: -2.3,
-            },
-          ],
+          cards: isAnalyst
+            ? [
+                // ANALYST MODE: Advanced metrics including Afluencia and Tasa de Retorno
+                {
+                  title: "Entradas Totales",
+                  description: "Total de personas que ingresaron al local",
+                  value: "8,488",
+                  change: -13.9,
+                },
+                {
+                  title: "Trafico Exterior",
+                  description: "Total de personas que pasaron frente al local",
+                  value: "70,996",
+                  change: -12.93,
+                },
+                {
+                  title: "Afluencia",
+                  description: "Tasa de conversión de tráfico exterior",
+                  value: "11.96%",
+                  change: -1.6,
+                },
+                {
+                  title: "Tasa de Retorno",
+                  description: "Porcentaje de clientes que regresan",
+                  value: "14.87%",
+                  change: -2.3,
+                },
+              ]
+            : [
+                // BUSINESS OWNER MODE: Basic pedestrian analytics that anyone can understand
+                {
+                  title: "Entradas Totales",
+                  description: "Personas que entraron a tu negocio",
+                  value: "8,488",
+                  change: -13.9,
+                },
+                {
+                  title: "Salidas Totales",
+                  description: "Personas que salieron de tu negocio",
+                  value: "8,295",
+                  change: -14.7,
+                },
+                {
+                  title: "Promedio Diario",
+                  description: "Entradas promedio por día",
+                  value: "1,214",
+                  change: -13.8,
+                },
+                {
+                  title: "Visitantes Únicos",
+                  description: "Clientes diferentes que visitaron",
+                  value: "7,205",
+                  change: -12.1,
+                },
+              ],
         },
         execution: {
           totalDuration: 1500,
-          agentsInvoked: ["DataAgent", "MetricsAgent", "CardAgent"],
+          agentsInvoked: isAnalyst
+            ? ["DataAgent", "MetricsAgent", "CardAgent"]
+            : ["BasicDataAgent", "SimpleMetricsAgent"],
           errors: [],
         },
         timestamp: new Date().toISOString(),
