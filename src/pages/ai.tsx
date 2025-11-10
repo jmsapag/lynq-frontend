@@ -5,7 +5,7 @@ import {
   CardBody,
   Select,
   SelectItem,
-  Input,
+  Textarea,
 } from "@heroui/react";
 import { useTranslation } from "react-i18next";
 import { AIAnalysisChart } from "../components/dashboard/charts/ai-chart";
@@ -21,7 +21,7 @@ import {
   MagnifyingGlassIcon,
   ShieldCheckIcon,
 } from "@heroicons/react/24/outline";
-import { SparklesIcon, UsersIcon } from "@heroicons/react/16/solid";
+import { SparklesIcon } from "@heroicons/react/16/solid";
 
 type TimePeriod = "daily" | "weekly" | "monthly" | "quarterly";
 
@@ -130,12 +130,6 @@ const AIPage: React.FC = () => {
     await sendMessage(searchQuery);
   };
 
-  const handleSearchKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
-      handleSearch();
-    }
-  };
-
   const handleGenerate = () => {
     refetch();
   };
@@ -185,35 +179,91 @@ const AIPage: React.FC = () => {
       {/* 2. AI Chat Input */}
       <Card shadow="none" className="border border-gray-200">
         <CardBody className="p-4">
-          <div className="flex gap-2">
-            <Input
+          <div className="flex gap-2 items-start">
+            <Textarea
               placeholder={t("ai.searchPlaceholder")}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyPress={handleSearchKeyPress}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSearch();
+                }
+              }}
+              minRows={1}
+              maxRows={6}
               startContent={
-                <MagnifyingGlassIcon className="w-4 h-4 text-gray-400" />
+                <MagnifyingGlassIcon className="w-4 h-4 text-gray-400 mt-2" />
               }
               className="flex-1"
+              classNames={{
+                input: "resize-none",
+              }}
             />
             <Button
               color="primary"
               onClick={handleSearch}
               isDisabled={!searchQuery.trim()}
               isLoading={chatLoading}
+              className="mt-1"
             >
               {t("ai.ask")}
             </Button>
           </div>
 
-          {/* Chat Response Display */}
-          {chatData && (
-            <div className="mt-4 p-4 bg-blue-50 rounded-lg border-l-4 border-blue-400">
-              <div className="flex items-start gap-3">
-                <SparklesIcon className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
-                <div className="text-gray-800 leading-relaxed">
-                  {chatData.response}
-                </div>
+          {/* Chat Response Display - Cards */}
+          {chatData && chatData.result?.cards && (
+            <div className="mt-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                {chatData.result.cards.map((card, index) => {
+                  // Parse the value to get numeric value if possible
+                  const numericValue = parseFloat(
+                    card.value.replace(/[^0-9.-]/g, ""),
+                  );
+                  const previousValue =
+                    card.change !== undefined && !isNaN(numericValue)
+                      ? numericValue / (1 + card.change / 100)
+                      : numericValue;
+
+                  return (
+                    <SensorDataCard
+                      key={index}
+                      title={card.title}
+                      value={card.value}
+                      description={card.description}
+                      icon={<ChartBarIcon className="w-6 h-6" />}
+                      hideExport={true}
+                      comparison={
+                        card.change !== undefined && !isNaN(numericValue)
+                          ? {
+                              current: numericValue,
+                              previous: previousValue,
+                              delta: numericValue - previousValue,
+                              deltaPercentage: card.change,
+                              trend:
+                                card.change > 0
+                                  ? "up"
+                                  : card.change < 0
+                                    ? "down"
+                                    : "stable",
+                            }
+                          : undefined
+                      }
+                      comparisonPeriod={
+                        card.change !== undefined
+                          ? {
+                              start: new Date(
+                                Date.now() - 14 * 24 * 60 * 60 * 1000,
+                              ),
+                              end: new Date(
+                                Date.now() - 7 * 24 * 60 * 60 * 1000,
+                              ),
+                            }
+                          : undefined
+                      }
+                    />
+                  );
+                })}
               </div>
             </div>
           )}
@@ -279,7 +329,7 @@ const AIPage: React.FC = () => {
 
       {/* 4. Metrics Cards */}
       {isReady && metrics && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <SensorDataCard
             title={t("ai.metrics.expectedAverage")}
             value={metrics.averageP50.toLocaleString()}
@@ -294,14 +344,6 @@ const AIPage: React.FC = () => {
             value={metrics.rangeP10P90}
             icon={<ShieldCheckIcon className="w-6 h-6" />}
             unit={t("ai.metrics.visitors")}
-            dateRange={dateRange}
-            hideExport={true}
-          />
-
-          <SensorDataCard
-            title={t("ai.metrics.modelConfidence")}
-            value={`${metrics.confidence}%`}
-            icon={<UsersIcon className="w-6 h-6" />}
             dateRange={dateRange}
             hideExport={true}
           />

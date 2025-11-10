@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Button, addToast, Spinner } from "@heroui/react";
+import { Button, addToast, Spinner, Tabs, Tab } from "@heroui/react";
 import { useTickets } from "../hooks/useTickets";
 import {
   CreateTicketInput,
@@ -9,6 +9,7 @@ import {
 } from "../types/ticket";
 import CreateTicketModal from "../components/help/CreateTicketModal";
 import { Link } from "react-router-dom";
+import { ManualViewer } from "../components/help/ManualViewer";
 
 const TicketStatusBadge = ({ status }: { status: string }) => {
   const { t } = useTranslation();
@@ -76,6 +77,7 @@ const HelpPage = () => {
   const { t } = useTranslation();
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [activeTab, setActiveTab] = useState<string>("tickets");
 
   // Mock business ID - in a real app this would come from context or props
   const businessId = "1";
@@ -152,25 +154,43 @@ const HelpPage = () => {
 
   return (
     <div className="w-full mx-1">
-      <div className="flex justify-between items-center mb-4 gap-4">
-        <div className="text-sm">
-          {t("help.needHelp")}{" "}
-          <Link to="/faq" className="text-primary-600 hover:underline">
-            {t("help.faqLink")}
-          </Link>
-          .
-        </div>
-        <Button
-          color="primary"
-          variant="solid"
-          size="sm"
-          onPress={() => setIsCreateModalOpen(true)}
-        >
-          {t("help.openTicket")}
-        </Button>
-      </div>
+      <Tabs
+        selectedKey={activeTab}
+        onSelectionChange={(key) => setActiveTab(key as string)}
+        variant="underlined"
+        color="primary"
+        className="mb-4"
+      >
+        <Tab key="tickets" title={t("help.tabs.support")}>
+          <div className="mt-4">
+            <div className="flex justify-between items-center mb-4 gap-4">
+              <div className="text-sm">
+                {t("help.needHelp")}{" "}
+                <Link to="/faq" className="text-primary-600 hover:underline">
+                  {t("help.faqLink")}
+                </Link>
+                .
+              </div>
+              <Button
+                color="primary"
+                variant="solid"
+                size="sm"
+                onPress={() => setIsCreateModalOpen(true)}
+              >
+                {t("help.openTicket")}
+              </Button>
+            </div>
 
-      {renderTicketList()}
+            {renderTicketList()}
+          </div>
+        </Tab>
+
+        <Tab key="manual" title={t("help.tabs.manual")}>
+          <div className="mt-4">
+            <ManualViewer />
+          </div>
+        </Tab>
+      </Tabs>
 
       <CreateTicketModal
         isOpen={isCreateModalOpen}
