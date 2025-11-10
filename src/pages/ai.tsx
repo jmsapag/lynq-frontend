@@ -164,9 +164,11 @@ const AIPage: React.FC = () => {
   const dateRange =
     forecastData?.intervals && forecastData.intervals.length > 0
       ? {
-          start: new Date(forecastData.intervals[0].timestamp),
+          start: new Date(forecastData.intervals[0].timestamp.replace("Z", "")),
           end: new Date(
-            forecastData.intervals[forecastData.intervals.length - 1].timestamp,
+            forecastData.intervals[
+              forecastData.intervals.length - 1
+            ].timestamp.replace("Z", ""),
           ),
         }
       : undefined;
