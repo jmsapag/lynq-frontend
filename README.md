@@ -1,31 +1,72 @@
-# Frontend Project
+# LYNQ Frontend
 
-Este es un proyecto frontend construido con React, TypeScript y Vite, utilizando Tailwind CSS para los estilos.
+**React 18 + TypeScript + Vite** frontend for the LYNQ pedestrian analytics platform.
 
-## Cómo Empezar
+## Quick Start
 
-Sigue estos pasos para configurar y ejecutar el proyecto en tu máquina local:
+1. **Clone and install**:
 
-1.  **Clona el repositorio** (si aún no lo has hecho), y navega al directorio del proyecto
+   ```bash
+   git clone <repository-url>
+   cd lynq-frontend
+   npm install
+   ```
 
-2.  **Instala las dependencias**:
-    Navega al directorio del proyecto y ejecuta el siguiente comando para instalar todos los paquetes necesarios definidos en `package.json`.
+2. **Environment setup**:
 
-    ```bash
-    npm install
-    ```
+   ```bash
+   cp .env.example .env
+   # Edit .env with your VITE_API_URL
+   ```
 
-3.  **Inicia el servidor de desarrollo**:
-    Una vez instaladas las dependencias, puedes iniciar el servidor de desarrollo local.
-    ```bash
-    npm run dev
-    ```
-    Esto iniciará la aplicación en modo de desarrollo. Abre tu navegador y visita la URL que se muestra en la terminal.
+3. **Development**:
+   ```bash
+   npm run dev
+   # Open http://localhost:5173
+   ```
 
-## Scripts Disponibles
+## Scripts
 
-En el archivo `package.json`, encontrarás varios scripts útiles:
+| Command             | Description              |
+| ------------------- | ------------------------ |
+| `npm run dev`       | Start development server |
+| `npm run build`     | Build for production     |
+| `npm run preview`   | Preview production build |
+| `npm run lint`      | Run ESLint               |
+| `npm run format`    | Format with Prettier     |
+| `npm run test`      | Run Vitest tests         |
+| `npm run storybook` | Start Storybook          |
 
-- `npm run dev`: Inicia el servidor de desarrollo con Vite.
-- `npm run lint`: Ejecuta ESLint para analizar el código en busca de problemas
-- `npm run format`: Ejecuta Prettier para formatear el código.
+## Technology Stack
+
+- **Frontend**: React 18, TypeScript, Vite
+- **UI**: Hero UI, Tailwind CSS
+- **Charts**: ECharts
+- **Testing**: Vitest, Playwright, Storybook
+- **Auth**: JWT tokens in httpOnly cookies
+
+## Development
+
+- **Node.js**: 18+ LTS
+- **Package Manager**: npm
+- **IDE**: VSCode with TypeScript/React extensions recommended
+
+## Project Structure
+
+```
+src/
+├── pages/          # Route-level components
+├── components/     # Reusable UI components
+├── hooks/          # Custom React hooks
+├── services/       # API clients
+├── types/          # TypeScript definitions
+└── utils/          # Helper functions
+```
+
+## Contributing
+
+1. Follow TypeScript strict mode
+2. Use Hero UI components
+3. Implement role-based access control
+4. Write tests for new features
+5. Run `npm run lint` before commits
